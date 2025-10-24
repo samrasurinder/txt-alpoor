@@ -1,0 +1,202 @@
+SQL> select PLUGIN_HOME from sysman.gc_current_deployed_plugin where plugin_id='oracle.sysman.db' and destination_type='OMS';
+
+PLUGIN_HOME
+--------------------------------------------------------------------------------
+/u02/app/oracle/middleware/plugins/oracle.sysman.db.oms.plugin_13.3.1.0.0
+
+
+
+$PLUGIN_HOME/sql/db/latest/masking/dm_fmtlib_pkgdef.sql
+$PLUGIN_HOME/sql/db/latest/masking/dm_fmtlib_pkgbody.sql
+
+
+
+[oracle@hrvlprdoem7603 masking]$ pwd
+/u02/app/oracle/middleware/plugins/oracle.sysman.db.oms.plugin_13.3.1.0.0/sql/db/latest/masking
+[oracle@hrvlprdoem7603 masking]$ ls -altrh
+total 572K
+-rw-r-----.  1 oracle oinstall 308K Feb 10  2010 dm_fmtlib_pkgbody.plb
+-rw-r-----.  1 oracle oinstall 2.3K Aug 31  2010 dm_utildef.sql
+-rw-r-----.  1 oracle oinstall 1.5K Aug 31  2010 dm_types.sql
+-rw-r-----.  1 oracle oinstall 9.5K May 29  2016 dm_pkgdef.sql
+-rw-r-----.  1 oracle oinstall  25K May 29  2016 dm_pkgbody.sql
+-rw-r-----.  1 oracle oinstall  25K Feb  7  2017 dm_utilbody.sql
+-rw-r-----.  1 oracle oinstall  14K Feb  7  2017 dm_tables.sql
+-rw-r-----.  1 oracle oinstall  40K Feb  7  2017 dm_post_creation.sql
+-rw-r-----.  1 oracle oinstall  19K Feb  7  2017 dm_fmtlib_pkgdef.sql
+-rw-r-----.  1 oracle oinstall 101K Feb  7  2017 dm_fmtlib_pkgbody.sql
+drwxr-x---.  2 oracle oinstall 4.0K Apr  3 11:25 .
+drwxr-x---. 79 oracle oinstall 4.0K Apr  3 11:25 ..
+[oracle@hrvlprdoem7603 masking]$
+
+
+directory=opstrn1
+
+
+ESSR66743 
+
+
+expdp \"/ as sysdba\" DIRECTORY=ESSR66743  DUMPFILE=ESSR66743.dmp LOGFILE=ESSR66743a.log TABLESPACES=HRLARGE &
+
+
+PS_SJTPRJ_TMP 
+
+
+expdp \"/ as sysdba\" DIRECTORY=ESSR66743  DUMPFILE=ESSR66743.dmp LOGFILE=ESSR66743.log TABLES=SYSADM.PS_SJTPRJ_TMP 
+
+
+expdp \"/ as sysdba\" DIRECTORY=ESSR66743  DUMPFILE=ESSR66743a.dmp LOGFILE=ESSR66743a.log TABLESPACES=HRLARGE 
+
+
+
+impdp \"/ as sysdba\" DIRECTORY=ESSR66743 DUMPFILE=ESSR66743a.dmp table_exists_action=replace remap_tablespace=HRLARGE:HRLARGE1 LOGFILE=HRLARGE1.log &
+
+
+
+
+
+CREATE TABLE "SYSADM"."PS_SJTPRJ_TMP"
+   (    "PROCESS_INSTANCE" NUMBER(10,0) NOT NULL ENABLE,
+        "SCRTY_TYPE_CD" VARCHAR2(3 CHAR) NOT NULL ENABLE,
+        "SCRTY_KEY1" VARCHAR2(20 CHAR) NOT NULL ENABLE,
+        "SCRTY_KEY2" VARCHAR2(20 CHAR) NOT NULL ENABLE,
+        "SCRTY_KEY3" VARCHAR2(20 CHAR) NOT NULL ENABLE,
+        "EMPLID" VARCHAR2(11 CHAR) NOT NULL ENABLE,
+        "POI_TYPE" VARCHAR2(5 CHAR) NOT NULL ENABLE,
+        "PER_ORG" VARCHAR2(3 CHAR) NOT NULL ENABLE,
+        "EMPL_RCD" NUMBER(*,0) NOT NULL ENABLE,
+        "BUSINESS_UNIT" VARCHAR2(5 CHAR) NOT NULL ENABLE,
+        "SETID_DEPT" VARCHAR2(5 CHAR) NOT NULL ENABLE,
+        "DEPTID" VARCHAR2(10 CHAR) NOT NULL ENABLE,
+        "SETID_LOCATION" VARCHAR2(5 CHAR) NOT NULL ENABLE,
+        "LOCATION" VARCHAR2(10 CHAR) NOT NULL ENABLE,
+        "COMPANY" VARCHAR2(3 CHAR) NOT NULL ENABLE,
+        "REG_REGION" VARCHAR2(5 CHAR) NOT NULL ENABLE,
+        "APPT_TYPE" VARCHAR2(1 CHAR) NOT NULL ENABLE,
+        "HR_STATUS" VARCHAR2(1 CHAR) NOT NULL ENABLE,
+        "EMPL_STATUS" VARCHAR2(1 CHAR) NOT NULL ENABLE,
+        "OTHER_ID_JPN" VARCHAR2(11 CHAR) NOT NULL ENABLE,
+        "REPORTS_TO" VARCHAR2(8 CHAR) NOT NULL ENABLE,
+        "SUPERVISOR_ID" VARCHAR2(11 CHAR) NOT NULL ENABLE,
+        "INSTITUTION" VARCHAR2(5 CHAR) NOT NULL ENABLE,
+        "NATIONAL_ID" VARCHAR2(20 CHAR) NOT NULL ENABLE,
+        "SETID_JOBCODE" VARCHAR2(5 CHAR) NOT NULL ENABLE,
+        "JOBCODE" VARCHAR2(6 CHAR) NOT NULL ENABLE,
+        "MAIN_APPT_NUM_JPN" NUMBER(*,0) NOT NULL ENABLE,
+        "ORG_INSTANCE_ERN" NUMBER(*,0) NOT NULL ENABLE,
+        "HOME_HOST_CLASS" VARCHAR2(1 CHAR) NOT NULL ENABLE,
+        "PAY_SYSTEM_FLG" VARCHAR2(2 CHAR) NOT NULL ENABLE,
+        "GP_PAYGROUP" VARCHAR2(10 CHAR) NOT NULL ENABLE,
+        "PAYGROUP" VARCHAR2(3 CHAR) NOT NULL ENABLE,
+        "MILITARY_SERVICE" VARCHAR2(8 CHAR) NOT NULL ENABLE,
+        "MIL_RANK" VARCHAR2(5 CHAR) NOT NULL ENABLE,
+        "MIL_WORN_RANK" VARCHAR2(5 CHAR) NOT NULL ENABLE,
+        "EFFDT_NOKEY" DATE,
+        "EFFSEQ_NOKEY" NUMBER(*,0) NOT NULL ENABLE,
+        "FUTURE_FLG" VARCHAR2(1 CHAR) NOT NULL ENABLE,
+        "HCR_HOME_HOST_TYPE" VARCHAR2(1 CHAR) NOT NULL ENABLE,
+        "HCR_JPN_SEC_FLG" VARCHAR2(1 CHAR) NOT NULL ENABLE,
+        "HCR_ASGN_TYPE" VARCHAR2(1 CHAR) NOT NULL ENABLE
+   ) SEGMENT CREATION IMMEDIATE
+  PCTFREE 10 PCTUSED 80 INITRANS 1 MAXTRANS 255
+ NOCOMPRESS LOGGING
+  STORAGE(INITIAL 40960 NEXT 106496 MINEXTENTS 1 MAXEXTENTS 2147483645
+  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1
+  BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
+  TABLESPACE "BNAPP" ;
+
+
+
+
+
+CREATE TABLE "SYSADM"."PS_SJTPRJ_TMP"
+   (    "PROCESS_INSTANCE" NUMBER(10,0) NOT NULL ENABLE,
+        "SCRTY_TYPE_CD" VARCHAR2(3 CHAR) NOT NULL ENABLE,
+        "SCRTY_KEY1" VARCHAR2(20 CHAR) NOT NULL ENABLE,
+        "SCRTY_KEY2" VARCHAR2(20 CHAR) NOT NULL ENABLE,
+        "SCRTY_KEY3" VARCHAR2(20 CHAR) NOT NULL ENABLE,
+        "EMPLID" VARCHAR2(11 CHAR) NOT NULL ENABLE,
+        "POI_TYPE" VARCHAR2(5 CHAR) NOT NULL ENABLE,
+        "PER_ORG" VARCHAR2(3 CHAR) NOT NULL ENABLE,
+        "EMPL_RCD" NUMBER(*,0) NOT NULL ENABLE,
+        "BUSINESS_UNIT" VARCHAR2(5 CHAR) NOT NULL ENABLE,
+        "SETID_DEPT" VARCHAR2(5 CHAR) NOT NULL ENABLE,
+        "DEPTID" VARCHAR2(10 CHAR) NOT NULL ENABLE,
+        "SETID_LOCATION" VARCHAR2(5 CHAR) NOT NULL ENABLE,
+        "LOCATION" VARCHAR2(10 CHAR) NOT NULL ENABLE,
+        "COMPANY" VARCHAR2(3 CHAR) NOT NULL ENABLE,
+        "REG_REGION" VARCHAR2(5 CHAR) NOT NULL ENABLE,
+        "APPT_TYPE" VARCHAR2(1 CHAR) NOT NULL ENABLE,
+        "HR_STATUS" VARCHAR2(1 CHAR) NOT NULL ENABLE,
+        "EMPL_STATUS" VARCHAR2(1 CHAR) NOT NULL ENABLE,
+        "OTHER_ID_JPN" VARCHAR2(11 CHAR) NOT NULL ENABLE,
+        "REPORTS_TO" VARCHAR2(8 CHAR) NOT NULL ENABLE,
+        "SUPERVISOR_ID" VARCHAR2(11 CHAR) NOT NULL ENABLE,
+        "INSTITUTION" VARCHAR2(5 CHAR) NOT NULL ENABLE,
+        "NATIONAL_ID" VARCHAR2(20 CHAR) NOT NULL ENABLE,
+        "SETID_JOBCODE" VARCHAR2(5 CHAR) NOT NULL ENABLE,
+        "JOBCODE" VARCHAR2(6 CHAR) NOT NULL ENABLE,
+        "MAIN_APPT_NUM_JPN" NUMBER(*,0) NOT NULL ENABLE,
+        "ORG_INSTANCE_ERN" NUMBER(*,0) NOT NULL ENABLE,
+        "HOME_HOST_CLASS" VARCHAR2(1 CHAR) NOT NULL ENABLE,
+        "PAY_SYSTEM_FLG" VARCHAR2(2 CHAR) NOT NULL ENABLE,
+        "GP_PAYGROUP" VARCHAR2(10 CHAR) NOT NULL ENABLE,
+        "PAYGROUP" VARCHAR2(3 CHAR) NOT NULL ENABLE,
+        "MILITARY_SERVICE" VARCHAR2(8 CHAR) NOT NULL ENABLE,
+        "MIL_RANK" VARCHAR2(5 CHAR) NOT NULL ENABLE,
+        "MIL_WORN_RANK" VARCHAR2(5 CHAR) NOT NULL ENABLE,
+        "EFFDT_NOKEY" DATE,
+        "EFFSEQ_NOKEY" NUMBER(*,0) NOT NULL ENABLE,
+        "FUTURE_FLG" VARCHAR2(1 CHAR) NOT NULL ENABLE,
+        "HCR_HOME_HOST_TYPE" VARCHAR2(1 CHAR) NOT NULL ENABLE,
+        "HCR_JPN_SEC_FLG" VARCHAR2(1 CHAR) NOT NULL ENABLE,
+        "HCR_ASGN_TYPE" VARCHAR2(1 CHAR) NOT NULL ENABLE
+   )
+TABLESPACE "HRLARGE1" ;
+
+
+
+
+
+CREATE INDEX "SYSADM"."PS0SJTPRJ_TMP" ON "SYSADM"."PS_SJTPRJ_TMP" ("EMPL_RCD", "PROCESS_INSTANCE", "SCRTY_TYPE_CD", "SCRTY_KEY1", "SCRTY_KEY2", "SCRTY_KEY3")
+    TABLESPACE "HRLARGE1" PARALLEL 1 ;
+
+  ALTER INDEX "SYSADM"."PS0SJTPRJ_TMP" NOPARALLEL;
+CREATE INDEX "SYSADM"."PS_SJTPRJ_TMP" ON "SYSADM"."PS_SJTPRJ_TMP" ("PROCESS_INSTANCE", "SCRTY_TYPE_CD", "SCRTY_KEY1", "SCRTY_KEY2", "SCRTY_KEY3", "EMPLID")
+  TABLESPACE "HRLARGE1" PARALLEL 1 ;
+
+  ALTER INDEX "SYSADM"."PS_SJTPRJ_TMP" NOPARALLEL;
+
+
+
+OPSUAT =
+  (description =
+    (load_balance = yes)
+    (address = (protocol = tcp)(host = hrvltstdb7601.hr.state.sbu)(port = 1521))
+    (connect_data = (service_name = OPSUAT.HR.STATE.SBU)))
+
+
+
+
+begin
+
+for i in 1..3 loop
+for r in (select object_name, object_type from user_objects 
+          order by object_type, object_name)
+  loop
+  begin
+    if (r.object_type = 'MINING MODEL') then 
+     execute immediate ' begin dbms_data_mining.drop_model('||''''||
+       r.object_name||''''||'); end;';
+    elsif (r.object_type = 'TABLE') then
+      execute immediate 'drop table "'||r.object_name
+                    ||'" cascade constraints purge';
+    else
+       execute immediate 'drop '||r.object_type||' "'||r.object_name||'"';
+    end if;
+    exception when others then null;
+  end;
+  end loop;
+end loop;
+end;
+/

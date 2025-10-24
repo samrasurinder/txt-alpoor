@@ -1,0 +1,16 @@
+ /usr/local/avamar/bin/avtar --backups --flagfile=/tmp/avtar-flags.txt
+
+
+
+--pidname=oracle
+--pidnum=1002
+--logfile=/usr/local/avamar/ora_rac/var/RMAN_avtar.log
+--vardir=/usr/local/avamar/ora_rac/var
+--id=avamar
+--ap=avamar
+--path=/EW_ORACLE/EW_PRD/prd-scan
+--ddr=true
+--ddr-index=1
+--ddr-auth-enabled=false
+--ddr-encrypt-strength=none
+--server=hrewemcavamar02.hr.state.sbu

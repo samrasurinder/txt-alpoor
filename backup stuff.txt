@@ -1,0 +1,80 @@
+
+
+backup database format '/u01/source_backup/db_%U' plus archivelog format '/u01/source_backup/arch_%U';
+backup current controlfile format '/u01/source_backup/cf_%U';
+
+spool log to ‘/home/oracle/Desktop/rman_log2.log’
+
+
+#!/bin/ksh
+rman target=/ << EOF
+RUN {
+  BACKUP DATABASE PLUS ARCHIVELOG;
+}
+EXIT;
+EOF
+
+
+
+
+Duplicate Notes:
+----------------
+
+
+Here are the two devices:
+Emcpowerc 9D2F18 - HREWPRASOEL02_ASM-00
+Emcpowerd FC5C1C - HREWPRASOEL02_ASM-01
+
+
+
+
+
+db_name =   
+controfile_name =
+db_file_name_convert and log_file_name_convert ( if source and destination locations are different ) 
+
+
+connect / as sysdba
+
+startup nomount
+
+
+
+
+
+
+
+#!/bin/ksh
+
+ORACLE_SID=$1
+ORAENV_ASK=NO
+. oraenv
+
+rman auxiliary=/ << EOF
+SPOOL LOG TO '/tmp/current_config.log';
+RUN {
+  allocate auxiliary channel a1  device type disk;
+  allocate auxiliary channel a2  device type disk;
+  DUPLICATE DATABASE TO [new_DB] NOOPEN  BACKUP LOCATION '/u01/dest_backup/' ;
+}
+EXIT;
+EOF
+
+
+
+
+alter database open resetlogs upgrade;
+
+Select * from v$tempfile ;
+
+ORACLE_HOME/perl/bin/perl  catctl.pl –n 4 –l /u01/upgrade/logs catupgrd.sql
+
+
+$ORACLE_HOME/perl/bin/perl  catctl.pl –n 4 –l /u01/upgrade/logs catuppst.sql
+
+col comp_id format a10
+col comp_name format a30
+col version format a10
+col status format a8
+select substr(comp_id,1,15) comp_id,substr(comp_name,1,30) comp_name,substr(version,1,10) version,status from dba_registry;
+

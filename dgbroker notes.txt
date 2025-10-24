@@ -1,0 +1,40 @@
+[grid@hrvlprddb7606 admin]$ lsnrctl status
+
+LSNRCTL for Linux: Version 19.0.0.0.0 - Production on 22-OCT-2020 18:42:57
+
+Copyright (c) 1991, 2020, Oracle.  All rights reserved.
+
+Connecting to (DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=hrvlprddb7606.hr.state.sbu)(PORT=1521)))
+STATUS of the LISTENER
+------------------------
+Alias                     LISTENER
+Version                   TNSLSNR for Linux: Version 19.0.0.0.0 - Production
+Start Date                19-OCT-2020 17:15:45
+Uptime                    3 days 1 hr. 27 min. 11 sec
+Trace Level               off
+Security                  ON: Local OS Authentication
+SNMP                      OFF
+Listener Parameter File   /u02/app/19.3.0/grid/network/admin/listener.ora
+Listener Log File         /u02/app/19.3.0/diag/tnslsnr/hrvlprddb7606/listener/alert/log.xml
+Listening Endpoints Summary...
+  (DESCRIPTION=(ADDRESS=(PROTOCOL=ipc)(KEY=LISTENER)))
+  (DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=10.68.104.91)(PORT=1521)))
+Services Summary...
+Service "+ASM" has 1 instance(s).
+  Instance "+ASM", status READY, has 1 handler(s) for this service...
+Service "+ASM_PRD_DATA" has 1 instance(s).
+  Instance "+ASM", status READY, has 1 handler(s) for this service...
+Service "+ASM_PRD_FRA" has 1 instance(s).
+  Instance "+ASM", status READY, has 1 handler(s) for this service...
+Service "GRBPRD.hr.state.sbu" has 1 instance(s).
+  Instance "GRBPRD", status READY, has 1 handler(s) for this service...
+Service "GRBPRDXDB.hr.state.sbu" has 1 instance(s).
+  Instance "GRBPRD", status READY, has 1 handler(s) for this service...
+Service "GRBPRD_CFG.hr.state.sbu" has 1 instance(s).
+  Instance "GRBPRD", status READY, has 1 handler(s) for this service...
+Service "TNTMPPRD.HR.STATE.SBU" has 1 instance(s).
+  Instance "TNTMPPRD", status READY, has 1 handler(s) for this service...
+Service "grbprdsvc.hr.state.sbu" has 1 instance(s).
+  Instance "GRBPRD", status READY, has 1 handler(s) for this service...
+The command completed successfully
+[grid@hrvlprddb7606 admin]$

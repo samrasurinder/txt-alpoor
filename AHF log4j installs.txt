@@ -1,0 +1,144 @@
+
+Step 1) : Uninstall
+
+export PATH=$PATH:/u02/app/19.3.0/grid/perl/bin
+
+tfactl uninstall -local -silent -deleterepo
+
+
+Step 2) : Install
+
+[oracle@hrvltstdb20 software]$ pwd
+/infshare/oracle/software
+[oracle@hrvltstdb20 software]$ sudo su -
+Last login: Wed Dec 22 06:17:32 EST 2021
+[root@hrvltstdb20 ~]# export PATH=$PATH:/u02/app/19.3.0/grid/perl/bin
+[root@hrvltstdb20 ~]# tfactl uninstall -local -silent -deleterepo
+Starting AHF Uninstall
+AHF will be uninstalled on: hrvltstdb20
+
+Stopping AHF service on local node hrvltstdb20...
+Sleeping for 10 seconds...
+
+Stopping TFA Support Tools...
+
+Removed symlink /etc/systemd/system/multi-user.target.wants/oracle-tfa.service.
+Removed symlink /etc/systemd/system/graphical.target.wants/oracle-tfa.service.
+
+Removing AHF setup on hrvltstdb20:
+Removing /etc/rc.d/rc0.d/K17init.tfa
+Removing /etc/rc.d/rc1.d/K17init.tfa
+Removing /etc/rc.d/rc2.d/K17init.tfa
+Removing /etc/rc.d/rc4.d/K17init.tfa
+Removing /etc/rc.d/rc6.d/K17init.tfa
+Removing /etc/init.d/init.tfa...
+Removing /etc/systemd/system/oracle-tfa.service...
+Removing /u02/app/19.3.0/grid/bin/tfactl...
+Removing /opt/oracle.ahf/rpms
+Removing /opt/oracle.ahf/jre
+Removing /opt/oracle.ahf/common
+Removing /opt/oracle.ahf/bin
+Removing /opt/oracle.ahf/python
+Removing /opt/oracle.ahf/analyzer
+Removing /opt/oracle.ahf/tfa
+Removing /opt/oracle.ahf/orachk
+Removing /opt/oracle.ahf/ahf
+Removing /u01/ahf_data_dir/oracle.ahf/data/hrvltstdb20
+Removing /opt/oracle.ahf/install.properties
+Removing /u01/ahf_data_dir/oracle.ahf/data/repository
+Removing /u01/ahf_data_dir/oracle.ahf/data
+Removing /u01/ahf_data_dir/oracle.ahf
+Removing AHF Home : /opt/oracle.ahf
+Removing /sys/fs/cgroup/cpu/oratfagroup/
+
+[root@hrvltstdb20 ~]#
+
+
+[root@hrvltstdb20 oracle]# cd /infshare/oracle/software/
+[root@hrvltstdb20 software]# ./ahf_setup
+
+AHF Installer for Platform Linux Architecture x86_64
+
+AHF Installation Log : /tmp/ahf_install_214000_91058_2021_12_22-07_41_32.log
+
+Starting Autonomous Health Framework (AHF) Installation
+
+AHF Version: 21.4.0 Build Date: 202112200745
+
+Default AHF Location : /opt/oracle.ahf
+
+Do you want to install AHF at [/opt/oracle.ahf] ? [Y]|N : Y
+
+AHF Location : /opt/oracle.ahf
+
+AHF Data Directory stores diagnostic collections and metadata.
+AHF Data Directory requires at least 5GB (Recommended 10GB) of free space.
+
+Choose Data Directory from below options :
+
+1. /u02/app/grid [Free Space : 46974 MB]
+2. Enter a different Location
+
+Choose Option [1 - 2] : 2
+
+Please Enter AHF Data Directory : /infshare/oracle/ahfdata
+
+AHF Data Directory : /infshare/oracle/ahfdata/oracle.ahf/data
+
+Do you want to add AHF Notification Email IDs ? [Y]|N : Y
+
+Enter Email IDs separated by space : GTM-EX-ESD-OAB-DBA@state.gov
+
+Login using root is disabled in sshd config. Installing AHF only on Local Node
+
+Extracting AHF to /opt/oracle.ahf
+
+Configuring TFA Services
+
+Discovering Nodes and Oracle Resources
+/usr/bin/checkmodule:  loading policy configuration from inittfa-policy.te
+/usr/bin/checkmodule:  policy configuration loaded
+/usr/bin/checkmodule:  writing binary representation (version 19) to inittfa-policy.mod
+
+Not generating certificates as GI discovered
+
+Starting TFA Services
+Created symlink from /etc/systemd/system/multi-user.target.wants/oracle-tfa.service to /etc/systemd/system/oracle-tfa.service.
+Created symlink from /etc/systemd/system/graphical.target.wants/oracle-tfa.service to /etc/systemd/system/oracle-tfa.service.
+
+.--------------------------------------------------------------------------------.
+| Host        | Status of TFA | PID   | Port | Version    | Build ID             |
++-------------+---------------+-------+------+------------+----------------------+
+| hrvltstdb20 | RUNNING       | 94516 | 5000 | 21.4.0.0.0 | 21400020211220074549 |
+'-------------+---------------+-------+------+------------+----------------------'
+
+Running TFA Inventory...
+
+Adding default users to TFA Access list...
+
+.-----------------------------------------------------------------------------.
+|                         Summary of AHF Configuration                        |
++-----------------+-----------------------------------------------------------+
+| Parameter       | Value                                                     |
++-----------------+-----------------------------------------------------------+
+| AHF Location    | /opt/oracle.ahf                                           |
+| TFA Location    | /opt/oracle.ahf/tfa                                       |
+| Orachk Location | /opt/oracle.ahf/orachk                                    |
+| Data Directory  | /infshare/oracle/ahfdata/oracle.ahf/data                  |
+| Repository      | /infshare/oracle/ahfdata/oracle.ahf/data/repository       |
+| Diag Directory  | /infshare/oracle/ahfdata/oracle.ahf/data/hrvltstdb20/diag |
+'-----------------+-----------------------------------------------------------'
+
+
+Starting orachk scheduler from AHF ...
+
+AHF binaries are available in /opt/oracle.ahf/bin
+
+AHF is successfully installed
+
+Do you want AHF to store your My Oracle Support Credentials for Automatic Upload ? Y|[N] : N
+
+Moving /tmp/ahf_install_214000_91058_2021_12_22-07_41_32.log to /infshare/oracle/ahfdata/oracle.ahf/data/hrvltstdb20/diag/ahf/
+
+You have new mail in /var/spool/mail/root
+[root@hrvltstdb20 software]#

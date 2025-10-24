@@ -1,0 +1,8 @@
+AWS fargate,ECS, serverlsess
+
+AWS CDK toolkit
+
+The DBMS must protect against or 
+limit the effects of organization-defined types
+ of Denial of Service (DoS) attacks.
+

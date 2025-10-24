@@ -1,0 +1,163 @@
+
+yum install -y perl-Digest-MD5 perl-Data-Dumper
+
+
+export PATH=$PATH:/u02/app/19.3.0/grid/perl/bin
+
+tfactl uninstall -local -silent -deleterepo
+
+
+[root@hrvltstdb22 patches]# ./ahf_setup
+
+AHF Installer for Platform Linux Architecture x86_64
+
+AHF Installation Log : /tmp/ahf_install_211300_69677_2021_06_21-14_01_33.log
+
+Starting Autonomous Health Framework (AHF) Installation
+
+AHF Version: 21.1.3 Build Date: 202106071249
+/bin/ls: cannot access perl: No such file or directory
+
+Default AHF Location : /opt/oracle.ahf
+
+Do you want to install AHF at [/opt/oracle.ahf] ? [Y]|N : Y
+
+AHF Location : /opt/oracle.ahf
+
+AHF Data Directory stores diagnostic collections and metadata.
+AHF Data Directory requires at least 5GB (Recommended 10GB) of free space.
+
+Choose Data Directory from below options :
+
+1. /u02/app/grid [Free Space : 29302 MB]
+2. Enter a different Location
+
+Choose Option [1 - 2] : 2
+
+Please Enter AHF Data Directory : /u01/ahf_data_dir
+
+AHF Data Directory : /u01/ahf_data_dir/oracle.ahf/data
+
+Do you want to add AHF Notification Email IDs ? [Y]|N : Y
+
+Enter Email IDs separated by space : GTM-EX-ESD-OAB-DBA@state.gov
+
+Login using root is disabled in sshd config. Installing AHF only on Local Node
+
+Extracting AHF to /opt/oracle.ahf
+
+Configuring TFA Services
+
+Discovering Nodes and Oracle Resources
+
+Not generating certificates as GI discovered
+
+Starting TFA Services
+Created symlink from /etc/systemd/system/multi-user.target.wants/oracle-tfa.service to /etc/systemd/system/oracle-tfa.service.
+Created symlink from /etc/systemd/system/graphical.target.wants/oracle-tfa.service to /etc/systemd/system/oracle-tfa.service.
+
+.--------------------------------------------------------------------------------.
+| Host        | Status of TFA | PID   | Port | Version    | Build ID             |
++-------------+---------------+-------+------+------------+----------------------+
+| hrvltstdb22 | RUNNING       | 72264 | 5000 | 21.1.3.0.0 | 21130020210607124914 |
+'-------------+---------------+-------+------+------------+----------------------'
+
+Running TFA Inventory...
+
+Adding default users to TFA Access list...
+
+.----------------------------------------------------------------------.
+|                     Summary of AHF Configuration                     |
++-----------------+----------------------------------------------------+
+| Parameter       | Value                                              |
++-----------------+----------------------------------------------------+
+| AHF Location    | /opt/oracle.ahf                                    |
+| TFA Location    | /opt/oracle.ahf/tfa                                |
+| Orachk Location | /opt/oracle.ahf/orachk                             |
+| Data Directory  | /u01/ahf_data_dir/oracle.ahf/data                  |
+| Repository      | /u01/ahf_data_dir/oracle.ahf/data/repository       |
+| Diag Directory  | /u01/ahf_data_dir/oracle.ahf/data/hrvltstdb22/diag |
+'-----------------+----------------------------------------------------'
+
+
+Starting orachk scheduler from AHF ...
+
+AHF binaries are available in /opt/oracle.ahf/bin
+
+AHF is successfully installed
+
+Moving /tmp/ahf_install_211300_69677_2021_06_21-14_01_33.log to /u01/ahf_data_dir/oracle.ahf/data/hrvltstdb22/diag/ahf/
+
+[root@hrvltstdb22 patches]#
+
+
+
+
+
+[root@hrvltstdb20 patches]# ahfctl toolstatus
+
+Running command tfactltoolstatus on hrvltstdb21 ...
+TFA-00103 TFA is not yet secured to run all commands
+
+TFA has not synchronised across all nodes yet.
+If an install or upgrade is in progress and the operation has not completed on all
+nodes then please wait for completion and allow TFA 10 minutes to synchronize.
+If no install or upgrade is in progress or you need TFA to synchronize now
+Please run 'tfactl syncnodes' to generate and copy TFA Certificates.
+[root@hrvltstdb20 patches]# tfactl syncnodes
+
+TFA has not yet generated any certificates on this Node.
+
+Do you want to generate new certificates to synchronize across the nodes? [Y|N] [Y]: Y
+
+Generating new TFA Certificates...
+
+Successfully generated certificates.
+
+Restarting TFA on hrvltstdb20...
+Shutting down TFA
+Removed symlink /etc/systemd/system/multi-user.target.wants/oracle-tfa.service.
+Removed symlink /etc/systemd/system/graphical.target.wants/oracle-tfa.service.
+Successfully shutdown TFA..
+
+Starting TFA..
+Created symlink from /etc/systemd/system/multi-user.target.wants/oracle-tfa.service to /etc/systemd/system/oracle-tfa.service.
+Created symlink from /etc/systemd/system/graphical.target.wants/oracle-tfa.service to /etc/systemd/system/oracle-tfa.service.
+Waiting up to 100 seconds for TFA to be started..
+. . . . .
+Successfully started TFA Process..
+. . . . .
+TFA Started and listening for commands
+
+Login using root is disabled in sshd config. Please enable it or
+
+Please copy these files manually to remote node and restart TFA
+1. /u01/ahf_data_dir/oracle.ahf/data/hrvltstdb20/tfa/server.jks
+2. /u01/ahf_data_dir/oracle.ahf/data/hrvltstdb20/tfa/client.jks
+3. /u01/ahf_data_dir/oracle.ahf/data/hrvltstdb20/tfa/internal/ssl.properties
+
+These files must be owned by root and should have 600 permissions.
+
+[root@hrvltstdb20 patches]#
+
+
+
+------------------------------------------------------------
+                      CLUSTERWIDE CHECKS
+------------------------------------------------------------
+
+ WARNING =>  DNS server config file does not match across database servers
+ FAIL =>     All $ORACLE_HOMEs should have same patches across database servers
+------------------------------------------------------------
+Detailed report (html) -  /u01/ahf_data_dir/oracle.ahf/data/hrvltstdb20/orachk/user_oracle/output/orachk_hrvltstdb20_TST2_062121_145024/orachk_hrvltstdb20_TST2_062121_145024.html
+
+
+
+
+
+UPLOAD [if required] - /u01/ahf_data_dir/oracle.ahf/data/hrvltstdb20/orachk/user_oracle/output/orachk_hrvltstdb20_TST2_062121_145024.zip
+
+
+
+
+[oracle@hrvltstdb20 ~]$

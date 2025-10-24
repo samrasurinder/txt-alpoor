@@ -1,0 +1,73 @@
+select a.emplid, 
+b.name as "Employee Name", 
+d.name as "Dependent Name", 
+d.birthdate, 
+d.relationship, 
+d.mar_status, 
+nvl(( 
+ SELECT x.descr 
+  FROM sysadm.ps_addresses z, sysadm.ps_state_tbl x 
+ WHERE a.emplid = z.emplid 
+   AND z.country = x.country 
+   and z.state = x.state 
+   AND z.effdt = ( 
+ SELECT MAX (a_ed.effdt) 
+  FROM sysadm.ps_addresses a_ed 
+ WHERE z.emplid = a_ed.emplid 
+   AND z.address_type = a_ed.address_type 
+   AND a_ed.effdt <= '01-APR-2020') 
+   AND z.address_type = 'LA'),( 
+ SELECT x.descr 
+  FROM sysadm.ps_addresses z, sysadm.ps_state_tbl x 
+ WHERE a.emplid = z.emplid 
+   AND z.country = x.country 
+   and z.state = x.state 
+   AND z.effdt = ( 
+ SELECT MAX (a_ed.effdt) 
+  FROM sysadm.ps_addresses a_ed 
+ WHERE z.emplid = a_ed.emplid 
+   AND z.address_type = a_ed.address_type 
+   AND a_ed.effdt <= '01-APR-2020') 
+   AND z.address_type = 'HOME')) as "State" 
+   from 
+sysadm.ps_job a, 
+sysadm.ps_personal_data b, 
+sysadm.ps_dependent_benef d, 
+sysadm.ps_dep_benef_nid e 
+where a.emplid = b.emplid 
+and a.emplid = d.emplid 
+and d.emplid = e.emplid 
+and d.dependent_benef = e.dependent_benef 
+and d.GM_DEP_STATUS_CD = 'A' 
+and d.TRAVELLING = 'Y' 
+--and d.relationship in ('SP','W','H','NA') 
+and a.effdt = (select max(a1.effdt) from sysadm.ps_job a1 
+	  		  	where a.emplid = a1.emplid 
+				and a.empl_rcd = a1.empl_rcd 
+				and a1.effdt <= '01-APR-2020') 
+and a.effseq = (select max(a1.effseq) from sysadm.ps_job a1 
+			   where a.emplid = a1.emplid 
+			   and a.empl_rcd = a1.empl_rcd 
+			   and a.effdt = a1.effdt) 
+and a.empl_status in ('A','L','P','S','U') 
+and a.deptid like '3%' 
+and a.emplid not like 'J%' 
+and a.emplid not like 'C%' 
+and a.location <> 'CD2500000' 
+and e.national_id not in (select q.national_id from sysadm.ps_pers_nid q, sysadm.ps_job w 
+where q.emplid = w.emplid 
+and w.empl_status in ('A','L','P','S','U') 
+and w.effdt = (select max(w1.effdt) from sysadm.ps_job w1 
+	  		  	where w.emplid = w1.emplid 
+				and w.empl_rcd = w1.empl_rcd 
+				and w1.effdt <= '01-APR-2020') 
+and w.effseq = (select max(w1.effseq) from sysadm.ps_job w1 
+			   where w.emplid = w1.emplid 
+			   and w.empl_rcd = w1.empl_rcd 
+			   and w.effdt = w1.effdt) 
+and w.deptid like '3%' 
+and w.emplid not like 'J%' 
+and w.emplid not like 'C%' 
+and w.location <> 'CD2500000' 
+) 
+ 

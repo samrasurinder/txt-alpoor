@@ -1,0 +1,266 @@
+
+Reference : https://www.oracle.com/technical-resources/articles/smiley-fsfo.html
+How To Configure Client Failover For Data Guard Connections Using Database Services (Doc ID 1429223.1)
+
+
+
+ALTER SYSTEM SET DG_BROKER_CONFIG_FILE1='+PRD_DATA/GRBPRD/BROKER/dr1GRBPRD.dat';
+ALTER SYSTEM SET DG_BROKER_CONFIG_FILE2='+PRD_FRA/GRBPRD/BROKER/dr2GRBPRD.dat';
+
+ALTER SYSTEM SET DG_BROKER_CONFIG_FILE1='+PRD_DATA/GRBPRDSB/BROKER/dr1GRBPRDSB.dat';
+ALTER SYSTEM SET DG_BROKER_CONFIG_FILE2='+PRD_FRA/GRBPRDSB/BROKER/dr2GRBPRDSB.dat';
+
+ALTER SYSTEM SET DG_BROKER_START=TRUE SCOPE=BOTH;
+
+
+SQL> show parameters log_archive_dest_2
+
+NAME                                 TYPE        VALUE
+------------------------------------ ----------- ------------------------------
+log_archive_dest_2                   string      SERVICE=GRBPRDSB ASYNC VALID_F
+                                                 OR=(ONLINE_LOGFILES,PRIMARY_RO
+                                                 LE) DB_UNIQUE_NAME=GRBPRDSB
+log_archive_dest_20                  string
+log_archive_dest_21                  string
+log_archive_dest_22                  string
+log_archive_dest_23                  string
+log_archive_dest_24                  string
+log_archive_dest_25                  string
+log_archive_dest_26                  string
+log_archive_dest_27                  string
+
+NAME                                 TYPE        VALUE
+------------------------------------ ----------- ------------------------------
+log_archive_dest_28                  string
+log_archive_dest_29                  string
+SQL>
+
+SQL> ALTER SYSTEM SET DG_BROKER_START=TRUE SCOPE=BOTH;
+
+System altered.
+
+SQL> show parameters uniq
+
+NAME                                 TYPE        VALUE
+------------------------------------ ----------- ------------------------------
+db_unique_name                       string      GRBPRDSB
+SQL> show parameters log_archive_dest_2
+
+NAME                                 TYPE        VALUE
+------------------------------------ ----------- ------------------------------
+log_archive_dest_2                   string      SERVICE=GRBPRD ASYNC DB_UNIQUE
+                                                 _NAME=GRBPRD VALID_FOR=(ONLINE
+                                                 _LOGFILE,PRIMARY_ROLE)
+log_archive_dest_20                  string
+log_archive_dest_21                  string
+log_archive_dest_22                  string
+log_archive_dest_23                  string
+log_archive_dest_24                  string
+log_archive_dest_25                  string
+log_archive_dest_26                  string
+log_archive_dest_27                  string
+
+NAME                                 TYPE        VALUE
+------------------------------------ ----------- ------------------------------
+log_archive_dest_28                  string
+log_archive_dest_29                  string
+SQL>
+
+alter system set LOG_ARCHIVE_DEST_2='' SCOPE=BOTH sid='*';
+
+
+
+
+
+[oracle@hrvlprddb7606 ~]$ dgmgrl sys@grbprd
+DGMGRL for Linux: Release 19.0.0.0.0 - Production on Fri Jun 19 09:40:23 2020
+Version 19.7.0.0.0
+
+Copyright (c) 1982, 2019, Oracle and/or its affiliates.  All rights reserved.
+
+Welcome to DGMGRL, type "help" for information.
+Password:
+Connected to "GRBPRD"
+Connected as SYSDBA.
+DGMGRL> show configuration
+ORA-16532: Oracle Data Guard broker configuration does not exist
+
+Configuration details cannot be determined by DGMGRL
+DGMGRL> create configuration GRBPRD AS
+> PRIMARY DATABASE IS GRBPRD
+> CONNECT IDENTIFIER IS GRBPRD;
+Configuration "grbprd" created with primary database "grbprd"
+DGMGRL> SHOW CONFIGURATION
+
+Configuration - grbprd
+
+  Protection Mode: MaxPerformance
+  Members:
+  grbprd - Primary database
+
+Fast-Start Failover:  Disabled
+
+Configuration Status:
+DISABLED
+
+DGMGRL>
+
+
+DGMGRL> ADD DATABASE GRBPRDSB AS CONNECT IDENTIFIER IS GRBPRDSB;
+Database "grbprdsb" added
+DGMGRL> SHOW CONFIGURATION;
+
+Configuration - grbprd
+
+  Protection Mode: MaxPerformance
+  Members:
+  grbprd   - Primary database
+    grbprdsb - Physical standby database
+
+Fast-Start Failover:  Disabled
+
+Configuration Status:
+DISABLED
+
+DGMGRL>
+
+
+DGMGRL> SHOW DATABASE VERBOSE GRBPRDSB;
+
+Database - grbprdsb
+
+  Role:               PHYSICAL STANDBY
+  Intended State:     OFFLINE
+  Transport Lag:      (unknown)
+  Apply Lag:          (unknown)
+  Average Apply Rate: (unknown)
+  Active Apply Rate:  (unknown)
+  Maximum Apply Rate: (unknown)
+  Real Time Query:    OFF
+  Instance(s):
+    GRBPRDSB
+
+  Properties:
+    DGConnectIdentifier             = 'grbprdsb'
+    ObserverConnectIdentifier       = ''
+    FastStartFailoverTarget         = ''
+    PreferredObserverHosts          = ''
+    LogShipping                     = 'ON'
+    RedoRoutes                      = ''
+    LogXptMode                      = 'ASYNC'
+    DelayMins                       = '0'
+    Binding                         = 'optional'
+    MaxFailure                      = '0'
+    ReopenSecs                      = '300'
+    NetTimeout                      = '30'
+    RedoCompression                 = 'DISABLE'
+    PreferredApplyInstance          = ''
+    ApplyInstanceTimeout            = '0'
+    ApplyLagThreshold               = '30'
+    TransportLagThreshold           = '30'
+    TransportDisconnectedThreshold  = '30'
+    ApplyParallel                   = 'AUTO'
+    ApplyInstances                  = '0'
+    StandbyFileManagement           = ''
+    ArchiveLagTarget                = '0'
+    LogArchiveMaxProcesses          = '0'
+    LogArchiveMinSucceedDest        = '0'
+    DataGuardSyncLatency            = '0'
+    LogArchiveTrace                 = '0'
+    LogArchiveFormat                = ''
+    DbFileNameConvert               = ''
+    LogFileNameConvert              = ''
+    ArchiveLocation                 = ''
+    AlternateLocation               = ''
+    StandbyArchiveLocation          = ''
+    StandbyAlternateLocation        = ''
+    InconsistentProperties          = '(monitor)'
+    InconsistentLogXptProps         = '(monitor)'
+    LogXptStatus                    = '(monitor)'
+    SendQEntries                    = '(monitor)'
+    RecvQEntries                    = '(monitor)'
+    HostName                        = 'hrvlprddb7607.hr.state.sbu'
+    StaticConnectIdentifier         = '(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=hrvlprddb7607.hr.state.sbu)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=GRBPRDSB_DGMGRL.hr.state.sbu)(INSTANCE_NAME=GRBPRDSB)(SERVER=DEDICATED)))'
+    TopWaitEvents                   = '(monitor)'
+    SidName                         = '(monitor)'
+
+  Log file locations:
+    (Unknown)
+
+Database Status:
+DISABLED - ORA-16905: The member was not enabled yet.
+
+DGMGRL>
+
+
+
+DGMGRL> ENABLE CONFIGURATION;
+Enabled.
+DGMGRL>
+
+
+DGMGRL> SHOW CONFIGURATION
+
+Configuration - grbprd
+
+  Protection Mode: MaxPerformance
+  Members:
+  grbprd   - Primary database
+    grbprdsb - Physical standby database
+
+Fast-Start Failover:  Disabled
+
+Configuration Status:
+SUCCESS   (status updated 13 seconds ago)
+
+
+
+SHOW DATABASE VERBOSE GRBPRDSB;
+
+
+DGMGRL> SHOW DATABASE GRBPRDSB;
+
+Database - grbprdsb
+
+  Role:               PHYSICAL STANDBY
+  Intended State:     APPLY-ON
+  Transport Lag:      0 seconds (computed 0 seconds ago)
+  Apply Lag:          0 seconds (computed 0 seconds ago)
+  Average Apply Rate: 3.00 KByte/s
+  Real Time Query:    ON
+  Instance(s):
+    GRBPRDSB
+
+Database Status:
+SUCCESS
+
+DGMGRL>
+
+
+Application Failover:
+---------------------
+
+
+Create Service on both Primary and Standby:
+------------------------------------------ 
+
+Refer to How To Configure Client Failover For Data Guard Connections Using Database Services (Doc ID 1429223.1)
+
+
+
+Steps to Enable FSFO:
+----------------------
+
+
+enable fast_start failover;
+
+mkdir -p /u01/app/oracle/admin/db1/observer
+
+mkdir -p /u02/app/oracle/scripts/dba/observer/
+
+
+
+ dgmgrl /@db1 "start observer file='/u01/app/oracle/admin/db1/observer/fsfo.dat'" \ >> /u01/app/oracle/admin/db1/observer/dgmgrl.log &
+
+select FS_FAILOVER_STATUS,FS_FAILOVER_OBSERVER_PRESENT,FS_FAILOVER_OBSERVER_HOST 
+     from v$database;

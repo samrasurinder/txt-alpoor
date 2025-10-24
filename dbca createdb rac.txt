@@ -1,0 +1,30 @@
+dbca -silent \
+-nodelist hrewoel42,hrewoel43,hrewoel44 \
+-createDatabase \
+-templateName General_Purpose.dbc \
+-gdbName SAMPLEDB \
+-sid SAMPLEDB \
+-SysPassword welcome1 \
+-SystemPassword welcome1 \
+-emConfiguration none \
+-redoLogFileSize 1024 \
+-recoveryAreaDestination +FRA \
+-storageType ASM \
+-asmsnmpPassword welcome1 \
+-diskGroupName DATA \
+-recoveryGroupName FRA \
+-listeners LISTENER \
+-registerWithDirService false \
+-databaseType MULTIPURPOSE \
+-automaticMemoryManagement false \
+-totalMemory 20480 \
+-sampleSchema true \
+-initParams audit_file_dest='/u02/app/oracle/admin/SAMPLEDB/adump' \
+,compatible='11.2.0.4' \
+,db_create_file_dest='+DATA' \
+,db_create_online_log_dest_1='+DATA' \
+,db_create_online_log_dest_2='+FRA' \
+,db_recovery_file_dest='+FRA' \
+,diagnostic_dest='/u02/app/oracle' \
+,parallel_max_servers=8 \
+,processes=1000

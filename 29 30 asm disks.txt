@@ -1,0 +1,48 @@
+[root@hrewoel29 ~]# history | grep fdisk
+ 1005  fdisk /dev/emcpowerr
+ 1006  fdisk /dev/emcpowerr*
+ 1008  fdisk /dev/emcpowerr*
+ 1010  fdisk /dev/emcpowerbi
+ 1013  fdisk /dev/emcpowerbj
+ 1016  fdisk /dev/emcpowerbk
+ 1019  fdisk /dev/emcpowerbl
+ 1022  fdisk /dev/emcpowerbm
+ 1025  history | grep fdisk
+
+
+CPY_DATA01
+CPY_DATA02
+CPY_DATA03
+CPY_DATA04
+CPY_DATA05
+CPY_DATA06
+CPY_DATA07
+CPY_DATA08
+CPY_DATA09
+CPY_DATA10
+CPY_DATA11
+
+NAME
+------------------------------
+CPY_DATA12
+CPY_FRA01
+
+[root@hrewoel29 ~]# oracleasm createdisk CPY_DATA13 '/dev/emcpowerr1';
+Writing disk header: done
+Instantiating disk: done
+[root@hrewoel29 ~]# oracleasm createdisk CPY_DATA14 '/dev/emcpowerbi1';
+Writing disk header: done
+Instantiating disk: done
+[root@hrewoel29 ~]# oracleasm createdisk CPY_DATA15 '/dev/emcpowerbj1';
+Writing disk header: done
+Instantiating disk: done
+[root@hrewoel29 ~]# oracleasm createdisk CPY_DATA16 '/dev/emcpowerbk1';
+Writing disk header: done
+Instantiating disk: done
+[root@hrewoel29 ~]# oracleasm createdisk CPY_DATA17 '/dev/emcpowerbl1';
+Writing disk header: done
+Instantiating disk: done
+[root@hrewoel29 ~]# oracleasm createdisk CPY_DATA18 '/dev/emcpowerbm1';
+Writing disk header: done
+Instantiating disk: done
+[root@hrewoel29 ~]#

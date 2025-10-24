@@ -1,0 +1,251 @@
+Thank you for installing Oracle Application Express 19.2.0.00.18
+
+Oracle Application Express is installed in the APEX_190200 schema.
+
+The structure of the link to the Application Express administration services is as follows:
+http://host:port/pls/apex/apex_admin (Oracle HTTP Server with mod_plsql)
+http://host:port/apex/apex_admin     (Oracle XML DB HTTP listener with the embedded PL/SQL gateway)
+http://host:port/apex/apex_admin     (Oracle REST Data Services)
+
+The structure of the link to the Application Express development interface is as follows:
+http://host:port/pls/apex (Oracle HTTP Server with mod_plsql)
+http://host:port/apex     (Oracle XML DB HTTP listener with the embedded PL/SQL gateway)
+http://host:port/apex     (Oracle REST Data Services)
+
+timing for: Phase 3 (Switch)
+Elapsed: 00:00:53.92
+timing for: Complete Installation
+Elapsed: 00:11:34.16
+
+PL/SQL procedure successfully completed.
+
+
+
+
+
+1 row selected.
+
+...null1.sql
+SYS> SYS>
+
+
+
+
+PL/SQL procedure successfully completed.
+
+...(16:33:51) Starting validate_apex for APEX_190200
+...(16:33:52) Checking missing sys privileges
+...(16:33:52) Re-generating APEX_190200.wwv_flow_db_version
+... wwv_flow_db_version is up to date
+...(16:33:52) alter package sys."WWV_FLOW_VAL" compile body reuse settings
+...(16:33:52) Checking for objects that are still invalid
+...(16:33:52) Recompiling FLOWS_FILES ... with dbms_utility.compile_schema
+...(16:33:54) Checking for objects that are still invalid
+ORA-20001: COMPILE FAILURE: TRIGGER FLOWS_FILES.WWV_BIU_FLOW_FILE_OBJECTS
+...6/13     PL/SQL: Statement ignored
+...7/19     PLS-00201: identifier 'WWV_FLOW_SECURITY.G_SECURITY_GROUP_ID' must b
+e declared
+...9/9      PLS-00201: identifier 'WWV_FLOW_FILE_OBJECT_ID.G_ID' must be declare
+d
+...9/9      PL/SQL: Statement ignored
+...15/9     PLS-00201: identifier 'WWV_FLOW_FILE_OBJECT_ID.G_ID' must be declare
+d
+...15/9     PL/SQL: Statement ignored
+...29/8     PL/SQL: Statement ignored
+...29/38    PLS-00201: identifier 'WWV_FLOW_SECURITY.G_SECURITY_GROUP_ID' must b
+e declared
+...(16:33:54) Key object existence check
+ORA-20001: FAILED status check for FLOWS_FILES.WWV_BIU_FLOW_FILE_OBJECTS: INVALI
+D
+...(16:33:57) Setting DBMS registry for APEX to INVALID
+...(16:33:57) Exiting validate_apex
+
+PL/SQL procedure successfully completed.
+
+
+PL/SQL procedure successfully completed.
+
+JOB_QUEUE_PROCESSES: 10
+
+PL/SQL procedure successfully completed.
+
+timing for: Validating Installation
+Elapsed: 00:00:06.57
+#
+# Actions in Phase 3:
+#
+    ok 1 - BEGIN                                                        |   0.02
+    ok 2 - Computing Pub Syn Dependents                                 |   0.02
+    ok 3 - Invalidating Pub Syn Dependents                              |   0.00
+    # 0 objects
+    ok 4 - Upgrade Hot Metadata and Switch Schemas                      |   0.00
+    ok 5 - Removing Jobs                                                |   0.00
+    ok 6 - Init Phase HOT                                               |   0.03
+    ok 7 - Purging Expired Sessions                                     |   0.00
+    ok 8 - Purging Builder Sessions                                     |   0.00
+    ok 9 - Dropping Upgrade Triggers in APEX_030200                     |   0.00
+    ok 10 - Creating Upgrade Triggers                                   |   0.00
+    ok 11 - Setting Patch Status: APPLYING                              |   0.03
+    ok 12 - Incrementing Session Sequence                               |   0.00
+    ok 13 - Removing FLOWS_FILES grants and synonyms                    |   0.03
+    ok 14 - Disabling Constraints and Triggers                          |   0.00
+    ok 15 - Copying WWV_FLOW_WORKSHEET_RPTS                             |   0.12
+    # copied 0 rows into WWV_FLOW_WORKSHEET_RPTS
+    ok 16 - Rebuilding WWV_FLOW_WS_BASE_RPT_IDX,WWV_FLOW_WS_CAT_RPT_IDX,|   0.00
+    ok 17 - Copying WWV_FLOW_WORKSHEET_CONDITIONS                       |   0.03
+    # copied 0 rows into WWV_FLOW_WORKSHEET_CONDITIONS
+    ok 18 - Rebuilding WWV_FLOW_WS_CONDITIONS_IDX,WWV_FLOW_WS_CONDITIONS|   0.00
+    ok 19 - Copying WWV_FLOW_WORKSHEET_COMPUTATION                      |   0.00
+    # copied 0 rows into WWV_FLOW_WORKSHEET_COMPUTATION
+    ok 20 - Rebuilding WWV_FLOW_WS_COMP_COLS_IDX,WWV_FLOW_WS_COM_COLS_ID|   0.02
+    ok 21 - Copying WWV_FLOW_PREFERENCES$                               |   0.00
+    # copied 0 rows into WWV_FLOW_PREFERENCES$
+    ok 22 - Rebuilding WWV_FLOW_PREFERENCES$_FKIDX,WWV_FLOW_PREF_USER_PR|   0.02
+    ok 23 - Copying WWV_FLOW_SESSIONS$                                  |   0.00
+    # copied 0 rows into WWV_FLOW_SESSIONS$
+    ok 24 - Rebuilding WWV_FLOW_SESSIONS$_IDX_COOKIE,WWV_FLOW_SESSIONS$_|   0.00
+    ok 25 - Copying WWV_FLOW_COLLECTIONS$                               |   0.00
+    # copied 0 rows into WWV_FLOW_COLLECTIONS$
+    ok 26 - Copying WWV_FLOW_COLLECTION_MEMBERS$                        |   0.00
+    # copied 0 rows into WWV_FLOW_COLLECTION_MEMBERS$
+    ok 27 - Copying WWV_FLOW_DATA                                       |   0.02
+    # copied 0 rows into WWV_FLOW_DATA
+    ok 28 - Rebuilding WWV_FLOW_DATA_IDX1                               |   0.00
+    ok 29 - Copying WWV_FLOW_REQUEST_VERIFICATIONS                      |   0.00
+    # copied 0 rows into WWV_FLOW_REQUEST_VERIFICATIONS
+    ok 30 - Copying WWV_FLOW_PAGE_SUBMISSIONS                           |   0.00
+    # copied 0 rows into WWV_FLOW_PAGE_SUBMISSIONS
+    ok 31 - Rebuilding WWV_FLOW_PAGE_SUB_IDX1,WWV_FLOW_PAGE_SUB_IDX2    |   0.00
+    ok 32 - Copying WWV_FLOW_DEVELOPERS                                 |   0.02
+    # copied 0 rows into WWV_FLOW_DEVELOPERS
+    ok 33 - Rebuilding WWV_FLOW_DEVELOPERS_FKIDX,WWV_FLOW_DEVELOPERS_ID |   0.00
+    ok 34 - Copying WWV_FLOW_FND_GROUP_USERS                            |   0.00
+    # copied 0 rows into WWV_FLOW_FND_GROUP_USERS
+    ok 35 - Rebuilding WWV_FLOW_FND_GROUP_USERS_IX1,WWV_FLOW_FND_GROUP_U|   0.00
+    ok 36 - Copying WWV_FLOW_FND_USER                                   |   0.00
+    # copied 1 rows into WWV_FLOW_FND_USER
+    ok 37 - Upgrading Hot Metadata                                      |   0.00
+    ok 38 - Enabling Constraints and Triggers                           |   0.02
+    ok 39 - Creating Jobs                                               |   0.00
+    ok 40 - Creating Dev Jobs                                           |   0.00
+    ok 41 - Creating Public Synonyms                                    |   0.03
+    ok 42 - Granting Public Synonyms                                    |   0.07
+    ok 43 - Granting to FLOWS_FILES                                     |   0.00
+    ok 44 - Creating FLOWS_FILES grants and synonyms                    |   0.02
+    ok 45 - Meta-Cleanup                                                |   0.00
+    ok 46 - Upgrading Websheets                                         |   0.00
+    ok 47 - Upgrading Team Development                                  |   0.00
+    not ok 48 - Installing FLOWS_FILES Objects                          |   0.00
+    # Message: ORA-38824: A CREATE OR REPLACE command may not change the EDITION
+ABLE property of an existing object.
+    #
+    # Statement: create or replace trigger FLOWS_FILES.wwv_biu_flow_file_objects
+    #     before insert or update on wwv_flow_file_objects$
+    #     for each row
+    # begin
+    #     if inserting then
+    #         :new.created_by := nvl(wwv_flow.g_user,user);
+    #         :new.created_on := sysdate;
+    #         wwv_flow_file_api.g_file_inserted := true;
+    #         wwv_flow_file_api.g_file_inserted_count := wwv_flow_file_api.g_fil
+e_inserted_count + 1;
+    #     elsif updating then
+    #         :new.updated_by := nvl(wwv_flow.g_user,user);
+    #         :new.updated_on := sysdate;
+    #     end if;
+    #     --
+    #     if :new.id is null then
+    #         :new.id := wwv_flow_id.next_val;
+    #     end if;
+    #     if :new.flow_id is null then
+    #         :new.flow_id := 0;
+    #     end if;
+    #     :new.filename := substr(:new.name,instr(:new.name,'/')+1);
+    #     --
+    #     -- vpd
+    #     --
+    #     if :new.security_group_id is null then
+    #        :new.security_group_id := nvl(v('APP_SECURITY_GROUP_ID'),0);
+    #     end if;
+    # end;
+    # Message: of an existing object.
+    # Statement: as above
+    ok 49 - Installing APEX$SESSION Context                             |   0.00
+    ok 50 - Recompiling APEX_190200                                     |   0.28
+    ok 51 - Installing APEX REST Config                                 |   0.00
+    ok 52 - Set Loaded/Upgraded in Registry                             |   0.02
+    ok 53 - Setting Patch Status: APPLIED                               |   0.00
+    ok 54 - Removing Unused SYS Objects                                 |   0.00
+    ok 55 - Dropping Upgrade Triggers in APEX_030200                    |   0.02
+    ok 56 - Validating Installation                                     |   0.10
+not ok 3 - 55 actions passed, 1 actions failed                          |   0.90
+
+PL/SQL procedure successfully completed.
+
+
+
+
+Thank you for installing Oracle Application Express 19.2.0.00.18
+
+Oracle Application Express is installed in the APEX_190200 schema.
+
+The structure of the link to the Application Express administration services is as follows:
+http://host:port/pls/apex/apex_admin (Oracle HTTP Server with mod_plsql)
+http://host:port/apex/apex_admin     (Oracle XML DB HTTP listener with the embedded PL/SQL gateway)
+http://host:port/apex/apex_admin     (Oracle REST Data Services)
+
+The structure of the link to the Application Express development interface is as follows:
+http://host:port/pls/apex (Oracle HTTP Server with mod_plsql)
+http://host:port/apex     (Oracle XML DB HTTP listener with the embedded PL/SQL gateway)
+http://host:port/apex     (Oracle REST Data Services)
+
+timing for: Phase 3 (Switch)
+Elapsed: 00:00:53.92
+timing for: Complete Installation
+Elapsed: 00:11:34.16
+
+PL/SQL procedure successfully completed.
+
+
+
+
+
+1 row selected.
+
+...null1.sql
+SYS> SYS>
+SYS>
+SYS>
+SYS>
+SYS>
+SYS> col comp_id format a10
+col comp_name format a30
+col version format a10
+col status format a8
+select substr(comp_id,1,15) comp_id,substr(comp_name,1,30) comp_name,substr(version,1,10) version,status from dba_registry;SYS> SYS> SYS> SYS>
+
+COMP_ID    COMP_NAME                      VERSION    STATUS
+---------- ------------------------------ ---------- --------
+CATALOG    Oracle Database Catalog Views  19.0.0.0.0 VALID
+CATPROC    Oracle Database Packages and T 19.0.0.0.0 VALID
+JAVAVM     JServer JAVA Virtual Machine   19.0.0.0.0 VALID
+XML        Oracle XDK                     19.0.0.0.0 VALID
+CATJAVA    Oracle Database Java Packages  19.0.0.0.0 VALID
+APS        OLAP Analytic Workspace        19.0.0.0.0 VALID
+RAC        Oracle Real Application Cluste 19.0.0.0.0 OPTION O
+                                                     FF
+
+OWM        Oracle Workspace Manager       19.0.0.0.0 VALID
+CONTEXT    Oracle Text                    19.0.0.0.0 VALID
+XDB        Oracle XML Database            19.0.0.0.0 VALID
+ORDIM      Oracle Multimedia              19.0.0.0.0 VALID
+SDO        Spatial                        19.0.0.0.0 VALID
+XOQ        Oracle OLAP API                19.0.0.0.0 VALID
+AMD        OLAP Catalog                   11.2.0.4.0 OPTION O
+                                                     FF
+
+APEX       Oracle Application Express     19.2.0.00. INVALID
+
+15 rows selected.
+
+SYS>

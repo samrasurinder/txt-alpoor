@@ -1,0 +1,56 @@
+Unable to clean disk "PRDFRA15"
+Scanning system for ASM disks...
+/usr/lib/oracleasm/oracleasm-Xshlib: line 182: /var/log/oracleasm: Permission denied
+[grid@hrewoel03 ~]$ asmcmd
+ASMCMD> lsdg
+State    Type    Rebal  Sector  Block       AU  Total_MB  Free_MB  Req_mir_free_MB  Usable_file_MB  Offline_disks  Voting_files  Name
+MOUNTED  EXTERN  N         512   4096  1048576    138097     4756                0            4756              0             N  ACFSSHARE/
+MOUNTED  EXTERN  N         512   4096  1048576   8562448   232966                0          232966              0             N  DATA/
+MOUNTED  EXTERN  N         512   4096  1048576   7303448  4466910                0         4466910              0             N  FRA/
+MOUNTED  EXTERN  N         512   4096  1048576      2047     1524                0            1524              0             Y  OCR_VOTE1/
+MOUNTED  EXTERN  N         512   4096  1048576   2867270   102660                0          102660              0             N  OPS_DATA/
+MOUNTED  EXTERN  N         512   4096  1048576   1433635   926842                0          926842              0             N  OPS_FRA/
+ASMCMD> mount prd_data
+ORA-15032: not all alterations performed
+ORA-15017: diskgroup "PRD_DATA" cannot be mounted
+ORA-15040: diskgroup is incomplete
+ORA-15080: synchronous I/O operation to a disk failed
+ORA-15080: synchronous I/O operation to a disk failed
+ORA-15080: synchronous I/O operation to a disk failed
+ORA-15080: synchronous I/O operation to a disk failed (DBD ERROR: OCIStmtExecute)
+ASMCMD>
+ASMCMD>
+ASMCMD>
+ASMCMD> exit
+[grid@hrewoel03 ~]$ exit
+logout
+[oracle@hrewoel03 ~]$ sudo su -
+[root@hrewoel03 ~]# oracleasm scandisks
+Reloading disk partitions: done
+Cleaning any stale ASM disks...
+Cleaning disk "PRDDATA01"
+Cleaning disk "PRDDATA02"
+Cleaning disk "PRDDATA03"
+Cleaning disk "PRDDATA04"
+Cleaning disk "PRDDATA05"
+Cleaning disk "PRDDATA06"
+Cleaning disk "PRDDATA07"
+Cleaning disk "PRDDATA08"
+Cleaning disk "PRDDATA09"
+Cleaning disk "PRDFRA01"
+Cleaning disk "PRDFRA02"
+Cleaning disk "PRDFRA03"
+Cleaning disk "PRDFRA04"
+Cleaning disk "PRDFRA05"
+Cleaning disk "PRDFRA06"
+Cleaning disk "PRDFRA07"
+Cleaning disk "PRDFRA08"
+Cleaning disk "PRDFRA09"
+Cleaning disk "PRDFRA10"
+Cleaning disk "PRDFRA11"
+Cleaning disk "PRDFRA12"
+Cleaning disk "PRDFRA13"
+Cleaning disk "PRDFRA14"
+Cleaning disk "PRDFRA15"
+Scanning system for ASM disks...
+[root@hrewoel03 ~]#

@@ -1,0 +1,33 @@
+EXEC DBMS_STATS.GATHER_FIXED_OBJECTS_STATS (NULL);
+EXEC DBMS_STATS.GATHER_DICTIONARY_STATS;
+EXEC DBMS_STATS.GATHER_SYSTEM_STATS;
+
+alter system reset AQ_TM_PROCESSES;
+
+ alter system reset AQ_TM_PROCESSES scope=both;
+
+
+
+select 'ALTER SYSTEM SET STREAMS_POOL_SIZE='||(max(to_number(trim(c.ksppstvl)))+67108864)||' SCOPE=SPFILE;'
+from sys.x$ksppi a, sys.x$ksppcv b, sys.x$ksppsv c
+where a.indx = b.indx and a.indx = c.indx and lower(a.ksppinm) in ('__streams_pool_size','streams_pool_size');
+
+
+
+
+
+select name,substr(name,1,(length(name)-15)) from v$datafile
+
+/hrewwnonprdfs01/Output/backup/OPSSTG2/61058
+
+select 'asmcmd cp ' || name || '  /hrewwnonprdfs01/Output/backup/OPSSTG2/61058/' || substr(name,1,(length(name)-15)) || '.dbf' from v$datafile;
+
+
+
+select "asmcmd cp " || name || "/hrewwnonprdfs01/Output/" || substr(name,1,(length(name)-15))  from v$datafile;
+
+
+
+\/hrewwnonprdfs01\/Output\/backup\/OPSSTG2\/61058\/+OPS_DATA\/opsstg2\/datafile\/
+
+\/hrewwnonprdfs01\/Output\/backup\/O

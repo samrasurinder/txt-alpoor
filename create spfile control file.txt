@@ -1,0 +1,31 @@
+set dbid=DBID;
+set controlfile autobackup format for device type sbt to 'cfhomegisdb.%F';
+run {
+allocate channel c1 type sbt PARMS="SBT_LIBRARY=C:\PROGRA~1\avs\bin\Libobk_avamar64.dll" format '%d_%U';
+send '"--flagfile=C:\TEMP\FlagFileBkp.txt" "--id=MCUser" "--ap=PWD" "--bindir=INSTALL-DIR/bin"';
+restore controlfile from autobackup MAXSEQ=SEQ
+until time = "TO_DATE('DATE','YYYYMMDD')";
+startup mount;
+release channel c1;
+list backup;
+}
+
+
+
+5. Set up the Oracle database:
+a. Ensure that you set the ORACLE_HOME to the same location as it was set to previously.
+b. Create the Oracle database with the same SID name that was used previously.
+Ensure that the ORACLE_SID, oradata, and flash_recovery_area pathnames are
+exactly the same as in the previous configuration.
+6. Start the database in the nomount mode by typing the following command:
+startup nomount
+7. Restore the server parameter file (spfile) by using the following RMAN script:
+connect target "/";
+set dbid=DBID;
+run{
+restore spfile to '/HOME/ORACLE/spfiletestdb.ora' from autobackup
+MAXSEQ=SEQ
+until time = "TO_DATE('DATE','YYYYMMDD')";
+}
+where:
+l DBID

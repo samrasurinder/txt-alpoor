@@ -1,0 +1,200 @@
+#!/bin/bash
+export ORAENV_ASK=NO
+
+
+db_list=`ps -ef|grep pmon|grep ora_pmon_$1|grep -v grep|awk '{print $8}'|cut -d_ -f3`
+
+for db in $db_list
+do
+  export ORACLE_SID=$db
+  . oraenv > /dev/null
+
+sqlplus -s "/ as sysdba" << EOF
+     set feedback off
+     set head off
+     select 'dblinks status for database --> '|| name from v\$database;
+     select '---------------------------------------------------------' from dual;
+     @/infshare/oracle/scripts/dba/dblink.sql
+     select '' from dual;
+     select '' from dual;
+     exit;
+EOF
+
+
+
+done
+
+
+
+
+
+
+
+CREATE OR REPLACE PROCEDURE test_any_db_link ( p_owner IN varchar2
+                                             , p_link  IN varchar2
+                                             )
+AS
+   l_owner  varchar2(100);
+BEGIN
+   IF p_owner = 'PUBLIC' THEN
+      l_owner := 'SYSTEM';
+   ELSE
+      l_owner := p_owner;
+   END IF;
+   --
+   BEGIN
+     EXECUTE IMMEDIATE 'create procedure '||l_owner||'.test_any_db_link_temp '||
+                       'as '||
+                       '  l_dummy varchar2(1); '||
+                       'begin '||
+                       '  select * into l_dummy from dual@'||p_link||'; '||
+                       '  dbms_output.put_line(''OK : '||p_owner||'.'||
+                                                         p_link||'''); '||
+                       'exception '||
+                       ' when others then '||
+                       '   dbms_output.put_line(''NOK: '||p_owner||'.'||
+                                                          p_link||'''||'' ''||
+                                                          sqlcode); '||
+                       'end;';
+     EXECUTE IMMEDIATE 'begin '||l_owner||'.test_any_db_link_temp; end;';
+   EXCEPTION
+     WHEN OTHERS THEN
+       dbms_output.put_line('ERR: '||p_owner||'.'||p_link||' '||sqlcode);
+   END;
+   EXECUTE IMMEDIATE 'drop procedure '||l_owner||'.test_any_db_link_temp';
+END;
+/
+
+set serveroutput on size 1000000;
+
+
+BEGIN
+ FOR r_stmt IN (select 'begin test_any_db_link('''||owner||''','''||
+                                                     db_link||'''); end;' stmt
+                   from dba_db_links
+                  order by owner, db_link
+                )
+  LOOP
+    execute immediate r_stmt.stmt;
+  END LOOP;
+END;
+/
+
+
+drop procedure test_any_db_link;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+expdp \"/ as sysdba\"  schemas=ACRS,EOPF_DOS,ESRT,ESRT_INTERFACE,REETA,SECREF,SYSADM dumpfile=dp_rfrsh_dmp:DBlink1.dmp logfile=dp_rfrsh_dmp:DBlink1.log  INCLUDE=DB_LINK REUSE_DUMPFILES=Y
+
+impdp \"/ as sysdba\"   dumpfile=dp_rfrsh_dmp:DBlink1.dmp logfile=dp_rfrsh_dmp:imp_DBlink1.log
+
+
+
+expdp \"/ as sysdba\"  parfile=/infshare/oracle/scripts/refresh/bin/build/CPY/parfile.par dumpfile=dp_rfrsh_dmp:DBlink2.dmp logfile=dp_rfrsh_dmp:DBlink2.log   REUSE_DUMPFILES=Y full=y
+
+impdp \"/ as sysdba\"  dumpfile=dp_rfrsh_dmp:DBlink2.dmp logfile=dp_rfrsh_dmp:imp_DBlink2.log
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CREATE PROCEDURE BMA.drop_db_link AS
+begin
+ EXECUTE IMMEDIATE 'drop database link BMA_DW.HR.STATE.SBU';
+end;
+/
+
+CREATE PROCEDURE EOPF_DOS.drop_db_link AS
+begin
+ EXECUTE IMMEDIATE 'drop database link EOPF_PRD.HR.STATE.SBU';
+end;
+/
+
+CREATE PROCEDURE ESRT.drop_db_link AS
+begin
+ EXECUTE IMMEDIATE 'drop database link CAMPUS7.HR.STATE.SBU';
+ EXECUTE IMMEDIATE 'drop database link CONTDB.HR.STATE.SBU';
+ EXECUTE IMMEDIATE 'drop database link EDW_SRC_LNK.HR.STATE.SBU';
+ EXECUTE IMMEDIATE 'drop database link EOPFLINK.HR.STATE.SBU';
+end;
+/
+
+CREATE PROCEDURE ESRT_INTERFACE.drop_db_link AS
+begin
+ EXECUTE IMMEDIATE 'drop database link EAPS.HR.STATE.SBU';
+end;
+/
+
+
+CREATE PROCEDURE REETA.drop_db_link AS
+begin
+ EXECUTE IMMEDIATE 'drop database link REETA_DB_LINK.HR.STATE.SBU';
+end;
+/
+
+CREATE PROCEDURE SECREF.drop_db_link AS
+begin
+ EXECUTE IMMEDIATE 'drop database link CRM.HR.STATE.SBU';
+ EXECUTE IMMEDIATE 'drop database link EAPS.HR.STATE.SBU';
+ EXECUTE IMMEDIATE 'drop database link DB_LINK_REETA_UAT.HR.STATE.SBU';
+end;
+/
+
+drop public database link GEMS_CRM_LINK.HR.STATE.SBU;
+
+CREATE PROCEDURE SYSADM.drop_db_link AS
+begin
+ EXECUTE IMMEDIATE 'drop database link EAPS.HR.STATE.SBU';
+ EXECUTE IMMEDIATE 'drop database link GEMS_CRM_LINK.HR.STATE.SBU';
+ EXECUTE IMMEDIATE 'drop database link EOD.HR.STATE.SBU';
+end;
+/
+
+col owner format a30
+col db_link format a40
+set pagesize 50
+
+select owner,db_link from dba_db_links order by owner;
+
+exec BMA.drop_db_link;
+exec EOPF_DOS.drop_db_link;
+exec ESRT.drop_db_link;
+exec ESRT_INTERFACE.drop_db_link;
+
+exec REETA.drop_db_link;
+exec SECREF.drop_db_link;
+exec SYSADM.drop_db_link;
+
+select owner,db_link from dba_db_links;
+

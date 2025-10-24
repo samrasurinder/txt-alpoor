@@ -1,0 +1,44 @@
+[root@hrewoel18 install]#  /u02/app/11.2.0.4/grid/perl/bin/perl rootcrs.pl -deconfig -force
+Using configuration parameter file: ./crsconfig_params
+****Unable to retrieve Oracle Clusterware home.
+Start Oracle Clusterware stack and try again.
+CRS-4047: No Oracle Clusterware components configured.
+CRS-4000: Command Stop failed, or completed with errors.
+################################################################
+# You must kill processes or reboot the system to properly #
+# cleanup the processes started by Oracle clusterware          #
+################################################################
+
+Either /etc/oracle/olr.loc does not exist or is not readable
+Make sure the file exists and it has read and execute access
+Either /etc/oracle/olr.loc does not exist or is not readable
+Make sure the file exists and it has read and execute access
+Failure in execution (rc=-1, 256, No such file or directory) for command /etc/init.d/ohasd deinstall
+error: package cvuqdisk is not installed
+Successfully deconfigured Oracle clusterware stack on this node
+[root@hrewoel18 install]#
+[root@hrewoel18 install]#
+
+
+vi /u02/app/oraInventory/ContentsXML/inventory.xml
+
+<HOME NAME="Ora11g_gridinfrahome1" LOC="/u02/app/11.2.0.4/grid" TYPE="O" IDX="1" CRS="true">
+   <NODE_LIST>
+      <NODE NAME="hrewoel02"/>
+      <NODE NAME="hrewoel03"/>
+      <NODE NAME="hrewoel10"/>
+      <NODE NAME="hrewoel18"/>
+   </NODE_LIST>
+</HOME>
+<HOME NAME="OraDb11g_home1" LOC="/u02/app/oracle/product/11.2.0.4/db_1" TYPE="O" IDX="2">
+   <NODE_LIST>
+      <NODE NAME="hrewoel02"/>
+      <NODE NAME="hrewoel03"/>
+      <NODE NAME="hrewoel10"/>
+      <NODE NAME="hrewoel18"/>
+   </NODE_LIST>
+</HOME>
+
+cd /u02/app/oracle/product/11.2.0.4/db_1/oui/bin
+./runInstaller -updateNodeList ORACLE_HOME=/u02/app/oracle/product/11.2.0.4/db_1 CLUSTER_NODES={hrewoel18} -local
+

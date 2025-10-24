@@ -1,0 +1,136 @@
+
+Enable Steps:
+------------
+
+on Primary:
+-----------
+
+dgmgrl sys/Wierd1234567#@prd
+
+show configuration
+
+SHOW DATABASE 'PRD';
+
+edit database 'PRD' SET STATE='TRANSPORT-ON';
+
+--alter system switch all logfile;
+
+on Standby:
+----------
+
+dgmgrl sys/Wierd1234567#@hfprd
+
+show configuration
+
+SHOW DATABASE 'HFPRD';
+
+edit database 'HFPRD' SET STATE='APPLY-ON';
+
+SHOW DATABASE verbose 'HFPRD' ;
+
+
+Disable steps:
+-------------
+
+
+[oracle@hrewoel45 OCTPSU]$ dgmgrl sys/Wierd1234567#@hfprd
+DGMGRL for Linux: Release 19.0.0.0.0 - Production on Fri Nov 11 06:12:47 2022
+Version 19.15.0.0.0
+
+Copyright (c) 1982, 2019, Oracle and/or its affiliates.  All rights reserved.
+
+Welcome to DGMGRL, type "help" for information.
+Connected to "HFPRD"
+Connected as SYSDBA.
+DGMGRL> show configuration
+
+Configuration - dg_config
+
+  Protection Mode: MaxPerformance
+  Members:
+  PRD   - Primary database
+    HFPRD - Physical standby database
+
+Fast-Start Failover:  Disabled
+
+Configuration Status:
+SUCCESS   (status updated 51 seconds ago)
+
+DGMGRL> edit database 'HFPRD' SET STATE='APPLY-OFF';
+Succeeded.
+DGMGRL>
+
+
+
+DGMGRL> SHOW DATABASE 'HFPRD';
+
+Database - HFPRD
+
+  Role:               PHYSICAL STANDBY
+  Intended State:     APPLY-OFF
+  Transport Lag:      0 seconds (computed 0 seconds ago)
+  Apply Lag:          (unknown)
+  Average Apply Rate: (unknown)
+  Real Time Query:    OFF
+  Instance(s):
+    HFPRD1 (apply instance)
+    HFPRD2
+    HFPRD3
+
+Database Status:
+SUCCESS
+
+DGMGRL>
+
+
+
+
+------------------------------------------------------------------------
+
+
+
+
+
+[oracle@hrewoel42 OCTPSU]$ dgmgrl sys/Wierd1234567#@prd
+DGMGRL for Linux: Release 19.0.0.0.0 - Production on Fri Nov 11 06:14:56 2022
+Version 19.15.0.0.0
+
+Copyright (c) 1982, 2019, Oracle and/or its affiliates.  All rights reserved.
+
+Welcome to DGMGRL, type "help" for information.
+Connected to "PRD"
+Connected as SYSDBA.
+DGMGRL> show configuration
+
+Configuration - dg_config
+
+  Protection Mode: MaxPerformance
+  Members:
+  PRD   - Primary database
+    HFPRD - Physical standby database
+
+Fast-Start Failover:  Disabled
+
+Configuration Status:
+SUCCESS   (status updated 32 seconds ago)
+
+DGMGRL> edit database 'PRD' SET STATE='TRANSPORT-OFF';
+Succeeded.
+DGMGRL> SHOW DATABASE 'PRD' VERBOSE
+Error: ORA-16606: unable to find property "verbose"
+
+DGMGRL> SHOW DATABASE 'PRD';
+
+Database - PRD
+
+  Role:               PRIMARY
+  Intended State:     TRANSPORT-OFF
+  Instance(s):
+    PRD1
+    PRD2
+    PRD3
+
+Database Status:
+SUCCESS
+
+DGMGRL>

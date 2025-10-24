@@ -1,0 +1,25 @@
+SQL> desc AUDIT_UNIFIED_ENABLED_POLICIES;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ USER_NAME                                          VARCHAR2(128 CHAR)
+ POLICY_NAME                                        VARCHAR2(128)
+ ENABLED_OPT                                        VARCHAR2(7 CHAR)
+ ENABLED_OPTION                                     VARCHAR2(15 CHAR)
+ ENTITY_NAME                                        VARCHAR2(128 CHAR)
+ ENTITY_TYPE                                        VARCHAR2(7 CHAR)
+ SUCCESS                                            VARCHAR2(3 CHAR)
+ FAILURE                                            VARCHAR2(3 CHAR)
+
+SQL> col user_name format a30
+SQL> col POLICY_NAME format a30
+SQL> col ENTITY_NAME format a30
+SQL> set linesize 180
+SQL> select * from AUDIT_UNIFIED_ENABLED_POLICIES;
+
+USER_NAME                      POLICY_NAME                    ENABLED ENABLED_OPTION  ENTITY_NAME                    ENTITY_ SUC FAI
+------------------------------ ------------------------------ ------- --------------- ------------------------------ ------- --- ---
+ALL USERS                      ORA_SECURECONFIG               BY      BY USER         ALL USERS                      USER    YES YES
+
+SQL>
+
+https://www.oracle.com/webfolder/technetwork/tutorials/obe/db/12c/r1/security/sec_uni_audit/sec_uni_audit.html

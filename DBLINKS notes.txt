@@ -1,0 +1,56 @@
+1. Backup Database Links
+
+The best way to backup database links, including the encrypted passwords, is to use the export datapump utility.
+
+First, get a “visual” definition of the database links:
+
+select * from dba_db_links;
+
+Second, run export datapump (expdp) to export the database links. For this exercise, we want to drop the hr_link database link owned by SCOTT:
+
+ 
+expdp DIRECTORY=PRDMASK 
+DUMPFILE=expdp_db_link_PRDMASK_SECREF.dmp 
+LOGFILE=expdp_db_link_PRDMASK_SECREF.log 
+INCLUDE=DB_LINK SCHEMAS=SECREF
+
+
+
+
+2. Drop Database Links
+
+Run the following script as the user sys, to drop the database link in another schema. If you have multiple links to drop, run it multiple times, with different values assigned to the variables _owner and _db_link.
+The script will create a job in the schema you want to drop the db link. The job will drop the db link. Then, the job is dropped.
+
+
+define _owner='SCOTT'
+define _db_link='HR_LINK'
+
+begin
+  dbms_scheduler.create_job(
+    job_name=>'&_owner..drop_database_link',
+    job_type=>'PLSQL_BLOCK',
+    job_action=>'BEGIN execute immediate ''drop database link &_db_link'';END;');
+    dbms_scheduler.run_job('&_owner..drop_database_link',false);
+    dbms_lock.sleep(3);
+    dbms_scheduler.drop_job('&_owner..drop_database_link');
+end;
+/
+After you run the above script, verify database links were dropped, and no longer exist in the database:
+
+select * from dba_db_links; 
+
+
+
+
+3. Create The Rollback Plan
+
+If your backup was to export the database links, the best way to restore them is to import the database links from the dump file generated in Step 1. Make sure you test your backup strategy in the test environment, before you drop the links in production!
+
+ 
+impdp DIRECTORY=DATA_PUMP_DIR 
+DUMPFILE=expdp_db_link_HRPRD_scott.dmp 
+LOGFILE=impdp_db_link_HRPRD_scott.log 
+Remember before you start dropping or deleting, always think about your recovery strategy!
+
+If you enjoyed this article, and would like to learn more about databases, please sign up below, and you will receive

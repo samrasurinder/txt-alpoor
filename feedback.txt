@@ -1,0 +1,59 @@
+
+
+
+1) Standard Spool file name:
+For ex:  <ESSR#>_<ENV>_<SYSDATE>.log
+This spool file name can be generated dynamically everytime script runs
+
+2) Include Pre and Post checks for every deployment rather than doing checks outside of scripts deployment:
+These checks should be part of every MSR deployment and part of the script itself and then spooled into the same spool log file 
+
+Pre-checks:
+-----------
+Select * from global_name;
+select sysdate from dual;
+show user;
+select owner,object_name,object_type from dba_invalid_objects
+
+
+Post-checks/tasks:
+-----------------
+run utlrp script
+select owner,object_name,object_type from dba_invalid_objects
+
+
+
+3) Maintain history of each MSR deployment in a standard table on all databases or in a single table in some cerntal repo database:
+
+This would be a simple standard insert statement at the end of every script
+
+Table Structure would be something as follows:
+
+
+MSR#
+date
+Script_Name
+Env
+Deployed (Success/Failed)
+
+This way, it's easy to troubleshoot any deployment issues rather than skimming thru MKS
+
+
+
+4) Package all scripts in one main script and call them individually rather than executing one by one
+
+
+5) Don't spit out errors like table/view don't exist during creation/dropping of any objects.
+
+   Check the exsistense of objects before creation/dropping.
+   These kind of errors sometimes misleading 
+
+    
+    
+
+
+   
+
+
+
+ 

@@ -1,0 +1,335 @@
+Run OPatch Conflict Check
+Determine whether any currently installed one-off patches conflict with this patch 32545008 as follows:
+
+For Grid Infrastructure Home, as home user:
+
+/infshare/oracle/patches/32578973
+
+/u02/app/19.3.0/grid/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir /infshare/oracle/patches/32578973/32545008/32545013
+/u02/app/19.3.0/grid/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir /infshare/oracle/patches/32578973/32545008/32579761
+/u02/app/19.3.0/grid/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir /infshare/oracle/patches/32578973/32545008/32576499
+/u02/app/19.3.0/grid/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir /infshare/oracle/patches/32578973/32545008/32585572
+/u02/app/19.3.0/grid/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir /infshare/oracle/patches/32578973/32545008/32584670
+
+For Database home, as home user:
+
+/u02/app/oracle/product/19.3.0/db_1/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir /infshare/oracle/patches/32578973/32545008/32545013
+/u02/app/oracle/product/19.3.0/db_1/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir /infshare/oracle/patches/32578973/32545008/32579761
+
+
+
+
+Summary of Conflict Analysis:
+
+There are no patches that can be applied now.
+
+Following patches have conflicts. Please contact Oracle Support and get the merged patch of the patches :
+31602782, 32545013
+
+Following patches will be rolled back from Oracle Home on application of the patches in the given list :
+32442404, 32259535, 32245850, 32013403, 31666449
+
+Conflicts/Supersets for each patch are:
+
+Patch : 32545013
+
+        Bug Superset of 32245850
+        Super set bugs are:
+        32245850
+
+        Bug Superset of 32013403
+        Super set bugs are:
+        32013403
+
+        Bug Superset of 32442404
+        Super set bugs are:
+        32442404
+
+        Conflict with 31602782
+        Conflict details:
+        /u02/app/oracle/product/19.3.0/db_1/lib/libserver19.a:kspt.o
+        /u02/app/oracle/product/19.3.0/db_1/lib/libserver19.a:qerpx.o
+        /u02/app/oracle/product/19.3.0/db_1/lib/libserver19.a:kxfx.o
+
+        Bug Superset of 31666449
+        Super set bugs are:
+        31666449
+
+        Bug Superset of 32259535
+        Super set bugs are:
+        32259535
+
+        Bug Superset of 32301133
+        Super set bugs are:
+        32191451, 31886745
+
+OPatch succeeded.
+
+
+
+[oracle@hrvlcpydb26 OPatch]$ ./opatch rollback -id 31602782
+Oracle Interim Patch Installer version 12.2.0.1.24
+Copyright (c) 2021, Oracle Corporation.  All rights reserved.
+
+
+Oracle Home       : /u02/app/oracle/product/19.3.0/db_1
+Central Inventory : /u02/app/oraInventory
+   from           : /u02/app/oracle/product/19.3.0/db_1/oraInst.loc
+OPatch version    : 12.2.0.1.24
+OUI version       : 12.2.0.7.0
+Log file location : /u02/app/oracle/product/19.3.0/db_1/cfgtoollogs/opatch/opatch2021-05-26_15-08-48PM_1.log
+
+
+Patches will be rolled back in the following order:
+   31602782
+The following patch(es) will be rolled back: 31602782
+
+Please shutdown Oracle instances running out of this ORACLE_HOME on the local system.
+(Oracle Home = '/u02/app/oracle/product/19.3.0/db_1')
+
+
+Is the local system ready for patching? [y|n]
+y
+User Responded with: Y
+
+Rolling back patch 31602782...
+
+RollbackSession rolling back interim patch '31602782' from OH '/u02/app/oracle/product/19.3.0/db_1'
+
+Patching component oracle.rdbms, 19.0.0.0.0...
+RollbackSession removing interim patch '31602782' from inventory
+Log file location: /u02/app/oracle/product/19.3.0/db_1/cfgtoollogs/opatch/opatch2021-05-26_15-08-48PM_1.log
+
+OPatch succeeded.
+[oracle@hrvlcpydb26 OPatch]$
+
+
+
+[root@hrvlcpydb25 OPatch]# ./opatchauto apply /infshare/oracle/patches/32578973/32545008/ &
+[1] 32110
+[root@hrvlcpydb25 OPatch]#
+OPatchauto session is initiated at Wed May 26 13:45:07 2021
+
+System initialization log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchautodb/systemconfig2021-05-26_01-45-11PM.log.
+
+Session log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchauto/opatchauto2021-05-26_01-45-39PM.log
+The id for this session is P6EB
+
+
+
+
+[root@hrvlcpydb25 OPatch]# ./opatchauto apply /infshare/oracle/patches/32578973/32399816/ &
+[1] 16509
+[root@hrvlcpydb25 OPatch]#
+OPatchauto session is initiated at Wed May 26 14:26:37 2021
+
+System initialization log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchautodb/systemconfig2021-05-26_02-26-38PM.log.
+
+Session log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchauto/opatchauto2021-05-26_02-28-26PM.log
+The id for this session is WV91
+
+Executing OPatch prereq operations to verify patch applicability on home /u02/app/oracle/product/19.3.0/db_1
+
+Executing OPatch prereq operations to verify patch applicability on home /u02/app/19.3.0/grid
+
+
+
+[root@hrvlcpydb26 OPatch]# ./opatchauto apply /infshare/oracle/patches/32578973/32545008/ &
+[1] 25306
+[root@hrvlcpydb26 OPatch]#
+OPatchauto session is initiated at Wed May 26 15:11:20 2021
+
+System initialization log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchautodb/systemconfig2021-05-26_03-11-23PM.log.
+
+Session log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchauto/opatchauto2021-05-26_03-11-48PM.log
+The id for this session is WSH8
+
+Executing OPatch prereq operations to verify patch applicability on home /u02/app/oracle/product/19.3.0/db_1
+
+Executing OPatch prereq operations to verify patch applicability on home /u02/app/19.3.0/grid
+Patch applicability verified successfully on home /u02/app/19.3.0/grid
+
+Patch applicability verified successfully on home /u02/app/oracle/product/19.3.0/db_1
+
+
+Executing patch validation checks on home /u02/app/19.3.0/grid
+Patch validation checks successfully completed on home /u02/app/19.3.0/grid
+
+
+Executing patch validation checks on home /u02/app/oracle/product/19.3.0/db_1
+Patch validation checks successfully completed on home /u02/app/oracle/product/19.3.0/db_1
+
+
+Verifying SQL patch applicability on home /u02/app/oracle/product/19.3.0/db_1
+
+
+
+
+
+
+
+
+
+
+[root@hrvltrndb23 OPatch]# ./opatchauto apply /infshare/oracle/patches/32578973/32545008/ &
+[1] 14991
+[root@hrvltrndb23 OPatch]#
+OPatchauto session is initiated at Wed May 26 17:25:12 2021
+
+System initialization log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchautodb/systemconfig2021-05-26_05-25-15PM.log.
+
+Session log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchauto/opatchauto2021-05-26_05-26-54PM.log
+The id for this session is EPAU
+
+Executing OPatch prereq operations to verify patch applicability on home /u02/app/19.3.0/grid
+
+Executing OPatch prereq operations to verify patch applicability on home /u02/app/oracle/product/19.3.0/db_1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[root@hrvltrndb24 OPatch]# ./opatchauto apply /infshare/oracle/patches/32578973/32545008/ &
+[1] 29503
+[root@hrvltrndb24 OPatch]#
+OPatchauto session is initiated at Wed May 26 19:44:10 2021
+
+System initialization log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchautodb/systemconfig2021-05-26_07-44-38PM.log.
+
+Session log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchauto/opatchauto2021-05-26_07-46-18PM.log
+The id for this session is I36I
+
+Executing OPatch prereq operations to verify patch applicability on home /u02/app/oracle/product/19.3.0/db_1
+
+Executing OPatch prereq operations to verify patch applicability on home /u02/app/19.3.0/grid
+Patch applicability verified successfully on home /u02/app/19.3.0/grid
+
+Patch applicability verified successfully on home /u02/app/oracle/product/19.3.0/db_1
+
+
+Executing patch validation checks on home /u02/app/19.3.0/grid
+Patch validation checks successfully completed on home /u02/app/19.3.0/grid
+
+
+Executing patch validation checks on home /u02/app/oracle/product/19.3.0/db_1
+Patch validation checks successfully
+
+
+
+[root@hrvltrndb24 OPatch]# ./opatchauto apply /infshare/oracle/patches/32578973/32399816/ &
+[1] 21351
+[root@hrvltrndb24 OPatch]#
+OPatchauto session is initiated at Wed May 26 20:28:30 2021
+
+System initialization log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchautodb/systemconfig2021-05-26_08-28-32PM.log.
+
+Session log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchauto/opatchauto2021-05-26_08-30-15PM.log
+The id for this session is TVPP
+
+Executing OPatch prereq operations to verify patch applicability on home /u02/app/19.3.0/grid
+
+Executing OPatch prereq operations to verify patch applicability on home /u02/app/oracle/product/19.3.0/db_1
+Patch applicability verified successfully on home /u02/app/19.3.0/grid
+
+Patch applicability verified successfully on home /u02/app/oracle/product/19.3.0/db_1
+
+
+Executing patch validation checks on home /u02/app/19.3.0/grid
+Patch validation checks successfully completed on home /u02/app/19.3.0/grid
+
+
+
+
+
+[root@hrvltrndb24 OPatch]# ./opatchauto apply /infshare/oracle/patches/32578973/32399816/ -oh /u02/app/19.3.0/grid &
+[1] 3899
+[root@hrvltrndb24 OPatch]#
+OPatchauto session is initiated at Wed May 26 22:04:40 2021
+
+System initialization log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchautodb/systemconfig2021-05-26_10-04-44PM.log.
+
+Session log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchauto/opatchauto2021-05-26_10-04-56PM.log
+The id for this session is QIVX
+
+Executing OPatch prereq operations to verify patch applicability on home /u02/app/19.3.0/grid
+
+
+
+
+
+[root@hrvltstdb22 ~]# cd $ORACLE_HOME
+[root@hrvltstdb22 grid]# cd OPatch
+[root@hrvltstdb22 OPatch]# ./opatchauto apply /infshare/oracle/patches/32578973/32545008/ &
+[1] 4288
+[root@hrvltstdb22 OPatch]#
+OPatchauto session is initiated at Thu May 27 17:56:38 2021
+
+System initialization log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchautodb/systemconfig2021-05-27_05-57-05PM.log.
+
+Session log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchauto/opatchauto2021-05-27_05-58-57PM.log
+The id for this session is 1VSI
+
+
+[root@hrvltstdb22 OPatch]# ./opatchauto apply /infshare/oracle/patches/32578973/32399816/ &
+[1] 6494
+[root@hrvltstdb22 OPatch]#
+OPatchauto session is initiated at Thu May 27 18:51:29 2021
+
+System initialization log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchautodb/systemconfig2021-05-27_06-51-31PM.log.
+
+Session log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchauto/opatchauto2021-05-27_06-53-23PM.log
+The id for this session is 31H3
+
+Executing OPatch prereq operations to verify patch applicability on home /u02/app/oracle/product/19.3.0/db_1
+
+Executing OPatch prereq operations to verify patch applicability on home /u02/app/19.3.0/grid
+Patch applicability verified successfully on home /u02/app/19.3.0/grid
+
+
+
+[root@hrvltstdb21 OPatch]# ./opatchauto apply /infshare/oracle/patches/32578973/32545008/ -oh /u02/app/19.3.0/grid/ &
+[1] 20847
+[root@hrvltstdb21 OPatch]#
+OPatchauto session is initiated at Thu May 27 21:02:42 2021
+
+System initialization log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchautodb/systemconfig2021-05-27_09-03-18PM.log.
+
+Session log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchauto/opatchauto2021-05-27_09-03-33PM.log
+The id for this session is QUPW
+
+Executing OPatch prereq operations to verify patch applicability on home /u02/app/19.3.0/grid
+Patch applicability verified successfully on home /u02/app/19.3.0/grid
+
+
+Executing patch validation checks on home /u02/app/19.3.0/grid
+Patch validation checks successfully completed on home /u02/app/19.3.0/grid
+
+
+Performing prepatch operations on CRS - bringing down CRS service on home /u02/app/19.3.0/grid
+
+
+[root@hrvltstdb21 OPatch]# ./opatchauto apply /infshare/oracle/patches/32578973/32399816/ &
+[1] 11935
+[root@hrvltstdb21 OPatch]#
+OPatchauto session is initiated at Thu May 27 21:32:11 2021
+
+System initialization log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchautodb/systemconfig2021-05-27_09-32-13PM.log.
+
+Session log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchauto/opatchauto2021-05-27_09-34-07PM.log
+The id for this session is 3QL7
+
+Executing OPatch prereq operations to verify patch applicability on home /u02/app/oracle/product/19.3.0/db_1
+
+Executing OPatch prereq operations to verify patch applicability on home /u02/app/19.3.0/grid
+Patch applicability verified successfully on home /u02/app/19.3.0/grid
+
+Patch applicability verified successfully on home /u02/app/oracle/product/19.3.0/db_1

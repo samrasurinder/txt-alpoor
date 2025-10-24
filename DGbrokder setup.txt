@@ -1,0 +1,25 @@
+5. In both database, create the necessary directories for saving the Broker configuration files. In our case, we will save the configuration files in +DATA/<SID>/BROKER and +FRA/<SID>/BROKER.
+# on the primary
+su – grid
+asmcmd
+cd DATA
+cd ORADB
+mkdir BROKER
+cd ..
+cd ..
+cd FRA
+cd ORADB
+mkdir BROKER
+
+
+# on the standby
+su – grid
+asmcmd
+cd DATA
+cd ORADB_S2
+mkdir BROKER
+cd ..
+cd ..
+cd FRA
+cd ORADB_S2
+mkdir BROKER

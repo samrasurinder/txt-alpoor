@@ -1,0 +1,183 @@
+ tfactl diagcollect -from "Sep/08/2021 18:00:00" -to "Sep/09/2021 09:00:00" 
+
+
+reboot   system boot  4.14.35-2047.504 Thu Sep  9 08:46 - 09:23  (00:37)
+reboot   system boot  4.14.35-2047.504 Thu Sep  9 07:25 - 09:23  (01:58)
+reboot   system boot  4.14.35-2047.504 Thu Sep  9 07:19 - 09:23  (02:04)
+reboot   system boot  4.14.35-2047.504 Thu Sep  9 06:49 - 09:23  (02:34)
+reboot   system boot  4.14.35-2047.504 Thu Sep  9 05:08 - 09:23  (04:15)
+reboot   system boot  4.14.35-2047.504 Thu Sep  9 04:06 - 09:23  (05:17)
+reboot   system boot  4.14.35-2047.504 Thu Sep  9 03:30 - 09:23  (05:53)
+
+
+wtmp begins Wed Sep  1 03:18:38 2021
+[root@hrvltstdb20 ~]# tfactl diagcollect -from "Sep/08/2021 18:00:00" -to "Sep/09/2021 09:00:00"
+Collecting data for all nodes
+Scanning files from Sep/08/2021 18:00:00 to Sep/09/2021 09:00:00
+
+Collection Id : 20210909092929hrvltstdb20
+
+Detailed Logging at : /u01/ahf_data_dir/oracle.ahf/data/repository/collection_Thu_Sep_09_09_29_30_EDT_2021_node_all/diagcollect_20210909092929_hrvltstdb20.log
+2021/09/09 09:29:33 EDT : NOTE : Any file or directory name containing the string .com will be renamed to replace .com with dotcom
+2021/09/09 09:29:33 EDT : Collection Name : tfa_Thu_Sep_09_09_29_30_EDT_2021.zip
+2021/09/09 09:29:34 EDT : Collecting diagnostics from hosts : [hrvltstdb20, hrvltstdb21, hrvltstdb22]
+2021/09/09 09:29:39 EDT : Scanning of files for Collection in progress...
+2021/09/09 09:29:39 EDT : Collecting additional diagnostic information...
+2021/09/09 09:30:29 EDT : Getting list of files satisfying time range [09/08/2021 18:00:00 EDT, 09/09/2021 09:00:00 EDT]
+
+
+
+
+[root@hrvltstdb20 ~]# tfactl set redact=mask
+Successfully set redact=mask
+.-------------------------------------------------------------------.
+|                            hrvltstdb20                            |
++-----------------------------------------------------------+-------+
+| Configuration Parameter                                   | Value |
++-----------------------------------------------------------+-------+
+| Setting for ACR redaction (none|SANITIZE|MASK) ( redact ) | mask  |
+'-----------------------------------------------------------+-------'
+
+[root@hrvltstdb20 ~]# tfactl diagcollect -from "Sep/08/2021 18:00:00" -to "Sep/09/2021 09:00:00"  &
+[1] 6483
+[root@hrvltstdb20 ~]# Collecting data for all nodes
+Scanning files from Sep/08/2021 18:00:00 to Sep/09/2021 09:00:00
+
+Collection Id : 20210910093036hrvltstdb20
+
+Detailed Logging at : /u01/ahf_data_dir/oracle.ahf/data/repository/collection_Fri_Sep_10_09_30_37_EDT_2021_node_all/diagcollect_20210910093036_hrvltstdb20.log
+2021/09/10 09:30:42 EDT : NOTE : Any file or directory name containing the string .com will be renamed to replace .com with dotcom
+2021/09/10 09:30:42 EDT : Collection Name : tfa_Fri_Sep_10_09_30_37_EDT_2021.zip
+2021/09/10 09:30:42 EDT : Collecting diagnostics from hosts : [hrvltstdb20, hrvltstdb21, hrvltstdb22]
+2021/09/10 09:30:48 EDT : Scanning of files for Collection in progress...
+2021/09/10 09:30:48 EDT : Collecting additional diagnostic information...
+2021/09/10 09:31:28 EDT : Getting list of files satisfying time range [09/08/2021 18:00:00 EDT, 09/09/2021 09:00:00 EDT]
+2021/09/10 09:32:40 EDT : Collecting ADR incident files...
+2021/09/10 09:35:56 EDT : Completed collection of additional diagnostic information...
+2021/09/10 09:36:01 EDT : Completed Local Collection
+2021/09/10 09:36:01 EDT : Redacting the collection...
+
+
+[root@hrvltstdb22 ~]# tfactl diagcollect -from "Sep/08/2021 18:00:00" -to "Sep/09/2021 09:00:00"  &
+[1] 97152
+[root@hrvltstdb22 ~]# Collecting data for all nodes
+Scanning files from Sep/08/2021 18:00:00 to Sep/09/2021 09:00:00
+
+Collection Id : 20210914083132hrvltstdb22
+
+Detailed Logging at : /u01/ahf_data_dir/oracle.ahf/data/repository/collection_Tue_Sep_14_08_31_33_EDT_2021_node_all/diagcollect_20210914083132_hrvltstdb22.log
+2021/09/14 08:31:37 EDT : NOTE : Any file or directory name containing the string .com will be renamed to replace .com with dotcom
+2021/09/14 08:31:37 EDT : Collection Name : tfa_Tue_Sep_14_08_31_33_EDT_2021.zip
+2021/09/14 08:31:38 EDT : Collecting diagnostics from hosts : [hrvltstdb20, hrvltstdb21, hrvltstdb22]
+2021/09/14 08:31:38 EDT : Scanning of files for Collection in progress...
+2021/09/14 08:31:38 EDT : Collecting additional diagnostic information...
+
+tfactl diagcollect -from "Sep/13/2021 21:00:00" -to "Sep/14/2021 10:00:00"  &
+
+
+[root@hrvltstdb20 ~]# tfactl diagcollect -from "Sep/13/2021 21:00:00" -to "Sep/14/2021 10:00:00"  &
+[1] 53035
+[root@hrvltstdb20 ~]# Collecting data for all nodes
+Scanning files from Sep/13/2021 21:00:00 to Sep/14/2021 10:00:00
+
+Collection Id : 20210914122852hrvltstdb20
+
+Detailed Logging at : /u01/ahf_data_dir/oracle.ahf/data/repository/collection_Tue_Sep_14_12_28_53_EDT_2021_node_all/diagcollect_20210914122852_hrvltstdb20.log
+2021/09/14 12:28:57 EDT : NOTE : Any file or directory name containing the string .com will be renamed to replace .com with dotcom
+2021/09/14 12:28:57 EDT : Collection Name : tfa_Tue_Sep_14_12_28_53_EDT_2021.zip
+2021/09/14 12:28:57 EDT : Collecting diagnostics from hosts : [hrvltstdb20, hrvltstdb21, hrvltstdb22]
+2021/09/14 12:29:00 EDT : Scanning of files for Collection in progress...
+2021/09/14 12:29:00 EDT : Collecting additional diagnostic information...
+
+
+[root@hrvltstdb20 ~]# tfactl diagcollect -from "Sep/13/2021 21:00:00" -to "Sep/14/2021 10:00:00"  &
+[1] 53035
+[root@hrvltstdb20 ~]# Collecting data for all nodes
+Scanning files from Sep/13/2021 21:00:00 to Sep/14/2021 10:00:00
+
+Collection Id : 20210914122852hrvltstdb20
+
+Detailed Logging at : /u01/ahf_data_dir/oracle.ahf/data/repository/collection_Tue_Sep_14_12_28_53_EDT_2021_node_all/diagcollect_20210914122852_hrvltstdb20.log
+2021/09/14 12:28:57 EDT : NOTE : Any file or directory name containing the string .com will be renamed to replace .com with dotcom
+2021/09/14 12:28:57 EDT : Collection Name : tfa_Tue_Sep_14_12_28_53_EDT_2021.zip
+2021/09/14 12:28:57 EDT : Collecting diagnostics from hosts : [hrvltstdb20, hrvltstdb21, hrvltstdb22]
+2021/09/14 12:29:00 EDT : Scanning of files for Collection in progress...
+2021/09/14 12:29:00 EDT : Collecting additional diagnostic information...
+2021/09/14 12:29:40 EDT : Getting list of files satisfying time range [09/13/2021 21:00:00 EDT, 09/14/2021 10:00:00 EDT]
+
+[root@hrvltstdb20 ~]# tfactl diagcollect -from "Sep/13/2021 21:00:00" -to "Sep/14/2021 10:00:00"  &
+[1] 53035
+[root@hrvltstdb20 ~]# Collecting data for all nodes
+Scanning files from Sep/13/2021 21:00:00 to Sep/14/2021 10:00:00
+
+Collection Id : 20210914122852hrvltstdb20
+
+Detailed Logging at : /u01/ahf_data_dir/oracle.ahf/data/repository/collection_Tue_Sep_14_12_28_53_EDT_2021_node_all/diagcollect_20210914122852_hrvltstdb20.log
+2021/09/14 12:28:57 EDT : NOTE : Any file or directory name containing the string .com will be renamed to replace .com with dotcom
+2021/09/14 12:28:57 EDT : Collection Name : tfa_Tue_Sep_14_12_28_53_EDT_2021.zip
+2021/09/14 12:28:57 EDT : Collecting diagnostics from hosts : [hrvltstdb20, hrvltstdb21, hrvltstdb22]
+2021/09/14 12:29:00 EDT : Scanning of files for Collection in progress...
+2021/09/14 12:29:00 EDT : Collecting additional diagnostic information...
+2021/09/14 12:29:40 EDT : Getting list of files satisfying time range [09/13/2021 21:00:00 EDT, 09/14/2021 10:00:00 EDT]
+2021/09/14 12:30:40 EDT : Collecting ADR incident files...
+2021/09/14 12:31:29 EDT : Completed collection of additional diagnostic information...
+2021/09/14 12:31:31 EDT : Completed Local Collection
+2021/09/14 12:31:31 EDT : Redacting the collection...
+
+
+ 4599  2021-09-14 14:06:21: history
+[root@hrvltstdb20 hrvltstdb20]# tfactl diagcollect -from "Sep/13/2021 21:00:00" -to "Sep/14/2021 10:00:00"  &
+[1] 83739
+[root@hrvltstdb20 hrvltstdb20]# Collecting data for all nodes
+Scanning files from Sep/13/2021 21:00:00 to Sep/14/2021 10:00:00
+
+Collection Id : 20210914140708hrvltstdb20
+
+Detailed Logging at : /u01/ahf_data_dir/oracle.ahf/data/repository/collection_Tue_Sep_14_14_07_09_EDT_2021_node_all/diagcollect_20210914140708_hrvltstdb20.log
+2021/09/14 14:07:14 EDT : NOTE : Any file or directory name containing the string .com will be renamed to replace .com with dotcom
+2021/09/14 14:07:14 EDT : Collection Name : tfa_Tue_Sep_14_14_07_09_EDT_2021.zip
+2021/09/14 14:07:14 EDT : Collecting diagnostics from hosts : [hrvltstdb20, hrvltstdb21, hrvltstdb22]
+2021/09/14 14:07:16 EDT : Scanning of files for Collection in progress...
+2021/09/14 14:07:16 EDT : Collecting additional diagnostic information...
+
+
+
+
+[root@hrvltstdb20 ~]# tfactl diagcollect -from "Sep/15/2021 01:00:00" -to "Sep/15/2021 09:40:00" -node local &
+[2] 85833
+[root@hrvltstdb20 ~]# Collecting data for local node(s).
+Scanning files from Sep/15/2021 01:00:00 to Sep/15/2021 07:00:00
+
+Collection Id : 20210915072159hrvltstdb20
+
+Detailed Logging at : /u01/ahf_data_dir/oracle.ahf/data/repository/collection_Wed_Sep_15_07_22_00_EDT_2021_node_local/diagcollect_20210915072159_hrvltstdb20.log
+2021/09/15 07:22:04 EDT : NOTE : Any file or directory name containing the string .com will be renamed to replace .com with dotcom
+2021/09/15 07:22:04 EDT : Collection Name : tfa_Wed_Sep_15_07_22_00_EDT_2021.zip
+2021/09/15 07:22:07 EDT : Scanning of files for Collection in progress...
+2021/09/15 07:22:07 EDT : Collecting additional diagnostic information...
+
+
+[root@hrvltstdb20 collection_Wed_Sep_15_07_22_00_EDT_2021_node_local]# tfactl set redact=mask
+Successfully set redact=mask
+.-------------------------------------------------------------------.
+|                            hrvltstdb20                            |
++-----------------------------------------------------------+-------+
+| Configuration Parameter                                   | Value |
++-----------------------------------------------------------+-------+
+| Setting for ACR redaction (none|SANITIZE|MASK) ( redact ) | mask  |
+'-----------------------------------------------------------+-------'
+
+[root@hrvltstdb20 collection_Wed_Sep_15_07_22_00_EDT_2021_node_local]# tfactl diagcollect -from "Sep/15/2021 01:00:00" -to "Sep/15/2021 09:40:00" -node local &
+[1] 29613
+[root@hrvltstdb20 collection_Wed_Sep_15_07_22_00_EDT_2021_node_local]# Collecting data for local node(s).
+Scanning files from Sep/15/2021 01:00:00 to Sep/15/2021 09:40:00
+
+Collection Id : 20210915095449hrvltstdb20
+
+Detailed Logging at : /u01/ahf_data_dir/oracle.ahf/data/repository/collection_Wed_Sep_15_09_54_50_EDT_2021_node_local/diagcollect_20210915095449_hrvltstdb20.log
+2021/09/15 09:54:53 EDT : NOTE : Any file or directory name containing the string .com will be renamed to replace .com with dotcom
+2021/09/15 09:54:53 EDT : Collection Name : tfa_Wed_Sep_15_09_54_50_EDT_2021.zip
+2021/09/15 09:54:57 EDT : Scanning of files for Collection in progress...
+2021/09/15 09:54:57 EDT : Collecting additional diagnostic information...
+
+

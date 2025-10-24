@@ -1,0 +1,30 @@
+Please create an index and review the sql below for performance.  Thanks
+
+   Table for index: GM_EOPF_HEADER
+   Field to index:  GM_EY_APPRAISAL_ID
+
+    select r.gm_ey_appraisal_id,r.emplid,r.empl_rcd,q.name_psformat,r.gm_ey_reviewstatus,null,r.gm_ey_review_type,r.gm_ey_template_id, r.period_begin_dt, r.period_end_dt, x.gm_eopf_status, x.run_status_cd, x.run_dttm, y.review_rating,decode(y.review_rating,'3','Interim','4','Interim','5','Interim','Annual')
+    from sysadm.ps_gm_ey_main r, sysadm.ps_gm_ey_section y, sysadm.ps_gm_eopf_h_d_vw x, sysadm.ps_person_name q
+    where r.gm_ey_template_id = 'DS_5055'
+    and r.gm_ey_reviewstatus= 'PYEA'
+    and y.gm_ey_appraisal_id = r.gm_ey_appraisal_id
+    and r.emplid = q.emplid
+    and y.gm_ey_section_type = 'FS109'
+    and x.gm_eopf_source(+) = 'E'
+    and x.emplid(+) = r.emplid
+    and x.gm_ey_appraisal_id(+) = r.gm_ey_appraisal_id  
+    and  r.gm_ey_appraisal_id   not in (
+    select eoh.gm_ey_appraisal_id
+       from sysadm.ps_gm_eopf_header eoh
+         , sysadm.ps_gm_eopf_detail eod
+    where eoh_gm_eopf_source = 'E'
+       and eoh.run_cntl_id = eod.run_cntl_id
+       and eod.seqnum = (
+          select max(eod1.seqnum)
+             from sysadm.ps_gm_eopf_detail eod1
+          where eod1.run_cntl_id = eod.run_cntl_id)
+              and eod.run_dttm > (
+          select max(t1.datetime_stamp)
+             from sysadm.ps_gm_ey_tracking t1
+          where t1.gm_ey_appraisal_id = eoh.gm_ey_appraisal_id)
+             and eod.run_status_cd in ('C','I','N'))

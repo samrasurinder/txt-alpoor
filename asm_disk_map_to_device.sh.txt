@@ -1,0 +1,12 @@
+#!/bin/bash
+oracleasm listdisks  > /tmp/listdisks.txt
+while read -r ASM_disk ; do
+major="$(oracleasm querydisk -d $ASM_disk | awk -F[ '{ print $2 }'| awk -F] '{ print $1 }' | awk -F, '{ print $1 }')"
+minor="$(oracleasm querydisk -d $ASM_disk | awk -F[ '{ print $2 }'| awk -F] '{ print $1 }' | awk -F, '{ print $2 }')"
+disk_name=$(ls -l /dev/* |  grep "\<$major\>" | grep "\<$minor\>" | awk '{ print $10 }')
+
+disk_name=`echo $disk_name | awk '{ print $1}'`
+#sudo /usr/sbin/fdisk fdisk -l $disk_name
+Totalsize=`sudo fdisk -l $disk_name | awk 'NR==2{ print $3,$4}'`
+echo "The ASM disk: '$ASM_disk' mapped to '$disk_name'  Totalsize=$Totalsize"
+done < /tmp/listdisks.txt

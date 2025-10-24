@@ -1,0 +1,42 @@
+
+
+https://helpcenter.netwrix.com/NA/Configure_IT_Infrastructure/Oracle/Configure_Oracle_FGA.html
+
+Configure Fine Grained Auditing
+When configuring Fine Grained Auditing, you need to create an audit policy with required parameters set. The section below explains how to create, disable and delete such audit policies.
+
+NOTE: Fine Grained audit policies can be configured for Oracle Database Enterprise Edition only. Keep in mind that if you have Fine Grained policies configured, you will receive a permanent error in the Netwrix Auditor System Health log because Netwrix Auditor cannot detect it. Use Unified and Standard audit policies to keep track of data changes.
+
+Fine Grained Auditing is not supported in Mixed mode.
+
+To configure Fine Grained Auditing
+
+Below is an example of Fine Grained audit policy that enables auditing of audit statements (INSERT, UPDATE, DELETE, and SELECT) on table hr.emp to audit any query that accesses the salary column of the employee records that belong to sales department.
+
+To...	Execute the following command...
+To create audit policy	EXEC DBMS_FGA.ADD_POLICY(object_schema => 'hr', object_name => 'emp', policy_name => 'chk_hr_emp', audit_condition => 'dept = ''SALES'' ', audit_column => 'salary', statement_types => 'INSERT,UPDATE,DELETE,SELECT');
+To disable audit policy	EXEC DBMS_FGA.DISABLE_POLICY(object_schema => 'hr', object_name =>'emp', policy_name => 'chk_hr_emp');
+To delete audit policy	EXEC DBMS_FGA.DROP_POLICY(object_schema => 'hr', object_name =>'emp', policy_name => 'chk_hr_emp');
+NOTE: Refer to Oracle documentation for additional information on Fine Grained Auditing.
+
+
+
+SECREF_UER_ROLE_AUDIT
+
+
+EXEC DBMS_FGA.ADD_POLICY(object_schema => 'SECREF', object_name => 'USER_ROLE', policy_name => 'SECREF_UER_ROLE_AUDIT', audit_condition => 'RL_CD in  (''IPMS Support'',''secref_admin'',''support'',''developer'')', audit_column => 'RL_CD', statement_types => 'INSERT,UPDATE,DELETE');
+
+EXEC DBMS_FGA.DROP_POLICY(object_schema => 'SECREF', object_name =>'USER_ROLE', policy_name => 'SECREF_UER_ROLE_AUDIT');
+
+  (''IPMS Support'',''secref_admin'',''support'',''developer'')
+
+
+EXEC DBMS_FGA.DROP_POLICY(object_schema => 'SECREF', object_name =>'USER_ROLE', policy_name => 'SECREF_UER_ROLE_AUDIT');
+
+EXEC DBMS_FGA.ADD_POLICY(object_schema => 'SECREF', object_name => 'USER_ROLE', policy_name => 'SECREF_UER_ROLE_AUDIT', audit_condition => 'RL_CD =  ''IPMS Support'' or RL_CD =  ''support'' ', audit_column => 'RL_CD', statement_types => 'INSERT,UPDATE,DELETE');
+
+
+EXEC DBMS_FGA.ADD_POLICY(object_schema => 'SECREF', object_name => 'USER_ROLE', policy_name => 'SECREF_UER_ROLE_AUDIT_IPMS_SUPPORT', audit_condition => 'RL_CD =  ''IPMS Support''', audit_column => 'RL_CD', statement_types => 'INSERT,UPDATE,DELETE');
+EXEC DBMS_FGA.ADD_POLICY(object_schema => 'SECREF', object_name => 'USER_ROLE', policy_name => 'SECREF_UER_ROLE_AUDIT_SECREF_ADMIN', audit_condition => 'RL_CD =  ''secref_admin''', audit_column => 'RL_CD', statement_types => 'INSERT,UPDATE,DELETE');
+EXEC DBMS_FGA.ADD_POLICY(object_schema => 'SECREF', object_name => 'USER_ROLE', policy_name => 'SECREF_UER_ROLE_AUDIT_SUPPORT', audit_condition => 'RL_CD =  ''support''', audit_column => 'RL_CD', statement_types => 'INSERT,UPDATE,DELETE');
+EXEC DBMS_FGA.ADD_POLICY(object_schema => 'SECREF', object_name => 'USER_ROLE', policy_name => 'SECREF_UER_ROLE_AUDIT_DEVELOPER', audit_condition => 'RL_CD =  ''developer''', audit_column => 'RL_CD', statement_types => 'INSERT,UPDATE,DELETE');

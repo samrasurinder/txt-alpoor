@@ -1,0 +1,18 @@
+DECLARE
+ CURSOR job_list
+ IS
+ SELECT JOB FROM dba_jobs;
+mysql VARCHAR2 (32767);
+BEGIN
+ FOR job_id IN job_list
+ LOOP
+ mysql := '';
+ DBMS_OUTPUT.put_line ('BEGIN');
+ DBMS_OUTPUT.put_line ('DBMS_JOB.REMOVE(' || job_id.job || ');');
+ DBMS_JOB.user_export (job_id.job, mysql);
+ DBMS_OUTPUT.put_line (mysql);
+ DBMS_OUTPUT.put_line ('END;');
+ DBMS_OUTPUT.put_line ('/');
+ END LOOP;
+END;
+/

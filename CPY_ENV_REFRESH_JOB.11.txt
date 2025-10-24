@@ -1,0 +1,396 @@
+
+
+'Multi-Task' Job: CPY_ENV_REFRESH_JOB.12
+-----------------------------------------
+
+Refresh CRMCPY, CPY, and DEVCPY database from HFPRD and HFCRM backup on DRSHARE diskgroup
+
+Weekly on Monday, Tuesday, Wednesday, Thursday, Friday
+beginning Sep 28, 2017 12:01:00 AM
+Eastern Standard Time (GMT -5:00)
+
+Step 1)  'OS Command' Task: DELETE_DRSHARE_BACKUPS
+--------------------------------------------------
+/bin/bash /infshare/oracle/scripts/dba/delete_drshare_backup.bash ( Target : hrewoel13.hr.state.sbu	Host	hrewoel13.hr.state.sbu	Eastern Standard Time )
+
+[oracle@hrewoel13 ~]$ cat /infshare/oracle/scripts/dba/delete_drshare_backup.bash
+#!/bin/bash
+
+sudo su - grid -c "/infshare/oracle/scripts/dba/backup_drshare_delete.bash"
+
+
+
+
+
+[oracle@hrewoel13 ~]$ cat /infshare/oracle/scripts/dba/backup_drshare_delete.bash
+#!/bin/bash
+
+whoami
+ORACLE_BASE=/u02/app/oracle
+ORACLE_HOME=/u02/app/11.2.0.4/grid
+ORACLE_SID=+ASM1
+export PATH=$PATH:$ORACLE_HOME/bin
+export ORACLE_BASE ORACLE_HOME ORACLE_SID
+
+/usr/local/bin/oraenv <<EOF
+$ORACLE_SID
+EOF
+echo ""
+echo ""
+echo  "********** DELETING DRSHARE BACKUPS **********"
+asmcmd <<EOF
+lsdg
+cd drshare
+pwd
+ls
+rm -rf HFPRD HFCRM OPSSTBY
+ls
+EOF
+echo "********** DELETED DRSHARE BACKUPS **********"
+
+[oracle@hrewoel13 ~]$
+
+
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+
+
+
+
+
+
+Step 2)  'OS Command' Task: HFPRD_BACKUP_TO_DRSHARE
+
+/infshare/oracle/scripts/backup/RMAN_BACKUP_FOR_REFRESH_DRSHARE.bash HFPRD (Target:hrewoel13.hr.state.sbu	Host	hrewoel13.hr.state.sbu	Eastern Standard Time)
+
+
+  1 #!/bin/bash
+  2
+  3 #######################################################################
+  4 # syntax:
+  5 #    RMAN_BACKUP_FOR_REFRESH.bash [PARM_1]
+  6 #
+  7 # Where:
+  8 #    PARM_1 = [Database Name]
+  9 #
+ 10 # For example:
+ 11 #    1. RMAN_BACKUP_FOR_REFRESH.bash HFPRD
+ 12 #    2. RMAN_BACKUP_FOR_REFRESH.bash arc
+ 13 #######################################################################
+ 14 # 15-Oct-2011  hvn  -Initial creation.
+ 15 # 14-Apr-2012  hvn  -Add logic to handle lower case database name like 'arc'.
+ 16 # 15-Apr-2012  hvn  -Migrate change to Test environment.
+ 17 # 16-Apr-2012  hvn  -Migrate change to Production environment.
+ 18 #######################################################################
+ 19
+ 20 #######################################################################
+ 21 # Determine database instance name
+ 22 export DB_NAME=$1
+ 23 ORACLE_SID=`ps -ef|grep pmon|grep ora_pmon_${DB_NAME}|grep -v grep|awk '{print $8}'|cut -d_ -f3`
+ 24 export ORACLE_SID
+ 25 export ORACLE_UNQNAME=$DB_NAME
+ 26 #######################################################################
+ 27 # Determine database mode based on database name
+ 28 case ${DB_NAME} in
+ 29 HFCRM)          DB_TYPE=PHYSICALSTDBY ;;
+ 30 HFPRD)          DB_TYPE=PHYSICALSTDBY ;;
+ 31 OPSSTBY)        DB_TYPE=PHYSICALSTDBY ;;
+ 32 SNCSTBY)        DB_TYPE=PHYSICALSTDBY ;;
+ 33 HFKC)           DB_TYPE=NOARCHIVELOG ;;
+ 34 GMPC)           DB_TYPE=NOARCHIVELOG ;;
+ 35 gmpr)           DB_TYPE=NOARCHIVELOG ;;
+ 36 CRM)            DB_TYPE=ARCHIVELOG ;;
+ 37 EODASB)         DB_TYPE=ARCHIVELOG ;;
+ 38 PRD)            DB_TYPE=ARCHIVELOG ;;
+ 39 PRDREP)         DB_TYPE=ARCHIVELOG ;;
+ 40 TST5)           DB_TYPE=ARCHIVELOG ;;
+ 41 *)              DB_TYPE=ARCHIVELOG ;;
+ 42 esac
+ 43
+ 44 #######################################################################
+ 45 # Validate database mode or type
+  46 case ${DB_TYPE} in
+ 47 ARCHIVELOG)     ;;
+ 48 NOARCHIVELOG)   ;;
+ 49 PHYSICALSTDBY)  ;;
+ 50 *)              echo "*** ERROR: Invalid Database Type found: ${DB_TYPE}."
+ 51                 echo "*** Valid Database Type: ARCHIVELOG | NOARCHIVELOG | PHYSICALSTDBY "
+ 52                 echo "+++ `whoami`@`hostname -s`: Job '$0 $1' failed on `date`"
+ 53                 exit 1 ;;
+ 54 esac
+ 55
+ 56 #######################################################################
+ 57 # Validate if database instance exists
+ 58 if [ "${ORACLE_SID}" = "" ] ; then
+ 59    echo "*** ERROR: What is the point! Where is the BEEF?"
+ 60    echo "*** ERROR: No instance for database ${DB_NAME} found at host `hostname -s`."
+ 61    echo "`ps -ef|grep pmon|grep -v grep`"
+ 62    echo "+++ `whoami`@`hostname -s`: Job '$0 $1' failed on `date`"
+ 63    exit 1
+ 64 fi
+ 65
+ 66 #######################################################################
+ 67 # Set environment variables
+ 68 . /usr/local/bin/oraenv <<EOF
+ 69 $ORACLE_SID
+ 70 EOF
+ 71
+ 72 #######################################################################
+ 73 # Validate existence of logs and backup directory
+ 74 DB_NAME=`echo $DB_NAME |tr  '[a-z]' '[A-Z]'`
+ 75 test ! -d /infshare/oracle/logs/${DB_NAME} && mkdir -p /infshare/oracle/logs/${DB_NAME}
+ 76 #test ! -d /infshare/oracle/backup/${DB_NAME} && mkdir -p /infshare/oracle/backup/${DB_NAME}
+ 77 #test ! -d /infshare/oracle/backup/${DB_NAME}/backupset && mkdir -p /infshare/oracle/backup/${DB_NAME}/backupset
+ 78
+ 79 #######################################################################
+ 80 # Remove any existing backups
+ 81 #cd /infshare/oracle/backup/${DB_NAME}/backupset
+ 82 #pwd
+ 83 #ls -l
+ 84 #echo "find . -type d -mtime +0 -exec rm -rf {} \;"
+ 85 #find . -type d -mtime +0 -exec rm -rf {} \; >/dev/null 2>&1
+ 86 #ls -l
+ 87
+ 88 #######################################################################
+ 89 # Subroutine: Backup for database with NO ARCHIVELOG mode
+ 90 backup_no_archivelog() {
+ 91 echo "*** Invoking backup_no_archivelog ***"
+ 92 # Startup in MOUNT mode
+ 93 echo srvctl stop database -d ${DB_NAME}
+ 94 srvctl stop database -d ${DB_NAME}
+ 95 RET_CODE=$?
+ 96 echo srvctl status database -d ${DB_NAME}
+ 97 srvctl status database -d ${DB_NAME}
+ 98 RET_CODE=$?
+ 99 echo srvctl start database -d ${DB_NAME} -o MOUNT
+100 srvctl start database -d ${DB_NAME} -o MOUNT
+101 RET_CODE=$?
+102 echo srvctl status database -d ${DB_NAME}
+103 srvctl status database -d ${DB_NAME}
+104 RET_CODE=$?
+105 cd /infshare/oracle/logs/${DB_NAME}
+106 TRACEFILE=${DB_NAME}_`date +%Y_%m%d_%H%M`_rman_backup_${ORACLE_SID}_`hostname -s`.log
+107 # Run RMAN backup for database in NOARCHIVELOG and MOUNT mode
+108 rman trace=${TRACEFILE} <<EOF
+109 connect target /;
+110 set echo on;
+111 backup
+112   device type disk
+113   to destination '+DRSHARE'
+114   tag '${DB_NAME}_Cold_Backup'
+115   spfile
+116   current controlfile
+117   database;
+118 EOF
+119 RET_CODE=$?
+120 STEP_NAME="${DB_NAME} RMAN Backup"
+121 # Startup in OPEN mode
+122 srvctl stop database -d ${DB_NAME}
+123 RET_CODE=$?
+124 srvctl start database -d ${DB_NAME}
+125 RET_CODE=$?
+126 srvctl status database -d ${DB_NAME}
+127 RET_CODE=$?
+128 } # end of backup_no_archivelog
+129
+130 #######################################################################
+131 # Subroutine: Backup for database as PHYSICAL STANDBY
+132 backup_physical_standby() {
+133 echo "*** Invoking backup_physical_standby ***"
+134 echo $ORACLE_UNQNAME
+135 #cd /infshare/oracle/logs/${DB_NAME}
+136 # Initial Stop then Start in MOUNT mode - trying to prevent issue 'skip forever tablespace  "SYSAUX"' (hvn 22-Feb-2012)
+137 srvctl stop database -d ${DB_NAME}
+138 sleep 30 # Very IMPORTANT! To prevent error 'ORA-16136: Managed Standby Recovery not active'
+139 srvctl start database -d ${DB_NAME} -o MOUNT
+140 # Startup in MOUNT mode - trust me on this - will solve a lot hurts! (hvn 25-Jan-2012)
+141 echo srvctl stop database -d ${DB_NAME}
+142 srvctl stop database -d ${DB_NAME}
+143 RET_CODE=$?
+144 echo srvctl status database -d ${DB_NAME}
+145 srvctl status database -d ${DB_NAME}
+146 echo srvctl start instance -d ${DB_NAME} -i ${ORACLE_SID} -o MOUNT
+147 srvctl start instance -d ${DB_NAME} -i ${ORACLE_SID} -o MOUNT
+148 RET_CODE=$?
+149 echo srvctl status database -d ${DB_NAME}
+150 srvctl status database -d ${DB_NAME}
+151 sleep 360 # Very IMPORTANT! To prevent error 'ORA-16136: Managed Standby Recovery not active'
+152 TRACEFILE=${DB_NAME}_`date +%Y_%m%d_%H%M`_rman_backup_${ORACLE_SID}_`hostname -s`.log
+153 # Run RMAN backup for PHYSICAL STANDBY database with ARCHIVELOG mode
+154 rman trace=${TRACEFILE} <<EOF
+155 connect target /;
+156 set echo on;
+157 SQL 'ALTER DATABASE RECOVER MANAGED STANDBY DATABASE CANCEL';
+158 backup
+159   device type disk
+160   to destination '+DRSHARE'
+161   tag '${DB_NAME}_Standby_Full'
+162   spfile
+163   current controlfile;
+164 backup
+165   device type disk
+166   to destination '+DRSHARE'
+167   tag '${DB_NAME}_Standby_Full'
+168   database;
+169 backup
+170   device type disk
+171   to destination '+DRSHARE'
+172   tag '${DB_NAME}_Standby_Full'
+173   spfile
+174   current controlfile;
+175 SQL 'ALTER DATABASE RECOVER MANAGED STANDBY DATABASE USING CURRENT LOGFILE DISCONNECT';
+176 EOF
+177 RET_CODE=$?
+178 STEP_NAME="${DB_NAME} RMAN Backup"
+179 echo srvctl stop instance -d ${DB_NAME} -i ${ORACLE_SID}
+180 srvctl stop instance -d ${DB_NAME} -i ${ORACLE_SID}
+181 RET_CODE=$?
+182 echo srvctl status database -d ${DB_NAME}
+183 srvctl status database -d ${DB_NAME}
+184 echo srvctl start database -d ${DB_NAME} -o MOUNT
+185 srvctl start database -d ${DB_NAME} -o MOUNT
+186 RET_CODE=$?
+187 echo srvctl status database -d ${DB_NAME}
+188 srvctl status database -d ${DB_NAME}
+189 sleep 360
+190 sqlplus / as sysdba <<EOF
+191 set echo on;
+192 Select wrl_parameter,status from v\$encryption_wallet;
+193 ALTER DATABASE RECOVER MANAGED STANDBY DATABASE USING CURRENT LOGFILE DISCONNECT;
+194 EOF
+195 }
+196
+197 #######################################################################
+198 # Subroutine: Backup for database with ARCHIVELOG mode
+199 backup_archivelog() {
+200 echo "*** Invoking backup_archivelog ***"
+201 cd /infshare/oracle/logs/${DB_NAME}
+202 TRACEFILE=${DB_NAME}_`date +%Y_%m%d_%H%M`_rman_backup_${ORACLE_SID}_`hostname -s`.log
+203 # Run RMAN backup for all other database with ARCHIVELOG mode
+204 rman trace=${TRACEFILE} <<EOF
+205 connect target /;
+206 set echo on;
+207 SQL 'alter system switch logfile';
+208 SQL 'alter system archive log current';
+209 backup
+210   device type disk
+211   to destination '+DRSHARE'
+212   tag '${DB_NAME}_Full_DB'
+213   spfile
+214   current controlfile;
+215 backup
+216   device type disk
+217   to destination '+DRSHARE'
+218   tag '${DB_NAME}_Full_DB'
+219   database
+220   plus archivelog not backed up;
+221 backup
+222   device type disk
+223   to destination '+DRSHARE'
+224   tag '${DB_NAME}_Full_DB'
+225   spfile
+226   current controlfile;
+227 EOF
+228 RET_CODE=$?
+229 STEP_NAME="${DB_NAME} RMAN Backup"
+230 } # end of backup_archivelog
+231
+232 #######################################################################
+233 # Set current tag
+234 #cd /infshare/oracle/backup/${DB_NAME}/backupset
+235 #rm -f current
+236 #ln -s `date +%Y_%m_%d` current
+237
+238 #######################################################################
+239 # Document TitleRecovery Manager (RMAN) diagnostic collection (Doc ID 1337285.1)
+240 export NLS_DATE_FORMAT='YYYY_MM_DD HH24:MI:SS'
+241
+242 #######################################################################
+243 # Backup based on DB_TYPE
+244 # -For database in NOARCHIVELOG and MOUNT mode
+245 # -For PHYSICAL STANDBY database with ARCHIVELOG mode
+246 # -For ALL OTHER database with ARCHIVELOG mode
+247 case ${DB_TYPE} in
+248 ARCHIVELOG)     backup_archivelog ;;
+249 NOARCHIVELOG)   backup_no_archivelog ;;
+250 PHYSICALSTDBY)  backup_physical_standby ;;
+251 *)              echo "*** ERROR: Invalid Database Type found: ${DB_TYPE}."
+252                 echo "*** Valid Database Type: ARCHIVELOG | NOARCHIVELOG | PHYSICALSTDBY "
+253                 echo "+++ `whoami`@`hostname -s`: Job '$0 $1' failed on `date`"
+254                 exit 1 ;;
+255 esac
+256
+257 exit $RET_CODE
+258
+
+
+
+
+
+
+
+Step 3)  'OS Command' Task: HFCRM_BACKUP_TO_DRSHARE
+
+/infshare/oracle/scripts/backup/RMAN_BACKUP_FOR_REFRESH_DRSHARE.bash HFCRM (Target: hrewoel13.hr.state.sbu	Host	hrewoel13.hr.state.sbu	Eastern Standard Time)
+
+
+
+
+Step 4) 'OS Command' Task: OPSSTBY_BACKUP_TO_DRSHARE
+
+/infshare/oracle/scripts/backup/RMAN_BACKUP_FOR_REFRESH_DRSHARE.bash OPSSTBY
+
+Target: hrewoel13.hr.state.sbu	Host	hrewoel13.hr.state.sbu	Eastern Standard Time
+
+
+Step 5)'OS Command' Task: DISMOUNT_DRSHARE_DISKGROUP_FROM_HF
+
+/bin/bash /infshare/oracle/scripts/dba/dismount_asm_diskgroup.bash
+
+Target: hrewoel13.hr.state.sbu	Host	hrewoel13.hr.state.sbu	Eastern Standard Time
+
+
+Step 6)'OS Command' Task: MOUNT_DRSHARE_DISKGROUP
+
+/bin/bash /infshare/oracle/scripts/dba/mount_asm_diskgroup.bash
+
+Target: hrewoel29.hr.state.sbu	Host	hrewoel29.hr.state.sbu	Eastern Standard Time
+
+
+Step 7) 'OS Command' Task: OPSCPY1_DB_REFRESH
+/infshare/oracle/scripts/refresh/bin/db_refresh_BACKUP.bash OPSCPY1
+
+Target: hrewoel29.hr.state.sbu	Host	hrewoel29.hr.state.sbu	Eastern Standard Time
+
+Step 8) 'OS Command' Task: RESTART_OPSCPY1_DOMAINS
+/ops/cfg/psft/pt/854/scripts/start_stop/restart_env.sh OPSCPY1
+
+Target: hrewlcpyap51.hr.state.sbu	Host	hrewlcpyap51.hr.state.sbu	Eastern Standard Time
+
+Step 9) Edit 'OS Command' Task: CPY1_DB_REFRESH
+/infshare/oracle/scripts/refresh/bin/db_refresh_BACKUP.bash CPY1
+
+Target: hrewoel29.hr.state.sbu	Host	hrewoel29.hr.state.sbu	Eastern Standard Time
+
+Step 10) 'OS Command' Task: CRMCPY_DB_REFRESH
+/bin/bash /infshare/oracle/scripts/refresh/bin/db_refresh_BACKUP.bash CRMCPY
+
+Target: hrewoel29.hr.state.sbu	Host	hrewoel29.hr.state.sbu	Eastern Standard Time
+
+Step 11) 'OS Command' Task: DISMOUNT_DRSHARE_DISKGROUP
+/bin/bash /infshare/oracle/scripts/dba/dismount_asm_diskgroup.bash
+
+hrewoel29.hr.state.sbu	Host	hrewoel29.hr.state.sbu	Eastern Standard Time
+
+
+
+
+
+
+
+
+
+

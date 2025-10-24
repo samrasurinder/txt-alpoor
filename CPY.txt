@@ -1,0 +1,74 @@
+
+# Current status of the job is ACTIVE.
+name=CPY_ENV_REFRESH_JOB.2
+type=multitask
+description=Refresh CRMCPY, CPY, and DEVCPY database from HFPRD and HFCRM backup on DRSHARE diskgroup
+owner=HROEM12CADMIN
+
+schedule.frequency=WEEKLY
+schedule.startTime=2017-09-28 00:01:00
+schedule.days=2, 3, 4, 5, 6
+schedule.timezone.region=America/New_York
+notification=SUSPENDED, SUCCEEDED, PROBLEMS
+
+
+###########
+# Tasks
+###########
+
+
+task.DELETE_DRSHARE_BACKUPS.type=OSCommand
+task.DELETE_DRSHARE_BACKUPS.target_list=hrewoel13.hr.state.sbu:host
+task.DELETE_DRSHARE_BACKUPS.targetType=host
+task.DELETE_DRSHARE_BACKUPS.cred.defaultHostCred.<all_targets>:host=NAMED:HROEM12CADMIN:ORACLE_PRD
+task.DELETE_DRSHARE_BACKUPS.variable.default_shell_command=/bin/bash /infshare/oracle/scripts/dba/delete_drshare_backup.bash
+
+task.HFPRD_BACKUP_TO_DRSHARE.dependsOn=successOf:DELETE_DRSHARE_BACKUPS
+task.HFPRD_BACKUP_TO_DRSHARE.type=OSCommand
+task.HFPRD_BACKUP_TO_DRSHARE.target_list=hrewoel13.hr.state.sbu:host
+task.HFPRD_BACKUP_TO_DRSHARE.targetType=host
+task.HFPRD_BACKUP_TO_DRSHARE.cred.defaultHostCred.<all_targets>:host=NAMED:HROEM12CADMIN:ORACLE_PRD
+task.HFPRD_BACKUP_TO_DRSHARE.variable.default_shell_command=/infshare/oracle/scripts/backup/RMAN_BACKUP_FOR_REFRESH_DRSHARE.bash HFPRD
+
+task.HFCRM_BACKUP_TO_DRSHARE.dependsOn=successOf:HFPRD_BACKUP_TO_DRSHARE
+task.HFCRM_BACKUP_TO_DRSHARE.type=OSCommand
+task.HFCRM_BACKUP_TO_DRSHARE.target_list=hrewoel13.hr.state.sbu:host
+task.HFCRM_BACKUP_TO_DRSHARE.targetType=host
+task.HFCRM_BACKUP_TO_DRSHARE.cred.defaultHostCred.<all_targets>:host=NAMED:HROEM12CADMIN:ORACLE_PRD
+task.HFCRM_BACKUP_TO_DRSHARE.variable.default_shell_command=/infshare/oracle/scripts/backup/RMAN_BACKUP_FOR_REFRESH_DRSHARE.bash HFCRM
+
+task.DISMOUNT_DRSHARE_DISKGROUP_FROM_HF.dependsOn=successOf:HFCRM_BACKUP_TO_DRSHARE
+task.DISMOUNT_DRSHARE_DISKGROUP_FROM_HF.type=OSCommand
+task.DISMOUNT_DRSHARE_DISKGROUP_FROM_HF.target_list=hrewoel13.hr.state.sbu:host
+task.DISMOUNT_DRSHARE_DISKGROUP_FROM_HF.targetType=host
+task.DISMOUNT_DRSHARE_DISKGROUP_FROM_HF.cred.defaultHostCred.<all_targets>:host=NAMED:HROEM12CADMIN:ORACLE_PRD
+task.DISMOUNT_DRSHARE_DISKGROUP_FROM_HF.variable.default_shell_command=/bin/bash /infshare/oracle/scripts/dba/dismount_asm_diskgroup.bash
+
+task.MOUNT_DRSHARE_DISKGROUP.dependsOn=successOf:DISMOUNT_DRSHARE_DISKGROUP_FROM_HF
+task.MOUNT_DRSHARE_DISKGROUP.type=OSCommand
+task.MOUNT_DRSHARE_DISKGROUP.target_list=hrewoel29.hr.state.sbu:host
+task.MOUNT_DRSHARE_DISKGROUP.targetType=host
+task.MOUNT_DRSHARE_DISKGROUP.cred.defaultHostCred.<all_targets>:host=NAMED:HROEM12CADMIN:ORACLE_CPY
+task.MOUNT_DRSHARE_DISKGROUP.variable.default_shell_command=/bin/bash /infshare/oracle/scripts/dba/mount_asm_diskgroup.bash
+
+task.CPY1_DB_REFRESH.dependsOn=successOf:MOUNT_DRSHARE_DISKGROUP
+task.CPY1_DB_REFRESH.type=OSCommand
+task.CPY1_DB_REFRESH.target_list=hrewoel29.hr.state.sbu:host
+task.CPY1_DB_REFRESH.targetType=host
+task.CPY1_DB_REFRESH.cred.defaultHostCred.<all_targets>:host=NAMED:HROEM12CADMIN:ORACLE_CPY
+task.CPY1_DB_REFRESH.variable.default_shell_command=/infshare/oracle/scripts/refresh/bin/db_refresh_BACKUP.bash CPY1
+
+task.CRMCPY_DB_REFRESH.dependsOn=successOf:CPY1_DB_REFRESH
+task.CRMCPY_DB_REFRESH.type=OSCommand
+task.CRMCPY_DB_REFRESH.target_list=hrewoel29.hr.state.sbu:host
+task.CRMCPY_DB_REFRESH.targetType=host
+task.CRMCPY_DB_REFRESH.cred.defaultHostCred.<all_targets>:host=NAMED:HROEM12CADMIN:ORACLE_CPY
+task.CRMCPY_DB_REFRESH.variable.default_shell_command=/bin/bash /infshare/oracle/scripts/refresh/bin/db_refresh_BACKUP.bash CRMCPY
+
+task.DISMOUNT_DRSHARE_DISKGROUP.dependsOn=successOf:CRMCPY_DB_REFRESH
+task.DISMOUNT_DRSHARE_DISKGROUP.type=OSCommand
+task.DISMOUNT_DRSHARE_DISKGROUP.target_list=hrewoel29.hr.state.sbu:host
+task.DISMOUNT_DRSHARE_DISKGROUP.targetType=host
+task.DISMOUNT_DRSHARE_DISKGROUP.cred.defaultHostCred.<all_targets>:host=NAMED:HROEM12CADMIN:ORACLE_CPY
+task.DISMOUNT_DRSHARE_DISKGROUP.variable.default_shell_command=/bin/bash /infshare/oracle/scripts/dba/dismount_asm_diskgroup.bash
+

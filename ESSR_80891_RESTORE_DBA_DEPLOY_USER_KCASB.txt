@@ -1,0 +1,175 @@
+SQL> SET SERVEROUTPUT ON
+SQL> show user;
+USER is "SYS"
+SQL> select * from global_name;
+
+GLOBAL_NAME                                                                     
+--------------------------------------------------------------------------------
+KCASB.HR.STATE.SBU                                                              
+
+SQL> select sysdate from dual;
+
+SYSDATE                                                                         
+---------                                                                       
+28-JUN-22                                                                       
+
+SQL> --DATABASE KCASB
+SQL> ----------------------DW.FSI_RMA_PEOPLEXREF_HR------------------
+SQL> TRUNCATE TABLE DW.FSI_RMA_PEOPLEXREF_HR;
+
+Table truncated.
+
+SQL> INSERT INTO DW.FSI_RMA_PEOPLEXREF_HR
+  2  SELECT * FROM DW.FSI_RMA_PEOPLEXREF_HR_BCK_20220524;
+
+230055 rows created.
+
+SQL> COMMIT;
+
+Commit complete.
+
+SQL> ----------------------DW.FSI_RMA_ETRNG--------------------------
+SQL> TRUNCATE TABLE DW.FSI_RMA_ETRNG;
+
+Table truncated.
+
+SQL> INSERT INTO DW.FSI_RMA_ETRNG
+  2  SELECT * FROM DW.FSI_RMA_ETRNG_BCK_20220524;
+
+99989 rows created.
+
+SQL> COMMIT;
+
+Commit complete.
+
+SQL> ----------------------DW.FSI_RMA_EMP_LANG_SCORES----------------
+SQL> TRUNCATE TABLE DW.FSI_RMA_EMP_LANG_SCORES;
+
+Table truncated.
+
+SQL> INSERT INTO DW.FSI_RMA_EMP_LANG_SCORES
+  2  SELECT * FROM DW.FSI_RMA_EMP_LANG_SCORES_BCK_20220524;
+
+101289 rows created.
+
+SQL> COMMIT;
+
+Commit complete.
+
+SQL> ----------------------DW.FSI_RMA_ITRNG---------------------------
+SQL> TRUNCATE TABLE DW.FSI_RMA_ITRNG;
+
+Table truncated.
+
+SQL> INSERT INTO DW.FSI_RMA_ITRNG
+  2  SELECT * FROM DW.FSI_RMA_ITRNG_BCK_20220524;
+
+2745918 rows created.
+
+SQL> COMMIT;
+
+Commit complete.
+
+SQL> ----------------------DW.S0_FSI_MAND_TRAINING--------------------
+SQL> TRUNCATE TABLE DW.S0_FSI_MAND_TRAINING;
+
+Table truncated.
+
+SQL> INSERT INTO DW.S0_FSI_MAND_TRAINING
+  2  SELECT * FROM DW.S0_FSI_MAND_TRAINING_BCK_20220524;
+
+989599 rows created.
+
+SQL> COMMIT;
+
+Commit complete.
+
+SQL> ----------------------DW.FSI_RMA_TRNG_ENROLLMENT------------------
+SQL> TRUNCATE TABLE DW.FSI_RMA_TRNG_ENROLLMENT;
+
+Table truncated.
+
+SQL> INSERT INTO DW.FSI_RMA_TRNG_ENROLLMENT
+  2  SELECT * FROM DW.FSI_RMA_TRNG_ENROLLMENT_BCK_20220524;
+
+20980 rows created.
+
+SQL> COMMIT;
+
+Commit complete.
+
+SQL> ----------------------WEBSTAGE.S0_FSIPEOPLEXREF_HR----------------
+SQL> TRUNCATE TABLE WEBSTAGE.S0_FSIPEOPLEXREF_HR;
+
+Table truncated.
+
+SQL> INSERT INTO WEBSTAGE.S0_FSIPEOPLEXREF_HR
+  2  SELECT * FROM WEBSTAGE.S0_FSIPEOPLEXREF_HR_BCK_20220524;
+
+230020 rows created.
+
+SQL> COMMIT;
+
+Commit complete.
+
+SQL> ----------------------WEBSTAGE.S0_FSIRSTMSTOGEMSETRNG--------------
+SQL> TRUNCATE TABLE WEBSTAGE.S0_FSIRSTMSTOGEMSETRNG;
+
+Table truncated.
+
+SQL> INSERT INTO WEBSTAGE.S0_FSIRSTMSTOGEMSETRNG
+  2  SELECT * FROM WEBSTAGE.S0_FSIRSTMSTOGEMSETRNG_BCK_20220524;
+
+99979 rows created.
+
+SQL> COMMIT;
+
+Commit complete.
+
+SQL> ----------------------WEBSTAGE.S0_FSIRSTMSTOGEMSTRNG---------------
+SQL> TRUNCATE TABLE WEBSTAGE.S0_FSIRSTMSTOGEMSTRNG;
+
+Table truncated.
+
+SQL> INSERT INTO WEBSTAGE.S0_FSIRSTMSTOGEMSTRNG
+  2  SELECT * FROM WEBSTAGE.S0_FSIRSTMSTOGEMSTRNG_BCK_20220524;
+
+2745394 rows created.
+
+SQL> COMMIT;
+
+Commit complete.
+
+SQL> ----------------------WEBSTAGE.S0_FSI_EMP_TRAINING_ENROLLMENT------
+SQL> TRUNCATE TABLE WEBSTAGE.S0_FSI_EMP_TRAINING_ENROLLMENT;
+
+Table truncated.
+
+SQL> INSERT INTO WEBSTAGE.S0_FSI_EMP_TRAINING_ENROLLMENT
+  2  SELECT * FROM WEBSTAGE.S0_FSI_EMP_TRAINING_ENROLLMENT_BCK_20220524;
+
+20887 rows created.
+
+SQL> COMMIT;
+
+Commit complete.
+
+SQL> ---------------------- WEBSTAGE.S0_FSI_COURSE----------------------
+SQL> TRUNCATE TABLE  WEBSTAGE.S0_FSI_COURSE;
+
+Table truncated.
+
+SQL> INSERT INTO  WEBSTAGE.S0_FSI_COURSE
+  2  SELECT * FROM WEBSTAGE.S0_FSI_COURSE_BCK_20220524;
+
+4315 rows created.
+
+SQL> COMMIT;
+
+Commit complete.
+
+SQL> 
+SQL> 
+SQL> SHOW ERRORS
+No errors.
+SQL> SPOOL OFF

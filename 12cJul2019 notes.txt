@@ -1,0 +1,471 @@
+
+As Oracle
+/u02/app/oracle/product/12.0.2/db_1/OPatch/opatch  lsinventory -detail -oh /u02/app/oracle/product/12.0.2/db_1 > /u02/PSU/JUL2019/lsinventory-detail.txt
+/u02/app/oracle/product/12.0.2/db_1/OPatch/opatch  lsinventory -oh /u02/app/oracle/product/12.0.2/db_1 > /u02/PSU/JUL2019/lsinventory.txt
+
+
+As Grid
+/u02/app/12.2.0/grid/OPatch/opatch  lsinventory -detail -oh /u02/app/12.2.0/grid > /u02/PSU/JUL2019/lsinventory-detail_grid_home.txt
+/u02/app/12.2.0/grid/OPatch/opatch  lsinventory -oh /u02/app/12.2.0/grid > /u02/PSU/JUL2019/lsinventory_grid_home.txt
+
+
+
+As Grid
+
+/u02/app/12.2.0/grid/OPatch/opatch prereq CheckconflictAgainstOHWithDetail -phBaseDir /u02/PSU/JUL2019/29699173/29708720/29757449
+Oracle Interim Patch Installer version 12.2.0.1.17
+Copyright (c) 2019, Oracle Corporation.  All rights reserved.
+
+PREREQ session
+
+Oracle Home       : /u02/app/12.2.0/grid
+Central Inventory : /u02/app/oraInventory
+   from           : /u02/app/12.2.0/grid/oraInst.loc
+OPatch version    : 12.2.0.1.17
+OUI version       : 12.2.0.1.4
+Log file location : /u02/app/12.2.0/grid/cfgtoollogs/opatch/opatch2019-08-06_12-17-55PM_1.log
+
+Invoking prereq "checkconflictagainstohwithdetail"
+
+Prereq "checkConflictAgainstOHWithDetail" passed.
+
+OPatch succeeded.
+
+
+/u02/app/12.2.0/grid/OPatch/opatch prereq CheckconflictAgainstOHWithDetail -phBaseDir /u02/PSU/JUL2019/29699173/29708720/29770090
+Oracle Interim Patch Installer version 12.2.0.1.17
+Copyright (c) 2019, Oracle Corporation.  All rights reserved.
+
+PREREQ session
+
+Oracle Home       : /u02/app/12.2.0/grid
+Central Inventory : /u02/app/oraInventory
+   from           : /u02/app/12.2.0/grid/oraInst.loc
+OPatch version    : 12.2.0.1.17
+OUI version       : 12.2.0.1.4
+Log file location : /u02/app/12.2.0/grid/cfgtoollogs/opatch/opatch2019-08-06_12-18-23PM_1.log
+
+Invoking prereq "checkconflictagainstohwithdetail"
+
+Prereq "checkConflictAgainstOHWithDetail" passed.
+
+OPatch succeeded.
+
+
+/u02/app/12.2.0/grid/OPatch/opatch prereq CheckconflictAgainstOHWithDetail -phBaseDir /u02/PSU/JUL2019/29699173/29708720/26839277
+Oracle Interim Patch Installer version 12.2.0.1.17
+Copyright (c) 2019, Oracle Corporation.  All rights reserved.
+
+PREREQ session
+
+Oracle Home       : /u02/app/12.2.0/grid
+Central Inventory : /u02/app/oraInventory
+   from           : /u02/app/12.2.0/grid/oraInst.loc
+OPatch version    : 12.2.0.1.17
+OUI version       : 12.2.0.1.4
+Log file location : /u02/app/12.2.0/grid/cfgtoollogs/opatch/opatch2019-08-06_12-18-58PM_1.log
+
+Invoking prereq "checkconflictagainstohwithdetail"
+
+
+Prereq "checkConflictAgainstOHWithDetail" passed.
+
+
+/u02/app/12.2.0/grid/OPatch/opatch prereq CheckconflictAgainstOHWithDetail -phBaseDir /u02/PSU/JUL2019/29699173/29708720/29770040
+Oracle Interim Patch Installer version 12.2.0.1.17
+Copyright (c) 2019, Oracle Corporation.  All rights reserved.
+
+PREREQ session
+
+Oracle Home       : /u02/app/12.2.0/grid
+Central Inventory : /u02/app/oraInventory
+   from           : /u02/app/12.2.0/grid/oraInst.loc
+OPatch version    : 12.2.0.1.17
+OUI version       : 12.2.0.1.4
+Log file location : /u02/app/12.2.0/grid/cfgtoollogs/opatch/opatch2019-08-06_12-19-26PM_1.log
+
+Invoking prereq "checkconflictagainstohwithdetail"
+
+Prereq "checkConflictAgainstOHWithDetail" passed.
+
+OPatch succeeded.
+
+Oracle Interim Patch Installer version 12.2.0.1.17
+Copyright (c) 2019, Oracle Corporation.  All rights reserved.
+
+PREREQ session
+
+Oracle Home       : /u02/app/12.2.0/grid
+Central Inventory : /u02/app/oraInventory
+   from           : /u02/app/12.2.0/grid/oraInst.loc
+OPatch version    : 12.2.0.1.17
+OUI version       : 12.2.0.1.4
+Log file location : /u02/app/12.2.0/grid/cfgtoollogs/opatch/opatch2019-08-06_12-19-45PM_1.log
+
+Invoking prereq "checkconflictagainstohwithdetail"
+
+Prereq "checkConflictAgainstOHWithDetail" passed.
+
+OPatch succeeded.
+
+
+
+
+AS Oracle
+/u02/app/oracle/product/12.0.2/db_1/OPatch/opatch prereq CheckconflictAgainstOHWithDetail -phBaseDir /u02/PSU/JUL2019/29699173/29708720/29757449
+
+[oracle@hrvldevdb7601 29757449]$ /u02/app/oracle/product/12.0.2/db_1/OPatch/opatch prereq CheckconflictAgainstOHWithDetail -phBaseDir /u02/PSU/JUL2019/29699173/29708720/29757449
+Oracle Interim Patch Installer version 12.2.0.1.17
+Copyright (c) 2019, Oracle Corporation.  All rights reserved.
+
+PREREQ session
+
+Oracle Home       : /u02/app/oracle/product/12.0.2/db_1
+Central Inventory : /u02/app/oraInventory
+   from           : /u02/app/oracle/product/12.0.2/db_1/oraInst.loc
+OPatch version    : 12.2.0.1.17
+OUI version       : 12.2.0.1.4
+Log file location : /u02/app/oracle/product/12.0.2/db_1/cfgtoollogs/opatch/opatch2019-08-06_12-15-54PM_1.log
+
+Invoking prereq "checkconflictagainstohwithdetail"
+
+Prereq "checkConflictAgainstOHWithDetail" passed.
+
+OPatch succeeded.
+[oracle@hrvldevdb7601 29757449]$
+
+
+/u02/app/oracle/product/12.0.2/db_1/OPatch/opatch prereq CheckconflictAgainstOHWithDetail -phBaseDir /u02/PSU/JUL2019/29699173/29708720/29770040
+
+Oracle Interim Patch Installer version 12.2.0.1.17
+Copyright (c) 2019, Oracle Corporation.  All rights reserved.
+
+PREREQ session
+
+Oracle Home       : /u02/app/oracle/product/12.0.2/db_1
+Central Inventory : /u02/app/oraInventory
+   from           : /u02/app/oracle/product/12.0.2/db_1/oraInst.loc
+OPatch version    : 12.2.0.1.17
+OUI version       : 12.2.0.1.4
+Log file location : /u02/app/oracle/product/12.0.2/db_1/cfgtoollogs/opatch/opatch2019-08-06_12-16-30PM_1.log
+
+Invoking prereq "checkconflictagainstohwithdetail"
+
+Prereq "checkConflictAgainstOHWithDetail" passed.
+
+OPatch succeeded.
+
+
+
+
+
+As root
+
+for gridhome 
+
+$ORACLE_HOME/OPatch/opatchauto apply /u02/PSU/JUL2019/29699173/29708720 -analyze
+
+
+[root@hrvldevdb7601 29708720]# $ORACLE_HOME/OPatch/opatchauto apply /u02/PSU/JUL2019/29699173/29708720 -analyze
+
+OPatchauto session is initiated at Tue Aug  6 12:25:08 2019
+
+System initialization log file is /u02/app/12.2.0/grid/cfgtoollogs/opatchautodb/systemconfig2019-08-06_12-25-14PM.log.
+
+Session log file is /u02/app/12.2.0/grid/cfgtoollogs/opatchauto/opatchauto2019-08-06_12-25-23PM.log
+The id for this session is 6BJU
+
+Executing OPatch prereq operations to verify patch applicability on home /u02/app/oracle/product/12.0.2/db_1
+Patch applicability verified successfully on home /u02/app/oracle/product/12.0.2/db_1
+
+
+Verifying SQL patch applicability on home /u02/app/oracle/product/12.0.2/db_1
+SQL patch applicability verified successfully on home /u02/app/oracle/product/12.0.2/db_1
+
+
+Executing OPatch prereq operations to verify patch applicability on home /u02/app/12.2.0/grid
+Patch applicability verified successfully on home /u02/app/12.2.0/grid
+
+OPatchAuto successful.
+
+--------------------------------Summary--------------------------------
+
+Analysis for applying patches has completed successfully:
+
+Host:hrvldevdb7601
+SIDB Home:/u02/app/oracle/product/12.0.2/db_1
+Version:12.2.0.1.0
+
+
+==Following patches were SKIPPED:
+
+Patch: /u02/PSU/JUL2019/29699173/29708720/29770090
+Reason: This patch is not applicable to this specified target type - "oracle_database"
+
+Patch: /u02/PSU/JUL2019/29699173/29708720/26839277
+Reason: This patch is not applicable to this specified target type - "oracle_database"
+
+Patch: /u02/PSU/JUL2019/29699173/29708720/28566910
+Reason: This patch is not applicable to this specified target type - "oracle_database"
+
+
+==Following patches were SUCCESSFULLY analyzed to be applied:
+
+Patch: /u02/PSU/JUL2019/29699173/29708720/29770040
+Log: /u02/app/oracle/product/12.0.2/db_1/cfgtoollogs/opatchauto/core/opatch/opatch2019-08-06_12-25-41PM_1.log
+
+Patch: /u02/PSU/JUL2019/29699173/29708720/29757449
+Log: /u02/app/oracle/product/12.0.2/db_1/cfgtoollogs/opatchauto/core/opatch/opatch2019-08-06_12-25-41PM_1.log
+
+
+Host:hrvldevdb7601
+SIHA Home:/u02/app/12.2.0/grid
+Version:12.2.0.1.0
+
+
+==Following patches were SKIPPED:
+
+Patch: /u02/PSU/JUL2019/29699173/29708720/26839277
+Reason: This patch is already been applied, so not going to apply again.
+
+Patch: /u02/PSU/JUL2019/29699173/29708720/28566910
+Reason: This patch is already been applied, so not going to apply again.
+
+
+==Following patches were SUCCESSFULLY analyzed to be applied:
+
+Patch: /u02/PSU/JUL2019/29699173/29708720/29770040
+Log: /u02/app/12.2.0/grid/cfgtoollogs/opatchauto/core/opatch/opatch2019-08-06_12-26-41PM_1.log
+
+Patch: /u02/PSU/JUL2019/29699173/29708720/29770090
+Log: /u02/app/12.2.0/grid/cfgtoollogs/opatchauto/core/opatch/opatch2019-08-06_12-26-41PM_1.log
+
+Patch: /u02/PSU/JUL2019/29699173/29708720/29757449
+Log: /u02/app/12.2.0/grid/cfgtoollogs/opatchauto/core/opatch/opatch2019-08-06_12-26-41PM_1.log
+
+
+
+OPatchauto session completed at Tue Aug  6 12:26:51 2019
+Time taken to complete the session 1 minute, 43 seconds
+
+
+
+
+
+
+
+$ORACLE_HOME/OPatch/opatchauto apply /u02/PSU/JUL2019/29699173/29708720 
+
+[root@hrvldevdb7601 29774415]# $ORACLE_HOME/OPatch/opatchauto apply /u02/PSU/JUL2019/29699173/29708720
+
+OPatchauto session is initiated at Tue Aug  6 12:33:12 2019
+
+System initialization log file is /u02/app/12.2.0/grid/cfgtoollogs/opatchautodb/systemconfig2019-08-06_12-33-15PM.log.
+
+Session log file is /u02/app/12.2.0/grid/cfgtoollogs/opatchauto/opatchauto2019-08-06_12-33-24PM.log
+The id for this session is V5DU
+
+
+
+
+
+[root@hrvldevdb7601 ~]# $ORACLE_HOME/OPatch/opatchauto apply /u02/PSU/JUL2019/29699173/29708720
+
+OPatchauto session is initiated at Tue Aug  6 13:10:22 2019
+
+System initialization log file is /u02/app/12.2.0/grid/cfgtoollogs/opatchautodb/systemconfig2019-08-06_01-10-26PM.log.
+
+Session log file is /u02/app/12.2.0/grid/cfgtoollogs/opatchauto/opatchauto2019-08-06_01-10-33PM.log
+The id for this session is M7QF
+
+
+[root@hrvldevdb7601 adump]# . oraenv
+ORACLE_SID = [+ASM] ?
+The Oracle base remains unchanged with value /u02/app/oracle
+[root@hrvldevdb7601 adump]# $ORACLE_HOME/OPatch/opatchauto apply /u02/PSU/JUL2019/29699173/29708720
+
+OPatchauto session is initiated at Tue Aug  6 13:17:40 2019
+
+System initialization log file is /u02/app/12.2.0/grid/cfgtoollogs/opatchautodb/systemconfig2019-08-06_01-17-43PM.log.
+
+Session log file is /u02/app/12.2.0/grid/cfgtoollogs/opatchauto/opatchauto2019-08-06_01-17-50PM.log
+The id for this session is BVMX
+
+Executing OPatch prereq operations to verify patch applicability on home /u02/app/oracle/product/12.0.2/db_1
+Patch applicability verified successfully on home /u02/app/oracle/product/12.0.2/db_1
+
+
+Verifying SQL patch applicability on home /u02/app/oracle/product/12.0.2/db_1
+SQL patch applicability verified successfully on home /u02/app/oracle/product/12.0.2/db_1
+
+
+Executing OPatch prereq operations to verify patch applicability on home /u02/app/12.2.0/grid
+Patch applicability verified successfully on home /u02/app/12.2.0/grid
+
+
+Preparing to bring down database service on home /u02/app/oracle/product/12.0.2/db_1
+Successfully prepared home /u02/app/oracle/product/12.0.2/db_1 to bring down database service
+
+
+Bringing down database service on home /u02/app/oracle/product/12.0.2/db_1
+Database service successfully brought down on home /u02/app/oracle/product/12.0.2/db_1
+
+
+Bringing down CRS service on home /u02/app/12.2.0/grid
+Prepatch operation log file location: /u02/app/oracle/crsdata/hrvldevdb7601/crsconfig/hapatch_2019-08-06_01-18-32PM.log
+CRS service brought down successfully on home /u02/app/12.2.0/grid
+
+
+Start applying binary patch on home /u02/app/oracle/product/12.0.2/db_1
+Binary patch applied successfully on home /u02/app/oracle/product/12.0.2/db_1
+
+
+Start applying binary patch on home /u02/app/12.2.0/grid
+Binary patch applied successfully on home /u02/app/12.2.0/grid
+
+
+Starting CRS service on home /u02/app/12.2.0/grid
+
+Postpatch operation log file location: /u02/app/oracle/crsdata/hrvldevdb7601/crsconfig/hapatch_2019-08-06_01-24-39PM.log
+CRS service started successfully on home /u02/app/12.2.0/grid
+
+
+Starting database service on home /u02/app/oracle/product/12.0.2/db_1
+Database service successfully started on home /u02/app/oracle/product/12.0.2/db_1
+
+
+Preparing home /u02/app/oracle/product/12.0.2/db_1 after database service restarted
+No step execution required.........
+
+
+Trying to apply SQL patch on home /u02/app/oracle/product/12.0.2/db_1
+SQL patch applied successfully on home /u02/app/oracle/product/12.0.2/db_1
+
+OPatchAuto successful.
+
+--------------------------------Summary--------------------------------
+
+Patching is completed successfully. Please find the summary as follows:
+
+Host:hrvldevdb7601
+SIDB Home:/u02/app/oracle/product/12.0.2/db_1
+Version:12.2.0.1.0
+Summary:
+
+==Following patches were SKIPPED:
+
+Patch: /u02/PSU/JUL2019/29699173/29708720/29770090
+Reason: This patch is not applicable to this specified target type - "oracle_database"
+
+Patch: /u02/PSU/JUL2019/29699173/29708720/26839277
+Reason: This patch is not applicable to this specified target type - "oracle_database"
+
+Patch: /u02/PSU/JUL2019/29699173/29708720/28566910
+Reason: This patch is not applicable to this specified target type - "oracle_database"
+
+
+==Following patches were SUCCESSFULLY applied:
+
+Patch: /u02/PSU/JUL2019/29699173/29708720/29757449
+Log: /u02/app/oracle/product/12.0.2/db_1/cfgtoollogs/opatchauto/core/opatch/opatch2019-08-06_13-18-58PM_1.log
+
+Patch: /u02/PSU/JUL2019/29699173/29708720/29770040
+Log: /u02/app/oracle/product/12.0.2/db_1/cfgtoollogs/opatchauto/core/opatch/opatch2019-08-06_13-18-58PM_1.log
+
+
+Host:hrvldevdb7601
+SIHA Home:/u02/app/12.2.0/grid
+Version:12.2.0.1.0
+Summary:
+
+==Following patches were SKIPPED:
+
+Patch: /u02/PSU/JUL2019/29699173/29708720/26839277
+Reason: This patch is already been applied, so not going to apply again.
+
+Patch: /u02/PSU/JUL2019/29699173/29708720/28566910
+Reason: This patch is already been applied, so not going to apply again.
+
+
+==Following patches were SUCCESSFULLY applied:
+
+Patch: /u02/PSU/JUL2019/29699173/29708720/29757449
+Log: /u02/app/12.2.0/grid/cfgtoollogs/opatchauto/core/opatch/opatch2019-08-06_13-20-55PM_1.log
+
+Patch: /u02/PSU/JUL2019/29699173/29708720/29770040
+Log: /u02/app/12.2.0/grid/cfgtoollogs/opatchauto/core/opatch/opatch2019-08-06_13-20-55PM_1.log
+
+Patch: /u02/PSU/JUL2019/29699173/29708720/29770090
+Log: /u02/app/12.2.0/grid/cfgtoollogs/opatchauto/core/opatch/opatch2019-08-06_13-20-55PM_1.log
+
+
+Patching session reported following warning(s):
+_________________________________________________
+
+[WARNING] The database instance 'DEVPHR' from '/u02/app/oracle/product/12.0.2/db_1', in host'hrvldevdb7601' is not running. SQL changes, if any,  will not be applied.
+To apply. the SQL changes, bring up the database instance and run the command manually from any one node (run as oracle).
+Refer to the readme to get the correct steps for applying the sql changes.
+
+[WARNING] The database instance 'OPSDEV2' from '/u02/app/oracle/product/12.0.2/db_1', in host'hrvldevdb7601' is not running. SQL changes, if any,  will not be applied.
+To apply. the SQL changes, bring up the database instance and run the command manually from any one node (run as oracle).
+Refer to the readme to get the correct steps for applying the sql changes.
+
+
+
+
+OPatchauto session completed at Tue Aug  6 13:30:34 2019
+Time taken to complete the session 12 minutes, 54 seconds
+[root@hrvldevdb7601 adump]#
+[root@hrvldevdb7601 adump]#
+
+
+
+
+
+
+$ORACLE_HOME/OPatch/opatchauto apply /u02/PSU/JUL2019/29699173/29774415 
+
+
+[root@hrvldevdb7601 adump]# $ORACLE_HOME/OPatch/opatchauto apply /u02/PSU/JUL2019/29699173/29774415
+
+OPatchauto session is initiated at Tue Aug  6 13:35:45 2019
+
+System initialization log file is /u02/app/12.2.0/grid/cfgtoollogs/opatchautodb/systemconfig2019-08-06_01-35-46PM.log.
+
+Session log file is /u02/app/12.2.0/grid/cfgtoollogs/opatchauto/opatchauto2019-08-06_01-35-53PM.log
+The id for this session is PHZB
+
+Executing OPatch prereq operations to verify patch applicability on home /u02/app/oracle/product/12.0.2/db_1
+Patch applicability verified successfully on home /u02/app/oracle/product/12.0.2/db_1
+
+
+Verifying SQL patch applicability on home /u02/app/oracle/product/12.0.2/db_1
+
+
+
+
+[oracle@hrvldevdb7601 OPatch]$ cd $ORACLE_HOME
+[oracle@hrvldevdb7601 grid]$ cd OPatch
+[oracle@hrvldevdb7601 OPatch]$ ./opatch lsinventory | grep 12.2.0.1.190716
+Patch description:  "OJVM RELEASE UPDATE: 12.2.0.1.190716 (29774415)"
+Patch description:  "ACFS JUL 2019 RELEASE UPDATE 12.2.0.1.190716 (29770090)"
+Patch description:  "OCW JUL 2019 RELEASE UPDATE 12.2.0.1.190716 (29770040)"
+Patch description:  "Database Jul 2019 Release Update : 12.2.0.1.190716 (29757449)"
+[oracle@hrvldevdb7601 OPatch]$ sudo su - grid
+[sudo] password for oracle:
+Last login: Tue Aug  6 14:20:22 EDT 2019
+Last login: Tue Aug  6 14:21:03 EDT 2019 on pts/0
+[grid@hrvldevdb7601 ~]$ cd $ORACLE_HOME
+[grid@hrvldevdb7601 ~]$ . oraenv
+ORACLE_SID = [grid] ? +ASM
+The Oracle base has been set to /u02/app/oracle
+[grid@hrvldevdb7601 ~]$ cd $ORACLE_HOME
+[grid@hrvldevdb7601 grid]$ cd OPatch
+[grid@hrvldevdb7601 OPatch]$ ./opatch lsinventory | grep 12.2.0.1.190716
+Patch description:  "OJVM RELEASE UPDATE: 12.2.0.1.190716 (29774415)"
+Patch description:  "ACFS JUL 2019 RELEASE UPDATE 12.2.0.1.190716 (29770090)"
+Patch description:  "OCW JUL 2019 RELEASE UPDATE 12.2.0.1.190716 (29770040)"
+Patch description:  "Database Jul 2019 Release Update : 12.2.0.1.190716 (29757449)"
+[grid@hrvldevdb7601 OPatch]$ exi
+
+

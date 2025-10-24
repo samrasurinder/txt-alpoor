@@ -1,0 +1,94 @@
+
+
+Format Raw Device as follows:
+-----------------------------
+
+[root@hrewoel02 ~]# fdisk emcpowerw
+
+fdisk: cannot open emcpowerw: No such file or directory
+[root@hrewoel02 ~]# fdisk /dev/emcpowerw
+Device contains neither a valid DOS partition table, nor Sun, SGI or OSF disklabel
+Building a new DOS disklabel with disk identifier 0x020a43a8.
+Changes will remain in memory only, until you decide to write them.
+After that, of course, the previous content won't be recoverable.
+
+Warning: invalid flag 0x0000 of partition table 4 will be corrected by w(rite)
+
+WARNING: DOS-compatible mode is deprecated. It's strongly recommended to
+         switch off the mode (command 'c') and change display units to
+         sectors (command 'u').
+
+Command (m for help): n
+Command action
+   e   extended
+   p   primary partition (1-4)
+p
+Partition number (1-4): 1
+First cylinder (1-17605, default 1):
+Using default value 1
+Last cylinder, +cylinders or +size{K,M,G} (1-17605, default 17605):
+Using default value 17605
+
+Command (m for help): w
+The partition table has been altered!
+
+Calling ioctl() to re-read partition table.
+Syncing disks.
+
+
+[root@hrewoel02 ~]# ls -altrh /dev/emcpowerw1
+brw-rw----. 1 root disk 120, 353 Feb 26 08:37 /dev/emcpowerw1
+[root@hrewoel02 ~]# oracleasm createdisk ACFSDISK1 /dev/emcpowerw1
+Writing disk header: done
+Instantiating disk: done
+[root@hrewoel02 ~]# oracleasm listdisks | grep ACFS
+ACFSDISK1
+[root@hrewoel02 ~]#
+
+
+
+Steps to Create ASM diskgroup:
+
+ sqlplus / as sysasm
+ CREATE DISKGROUP ACFSSHARE EXTERNAL REDUNDANCY DISK 'ORCL:ACFSDISK1';
+ alter diskgroup acfsshare set ATTRIBUTE  'compatible.asm' = '11.2';
+ alter diskgroup acfsshare set ATTRIBUTE 'compatible.rdbms' = '11.2';
+ alter diskgroup acfsshare set ATTRIBUTE 'compatible.advm' = '11.2';
+
+
+SET LINESIZE 150
+COL diskgroup FORMAT A20
+COL PATH FORMAT A40
+
+select dg.name diskgroup,ad.name disk,ad.state,ad.path,ad.os_mb,ad.total_mb,round(ad.total_mb/1024,2) size_GB, ad.header_status from v$asm_disk ad, v$asm_diskgroup dg where ad.group_number = dg.group_number and ad.name like 'ACFS%';
+
+ALTER DISKGROUP ACFSSHARE ADD VOLUME ACFSVOL SIZE 130G;
+
+
+
+
+ 
+[grid@hrewoel02 asm]$ /sbin/mkfs -t acfs -b 4k /dev/asm/acfsvol-396 -n "ACFSVOL"
+mkfs.acfs: version                   = 11.2.0.4.0
+mkfs.acfs: on-disk version           = 39.0
+mkfs.acfs: volume                    = /dev/asm/acfsvol-396
+mkfs.acfs: volume size               = 139586437120
+mkfs.acfs: Format complete.
+
+
+
+/sbin/acfsutil registry -f -a /dev/asm/acfsvol-396 /acfsshare
+
+[root@hrewoel02 ~]# /sbin/acfsutil registry -f -a /dev/asm/acfsvol-396 /acfsshare
+acfsutil registry: mount point /acfsshare successfully added to Oracle Registry
+
+
+/bin/mount -t acfs /dev/asm/acfsvol-396 /acfsshare
+
+
+
+To mount and Unmout acfs mountpoints:
+------------------------------------
+
+/bin/umount -t acfs -a
+/sbin/mount.acfs -o all

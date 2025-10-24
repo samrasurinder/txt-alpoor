@@ -1,0 +1,48 @@
+dbca -silent   \
+ -createDatabase                      \
+ -responseFile NO_VALUE               \
+ -templateName General_Purpose.dbc       \
+ -sid DEVCPGRB                           \
+ -gdbname DEVCPGRB.HR.STATE.SBU          \
+ -characterSet AL32UTF8                  \
+ -sysPassword Testing123#Testing123#     \
+ -systemPassword Testing123#Testing123#  \
+ -createAsContainerDatabase FALSE     \
+ -databaseType MULTIPURPOSE           \
+ -automaticMemoryManagement FALSE     \
+ -totalMemory 2048                    \
+ -datafileDestination +DATA           \
+ -recoveryAreaDestination +FRA       \
+ -redoLogFileSize 50                  \
+ -emConfiguration NONE                \
+ -sampleSchema FALSE                  \
+ -enableArchive TRUE                  \
+ -ignorePreReqs
+
+
+
+dbca -silent -deleteDatabase -sourceDB OPSDUMMY
+
+
+
+
+dbca -silent   \
+ -createDatabase                      \
+ -responseFile NO_VALUE               \
+ -templateName General_Purpose.dbc       \
+ -sid OPSDUMMY                           \
+ -gdbname OPSDUMMY.HR.STATE.SBU          \
+ -characterSet AL32UTF8                  \
+ -sysPassword Testing123#Testing123#     \
+ -systemPassword Testing123#Testing123#  \
+ -createAsContainerDatabase FALSE     \
+ -databaseType MULTIPURPOSE           \
+ -automaticMemoryManagement FALSE     \
+ -totalMemory 2048                    \
+ -datafileDestination +OPS_DATA           \
+ -recoveryAreaDestination +OPS_FRA       \
+ -redoLogFileSize 50                  \
+ -emConfiguration NONE                \
+ -sampleSchema FALSE                  \
+ -enableArchive TRUE                  \
+ -ignorePreReqs

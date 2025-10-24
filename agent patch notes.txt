@@ -1,0 +1,33 @@
+Download patch 
+==================
+   cd /tmp/   <--- On target remote server
+1. scp oracle@hrvlprdoem7603:/tmp/p32567228_134000_Generic.zip .
+   unzip p32567228_134000_Generic.zip
+
+ 
+
+
+2. Backup agent home:-
+   cd /u02/app/oracl
+   tar -cvzf /u02/backup/Agent_home_Before_patch.tar.gz agent13c/
+
+ 
+
+3. Apply Agent patch:-
+   
+     cd /tmp/32567228
+     export ORACLE_HOME=/u02/app/oracle/agent13c/agent_13.4.0.0.0
+     /u02/app/oracle/agent13c/agent_inst/bin/emctl status agent
+     /u02/app/oracle/agent13c/agent_inst/bin/emctl stop agent  <-------------STOP Agent
+     /u02/app/oracle/agent13c/agent_13.4.0.0.0/OPatch/opatch lsinventory
+   -- Apply patch --
+     /u02/app/oracle/agent13c/agent_13.4.0.0.0/OPatch/opatch napply
+
+ 
+
+4.  Start Agent:-
+     /u02/app/oracle/agent13c/agent_inst/bin/emctl start agent
+
+ 
+
+     /u02/app/oracle/agent13c/agent_13.4.0.0.0/OPatch/opatch lsinventory

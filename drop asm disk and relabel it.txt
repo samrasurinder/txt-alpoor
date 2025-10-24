@@ -1,0 +1,320 @@
+[grid@hrewoel03 ~]$ ./asm_disk_map_to_device.sh
+The ASM disk: 'ACFSDISK1' mapped to '/dev/emcpowerdm1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA01' mapped to '/dev/emcpowercn1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA02' mapped to '/dev/emcpowerco1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA03' mapped to '/dev/emcpowercp1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA04' mapped to '/dev/emcpowercq1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA05' mapped to '/dev/emcpowercr1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA06' mapped to '/dev/emcpowercs1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA07' mapped to '/dev/emcpowercu1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA08' mapped to '/dev/emcpowerbj1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA09' mapped to '/dev/emcpowera'  Totalsize=144.8 GB,
+The ASM disk: 'DATA10' mapped to '/dev/emcpowerb1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA11' mapped to '/dev/emcpowerc1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA12' mapped to '/dev/emcpowerf1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA13' mapped to '/dev/emcpowercc'  Totalsize=144.8 GB,
+The ASM disk: 'DATA14' mapped to '/dev/emcpowere1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA15' mapped to '/dev/emcpowerh1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA16' mapped to '/dev/emcpoweri1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA17' mapped to '/dev/emcpowerj1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA18' mapped to '/dev/emcpowerk1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA19' mapped to '/dev/emcpowerl1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA20' mapped to '/dev/emcpowerm1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA21' mapped to '/dev/emcpowern1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA22' mapped to '/dev/emcpowero1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA23' mapped to '/dev/emcpowerp1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA24' mapped to '/dev/emcpowerq1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA25' mapped to '/dev/emcpowerr1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA26' mapped to '/dev/emcpowers1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA27' mapped to '/dev/emcpowert1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA28' mapped to '/dev/emcpoweru1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA29' mapped to '/dev/emcpowerv1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA30' mapped to '/dev/emcpowerw1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA31' mapped to '/dev/emcpowerx1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA32' mapped to '/dev/emcpowery1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA33' mapped to '/dev/emcpowerz1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA34' mapped to '/dev/emcpoweraa1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA35' mapped to '/dev/emcpowerab1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA36' mapped to '/dev/emcpowerac1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA37' mapped to '/dev/emcpowerad1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA38' mapped to '/dev/emcpowerae1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA39' mapped to '/dev/emcpowerag1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA40' mapped to '/dev/emcpoweraf1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA41' mapped to '/dev/emcpowerah1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA42' mapped to '/dev/emcpowerg1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA43' mapped to '/dev/emcpowerai1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA44' mapped to '/dev/emcpoweraj1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA45' mapped to '/dev/emcpowerak1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA46' mapped to '/dev/emcpoweral1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA47' mapped to '/dev/emcpoweram1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA48' mapped to '/dev/emcpoweran1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA49' mapped to '/dev/emcpowercw1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA50' mapped to '/dev/emcpowercx1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA51' mapped to '/dev/emcpowercy1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA52' mapped to '/dev/emcpowercz1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA53' mapped to '/dev/emcpowerct1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA54' mapped to '/dev/emcpowercm1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA55' mapped to '/dev/emcpowerch1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA56' mapped to '/dev/emcpowerck1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA57' mapped to '/dev/emcpowercj1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA58' mapped to '/dev/emcpowercl1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA59' mapped to '/dev/emcpowercf1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA60' mapped to '/dev/emcpowercg1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA61' mapped to '/dev/emcpowercd1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA62' mapped to '/dev/emcpowerce1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA63' mapped to '/dev/emcpowerbw1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA64' mapped to '/dev/emcpowerby1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA65' mapped to '/dev/emcpowerbz1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA66' mapped to '/dev/emcpowerca1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA67' mapped to '/dev/emcpowercb1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA68' mapped to '/dev/emcpowerci1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA69' mapped to '/dev/emcpowercc1'  Totalsize=144.8 GB,
+The ASM disk: 'DRSHARE1' mapped to '/dev/emcpowerdv1'  Totalsize=1649.3 GB,
+The ASM disk: 'FRA01' mapped to '/dev/emcpowerdb1'  Totalsize=144.8 GB,
+The ASM disk: 'FRA02' mapped to '/dev/emcpowerda1'  Totalsize=144.8 GB,
+The ASM disk: 'FRA03' mapped to '/dev/emcpowerdc1'  Totalsize=144.8 GB,
+The ASM disk: 'FRA04' mapped to '/dev/emcpowerdd1'  Totalsize=144.8 GB,
+The ASM disk: 'FRA05' mapped to '/dev/emcpowerde1'  Totalsize=144.8 GB,
+The ASM disk: 'FRA06' mapped to '/dev/emcpowerdf1'  Totalsize=144.8 GB,
+The ASM disk: 'FRA07' mapped to '/dev/emcpowerdg1'  Totalsize=144.8 GB,
+The ASM disk: 'FRA08' mapped to '/dev/emcpowerdh1'  Totalsize=144.8 GB,
+The ASM disk: 'FRA09' mapped to '/dev/emcpowerdi1'  Totalsize=144.8 GB,
+The ASM disk: 'FRA10' mapped to '/dev/emcpowerdj1'  Totalsize=144.8 GB,
+The ASM disk: 'FRA11' mapped to '/dev/emcpowerdk1'  Totalsize=144.8 GB,
+The ASM disk: 'FRA12' mapped to '/dev/emcpowerao1'  Totalsize=144.8 GB,
+The ASM disk: 'FRA13' mapped to '/dev/emcpowerap1'  Totalsize=144.8 GB,
+The ASM disk: 'FRA14' mapped to '/dev/emcpoweraq1'  Totalsize=128.0 GB,
+The ASM disk: 'FRA15' mapped to '/dev/emcpowerar1'  Totalsize=144.8 GB,
+The ASM disk: 'FRA16' mapped to '/dev/emcpoweras1'  Totalsize=144.8 GB,
+The ASM disk: 'FRA17' mapped to '/dev/emcpowerat1'  Totalsize=144.8 GB,
+The ASM disk: 'FRA18' mapped to '/dev/emcpowerau1'  Totalsize=144.8 GB,
+The ASM disk: 'FRA19' mapped to '/dev/emcpowerav1'  Totalsize=144.8 GB,
+The ASM disk: 'FRA20' mapped to '/dev/emcpoweraw1'  Totalsize=144.8 GB,
+The ASM disk: 'FRA21' mapped to '/dev/emcpowerax1'  Totalsize=144.8 GB,
+The ASM disk: 'FRA22' mapped to '/dev/emcpoweray1'  Totalsize=144.8 GB,
+The ASM disk: 'FRA23' mapped to '/dev/emcpoweraz1'  Totalsize=144.8 GB,
+The ASM disk: 'FRA24' mapped to '/dev/emcpowerba1'  Totalsize=144.8 GB,
+The ASM disk: 'FRA25' mapped to '/dev/emcpowerbb1'  Totalsize=144.8 GB,
+The ASM disk: 'FRA26' mapped to '/dev/emcpowerbc1'  Totalsize=144.8 GB,
+The ASM disk: 'FRA27' mapped to '/dev/emcpowerbd1'  Totalsize=144.8 GB,
+The ASM disk: 'FRA28' mapped to '/dev/emcpowerbe1'  Totalsize=144.8 GB,
+The ASM disk: 'FRA29' mapped to '/dev/emcpowerbf1'  Totalsize=144.8 GB,
+The ASM disk: 'FRA30' mapped to '/dev/emcpowerbg1'  Totalsize=144.8 GB,
+The ASM disk: 'FRA31' mapped to '/dev/emcpowerbh1'  Totalsize=144.8 GB,
+The ASM disk: 'FRA32' mapped to '/dev/emcpowerbi1'  Totalsize=144.8 GB,
+The ASM disk: 'FRA33' mapped to '/dev/emcpowercv1'  Totalsize=144.8 GB,
+The ASM disk: 'FRA34' mapped to '/dev/emcpowerbl1'  Totalsize=144.8 GB,
+The ASM disk: 'FRA35' mapped to '/dev/emcpowerbk1'  Totalsize=144.8 GB,
+The ASM disk: 'FRA36' mapped to '/dev/emcpowerbm1'  Totalsize=144.8 GB,
+The ASM disk: 'FRA37' mapped to '/dev/emcpowerbn1'  Totalsize=144.8 GB,
+The ASM disk: 'FRA38' mapped to '/dev/emcpowerbo1'  Totalsize=144.8 GB,
+The ASM disk: 'FRA39' mapped to '/dev/emcpowerbp1'  Totalsize=144.8 GB,
+The ASM disk: 'FRA40' mapped to '/dev/emcpowerbq1'  Totalsize=144.8 GB,
+The ASM disk: 'FRA41' mapped to '/dev/emcpowerbr1'  Totalsize=144.8 GB,
+The ASM disk: 'FRA42' mapped to '/dev/emcpowerbs1'  Totalsize=144.8 GB,
+The ASM disk: 'FRA43' mapped to '/dev/emcpowerbt1'  Totalsize=144.8 GB,
+The ASM disk: 'FRA44' mapped to '/dev/emcpowerbu1'  Totalsize=144.8 GB,
+The ASM disk: 'FRA45' mapped to '/dev/emcpowerbx1'  Totalsize=144.8 GB,
+The ASM disk: 'FRA46' mapped to '/dev/emcpowerbv1'  Totalsize=144.8 GB,
+The ASM disk: 'OCR_VOTE1' mapped to '/dev/emcpowerdw1'  Totalsize=2146 MB,
+The ASM disk: 'OCR_VOTE2' mapped to '/dev/emcpowereu1'  Totalsize=2146 MB,
+The ASM disk: 'OCR_VOTE3' mapped to '/dev/emcpoweret1'  Totalsize=2146 MB,
+The ASM disk: 'OPS_DATA01' mapped to '/dev/emcpowerer1'  Totalsize=214.8 GB,
+The ASM disk: 'OPS_DATA02' mapped to '/dev/emcpowereq1'  Totalsize=214.8 GB,
+The ASM disk: 'OPS_DATA03' mapped to '/dev/emcpowerep1'  Totalsize=214.8 GB,
+The ASM disk: 'OPS_DATA04' mapped to '/dev/emcpowereo1'  Totalsize=214.8 GB,
+The ASM disk: 'OPS_DATA05' mapped to '/dev/emcpoweren1'  Totalsize=214.8 GB,
+The ASM disk: 'OPS_DATA06' mapped to '/dev/emcpowerem1'  Totalsize=214.8 GB,
+The ASM disk: 'OPS_DATA07' mapped to '/dev/emcpowerel1'  Totalsize=214.8 GB,
+The ASM disk: 'OPS_DATA08' mapped to '/dev/emcpowerek1'  Totalsize=214.8 GB,
+The ASM disk: 'OPS_DATA09' mapped to '/dev/emcpowerei1'  Totalsize=214.8 GB,
+The ASM disk: 'OPS_DATA10' mapped to '/dev/emcpowerej1'  Totalsize=214.8 GB,
+The ASM disk: 'OPS_DATA11' mapped to '/dev/emcpowereh1'  Totalsize=214.8 GB,
+The ASM disk: 'OPS_DATA12' mapped to '/dev/emcpowereg1'  Totalsize=214.8 GB,
+The ASM disk: 'OPS_DATA13' mapped to '/dev/emcpoweref1'  Totalsize=214.8 GB,
+The ASM disk: 'OPS_DATA14' mapped to '/dev/emcpoweree1'  Totalsize=214.8 GB,
+The ASM disk: 'OPS_DATA15' mapped tsqlo '/dev/emcpowerdx1'  Totalsize=214.8 GB,
+The ASM disk: 'OPS_FRA01' mapped to '/dev/emcpowered1'  Totalsize=214.8 GB,
+The ASM disk: 'OPS_FRA02' mapped to '/dev/emcpowerec1'  Totalsize=214.8 GB,
+The ASM disk: 'OPS_FRA03' mapped to '/dev/emcpowereb1'  Totalsize=214.8 GB,
+The ASM disk: 'OPS_FRA04' mapped to '/dev/emcpowerea1'  Totalsize=214.8 GB,
+The ASM disk: 'OPS_FRA05' mapped to '/dev/emcpowerdz1'  Totalsize=214.8 GB,
+The ASM disk: 'OPS_FRA06' mapped to '/dev/emcpowerdy1'  Totalsize=214.8 GB,
+The ASM disk: 'PRDDATA01' mapped to '/dev/emcpowerfx1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDDATA02' mapped to '/dev/emcpowerft1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDDATA03' mapped to '/dev/emcpowerga1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDDATA04' mapped to '/dev/emcpowergn1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDDATA05' mapped to '/dev/emcpowerfz1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDDATA06' mapped to '/dev/emcpowerfp1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDDATA07' mapped to '/dev/emcpowergc1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDDATA08' mapped to '/dev/emcpowerfk1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDDATA09' mapped to '/dev/emcpowerfv1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDFRA01' mapped to '/dev/emcpowergp1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDFRA02' mapped to '/dev/emcpowerfw1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDFRA03' mapped to '/dev/emcpowerfo1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDFRA04' mapped to '/dev/emcpowergl1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDFRA05' mapped to '/dev/emcpowergq1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDFRA06' mapped to '/dev/emcpowerfq1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDFRA07' mapped to '/dev/emcpowerfn1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDFRA08' mapped to '/dev/emcpowerfy1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDFRA09' mapped to '/dev/emcpowergm1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDFRA10' mapped to '/dev/emcpowerfm1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDFRA11' mapped to '/dev/emcpowerfu1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDFRA12' mapped to '/dev/emcpowerfr1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDFRA13' mapped to '/dev/emcpowergo1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDFRA14' mapped to '/dev/emcpowerfs1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDFRA15' mapped to '/dev/emcpowergb1'  Totalsize=144.8 GB,
+[grid@hrewoel03 ~]$
+
+
+
+SQL> select group_number,name from v$asm_diskgroup;
+
+GROUP_NUMBER NAME
+------------ ------------------------------
+           1 ACFSSHARE
+           2 DATA
+           3 FRA
+           4 OCR_VOTE1
+           5 OPS_DATA
+           6 OPS_FRA
+           0 DRSHARE
+           0 PRD_DATA
+           0 PRD_FRA
+
+9 rows selected.
+
+SQL>
+
+
+SQL> select group_number,name,state,path from v$asm_disk where group_number = 6;
+
+GROUP_NUMBER NAME                           STATE
+------------ ------------------------------ --------
+PATH
+--------------------------------------------------------------------------------
+           6 OPS_FRA06                      NORMAL
+ORCL:OPS_FRA06
+
+           6 OPS_FRA02                      NORMAL
+ORCL:OPS_FRA02
+
+           6 OPS_FRA03                      NORMAL
+ORCL:OPS_FRA03
+
+
+GROUP_NUMBER NAME                           STATE
+------------ ------------------------------ --------
+PATH
+--------------------------------------------------------------------------------
+           6 OPS_FRA04                      NORMAL
+ORCL:OPS_FRA04
+
+           6 OPS_FRA05                      NORMAL
+ORCL:OPS_FRA05
+
+           6 OPS_FRA01                      NORMAL
+ORCL:OPS_FRA01
+
+
+6 rows selected.
+
+SQL>
+
+
+           6 OPS_FRA06                      DROPPING
+ORCL:OPS_FRA06
+
+
+
+
+[root@hrewoel03 ~]# oracleasm renamedisk -f OPS_FRA06 OPS_DATA16
+Instantiating disk "OPS_DATA16": done
+Writing disk header: done
+Removing old ASM disk "OPS_FRA06": done
+[root@hrewoel03 ~]#
+
+
+[grid@hrewoel03 ~]$ ./asm_disk_map_to_device.sh | grep OPS
+The ASM disk: 'OPS_DATA01' mapped to '/dev/emcpowerer1'  Totalsize=214.8 GB,
+The ASM disk: 'OPS_DATA02' mapped to '/dev/emcpowereq1'  Totalsize=214.8 GB,
+The ASM disk: 'OPS_DATA03' mapped to '/dev/emcpowerep1'  Totalsize=214.8 GB,
+The ASM disk: 'OPS_DATA04' mapped to '/dev/emcpowereo1'  Totalsize=214.8 GB,
+The ASM disk: 'OPS_DATA05' mapped to '/dev/emcpoweren1'  Totalsize=214.8 GB,
+The ASM disk: 'OPS_DATA06' mapped to '/dev/emcpowerem1'  Totalsize=214.8 GB,
+The ASM disk: 'OPS_DATA07' mapped to '/dev/emcpowerel1'  Totalsize=214.8 GB,
+The ASM disk: 'OPS_DATA08' mapped to '/dev/emcpowerek1'  Totalsize=214.8 GB,
+The ASM disk: 'OPS_DATA09' mapped to '/dev/emcpowerei1'  Totalsize=214.8 GB,
+The ASM disk: 'OPS_DATA10' mapped to '/dev/emcpowerej1'  Totalsize=214.8 GB,
+The ASM disk: 'OPS_DATA11' mapped to '/dev/emcpowereh1'  Totalsize=214.8 GB,
+The ASM disk: 'OPS_DATA12' mapped to '/dev/emcpowereg1'  Totalsize=214.8 GB,
+The ASM disk: 'OPS_DATA13' mapped to '/dev/emcpoweref1'  Totalsize=214.8 GB,
+The ASM disk: 'OPS_DATA14' mapped to '/dev/emcpoweree1'  Totalsize=214.8 GB,
+The ASM disk: 'OPS_DATA15' mapped to '/dev/emcpowerdx1'  Totalsize=214.8 GB,
+The ASM disk: 'OPS_DATA16' mapped to '/dev/emcpowerdy1'  Totalsize=214.8 GB,
+The ASM disk: 'OPS_FRA01' mapped to '/dev/emcpowered1'  Totalsize=214.8 GB,
+The ASM disk: 'OPS_FRA02' mapped to '/dev/emcpowerec1'  Totalsize=214.8 GB,
+The ASM disk: 'OPS_FRA03' mapped to '/dev/emcpowereb1'  Totalsize=214.8 GB,
+The ASM disk: 'OPS_FRA04' mapped to '/dev/emcpowerea1'  Totalsize=214.8 GB,
+The ASM disk: 'OPS_FRA05' mapped to '/dev/emcpowerdz1'  Totalsize=214.8 GB,
+
+
+
+[grid@hrewoel03 ~]$ asmcmd lsdg
+State    Type    Rebal  Sector  Block       AU  Total_MB  Free_MB  Req_mir_free_MB  Usable_file_MB  Offline_disks  Voting_files  Name
+MOUNTED  EXTERN  N         512   4096  1048576    138097     4756                0            4756              0             N  ACFSSHARE/
+MOUNTED  EXTERN  N         512   4096  1048576   9391072   487979                0          487979              0             N  DATA/
+MOUNTED  EXTERN  N         512   4096  1048576   6336720  3887121                0         3887121              0             N  FRA/
+MOUNTED  EXTERN  N         512   4096  1048576      2047     1524                0            1524              0             Y  OCR_VOTE1/
+MOUNTED  EXTERN  N         512   4096  1048576   3072075    95085                0           95085              0             N  OPS_DATA/
+MOUNTED  EXTERN  N         512   4096  1048576   1024025   440646                0          440646              0             N  OPS_FRA/
+MOUNTED  EXTERN  N         512   4096  1048576   1242936   179059                0          179059              0             N  PRD_DATA/
+MOUNTED  EXTERN  N         512   4096  1048576   2071560   605641                0          605641              0             N  PRD_FRA/
+[grid@hrewoel03 ~]$
+
+
+
+
+SQL> alter diskgroup OPS_DATA add disk 'ORCL:OPS_DATA16';
+
+Diskgroup altered.
+
+SQL>
+
+
+
+
+SQL> alter diskgroup OPS_DATA rebalance power 8;
+
+Diskgroup altered.
+
+SQL>
+
+
+SQL> select * from v$asm_operation;
+
+GROUP_NUMBER OPERA STAT      POWER     ACTUAL      SOFAR   EST_WORK   EST_RATE
+------------ ----- ---- ---------- ---------- ---------- ---------- ----------
+EST_MINUTES ERROR_CODE
+----------- --------------------------------------------
+           5 REBAL RUN           1          1         36     238176       1121
+        212
+
+
+SQL> alter diskgroup OPS_DATA rebalance power 8;
+
+Diskgroup altered.
+
+SQL> select * from v$asm_operation;
+
+GROUP_NUMBER OPERA STAT      POWER     ACTUAL      SOFAR   EST_WORK   EST_RATE
+------------ ----- ---- ---------- ---------- ---------- ---------- ----------
+EST_MINUTES ERROR_CODE
+----------- --------------------------------------------
+           5 REBAL RUN           8          8       1646     231191       7850
+         29
+
+
+SQL>
+
+

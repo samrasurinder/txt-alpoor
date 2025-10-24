@@ -1,0 +1,21 @@
+
+create database link eaps connect to hroracpysecref identified by "TRNL6Yd$AdgZ48s" using 'CPY_EAPS';
+create database link crm connect to sysadm identified by "Y$cEB11y" using 'CRMCPY';
+
+SQL> /
+
+OWNER                DB_LINK
+-------------------- ----------------------------------------
+ACRS                 DB_LINK_MIGRATE_CIRCUIT.HR.STATE.GOV
+ESRT                 EOPFLINK.HR.STATE.SBU
+ESRT                 EDW_SRC_LNK.HR.STATE.SBU
+ESRT                 CONTDB.HR.STATE.SBU
+ESRT                 CAMPUS7.HR.STATE.SBU
+ESRT_INTERFACE       EAPS.HR.STATE.SBU
+SECREF               EAPS.HR.STATE.SBU
+SECREF               CRM.HR.STATE.SBU
+REETA                REETA_DB_LINK.HR.STATE.SBU
+BMA                  BMA_DW.HR.STATE.SBU
+EOPF_DOS             KOFAX.HR.STATE.SBU
+
+11 rows selected.

@@ -1,0 +1,12 @@
+/infshare/oracle/scripts/dba/check_drshare.bash
+   /infshare/oracle/scripts/refresh/bin/db_refresh_BACKUP.bash CPY1
+
+
+/infshare/oracle/scripts/dba/devcpy_refresh_scripts/PRESERVE_devcpy_users.bash
+   /infshare/oracle/scripts/refresh/bin/db_refresh_BACKUP.bash DEVCPY
+     /infshare/oracle/scripts/dba/devcpy_refresh_scripts/POST_devcpy_refresh.bash
+       /infshare/oracle/scripts/dba/devcpy_refresh_scripts/DROP_devcopy_users.bash
+         /infshare/oracle/scripts/dba/devcpy_refresh_scripts/CREATE_devcpy_roles.bash
+           /infshare/oracle/scripts/dba/devcpy_refresh_scripts/RESTORE_devcpy_users.bash
+             /infshare/oracle/scripts/dba/devcpy_refresh_scripts/ENABLE_devcpy_audit.bash
+               sudo su - grid "/infshare/oracle/scripts/dba/drshare_umount.bash"

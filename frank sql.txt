@@ -1,0 +1,153 @@
+INSERT
+
+INTO    EOPF_TENURE_BRD_CAND_DOCMT
+
+        (
+
+                ETBCD_SEQ_NUM    ,
+
+                EOPFD_DOC_ID     ,
+
+                BMA_TBE_ID       ,
+
+                DT_ID            ,
+
+                ETBCD_CREATE_DATE,
+
+                ETBCD_CREATE_ID  ,
+
+                ETBCD_UPDATE_DATE,
+
+                ETBCD_UPDATE_ID
+
+        )
+
+SELECT  SEQ_ETBCD_SEQ_NUM.NEXTVAL,
+
+        CASE
+
+                WHEN INSTR(EOPFD_DOC_ID,'.') > 0
+
+                THEN NULL
+
+                ELSE EOPFD_DOC_ID
+
+        END   ,
+
+        :TBEId,
+
+        CASE
+
+                WHEN INSTR(EOPFD_DOC_ID,'.') > 0
+
+                THEN EOPFD_DOC_ID
+
+                ELSE NULL
+
+        END         ,
+
+        SYSDATE     ,
+
+        :EopfUserId1,
+
+        SYSDATE     ,
+
+        :EopfUserId2
+
+FROM
+
+        (
+
+                SELECT  EOPF_DOCUMENT.EOPFD_DOC_ID                ,
+
+                        EOPFD_FORM                                ,
+
+                        FORML_ORDER                               ,
+
+                        FORML_TITLE                               ,
+
+                        TRUNC(EOPFD_EFF_DATE) EOPFD_EFF_DATE      ,
+
+                        TO_CHAR(EOPFD_BEGIN_DATE) EOPFD_BEGIN_DATE,
+
+                        TO_CHAR(EOPFD_END_DATE) EOPFD_END_DATE    ,
+
+                        forml_default_side                        ,
+
+                        EDC_STATUS_IND                            ,
+
+                        EVO_VOL_PATHNAME PATH                     ,
+
+                        EDC_FILENAME_TEXT FILENAME
+
+                FROM    EOPF_DOCUMENT           ,
+
+                        EOPF_FOLDER             ,
+
+                        EMPLOYEE                ,
+
+                        FORML                   ,
+
+                        eopf_document_conversion,
+
+                        eopf_volume_ocr
+
+                WHERE   EOPFD_FLDR_ID                           = eopf_folder.eopff_id
+
+                        AND EOPFF_SSN                           = SSN
+
+                        AND SSN                                 = :SSN
+
+                        AND EOPFD_QA_COMPLETE                   = 'Y'
+
+                        AND EOPFD_FORM                          = FORML_ID
+
+                        AND forml_default_folder                = 'Performance'
+
+                        AND EOPF_DOCUMENT.EOPFD_doc_id          = eopf_document_conversion.EOPFD_doc_id (+)
+
+                        AND eopf_document_conversion.EVO_VOL_ID = eopf_volume_ocr.EVO_VOL_ID (+)
+
+                UNION ALL
+
+                SELECT  doc_seq_num eopfd_doc_ID                                                           ,
+
+                        0 EOPFD_FORM                                                                       ,
+
+                        0 FORML_ORDER                                                                      ,
+
+                        MAX(DECODE(a1.EDD_COLUMN_DESCR_TEXT, 'DOCTYPE', upper(a1.COLUMN_DATA))) forml_title,
+
+                        MAX(DECODE(a1.EDD_COLUMN_DESCR_TEXT, 'Effective Date',
+
+                        CASE
+
+                                WHEN a1.COLUMN_DATA LIKE '%/%/%'
+
+                                THEN to_date(a1.COLUMN_DATA,'MM/dd/yyyy')
+
+                                WHEN a1.COLUMN_DATA LIKE '__-__-____'
+
+                                THEN to_date(a1.COLUMN_DATA,'MM-DD-YYYY')
+
+                                ELSE to_date(a1.COLUMN_DATA,'DD-MON-YY')
+
+                        END, to_date(NULL))) EOPFD_EFF_DATE                                             ,
+
+                        NULL EOPFD_BEGIN_DATE                                                           ,
+
+                        NULL EOPFD_END_DATE                                                             ,
+
+                        MAX(DECODE(a1.EDD_COLUMN_DESCR_TEXT, 'SIDE', a1.COLUMN_DATA)) forml_default_side,
+
+                        'Y' EDC_STATUS_IND                                                              ,
+
+                        MAX(DECODE(a1.EDD_COLUMN_DESCR_TEXT, 'PATH', a1.COLUMN_DATA)) PATH              ,
+
+                        MAX(DECODE(a1.EDD_COLUMN_DESCR_TEXT, 'FILENAME', a1.COLUMN_DATA)) FILENAME
+
+                FROM    TABLE(CAST(eopf_ehri_use_BROKER_pkg.fnc_lst_ed_docs(:SSN,2,'E',NULL) AS ED_DISPLAY_DETAILS_TAB_S)) a1
+
+                GROUP BY doc_seq_num
+
+        )

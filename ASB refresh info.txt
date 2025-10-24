@@ -1,0 +1,1388 @@
+
+ASB refreshes for the following environments:
+•	ASB
+•	CRMASB
+•	IVV1
+•	EODASB
+
+
+ASB       =  /bin/bash /infshare/oracle/scripts/refresh/bin/db_refresh_BACKUP.bash ASB          (Target : hrewoel02.hr.state.sbu	Host	hrewoel02.hr.state.sbu)
+
+CRMASB    =  /bin/bash /infshare/oracle/scripts/refresh/bin/db_refresh_BACKUP.bash CRMASB       (Target : hrewoel02.hr.state.sbu	Host	hrewoel02.hr.state.sbu)
+
+EODASB    =  EODASB_DB_REFRESH_LATEST (multi task)
+             1) /infshare/oracle/scripts/dba/pre_refresh_EODASB.bash  on hrewoel03.hr.state.sbu
+             2) /infshare/oracle/scripts/dba/refresh_EODASB.bash on hrewoel03.hr.state.sbu
+             3) /infshare/oracle/scripts/dba/post_refresh_EODASB.bash on hrewoel03.hr.state.sbu
+              
+
+
+
+
+
+
+Email Distro:
+------------- 
+To: HRCM <HRCM@state.gov>; HR-EX-SDD <HR-EX-SDD@state.gov>; HR-EX-SOD <HR-EX-SOD@state.gov>; HR-EX-ESD-OAB <HR-EX-ESD-OAB@state.gov>
+Cc: HR-EX-ESD <HR-EX-ESD@state.gov>
+Subject: ASB Refresh will begin momentarily
+ 
+
+PeopleSoft Links after refresh:
+------------------------------
+\\esocomsntap101\hrpublic$\Office Shares\IPMS Upgrade\GEMS Phase2\9.1 Upgrade\PeopleSoftWebSite\Peoplesoft 91 GEMs Websites.htm
+
+
+
+
+PeopleSoft Environment:
+-----------------------
+http://hr.m.state.sbu/Office/EX/ESD/OAB/_layouts/xlviewer.aspx?id=/Office/EX/ESD/OAB/OAB%20Documents/Server%20Inventory/PeopleSoft_Environments_1013_2015.xlsx&Source=http%3A%2F%2Fhr%2Em%2Estate%2Esbu%2FOffice%2FEX%2FESD%2FOAB%2FOAB%2520Documents%2FForms%2FAllItems%2Easpx%3FRootFolder%3D%252FOffice%252FEX%252FESD%252FOAB%252FOAB%2520Documents%252FServer%2520Inventory%26FolderCTID%3D0x012000D2D49FDB78CFAA49A160939092253D3F%26View%3D%7B97E7581C%2D1494%2D44B1%2D9D69%2DD80DDD3BC395%7D%26InitialTabId%3DRibbon%252EDocument%26VisibilityContext%3DWSSTabPersistence&DefaultItemOpen=1
+
+
+
+
+
+
+
+ ASB_DB_REFRESH (Target: hrewoel02.hr.state.sbu	Host	hrewoel02.hr.state.sbu	Eastern Standard Time)
+
+/bin/bash /infshare/oracle/scripts/refresh/bin/db_refresh_BACKUP.bash ASB
+
+
+
+  1 #!/bin/bash
+   2
+   3 export parm_dir=/infshare/oracle/scripts/refresh/bin
+   4
+   5
+   6 ############################################################################################################################################
+   7 ######################################################## *** BEGIN OF HELP *** #############################################################
+   8 ############################################################################################################################################
+   9 function HELP() {
+  10 export refresh_steps_begin="1"
+  11 export refresh_steps_end="12"
+  12 if [ -n "$step_begin" ] && ( (("$step_begin" > "$refresh_steps_end")) || (("$step_begin" < "$refresh_steps_begin")) ) ; then
+  13
+  14 cat <<EOF
+  15
+  16       - Refresh Steps:
+  17
+  18           1- PRE Refresh
+  19           2- Current Database Status
+  20           3- Drop database
+  21           4- Duplicate Database
+  22           5- Configure Database in CRS
+  23           6- Convert database to Archivelog Mode
+  24           7- Cluster Database
+  25           8- Convert Database to NOarchivelog Mode
+  26           9- POST Refresh
+  27          10- Resync PasswordFiles
+  28          11- Reset Spfile Parameters
+  29          12- Final Status
+  30
+  31 EOF
+  32 exit
+  33 fi
+  34 ###
+  35 if [ -z $1 ] ; then
+  36 echo ""
+  37 echo "*** "USAGE" ***"
+  38 echo "      script <to_db>"
+  39 echo "Please specify database name to be refreshed or run with -h for help"
+  40 echo ""
+  41 exit 1
+  42 fi
+  43
+   44 # HELP notes:
+  45 if [ $1 == "-h" ] ; then
+  46
+  47 cat <<EOF
+  48
+  49 ############################################################################################################################################
+  50
+  51 *** "USAGE" ***
+  52
+  53    /bin/bash db_refresh_BACKUP.bash <db_name>
+  54
+  55
+  56 Script, db_refresh_BACKUP.bash, can do the following processes:
+  57
+  58    - Create new database
+  59    - Refresh existing database
+  60    - Drop existing database
+  61
+  62 Script sccepts database name, to be refreshed, as first argument. Script requires parameter file "parm.<db_name>"
+  63
+  64 to be in the script current working directory. The parameter file (key & value) must have all driving parameters for the script set appropria     tely.
+  65
+  66 **  Script performs following steps and generates a logfile at the end of each step: **
+  67
+  68                           - Pre-checks for required files:
+  69                                 - Script parm files [ parm.<db_name> ]
+  70                                 - Existence of \$ORACLE_HOME/dbs/init<db_name>_DUP.ora which is spooled by parm.<db_name> file
+  71                                 - DB backup directory for refresh
+  72                                 - XML file for RAC conversion
+  73                           - PRE Refresh
+  74                           - Drop the destination database including its instances and ASM datafiles
+  75                           - Duplicate destination database from backup
+  76                           - Swtich single opened dulicated database to Archivelog mode
+  77                           - Convert single destination database to RAC
+  78                           - Convert, optionally, database in ARCHIVELOG mode to NOARACHIVELOG mode
+  79                           - POST Refresh
+  80                           - Resync orapw files from primary to all participating instances
+  81                           - Reset required spfile parameters for applications
+  82                           - Report final database refresh status
+  83
+  84                          ********************************************************************************************
+  85
+  86
+  87 - To create a new database in [for example, TST] environment and apply POST Refresh as [for example, UAT] edit the appropriate
+  88   PARM file [ parm.<db_name> ] and set the following keys values as shown:
+  89
+  90         export operation=FORCE       # DROP | FORCE | leave empty  UPPER CASE
+  91         export run_pre=N             # Y | N | IGNORE  UPPER CASE
+  92         export run_post=Y            # Y | N | IGNORE  UPPER CASE      <- [OPTIONAL]
+  93         export ENV=TST               # CPY | DEV | KC | TST | TSTKC | IVV UPPER CASE     <- [IF "run_post=Y", SELECT ENV]
+  94         export postRefresh_as=UAT    # DB Name    <- [REQUIRED IF "run_post=Y", SELECT DB_NAME IN SPECIFIED ENV]
+  95
+  96
+  97 - To drop a database, remove its instances and delete all its datafiles, edit the appropriate PARM file [ parm.<db_name> ] and
+  98   set the following keys values as shown:
+  99
+ 100         export operation=DROP        # DROP | FORCE | leave empty  UPPER CASE
+ 101         export run_pre=N             # Y | N | IGNORE  UPPER CASE
+ 102         export run_post=N            # Y | N | IGNORE  UPPER CASE
+ 103         export ENV=IVV                   # CPY | DEV | KC | TST | TSTKC | IVV UPPER CASE
+ 104         export postRefresh_as=IVV1       # DB Name
+ 105
+ 106
+ 107 - To refresh an existing working DB [for example, CPY1] edit the appropriate PARM file [ parm.<db_name> ] and set the following keys
+ 108   values as shown:
+ 109
+ 110         export operation=            # DROP | FORCE | leave empty  UPPER CASE
+ 111         export run_pre=Y             # Y | N | IGNORE  UPPER CASE
+ 112         export run_post=Y            # Y | N | IGNORE  UPPER CASE      <- [OPTIONAL]
+ 113         export ENV=CPY               # CPY | DEV | KC | TST | TSTKC | IVV UPPER CASE     <- [IF "run_post=Y", SELECT ENV]
+ 114         export postRefresh_as=CPY1   # DB Name    <- [REQUIRED IF "run_post=Y", SELECT DB_NAME IN SPECIFIED ENV]
+ 115
+ 116
+ 117 Every database that has been refreshed spools stack of logfiles in a directory specified by its PARM file [ parm.<db_name> ]
+ 118
+ 119 ** Refer to documentation for further details **
+ 120 ############################################################################################################################################
+ 121
+ 122 EOF
+ 123 exit
+ 124 fi
+ 125 }
+ 126 ######################################################################################################################################
+ 127 ####################################################  *** END of HELP ***  ###########################################################
+ 128 #########################
+  129
+ 130
+ 131
+ 132
+ 133 ######################################################################################################################################
+ 134 #############################################  *** BEGIN of SCRIPT FUNCTIONS ***  ####################################################
+ 135 ######################################################################################################################################
+ 136 function PRE_CHECKS() {
+ 137
+ 138 # Source all environment variables
+ 139 if [ -f $parm_dir/parm.${1} ] ; then
+ 140     source $parm_dir/parm.${1}
+ 141 # Create logging environments
+ 142     test ! -d /infshare/oracle/logs/refresh && mkdir -p /infshare/oracle/logs/refresh
+ 143     export log_hstry=`date '+%Y-%m-%d-%H%M'`
+ 144     mkdir -p $log/$log_hstry
+ 145     mv $log/*.* $log/$log_hstry
+ 146 # Validate existence of backup location
+ 147 else
+ 148     echo ""
+ 149     echo "`date`" |tee -i ./check_files_ifexist.log
+ 150     echo "*** ERROR: Expected PARM file NOT found:" |tee -i ./check_files_ifexist.log
+ 151     echo "*** ERROR: parm.${1}" |tee -a -i  ./check_files_ifexist.log
+ 152     echo ""
+ 153     exit 1
+ 154 fi
+ 155 # THIS WILL CROSS-CHECK AND MAKE SURE WHAT YOU DROPPING IS WHAT YOU SPECIFIED BY "SID" IN PARM FILE
+ 156 export RUNNING_INSTANCE=`ps -ef|grep pmon|grep ora_pmon_${to_db}|grep -v grep|awk '{print $8}'|cut -d_ -f3`
+ 157 if [ -n "$RUNNING_INSTANCE" ] && [ "$RUNNING_INSTANCE" != "$SID" ] ; then
+ 158     echo "REFRESH $to_db: ERROR: ** Current Running Instance "$RUNNING_INSTANCE" NOT Matching "SID" in PARM File ** Refresh Terminated !!" |t     ee -i $log/check_files_ifexist.log
+ 159     echo "Please reset \"SID\" values in PARM file or Refresh from an appropriate location" |tee -a -i $log/check_files_ifexist.log
+ 160     echo ""
+ 161     send_mail " (TRA) Current_Running_Instance_NOT_Matching_SID"
+ 162     exit 1
+ 163 elif [ -z "$RUNNING_INSTANCE" ] && [ "$operation" != "FORCE" ] ; then
+ 164     echo ""
+ 165     echo "REFRESH $to_db: ERROR: ** No Instance Found To Refresh !! Instance May Be Down Or Refresh Initiated From Wrong Server!! Refresh Ter     minated !!" |tee -a -i $log/check_files_ifexist.log
+ 166     echo "IF this is the first time to create this database, please reset \"Operation\" in the PARM file To \"FORCE\" and retry .."|tee -a -i      $log/check_files_ifexist.log
+ 167     echo ""
+ 168     send_mail " (TRA) No_Instance_Found_To_Refresh"
+  169     exit 1
+ 170 fi
+ 171 # Validate existence of init.ora used for DUPLICATE command
+ 172 if [ ! -f $ORACLE_HOME/dbs/init${to_db}_DUP.ora ] ; then
+ 173     echo ""
+ 174     echo "`date`" |tee -i  $log/check_files_ifexist.log
+ 175     echo "*** ERROR: Please ask your friendly DBA to create the following missing init.ora file:" |tee -a -i  $log/check_files_ifexist.log
+ 176     echo "*** ERROR: $ORACLE_HOME/dbs/init${to_db}_DUP.ora" |tee -a -i  $log/check_files_ifexist.log
+ 177     send_mail " (TRA) No_dup_parm_file"
+ 178     exit 1
+ 179 fi
+ 180 # Validate existence of directory used by 'audit_file_dest'
+ 181 if [ ! -d $ORACLE_BASE/admin/${to_db}/adump ] ; then
+ 182     mkdir -p $ORACLE_BASE/admin/${to_db}/adump
+ 183 fi
+ 184 # Validate existence of backup directory
+ 185 #if [ ! -d $backup_dir ] ; then
+ 186 #    echo ""
+ 187 #    echo "`date`" |tee -i  $log/check_files_ifexist.log
+ 188 #    echo "*** ERROR: What is the point! Following backup location is NOT found:"  |tee -a -i   $log/check_files_ifexist.log
+ 189 #    echo "*** ERROR: $backup_dir"  |tee -a -i  $log/check_files_ifexist.log
+ 190 #    send_mail "No_backup"
+ 191 #    exit 1
+ 192 #fi
+ 193 # Validate existence of ConvertToRAC file
+ 194 if [ "$isCluster" == "Y" ] && [ ! -f $library_dir/ConvertToRAC_AdminManaged_${to_db}.xml ] ; then
+ 195     echo ""
+ 196     echo "`date`" |tee -i  $log/check_files_ifexist.log
+ 197     echo ""
+ 198     echo "*** ERROR: ConvertToRAC_AdminManaged_${to_db}.xml NOT Found!! Refresh Terminated!!" |tee $log/check_files_ifexist.log
+ 199     echo ""
+ 200     send_mail "No_XML_File"
+ 201     exit 1
+ 202 fi
+ 203 }
+ 204 ##################################################################################################################################
+ 205
+ 206 #################################################################################################################################
+ 207 send_mail() {
+ 208
+ 209 if [ -n "$email_error_to" ] && [ "$1" == "begin_refresh" ]
+ 210 then
+ 211 echo "inside block"
+  212 cat <<EOF |mail -s "(TRA) REFRESH ${to_db}: ** Begin Of Refresh..**" $email_error_to
+ 213
+ 214       - Refresh Steps:
+ 215
+ 216            1- PRE Refresh
+ 217            2- Current Database Status
+ 218            3- Drop database
+ 219            4- Duplicate Database
+ 220            5- Configure Database in CRS
+ 221            6- Convert database to Archivelog Mode
+ 222            7- Cluster Database
+ 223            8- Convert Database to NOarchivelog Mode
+ 224            9- POST Refresh
+ 225           10- Resync PasswordFiles
+ 226           11- Reset Spfile Parameters
+ 227           12- Final Status
+ 228
+ 229 EOF
+ 230 fi
+ 231 if [ -n "$email_error_to" ] && [ "$1" == "Current_Running_Instance_NOT_Matching_SID" ]
+ 232 then
+ 233 mail -s "(TRA) REFRESH $to_db: ERROR: ** Current Running Instance NOT Matching SID in PARM File !!" $email_error_to < $log/check_files_ifexis     t.log
+ 234 fi
+ 235 if [ -n "$email_error_to" ] && [ "$1" == "No_Instance_Found_To_Refresh" ]
+ 236 then
+ 237 mail -s "(TRA) REFRESH $to_db: ERROR: ** No Instance Found To Refresh !! Instance May Be Down Or Refresh Initiated from Wrong Server !! Refre     sh Terminated !!" $email_error_to < $log/check_files_ifexist.log
+ 238 fi
+ 239 if [ -n "$email_error_to" ] && [ "$1" == "No_dup_parm_file" ]
+ 240 then
+ 241 mail -s "(TRA) REFRESH ${to_db}: ERROR: $ORACLE_HOME/dbs/init${to_db}_DUP.ora"  $email_error_to < $log/check_files_ifexist.log
+ 242 fi
+ 243 if [ -n "$email_error_to" ] && [ "$1" == "No_backup" ]
+ 244 then
+ 245 mail -s "(TRA) REFRESH ${to_db}: ERROR: $backup_dir" $email_error_to < $log/check_files_ifexist.log
+ 246 fi
+ 247 if [ -n "$email_error_to" ] && [ "$1" == "No_XML_File" ]
+ 248 then
+ 249 mail -s "(TRA) REFRESH ${to_db}: ERROR: ConvertToRAC_AdminManaged_${to_db}.xml NOT Found!! Refresh Terminated!!"  $email_error_to < $log/chec     k_files_ifexist.log
+ 250 fi
+ 251 if [ -n "$email_error_to" ] && [ "$1" == "No_PRE_build_driver" ]
+  252 then
+ 253 mail -s "(TRA) REFRESH ${to_db}: ERROR: $builds_dir/build_driver_${ENV}.pre" $email_error_to < $log/check_files_ifexist.log
+ 254 fi
+ 255 if [ -n "$email_error_to" ] && [ "$1" == "PRE_Refresh_Terminate" ]
+ 256 then
+ 257 mail -s "(TRA) REFRESH ${to_db}: run_pre=${run_pre}: ERROR: PRE Refresh Encountered Issues!!! ** run_pre with \"IGNORE\" or \"N\" NOT Specifi     ed! ** Refresh Terminated !!"  $mail_error_to < $log/build_driver_${ENV}.pre.MASTER
+ 258 fi
+ 259 if [ -n "$email_error_to" ] && [ "$1" == "PRE_Error_Proceed" ]
+ 260 then
+ 261 mail -s "(TRA) REFRESH ${to_db}: ERROR: run_pre="${run_pre}" ** PRE Refresh Encountered Issues ** run_pre with \"IGNORE\" Option Specified. E     ntering Drop of Destination Database..**"  $email_error_to < $log/build_driver_${ENV}.pre.MASTER
+ 262 fi
+ 263 if [ -n "$email_error_to" ] && [ "$1" == "Remove_DB_Refresh_Terminate" ]
+ 264 then
+ 265 mail -s "(TRA) REFRESH ${to_db}: ERROR: Refresh Encountered Issues While Removing Database !!! ** Refresh Terminated !!"  $email_error_to < $     log/crs_remove_db.log
+ 266 fi
+ 267 if [ -n "$email_error_to" ] && [ "$1" == "Drop_DB_Refresh_noForce" ]
+ 268 then
+ 269 mail -s "(TRA) REFRESH ${to_db}: ERROR: ** RMAN Drop Status Failed ** Operation With \"FORCE\" option NOT Specified ** Refresh Terminated!!"       $email_error_to < $log/rman_drop_db.log
+ 270 fi
+ 271 if [ -n "$email_error_to" ] && [ "$1" == "Drop_DB_Refresh_Force" ]
+ 272 then
+ 273 mail -s "(TRA) REFRESH ${to_db}: OPERATION=${operation} ** RMAN Drop Encountered Issues!!! ** Operation With \"FORCE\" Option Specified ** En     tering Refresh.."  $email_error_to < $log/rman_drop_db.log
+ 274 fi
+ 275 if [ -n "$email_error_to" ] && [ "$1" == "Drop_only_DB_error" ]
+ 276 then
+ 277 mail -s "(TRA) REFRESH ${to_db}: ERROR: OPERATION=${operation} ** RMAN Drop Encountered Issues!!! ** Refresh NOT Required ..Exiting !!"  $ema     il_error_to < $log/rman_drop_db.log
+ 278 fi
+ 279 if [ -n "$email_error_to" ] && [ "$1" == "RMAN_Duplicate_Failed_Refresh_Terminated" ]
+ 280 then
+ 281 mail -s  "(TRA) REFRESH ${to_db}: ERROR: ** RMAN Duplicate Failed ** Refresh Terminated!!!"  $email_error_to < $log/rman_duplicate.log
+ 282 fi
+ 283 if [ -n "$email_error_to" ] && [ "$1" == "Database_Clustering_Encountered_Issues" ]
+ 284 then
+ 285 mail -s "(TRA) REFRESH ${to_db}: ERROR: ** Database Clustering Encountered Issues!! ** Attempting Post Refresh ..!!"  $email_error_to < $log/     rconfig.log
+ 286 fi
+ 287 if [ -n "$email_error_to" ] && [ "$1" == "No_build_driver_post" ]
+  288 then
+ 289 mail -s "(TRA) REFRESH ${to_db}: ERROR: $builds_dir/build_driver_${ENV}.post" $email_error_to < $log/check_files_ifexist.log
+ 290 fi
+ 291 if [ -n "$email_error_to" ] && [ "$1" == "POST_Refresh_Encountered_UNexpected_Errors" ]
+ 292 then
+ 293 mail -s "(TRA) REFRESH ${to_db}: ERROR: run_post=\"${run_post}\" ** POST Refresh Encountered UNexpected Errors !! ** Executing Final Refresh      Steps.."  $email_error_to < $log/build_driver_${ENV}.post.MASTER
+ 294 fi
+ 295 if [ -n "$email_error_to" ] && [ "$1" == "Final_Database_Status_Error" ]
+ 296 then
+ 297 mail -s  "(TRA) REFRESH ${to_db}: ERROR: run_post="${run_post}" ** Final Database Status ** END OF REFRESH"  $email_error_to < $log/final_sta     tus.log
+ 298 fi
+ 299 ############################
+ 300 if [ -n "$email_ok_to" ] && [ "$1" == "Entering_PRE" ]
+ 301 then
+ 302 echo |mail -s "(TRA) REFRESH ${to_db}: run_pre="${run_pre}" ** Entering PRE Refresh..**" $email_ok_to
+ 303 fi
+ 304 if [ -n "$email_ok_to" ] && [ "$1" == "Entering_Drop_of_Destination_Database" ]
+ 305 then
+ 306 mail -s "(TRA) REFRESH ${to_db}: ** PRE Refresh Reported NO ERROR(s) ** Entering Drop of Destination Database..**"  $email_ok_to < $log/build     _driver_${ENV}.pre.MASTER
+ 307 fi
+ 308 if [ -n "$email_ok_to" ] && [ "$1" == "PRE_Refresh_NOT_Required" ]
+ 309 then
+ 310 echo |mail -s "(TRA) REFRESH ${to_db} ** run_pre=${run_pre} ** PRE Refresh NOT Required ** Entering Drop of Destination Database..**" $email_     ok_to
+ 311 fi
+ 312 if [ -n "$email_ok_to" ] && [ "$1" == "Drop_DB_Refresh_OK" ]
+ 313 then
+ 314 mail -s "(TRA) REFRESH ${to_db}: OPERATION=${operation} ** RMAN Drop Completed ** Refresh Starting.."  $email_ok_to < $log/rman_drop_db.log
+ 315 fi
+ 316 if [ -n "$email_ok_to" ] && [ "$1" == "Drop_only_DB_ok" ]
+ 317 then
+ 318 mail -s "(TRA) REFRESH ${to_db}: OPERATION=${operation} ** RMAN Drop Completed ** Refresh NOT Required. ** Exiting.."  $email_ok_to < $log/rm     an_drop_db.log
+ 319 fi
+ 320 if [ -n "$email_ok_to" ] && [ "$1" == "Single_Instance_Database_Opened_Clustering_In_Progress" ]
+ 321 then
+ 322 mail -s  "(TRA) REFRESH ${to_db}: ** RMAN Duplicate Completed ** Single Instance Database Opened ** Clustering In Progress.."  $email_ok_to <      $log/rman_duplicate.log
+ 323 fi
+ 324 if [ -n "$email_ok_to" ] && [ "$1" == "Clustering_Completed" ]
+  325 then
+ 326 mail -s "(TRA) REFRESH ${to_db}: ** Database Clustering Completed **"  $email_ok_to < $log/rconfig.log
+ 327 fi
+ 328 if [ -n "$email_ok_to" ] && [ "$1" == "Clustering_Completed_Switching_to_NOarchivelog" ]
+ 329 then
+ 330 mail -s "(TRA) REFRESH ${to_db}: ** Database Clustering Completed ** Switching to NOarchivelog Mode.."  $email_ok_to < $log/rconfig.log
+ 331 fi
+ 332 if [ -n "$email_ok_to" ] && [ "$1" == "POST_Refresh_Completed_with_NO_UNexpected_Errors" ]
+ 333 then
+ 334 mail -s "(TRA) REFRESH ${to_db}: run_post=\"${run_post}\" ** POST Refresh Completed with NO UNexpected Errors ** Executing Final Refresh Step     s.." $email_ok_to < $log/build_driver_${ENV}.post.MASTER
+ 335 fi
+ 336 if [ -n "$email_ok_to" ] && [ "$1" == "POST_Refresh_NOT_Required" ]
+ 337 then
+ 338 mail -s "(TRA) REFRESH ${to_db}: run_post=\"${run_post}\" ** POST Refresh NOT Required ** Executing Final Refresh Steps.." $email_ok_to < ${O     RACLE_HOME}/dbs/init${to_db}_REFRESH.ora
+ 339 fi
+ 340 if [ -n "$email_ok_to" ] && [ "$1" == "Entering_POST_Refresh" ]
+ 341 then
+ 342 echo |mail -s "(TRA) REFRESH ${to_db}: run_post=${run_post} ** Entering POST Refresh .." $email_ok_to
+ 343 fi
+ 344 if [ -n "$email_error_to" ] && [ "$1" == "Final_Database_Status" ]
+ 345 then
+ 346 mail -s  "(TRA) REFRESH ${to_db}: run_post="${run_post}" ** Final Database Status ** END OF REFRESH"  $email_error_to < $log/final_status.log
+ 347 fi
+ 348 }
+ 349 #################################################################################################################################
+ 350
+ 351 ###################################################################################################################################
+ 352 #                                                                                                                                 #
+ 353 #                                                      ****  PRE REFRESH ****                                                     #
+ 354 #                                                                                                                                 #
+ 355 ###################################################################################################################################
+ 356 function PRE_REFRESH() {
+ 357 # Check if pre refresh script exist?!
+ 358 if [ ! -f $builds_dir/build_driver_${ENV}.pre ] && [ "$run_pre" == "Y" ] ; then
+ 359    echo "`date`" |tee -i  $log/check_files_ifexist.log
+ 360    echo "*** ERROR: No pre refresh scripts found!!" |tee -a -i   $log/check_files_ifexist.log
+ 361    echo "*** ERROR: $builds_dir/build_driver_${ENV}.pre" |tee -a -i   $log/check_files_ifexist.log
+ 362    send_mail "No_PRE_build_driver"
+ 363    cat $log/check_files_ifexist.log
+ 364    exit 1
+ 365 fi
+  366 # Check if pre_refresh is required, otherwise skip and continue...
+ 367 if [ "$run_pre" == "Y" ] || [ "$run_pre" == "IGNORE" ] ; then
+ 368
+ 369 cat <<EOF |tee -i $log/build_driver_${ENV}.pre.MASTER
+ 370
+ 371 ################################# ** BEGIN OF PRE REFRESH ** #######################################
+ 372 `date`
+ 373
+ 374 EOF
+ 375
+ 376 echo |send_mail "Entering_PRE"
+ 377 #srvctl stop database -d $to_db
+ 378 #sleep 3
+ 379 #srvctl start database -d $to_db
+ 380                                             ##############################################################
+ 381                                                                        cd $builds_dir
+ 382                                             ##############################################################
+ 383
+ 384 /bin/bash  build_driver_${ENV}.pre $to_db |tee -a -i  $log/build_driver_${ENV}.pre.MASTER 2>&1
+ 385
+ 386                                             ##############################################################
+ 387                                                                        cd $scripts_dir
+ 388                                             #############################################################
+ 389
+ 390 cat <<EOF |tee  -a -i  $log/build_driver_${ENV}.pre.MASTER
+ 391
+ 392 ################################ ** END OF PRE REFRESH ** ##########################################
+ 393
+ 394 EOF
+ 395 # Check pre refresh result. If success continue, otherwise exit and alert.
+ 396 export success_exp_check="`cat $log/expdp_PRE_${to_db}_INF_SCHEMAS.log |egrep -i 'ORA-'`"
+ 397     if [ -f $log/expdp_PRE_${to_db}_INF_SCHEMAS.log ] && ( [[ "$success_exp_check" == *"ORA-"* ]] ) ; then
+ 398     unix2dos $log/build_driver_${ENV}.pre.MASTER
+ 399     send_mail "PRE_Refresh_Terminate"
+ 400     echo ""
+ 401     echo "$success_exp_check"
+ 402     echo ""
+ 403     echo "==> STATUS <== *** (TRA) REFRESH ${to_db}: ERROR: PRE Refresh Encountered Issues During Exporting INF* Schemas!!! ** Refresh Termin     ated !! *** ==> STATUS <=="
+ 404     echo ""
+ 405 exit 1
+ 406     fi
+ 407 export check_pre_build="`cat $log/build_driver_${ENV}.pre.MASTER |egrep -i 'ERROR|ORA-|unsuccessfully' |egrep -v 'ORA-39001|ORA-39170'`"
+  408   if ( [ "$run_pre" != "IGNORE" ] ) &&  ( [ ! -f $builds_dir/build_driver_${ENV}.pre ] || [ ! -f $log/build_driver_${ENV}.pre.MASTER ] || [[      "$check_pre_build" == *"unsuccessfully"* ]] || [[ "$check_pre_build" == *"ERROR"* ]] || [[ "$check_pre_build" == *"ORA-"* ]] ) ; then
+ 409     unix2dos $log/build_driver_${ENV}.pre.MASTER
+ 410     send_mail "PRE_Refresh_Terminate"
+ 411     echo ""
+ 412     echo "==> STATUS <== *** (TRA) REFRESH ${to_db}: run_pre=${run_pre}: ERROR: PRE Refresh Encountered Issues!!! ** run_pre with \"IGNORE\"      or \"N\" NOT Specified! ** Refresh Terminated !! *** ==> STATUS <=="
+ 413     echo ""
+ 414 exit 1
+ 415     elif ( [ "$run_pre" == "IGNORE" ] )  && ( [ ! -f $builds_dir/build_driver_${ENV}.pre ] || [ ! -f $log/build_driver_${ENV}.pre.MASTER ] ||      [[ "$check_pre_build" == *"unsuccessfully"* ]] ||  [[ "$check_pre_build" == *"ERROR"* ]] || [[ "$check_pre_build" == *"ORA-"* ]] ) ; then
+ 416     unix2dos $log/build_driver_${ENV}.pre.MASTER
+ 417     send_mail "PRE_Error_Proceed"
+ 418     echo ""
+ 419     echo "==> STATUS <== *** (TRA) REFRESH ${to_db}: ERROR: run_pre="${run_pre}" ** PRE Refresh Encountered Issues ** run_pre with \"IGNORE\"      Option Specified. Refresh in Progress *** ==> STATUS <=="
+ 420     echo ""
+ 421     elif [ -f $builds_dir/build_driver_${ENV}.pre ] && [[ "$check_pre_build" != *"unsuccessfully"* ]] &&  [[ "$check_pre_build" != *"ERROR"*      ]] && [[ "$check_pre_build" != *"ORA-"* ]] ; then
+ 422     unix2dos $log/build_driver_${ENV}.pre.MASTER
+ 423     send_mail "Entering_Drop_of_Destination_Database"
+ 424     echo ""
+ 425     echo "==> STATUS <== *** (TRA) REFRESH ${to_db}: ** PRE Refresh Reported NO ERROR(s) *** ==> STATUS <=="
+ 426     echo ""
+ 427   fi
+ 428 fi
+ 429 # PRE Refresh is NOT Required so notify and proceed with Refresh
+ 430 if [ "$run_pre" == "N" ] ; then
+ 431     echo |send_mail "PRE_Refresh_NOT_Required"
+ 432     echo ""
+ 433     echo "==> STATUS <== *** (TRA) REFRESH ${to_db} ** run_pre=${run_pre} ** PRE Refresh NOT Required *** ==> STATUS <=="
+ 434     echo ""
+ 435 fi
+ 436 }
+ 437 ##################################################################################################################################
+ 438
+ 439
+ 440
+ 441 #################################################################################################################################
+ 442 # RECORDING CURRENT ENVIRONMENT BEFORE ENTERING OF DROP OF DESTINATION DATABASE
+ 443 function DB_ENV_STATUS_BEFORE_REFRESH() {
+ 444
+ 445 export ORACLE_SID=`ps -ef|grep pmon|grep ora_pmon_${to_db}|grep -v grep|awk '{print $8}'|cut -d_ -f3`
+ 446
+ 447 cat <<EOF |tee -i  $log/db_status_before_refresh.log
+ 448
+ 449 ####################### ** CURRENT DATABASE STATUS BEFORE REFRESH BEGINS ** ########################
+ 450 `date`
+ 451
+ 452 ----
+ 453
+ 454 `ps -ef|grep pmon`
+ 455
+ 456 ----
+ 457
+ 458 Script was invoked from host: "`hostname`"
+ 459
+ 460 Current instance name to be refreshed: "$ORACLE_SID"
+ 461
+ 462 `srvctl status database -d $to_db`
+ 463 `srvctl modify database -d $to_db -t abort`
+ 464 `srvctl config database -d $to_db`
+ 465
+ 466 ##################### ** END OF CURRENT DATABASE STATUS BEFORE REFRESH BEGINS ** ###################
+ 467
+ 468 EOF
+ 469 }
+ 470 #####################################################################################################################################
+ 471 function DROP_DATABASE() {
+ 472
+ 473 export ORACLE_SID=`ps -ef|grep pmon|grep ora_pmon_${to_db}|grep -v grep|awk '{print $8}'|cut -d_ -f3`
+ 474 # BEGIN RMAN DROP
+ 475 cat <<EOF |tee -i $log/rman_drop_db.log
+ 476
+ 477 ########################### ** BEGIN OF DROP & REMOVE OF DATABASE ** ###############################
+ 478 `date`
+ 479
+ 480    RMAN DROP, IN RAC ENVIRONMENT, REQUIRES:
+ 481
+ 482         - TURN CLUSTER OFF IN SPFILE
+ 483         - SHUTDOWN RAC DATABASE
+ 484         - STARTUP LOCAL INSTANCE
+ 485         - ENABLE RESTRICTED SESSION MODE
+ 486         - RMAN DROP
+ 487
+ 488 EOF
+ 489 # DISABLE DATABASE CLUSTER MODE FOR RMAN DROP
+ 490 echo "################################# ** BEGIN TURN DB CLUSTER OFF ** ###################################" > $log/turn_cluster_off.log
+ 491 echo "`date`" >> $log/turn_cluster_off.log
+ 492 sqlplus  / as sysdba <<EOF >> $log/turn_cluster_off.log
+ 493 set echo on
+ 494 SHUTDOWN abort;
+ 495 startup;
+ 496 select instance_name from v\$instance;
+ 497 select status from v\$instance;
+ 498 Alter SYSTEM SET CLUSTER_DATABASE=FALSE SCOPE=SPFILE;
+ 499 EOF
+ 500 srvctl status database -d ${to_db} >> $log/turn_cluster_off.log
+ 501 echo "Stopping $to_db .. `srvctl stop database -d ${to_db}`" >> $log/turn_cluster_off.log
+ 502 srvctl status database -d ${to_db} >> $log/turn_cluster_off.log
+ 503 echo "################################## ** END TURN DB CLUSTER OFF ** ####################################" >> $log/turn_cluster_off.log
+ 504 # RMAN requires DB startup in restricted mode
+ 505 echo "################################ ** BEGIN STARTUP DB EXCLUSIVE ** ###################################" > $log/startup_restricted.log
+ 506 echo "`date`" >> $log/startup_restricted.log
+ 507 sqlplus  / as sysdba <<EOF >> $log/startup_restricted.log
+ 508 set echo on
+ 509 SHUTDOWN abort;
+ 510 STARTUP NOMOUNT;
+ 511 STARTUP FORCE MOUNT;
+ 512 ALTER SYSTEM ENABLE RESTRICTED SESSION;
+ 513 EOF
+ 514 echo "################################## ** END STARTUP DB EXCLUSIVE ** ###################################" >> $log/startup_restricted.log
+ 515 # ISSUE RMAN DROP DB & ARCHIVELOGS
+ 516 rman <<EOF |tee -a -i $log/rman_drop_db.log
+ 517 connect target /;
+ 518 set echo on;
+ 519 DELETE NOPROMPT ARCHIVELOG ALL;
+ 520 DROP DATABASE INCLUDING BACKUPS NOPROMPT;
+ 521 EOF
+ 522 sleep 2
+ 523 echo "`date` STOPPING and REMOVING \"${to_db}\" FROM CRS .." |tee -i $log/crs_remove_db.log
+ 524 echo "" |tee -a -i $log/crs_remove_db.log
+ 525 srvctl stop database -d $to_db -f  |tee -a -i $log/crs_remove_db.log
+ 526 sleep 3
+ 527 srvctl remove database -d $to_db -f -y  |tee -a -i $log/crs_remove_db.log
+ 528 sleep 3
+ 529 export grid_cmd='crsctl delete serverpool ora.'${to_db}
+ 530 echo "sudo su - grid -c '${grid_cmd}' " |tee -i  $log/crs_remove_db.sh
+ 531 /bin/bash $log/crs_remove_db.sh |tee -a -i $log/crs_remove_db.log
+  532
+ 533 ## CHECK THAT UNREGISTER AND REMOVE FROM CRS IS SUCCESSFUL IF NOT QUIT REFRESH AND SEND EMAIL
+ 534 export error_unregister_check="`cat $log/crs_remove_db.log |egrep -i 'PRKO-3141|CRS-2554'`"
+ 535 if ( [[ "$error_unregister_check" == *"PRKO-3141"* ]] || [[ "$error_unregister_check" == *"CRS-2554"* ]] || [[ "$error_unregister_check" == *     "cannot be unregistered as it is referenced by resource"* ]] ) ; then
+ 536     unix2dos $log/crs_remove_db.log
+ 537     send_mail "Remove_DB_Refresh_Terminate"
+ 538     echo ""
+ 539     echo "==> STATUS <== *** (TRA) REFRESH ${to_db}: ERROR: Refresh Encountered Issues While Removing Database !!! ** Refresh Terminated !! *     ** ==> STATUS <=="
+ 540     echo ""
+ 541 exit 1
+ 542 fi
+ 543 ###
+ 544
+ 545 cat <<EOF |tee -a -i $log/rman_drop_db.log
+ 546
+ 547 ############################### ** END OF DROP & REMOVE OF DATABASE ** #############################
+ 548
+ 549 EOF
+ 550 # CHECK DROP DATABASE STATUS
+ 551 # FOR REFRESH; IF NORMAL OPERATION THEN EITHER SUCCEED OR EXIT
+ 552 export error_drop_check="`cat $log/rman_drop_db.log |grep -i "database dropped"`"
+ 553 if ( [ -z "$operation" ] || [ "$operation" == "FORCE" ] ) && ( [ -f $log/rman_drop_db.log ] && [ "$error_drop_check" == "database dropped" ]      ); then
+ 554    unix2dos $log/rman_drop_db.log
+ 555    send_mail "Drop_DB_Refresh_OK"
+ 556    echo ""
+ 557    echo "==> STATUS <== *** (TRA) REFRESH ${to_db}: OPERATION=${operation} ** RMAN Drop Completed ** Refresh in Progress.. *** ==> STATUS <==     "
+ 558    echo ""
+ 559    elif [ -z "$operation" ] && [ "$error_drop_check" != "database dropped" ] ; then
+ 560    unix2dos $log/rman_drop_db.log
+ 561    send_mail "Drop_DB_Refresh_noForce"
+ 562    echo ""
+ 563    echo "==> STATUS <== *** (TRA) REFRESH ${to_db}: ERROR: ** RMAN Drop Status Failed ** Operation With \"FORCE\" option NOT Specified ** Ref     resh Terminated!! *** ==> STATUS <=="
+ 564    echo ""
+ 565    exit 1
+ 566 fi
+ 567 # FOR REFRESH; IF FORCE OPTION SPECIFIED THEN REFRESH WILL BE FORCED REGARDLESS IF PREVIOUS DATABASE DROP SUCCEEDED OR NOT.
+ 568 if [ "$error_drop_check" != "database dropped" ] && [ "$operation" == "FORCE" ] ; then
+ 569    unix2dos $log/rman_drop_db.log
+  570    send_mail "Drop_DB_Refresh_Force"
+ 571    echo ""
+ 572    echo "==> STATUS <== *** (TRA) REFRESH ${to_db}: OPERATION=${operation} ** RMAN Drop Encountered Issues!!! ** Operation With \"FORCE\" Opt     ion Specified ** Refresh in Progress..*** ==> STATUS <=="
+ 573    echo ""
+ 574 fi
+ 575 # IF OPERATION IS DROP THEN EITHER DROP SUCCESSFULLY AND EXIT GRACEFULLY OR WARN BY EMAIL
+ 576 if [ "$operation" == "DROP" ] && [ "$error_drop_check" == "database dropped" ]; then
+ 577    unix2dos $log/rman_drop_db.log
+ 578    send_mail "Drop_only_DB_ok"
+ 579    echo ""
+ 580    echo "==> STATUS <== *** (TRA) REFRESH ${to_db}: OPERATION=${operation} ** RMAN Drop Completed ** Refresh NOT Required. ** Exiting..*** ==     > STATUS <=="
+ 581    echo ""
+ 582    exit 0
+ 583    elif [ "$operation" == "DROP" ] && [ "$error_drop_check" != "database dropped" ]; then
+ 584    send_mail "Drop_only_DB_error"
+ 585    echo ""
+ 586    echo "==> STATUS <== *** (TRA) REFRESH ${to_db}: ERROR: OPERATION=${operation} ** RMAN Drop Encountered Issues!!! ** Refresh NOT Required      !! ..Exiting !! *** ==> STATUS <=="
+ 587    echo ""
+ 588    exit 1
+ 589 fi
+ 590 }
+ 591 ######################################################################################################################################
+ 592 # THIS FUNCTION TO DUPLICATE DATABASE FROM BACKUP
+ 593 function DUPLICATE_DATABASE() {
+ 594
+ 595 export ORACLE_SID=$to_db
+ 596 export ORACLE_UNQNAME=$to_db
+ 597 cat <<EOF |tee -i $log/rman_duplicate.log
+ 598
+ 599 ######################################## ** BEGIN DUPLICATE ** #####################################
+ 600 `date`
+ 601
+ 602 EOF
+ 603
+ 604 # NEXT STEP IS TO START DESTINATION DB IN NOMOUNT
+ 605 # using private pfile "init<dbname|tee _DUP.ora" in default location.
+ 606 echo "`date`" |tee -i  $log/startup_nomount.log
+ 607 sqlplus  / as sysdba <<EOF |tee -a -i $log/startup_nomount.log
+ 608 set echo on
+ 609 shutdown immediate;
+  610 startup nomount pfile='$ORACLE_HOME/dbs/init${to_db}_DUP.ora';
+ 611 exit;
+ 612 EOF
+ 613 ######################################################################
+ 614 # Once destination DB is started in nomount, we can issue duplicate
+ 615 #######################################################################
+ 616 # For HFPRD due to PHYSICAL STANDBY requirements
+ 617 if [ "${from_db}" = "HFPRD" -o "${from_db}" = "HFCRM" -o "${from_db}" = "OPSSTBY" -o "${from_db}" = "SNCSTBY" ]  ; then
+ 618 rman <<EOF |tee -a -i $log/rman_duplicate.log
+ 619 connect auxiliary /;
+ 620 set echo on;
+ 621 run
+ 622 {
+ 623 allocate auxiliary channel ch0 device type disk;
+ 624 allocate auxiliary channel ch1 device type disk;
+ 625 allocate auxiliary channel ch2 device type disk;
+ 626 allocate auxiliary channel ch3 device type disk;
+ 627 allocate auxiliary channel ch4 device type disk;
+ 628 allocate auxiliary channel ch5 device type disk;
+ 629 allocate auxiliary channel ch6 device type disk;
+ 630 allocate auxiliary channel ch7 device type disk;
+ 631 allocate auxiliary channel ch8 device type disk;
+ 632 allocate auxiliary channel ch9 device type disk;
+ 633 duplicate database to '$to_db' backup location '$backup_dir' noredo nofilenamecheck;
+ 634 }
+ 635 EOF
+ 636 else
+ 637 rman <<EOF |tee -a -i $log/rman_duplicate.log
+ 638 connect auxiliary /;
+ 639 set echo on;
+ 640 run
+ 641 {
+ 642 allocate auxiliary channel ch0 device type disk;
+ 643 allocate auxiliary channel ch1 device type disk;
+ 644 allocate auxiliary channel ch2 device type disk;
+ 645 allocate auxiliary channel ch3 device type disk;
+ 646 allocate auxiliary channel ch4 device type disk;
+ 647 allocate auxiliary channel ch5 device type disk;
+ 648 allocate auxiliary channel ch6 device type disk;
+ 649 allocate auxiliary channel ch7 device type disk;
+ 650 allocate auxiliary channel ch8 device type disk;
+ 651 allocate auxiliary channel ch9 device type disk;
+ 652 duplicate database to '$to_db' backup location '$backup_dir' nofilenamecheck;
+  653 }
+ 654 EOF
+ 655 fi
+ 656
+ 657 cat <<EOF |tee -a -i $log/rman_duplicate.log
+ 658
+ 659 ###################################### ** END OF DUPLICATE ** ######################################
+ 660
+ 661 EOF
+ 662
+ 663 ##################################################################
+ 664 # Check that DB has been successfully duplicated BEFORE proceeding
+ 665 export success_dup_check="`cat $log/rman_duplicate.log |egrep -i 'ERROR MESSAGE STACK FOLLOWS|failure of Duplicate Db command|database opened     |aborting duplication of target database|OFFLINE|not processed'`"
+ 666 if ( [ "$success_dup_check" == "database opened" ] ) && ( [ -f $log/rman_duplicate.log ] && [[ "$success_dup_check" != *"failure of Duplicate      Db command"* ]] && [[ "$success_dup_check" != *"OFFLINE"* ]] && [[ "$success_dup_check" != *"not processed"* ]] && [[ "$success_dup_check" !     = *"aborting duplication of target database"* ]] && [[ "$success_dup_check" != *"ERROR MESSAGE STACK FOLLOWS"* ]] ); then
+ 667    send_mail "Single_Instance_Database_Opened_Clustering_In_Progress"
+ 668    echo ""
+ 669    echo "==> STATUS <== *** (TRA) REFRESH ${to_db}: ** RMAN Duplicate Completed ** Single Instance Database Opened *** ==> STATUS <=="
+ 670    echo ""
+ 671 else
+ 672    send_mail "RMAN_Duplicate_Failed_Refresh_Terminated"
+ 673    echo ""
+ 674    echo "==> STATUS <== *** (TRA) REFRESH ${to_db}: ERROR: ** RMAN Duplicate Failed ** Refresh Terminated!!! *** ==> STATUS <=="
+ 675    echo ""
+ 676 exit 1
+ 677 fi
+ 678 }
+ 679 ####################################################################################################################################
+ 680 # THIS FUNCTION TO ADD, CONFIGURE. STOP AND START DB AND INSTANCE IN CRS
+ 681 function CONFIGURE_DB_CRS() {
+ 682
+ 683 export ORACLE_SID=$to_db
+ 684
+ 685 cat <<EOF
+ 686
+ 687 ############################# ** BEGIN OF CONFIGURE DATABASE IN CRS ** #############################
+ 688 `date`
+ 689
+ 690 EOF
+ 691 ##############################################################################################
+ 692 # This is to create the spfile in ASM. The spfile created here will include
+  693 # All required parameters from the existing DUP pfile
+ 694 sqlplus  / as sysdba <<EOF >  $log/create_spfile.log
+ 695 set echo on
+ 696 create pfile='init${to_db}_FULL.ora' from memory;
+ 697 create spfile='${to_data_grp}/${to_db}/spfile${to_db}.ora' from pfile='init${to_db}_FULL.ora';
+ 698 exit;
+ 699 EOF
+ 700 #############################################################################
+ 701 # Create init.ora file containing ASM Spfile
+ 702 cat > $ORACLE_HOME/dbs/init${to_db}_SP.ora <<EOF
+ 703 SPFILE='${to_data_grp}/${to_db}/spfile${to_db}.ora'
+ 704 EOF
+ 705 cp -p $ORACLE_HOME/dbs/init${to_db}_SP.ora $ORACLE_HOME/dbs/init${to_db}.ora
+ 706 #############################################################################
+ 707 # Now let us add the newly created DB to the cluster.
+ 708 echo "`date` Adding $to_db to CRS ..." |tee -i  $log/crs_add_db.log
+ 709 srvctl add database -d $to_db  -n $to_db  -o $ORACLE_HOME |tee -a -i $log/crs_add_db.log
+ 710 sleep 5
+ 711 echo "`date` Adding $INSTANCE_NAME to CRS ..." |tee -i  $log/crs_add_inst.log
+ 712 srvctl add instance -d $to_db -i $to_db -n $host_name |tee -a -i $log/crs_add_inst.log
+ 713 sleep 5
+ 714 echo "`date` Modify $to_db in CRS ..." |tee -i  $log/crs_modify_db.log
+ 715 srvctl modify database -d $to_db -p ${to_data_grp}/$to_db/spfile${to_db}.ora |tee -a -i $log/crs_modify_db.log
+ 716 sleep 5
+ 717 echo "`date` Adding ORACLE_UNQNAME to CRS ..." |tee -i  $log/crs_add_unqname.log
+ 718 srvctl setenv database -d $to_db -t "ORACLE_UNQNAME=$to_db"
+ 719 srvctl getenv database -d $to_db
+ 720 echo "`date` Config $to_db in CRS ..." |tee -i $log/crs_config_db.log
+ 721 srvctl config database -d $to_db -a |tee -a -i $log/crs_config_db.log
+ 722 sleep 5
+ 723 echo "`date` Stopping $to_db ..." |tee -i  $log/crs_stop_db.log
+ 724 srvctl stop database -d $to_db |tee -a -i $log/crs_stop_db.log
+ 725 sleep 5
+ 726 echo "`date` Starting $to_db ..." |tee -i  $log/crs_start_db.log
+ 727 srvctl start database -d $to_db |tee -a -i $log/crs_start_db.log
+ 728 sleep 5
+ 729 echo "`date` Stopping $to_db ..." |tee -i  $log/crs_stop_db.log
+ 730 srvctl stop database -d $to_db |tee -a -i $log/crs_stop_db.log
+ 731 sleep 5
+ 732 echo "`date` Starting $to_db ..." |tee -i  $log/crs_start_db.log
+ 733 srvctl start database -d $to_db |tee -a -i $log/crs_start_db.log
+ 734 #####################################################################################################
+ 735
+ 736 cat <<EOF
+ 737
+ 738 ############################# ** END OF CONFIGURE DATABASE IN CRS ** ###############################
+ 739
+ 740 EOF
+ 741 }
+ 742 ######################################################################################################################################
+ 743 # FUNCTION TO CONVERT DB to ARCHIVELOG MODE
+ 744 function TO_ARCHIVE() {
+ 745
+ 746 if ( [ "$isCluster" == "Y" ] && [ "$archivelog_enabled" == "N" ] ) || ( [ "$archivelog_enabled" == "N" ] && [ "$enable_archivelog" == "Y" ] )      ; then
+ 747
+ 748 export ORACLE_SID=`ps -ef|grep pmon|grep ora_pmon_${to_db}|grep -v grep|awk '{print $8}'|cut -d_ -f3`
+ 749
+ 750 cat <<EOF |tee -i $log/to_archive.log
+ 751
+ 752 ########################## ** BEGIN CONVERT DATABASE TO ARCHIVELOG MODE ** #########################
+ 753 `date`
+ 754
+ 755 EOF
+ 756
+ 757   echo "Connecting to $ORACLE_SID ..." |tee -a -i $log/to_archive.log
+ 758   echo "" |tee -a -i $log/to_archive.log
+ 759
+ 760   rac_flag=`sqlplus -s '/ as sysdba' <<EOF
+ 761   set pagesize0
+ 762   set trimspool on
+ 763   set trim on
+ 764   set feedback off
+ 765   set verify off
+ 766   select value from v\\$spparameter where lower (name)='cluster_database';
+ 767 EOF
+ 768   `
+ 769   export rac_flag
+ 770   echo "Parameter \"CLUSTER_DATABASE\" currently set to \"$rac_flag\"" |tee -a -i $log/to_archive.log
+ 771
+ 772   echo "" |tee -a -i $log/to_archive.log
+ 773   srvctl status database -d $to_db |tee -a -i $log/to_archive.log
+ 774   echo "Stopping database $to_db ..." |tee -a -i $log/to_archive.log
+ 775   srvctl stop database -d $to_db |tee -a -i $log/to_archive.log
+ 776   echo "Disabling database $to_db ..." |tee -a -i $log/to_archive.log
+ 777   srvctl disable database -d $to_db |tee -a -i $log/to_archive.log
+ 778   echo "" |tee -a -i $log/to_archive.log
+ 779   echo $ORACLE_UNQNAME
+ 780
+ 781   sqlplus / as sysdba <<EOF |tee -a -i $log/to_archive.log
+ 782   set echo on
+ 783   startup mount exclusive;
+ 784   Select wrl_parameter,status from v\$encryption_wallet;
+ 785   alter system set db_recovery_file_dest='${to_fra_grp}';
+ 786   alter database archivelog;
+ 787   archive log list;
+ 788   alter database open;
+ 789   SELECT log_mode FROM gv\$database;
+ 790   shutdown immediate;
+ 791 EOF
+ 792 #  startup
+ 793 #  select name from v\$database;
+ 794 #  alter system set cluster_database=false scope=spfile;
+ 795 #  shutdown immediate;
+ 796 #  STARTUP NOMOUNT;
+ 797 #  STARTUP FORCE MOUNT;
+ 798 #  ALTER SYSTEM ENABLE RESTRICTED SESSION;
+ 799 #  ALTER SYSTEM SET log_archive_start=TRUE scope=SPFILE;
+ 800 #  shutdown immediate;
+ 801 #  startup mount;
+ 802 #  alter database archivelog;
+ 803 #  archive log list;
+ 804 #EOF
+ 805
+ 806 # if [ "$rac_flag" == "FALSE" ] || [ -z "$rac_flag" ] ; then
+ 807 #  sqlplus / as sysdba <<EOF |tee -a -i $log/to_archive.log
+ 808 #  set echo on
+ 809 #  alter system set CLUSTER_DATABASE=FALSE SCOPE=SPFILE;
+ 810 #  shutdown immediate;
+ 811 #EOF
+ 812 #  elif [ "$rac_flag" == "TRUE" ] ; then
+ 813 #  sqlplus / as sysdba <<EOF |tee -a -i $log/to_archive.log
+ 814 #  alter system set CLUSTER_DATABASE=TRUE SCOPE=SPFILE;
+ 815 #  shutdown immediate;
+ 816 #EOF
+ 817 #  fi
+ 818
+ 819   echo "" |tee -a -i $log/to_archive.log
+ 820   echo "Enabling database $to_db ..." |tee -a -i $log/to_archive.log
+  821   srvctl enable database -d $to_db |tee -a -i $log/to_archive.log
+ 822   echo "Adding ORACLE_UNQNAME  ..." |tee -i  $log/crs_add_unqname.log
+ 823   srvctl setenv database -d $to_db -t "ORACLE_UNQNAME=$to_db"
+ 824   srvctl getenv database -d $to_db
+ 825   echo "Starting database $to_db ..." |tee -a -i $log/to_archive.log
+ 826   srvctl start database -d $to_db |tee -a -i $log/to_archive.log
+ 827   srvctl status database -d $to_db |tee -a -i $log/to_archive.log
+ 828   echo "" |tee -a -i $log/to_archive.log
+ 829
+ 830   sqlplus / as sysdba <<EOF |tee -a -i $log/to_archive.log
+ 831   archive log list;
+ 832   show parameter cluster_database;
+ 833 EOF
+ 834
+ 835 cat <<EOF |tee -a -i $log/to_archive.log
+ 836
+ 837 ########################## ** END OF DATABASE CONVERT TO ARCHIVELOG MODE ** ########################
+ 838
+ 839 EOF
+ 840
+ 841 export archivelog_enabled=Y
+ 842
+ 843 fi
+ 844 echo ""
+ 845 echo "=> STATUS <= ** parm.$to_db: isCluster=\"$isCluster\" archivelog_enabled=\"$archivelog_enabled\" enable_archivelog=\"$enable_archivelog     \" ** => STATUS <= " |tee -a -i $log/to_archive.log
+ 846 echo ""
+ 847
+ 848 }
+ 849 #####################################################################################################################################
+ 850 # FUNCTION TO CONVERT DB to NOARCHIVELOG MODE
+ 851 function TO_NOARCHIVE() {
+ 852
+ 853 if [ "$archivelog_enabled" == "Y" ] && [ "$enable_archivelog" == "N" ] ; then
+ 854
+ 855 export ORACLE_SID=`ps -ef|grep pmon|grep ora_pmon_${to_db}|grep -v grep|awk '{print $8}'|cut -d_ -f3`
+ 856
+ 857 cat <<EOF |tee -i $log/to_noarchive.log
+ 858
+ 859 ##################### ** BEGIN CONVERT DATABASE TO NOARCHIVELOG MODE ** ############################
+ 860 `date`
+ 861
+ 862 EOF
+  863
+ 864   echo "Connecting to $ORACLE_SID ..." |tee -a -i $log/to_noarchive.log
+ 865
+ 866   rac_flag=`sqlplus -s '/ as sysdba' <<EOF
+ 867   set pagesize0
+ 868   set trimspool on
+ 869   set trim on
+ 870   set feedback off
+ 871   set verify off
+ 872   select value from v\\$spparameter where lower (name)='cluster_database';
+ 873 EOF
+ 874   `
+ 875   export rac_flag
+ 876   echo "" |tee -a -i $log/to_noarchive.log
+ 877   echo "Parameter \"CLUSTER_DATABASE\" is currently set to \"$rac_flag\"" |tee -a -i $log/to_noarchive.log
+ 878   echo "" |tee -a -i $log/to_noarchive.log
+ 879   echo "Stoppping database $to_db" |tee -a -i $log/to_noarchive.log
+ 880   srvctl stop database -d $to_db |tee -a -i $log/to_noarchive.log
+ 881   echo "Disabling database $to_db" |tee -a -i $log/to_noarchive.log
+ 882   srvctl disable database -d $to_db |tee -a -i $log/to_noarchive.log
+ 883
+ 884 #  sqlplus / as sysdba <<EOF |tee -a -i $log/to_noarchive.log
+ 885 #  set echo on
+ 886 #  startup;
+ 887 #  alter system set CLUSTER_DATABASE=FALSE scope=spfile;
+ 888 #  alter system set LOG_ARCHIVE_START=FALSE scope=spfile;
+ 889 #  shutdown immediate;
+ 890 #EOF
+ 891
+ 892   sqlplus / as sysdba <<EOF |tee -a -i $log/to_noarchive.log
+ 893   set echo on
+ 894   startup mount exclusive;
+ 895   alter database noarchivelog;
+ 896   archive log list;
+ 897   alter database open;
+ 898   SELECT log_mode FROM gv\$database;
+ 899   shutdown immediate;
+ 900 EOF
+ 901
+ 902 #  if [ "$rac_flag" == "FALSE" ] || [ -z "$rac_flag" ] ; then
+ 903 #  sqlplus / as sysdba <<EOF |tee -a -i $log/to_noarchive.log
+ 904 #  set echo on
+ 905 #  alter system set CLUSTER_DATABASE=FALSE SCOPE=SPFILE;
+  906 #  shutdown immediate;
+ 907 #EOF
+ 908 #  elif [ "$rac_flag" == "TRUE" ] ; then
+ 909 #  sqlplus / as sysdba <<EOF |tee -a -i $log/to_noarchive.log
+ 910 #  alter system set CLUSTER_DATABASE=TRUE SCOPE=SPFILE;
+ 911 #  shutdown immediate;
+ 912 #EOF
+ 913 #  fi
+ 914
+ 915   echo "" |tee -a -i $log/to_noarchive.log
+ 916   echo "Enabling database $to_db ... " |tee -a -i $log/to_noarchive.log
+ 917   srvctl enable database -d $to_db |tee -a -i $log/to_noarchive.log
+ 918   echo "Adding ORACLE_UNQNAME for $to_db ... " |tee -a -i $log/to_noarchive.log
+ 919   srvctl setenv database -d $to_db -t "ORACLE_UNQNAME=$to_db"
+ 920   srvctl getenv database -d $to_db
+ 921   echo "Starting database $to_db ... " |tee -a -i $log/to_noarchive.log
+ 922   srvctl start database -d $to_db |tee -a -i $log/to_noarchive.log
+ 923   srvctl status database -d $to_db |tee -a -i $log/to_noarchive.log
+ 924   echo "" |tee -a -i $log/to_noarchive.log
+ 925
+ 926   sqlplus / as sysdba <<EOF |tee -a -i $log/to_noarchive.log
+ 927   set echo on
+ 928   archive log list;
+ 929   show parameter cluster_database;
+ 930   SELECT log_mode FROM gv\$database;
+ 931 EOF
+ 932
+ 933
+ 934 cat <<EOF |tee -a -i $log/to_noarchive.log
+ 935
+ 936 ####################### ** END OF DATABASE CONVERT TO NOARCHIVELOG MODE ** #########################
+ 937
+ 938 EOF
+ 939
+ 940 export archivelog_enabled=N
+ 941
+ 942 fi
+ 943
+ 944 echo ""
+ 945 echo "=> STATUS <= ** parm.$to_db: isCluster=\"$isCluster\" archivelog_enabled=\"$archivelog_enabled\" enable_archivelog=\"$enable_archivelog     \" ** => STATUS <=" |tee -a -i $log/to_noarchive.log
+ 946 echo ""
+ 947 }
+  948 #####################################################################################################################################
+ 949 # FUNCTION TO CONVERT SINGLE INSTANCE TO RAC
+ 950 function CLUSTER_DATABASE() {
+ 951
+ 952 export ORACLE_SID=${to_db}
+ 953
+ 954 cat <<EOF |tee -i $log/rconfig.log
+ 955
+ 956 ############################### ** BEGIN OF DATABASE CLUSTERING ** #################################
+ 957 `date`
+ 958
+ 959 EOF
+ 960
+ 961 if   [ "$isCluster" == "Y" ] && [ "$archivelog_enabled" == "Y" ] ; then
+ 962      rconfig $library_dir/ConvertToRAC_AdminManaged_${to_db}.xml |tee -a -i $log/rconfig.log
+ 963 elif [ "$isCluster" == "Y" ] && [ "$archivelog_enabled" == "N" ] ; then
+ 964      TO_ARCHIVE $ORACLE_SID
+ 965      rconfig $library_dir/ConvertToRAC_AdminManaged_${to_db}.xml |tee -a -i $log/rconfig.log
+ 966 else
+ 967 echo "REFRESH ${to_db}: \"isCluster\"=$isCluster ** Database Clustering NOT Required **" |tee -a -i $log/rconfig.log
+ 968 fi
+ 969
+ 970 cat <<EOF |tee -a -i $log/rconfig.log
+ 971
+ 972 ############################### ** END OF DATABASE CLUSTERING ** ###################################
+ 973
+ 974 EOF
+ 975
+ 976 # Check if rconfig completed successfully and then call func to_noarchive() to convert to NOARCHIVELOG mode
+ 977 export check_rconfig="`cat $log/rconfig.log |grep -i "Operation Succeeded"`"
+ 978 if [ "$isCluster" == "Y" ] && [[ "$check_rconfig" == *"Operation Succeeded"* ]] && [ "$enable_archivelog" == "N" ] ; then
+ 979     unix2dos $log/rconfig.log
+ 980     send_mail "Clustering_Completed_Switching_to_NOarchivelog"
+ 981     echo ""
+ 982     echo "==> STATUS <== *** (TRA) REFRESH ${to_db}: ** Database Clustering Completed *** ==> STATUS <=="
+ 983     echo ""
+ 984     TO_NOARCHIVE
+ 985     elif [ "$isCluster" == "Y" ] && [[ "$check_rconfig" == *"Operation Succeeded"* ]] && [ "$enable_archivelog" == "Y" ] ; then
+ 986     unix2dos $log/rconfig.log
+ 987     send_mail "Clustering_Completed"
+ 988     echo ""
+ 989     echo "==> STATUS <== *** (TRA) REFRESH ${to_db}: ** Database Clustering Completed *** ==> STATUS <=="
+ 990     echo ""
+  991     elif [ "$isCluster" == "Y" ] && [[ "$check_rconfig" != *"Operation Succeeded"* ]] ; then
+ 992     unix2dos $log/rconfig.log
+ 993     send_mail "Database_Clustering_Encountered_Issues"
+ 994     echo ""
+ 995     echo "==> STATUS <== *** (TRA) REFRESH ${to_db}: ERROR: ** Database Clustering Encountered Issues!! ** Attempting Post Refresh ..!! *** =     => STATUS <=="
+ 996     echo ""
+ 997     exit 1
+ 998 fi
+ 999 }
+1000 ######################################################################################################################################
+1001
+1002
+1003 ###################################################################################################################################
+1004 #                                                                                                                                 #
+1005 #                                                      ****  POST REFRESH ****                                                    #
+1006 #                                                                                                                                 #
+1007 ###################################################################################################################################
+1008 function POST_REFRESH() {
+1009 if [ ! -f $builds_dir/build_driver_${ENV}.post ] && [ "$run_post" == "Y" ] ; then
+1010     echo "`date`" |tee -i  $log/check_files_ifexist.log
+1011     echo "*** ERROR: No post refresh scripts found!!" |tee -a -i   $log/check_files_ifexist.log
+1012     echo "*** ERROR: $builds_dir/build_driver_${ENV}.post" |tee -a -i  $log/check_files_ifexist.log
+1013     send_mail "No_build_driver_post"
+1014     cat $log/check_files_ifexist.log
+1015 fi
+1016 # Check if post_refresh is required, otherwise skip and continue...
+1017 if [ -f $builds_dir/build_driver_${ENV}.post ] && [ "$run_post" == "Y" ] ; then
+1018
+1019 cat <<EOF |tee -i $log/build_driver_${ENV}.post.MASTER
+1020
+1021 ################################# ** BEGIN OF POST REFRESH ** ######################################
+1022 `date`
+1023
+1024 EOF
+1025
+1026 echo |send_mail "Entering_POST_Refresh"
+1027
+1028                                                       ###############################################
+1029                                                                       cd $builds_dir
+1030                                                       ###############################################
+1031
+1032 /bin/bash  $builds_dir/build_driver_${ENV}.post $to_db |tee -a -i $log/build_driver_${ENV}.post.MASTER 2>&1
+1033
+1034                                                       ###############################################
+1035                                                                       cd $scripts_dir
+1036                                                       ###############################################
+1037
+1038 cat <<EOF |tee  -a -i  $log/build_driver_${ENV}.post.MASTER
+1039
+1040 ################################ ** END OF POST REFRESH ** #########################################
+1041
+1042 EOF
+1043
+1044 # Check post refresh result for errors and alert.
+1045 export check_post_build="`cat $log/build_driver_${ENV}.post.MASTER |egrep -i 'ORA-|unsuccessfully' |egrep -v 'ORA-01920|ORA-01919|ORA-31684|O     RA-39002|ORA-28007|ORA-01918|create user|alter user|ORA-39082|ORA-04043'`"
+1046   if [[ "$check_post_build" != *"unsuccessfully"* ]] && [[ "$check_post_build" != *"ORA-"* ]] && [ -f $log/build_driver_${ENV}.post.MASTER ]      ; then
+1047      unix2dos $log/build_driver_${ENV}.post.MASTER
+1048      send_mail "POST_Refresh_Completed_with_NO_UNexpected_Errors"
+1049      echo ""
+1050      echo "==> STATUS <== *** (TRA) REFRESH ${to_db}: run_post=\"${run_post}\" ** POST Refresh Completed with NO UNexpected Errors ***==> STA     TUS <=="
+1051      echo ""
+1052 else
+1053      unix2dos $log/build_driver_${ENV}.post.MASTER
+1054      send_mail "POST_Refresh_Encountered_UNexpected_Errors"
+1055      echo ""
+1056      echo "==> STATUS <== *** (TRA) REFRESH ${to_db}: ERROR: run_post=\"${run_post}\" ** POST Refresh Encountered UNexpected Errors !! *** ==     > STATUS <=="
+1057      echo ""
+1058   fi
+1059 fi
+1060 # POST Refresh NOT Required
+1061 if [ "$run_post" == "N" ] ; then
+1062      unix2dos ${ORACLE_HOME}/dbs/init${to_db}_REFRESH.ora
+1063      send_mail "POST_Refresh_NOT_Required"
+1064      echo ""
+1065      echo "==> STATUS <== *** (TRA) REFRESH ${to_db}: run_post=\"${run_post}\" ** POST Refresh NOT Required *** ==> STATUS <=="
+1066      echo ""
+1067 fi
+1068 }
+1069 ######################################################################################################################################
+1070 # This is a function to copy passwordfile to all participating nodes to reset SYS password
+1071 function RSYNC_ORAPWDFILE() {
+1072
+1073 export ORACLE_SID=`ps -ef|grep pmon|grep ora_pmon_${to_db}|grep -v grep|awk '{print $8}'|cut -d_ -f3`
+1074
+1075 cat <<EOF |tee -i $log/POST_${to_db}_rsync_orapwd.log
+1076
+1077 ######################### ** BEGIN OF NODES PASSWORD FILES RESYNC ** ###############################
+1078 `date`
+1079
+1080 EOF
+1081
+1082   sqlplus -s / as sysdba <<EOF
+1083   set trimspool on
+1084   set verify off
+1085   set feedback off
+1086   set echo off
+1087   set termout off
+1088   set pagesize 0
+1089   set linesize 300
+1090   spool ${builds_dir}/POST_${to_db}_rsync_orapwd.bash
+1091   select '#!/bin/bash' from dual;
+1092   select 'scp ${ORACLE_HOME}/dbs/orapw${INSTANCE_NAME} '||host_name||':${ORACLE_HOME}/dbs/orapw'||instance_name from gv\$instance where insta     nce_number > 1;
+1093   spool off
+1094 EOF
+1095 /bin/bash ${builds_dir}/POST_${to_db}_rsync_orapwd.bash |tee -a -i  $log/POST_${to_db}_rsync_orapwd.log
+1096
+1097 cat <<EOF |tee -a -i $log/POST_${to_db}_rsync_orapwd.log
+1098
+1099 ############################ ** END OF NODES PASSWORD FILES RESYNC ** ##############################
+1100
+1101 EOF
+1102 }
+1103 #####################################################################################################################################
+1104 # Reset init.ora parm
+1105 function SET_PARMS_JOBS() {
+1106
+1107 export ORACLE_SID=`ps -ef|grep pmon|grep ora_pmon_${to_db}|grep -v grep|awk '{print $8}'|cut -d_ -f3`
+1108
+1109 cat <<EOF |tee -i $log/set_parms_jobs.log
+1110
+1111 ############### ** BEGIN OF RESET SPFILE PARAMETERS | DISABLE OF JOBS | ANALYZE ** #################
+1112 `date`
+1113
+1114 EOF
+1115
+1116   sqlplus / as sysdba <<EOF |tee -a -i $log/set_parms_jobs.log
+1117   set echo on
+1118   @$ORACLE_HOME/dbs/init${to_db}_REFRESH.ora;
+1119   exit;
+1120 EOF
+1121 echo "Stopping Database ... `srvctl stop database -d ${to_db}`" |tee -a -i $log/set_parms_jobs.log
+1122  srvctl setenv database -d ${to_db} -t "ORACLE_UNQNAME=${to_db}"
+1123 sleep 5
+1124 echo "Restarting Database ... `srvctl start database -d ${to_db}`" |tee -a -i $log/set_parms_jobs.log
+1125 echo "" |tee -a -i   $log/set_parms_jobs.log
+1126 echo "#*************************************************#" |tee -a -i  $log/set_parms_jobs.log
+1127 echo "Database restarted to enable new spfile parameters"  |tee -a -i  $log/set_parms_jobs.log
+1128 echo "#*************************************************#" |tee -a -i  $log/set_parms_jobs.log
+1129 sleep 30
+1130 cat <<EOF | tee -a -i $log/set_parms_jobs.log
+1131
+1132 EOF
+1133
+1134 sqlplus  / as sysdba <<EOF |tee -a -i $log/set_parms_jobs.log
+1135 set echo on
+1136 alter system set db_recovery_file_dest='${to_fra_grp}';
+1137 exit;
+1138 EOF
+1139
+1140 ############## ** END OF RESET SPFILE PARAMETERS | DISABLE OF JOBS | ANALYZE ** ####################
+1141
+1142 EOF
+1143 }
+1144 #####################################################################################################################################
+1145 # FUNCTION TO REPORT FINAL DATABASE REFRESH STATUS
+1146 FINAL_STATUS() {
+1147
+1148 cat <<EOF |tee -i  $log/final_status.log
+1149
+1150 ##################################### ** FINAL STATUS ** ###########################################
+1151 `date`
+1152
+1153  `srvctl status database -d ${to_db}`
+1154
+1155 ####################################################################################################
+1156
+1157 EOF
+1158
+1159 cat >> $log/final_status.log <<EOF
+1160
+1161    The Following Output Shows:
+1162
+1163      1) Performance Parameters update status.
+1164      2) Jobs Identified to be disabled.
+1165      3) Analyze Database status.
+1166
+1167 EOF
+1168
+1169 export error_check_db=`cat $log/final_status.log |grep "not"`
+1170 cat $log/set_parms_jobs.log >> $log/final_status.log
+1171 # CHECK FINAL DB STATUS
+1172 if [[ "$error_check_db" == *"not"* ]] ; then
+1173
+1174 cat <<EOF |tee -a -i $log/final_status.log
+1175
+1176 ###################################### ** END OF REFRESH ** ########################################
+1177
+1178 EOF
+1179
+1180    unix2dos $log/final_status.log
+1181    send_mail "Final_Database_Status_Error"
+1182    echo ""
+1183    echo "==> STATUS <== *** (TRA) REFRESH ${to_db}: ERROR: run_post="${run_post}" ** Final Database Status ** END OF REFRESH *** ==> STATUS <     =="
+1184    echo ""
+1185
+1186 else
+1187
+1188 ########## RESET ADHOC FILE in build_dir ###################
+1189 cat /dev/null > ${builds_dir}/ADHOC.${to_db}
+1190 ####
+1191
+1192 cat <<EOF |tee -a -i $log/final_status.log
+1193
+1194 ###################################### ** END OF REFRESH ** ########################################
+1195
+1196 EOF
+1197
+1198    unix2dos $log/final_status.log
+1199 # SEND EMAIL IN ALL CASES
+1200    send_mail "Final_Database_Status"
+1201    echo ""
+1202    echo "==> STATUS <== *** (TRA) REFRESH ${to_db}: run_post="${run_post}" ** Final Database Status ** END OF REFRESH *** ==> STATUS <=="
+1203    echo ""
+1204
+1205 if [ "$INSTANCE_NAME" == "KCPRD1" ] ; then
+1206 echo "REFRESH ${to_db}: Setting KC Flag "DB_KCPRD_REFRESH_COMPLETE" ..."
+1207 /bin/bash /infshare/oracle/scripts/backup/KC_AUTOMATION_FLAG.bash DB_REFRESH_COMPLETE KCPRD
+1208 fi
+1209 if [ "$INSTANCE_NAME" == "KC11" ] ; then
+1210 echo "REFRESH ${to_db}: Setting KC Flag "DB_KC_REFRESH_COMPLETE" ..."
+1211 /bin/bash /infshare/oracle/scripts/backup/KC_AUTOMATION_FLAG.bash DB_REFRESH_COMPLETE KC
+1212 fi
+1213 if [ "$INSTANCE_NAME" == "KC21" ] ; then
+1214 echo "REFRESH ${to_db}: Setting KC Flag "DB_KC_REFRESH_COMPLETE" ..."
+1215 /bin/bash /infshare/oracle/scripts/backup/KC_AUTOMATION_FLAG.bash DB_REFRESH_COMPLETE KC
+1216 fi
+1217 fi
+1218 }
+1219 ###########################################################################################################################################
+1220 ################################################# *** END OF SCRIPT FUNCTIONS *** #########################################################
+1221 ###########################################################################################################################################
+1222
+1223
+1224
+1225
+1226
+1227
+1228
+1229 ###########################################################################################################################################
+1230 ################################################# *** BEGIN OF SCRIPT OPERATION *** #######################################################
+1231 ###########################################################################################################################################
+1232 # RESET SPFILE PARAMETERS AND DISABLE IDENTIFIED JOBS THEN CALL FUNCTION "final_status TO REPORT END OF REFRESH STATUS
+1233 export to_db=$1
+1234 export step_begin=$2
+1235 export step_end=$3
+1236
+1237 HELP $to_db $step_begin $step_end
+1238
+1239 PRE_CHECKS $to_db
+1240
+1241 if [ -z "$step_begin" ] ; then
+1242 # SEND EMAIL TO NOTIFY BEGIN OF REFRESH. NO EMAIL IF SELECTED REFRESH STEPS IS RUNNING
+1243     send_mail "begin_refresh"
+1244 ###
+1245 fi
+1246 if [ -z "$step_begin" ] || [ "$step_begin" == "1" ] ; then
+1247     PRE_REFRESH
+1248      if [ -n "$step_end" ] && (("$step_begin" < "step_end")) ; then
+1249         ((step_begin += 1))
+1250         export step_begin
+1251      fi
+1252 fi
+1253 if [ -z "$step_begin" ] || [ "$step_begin" == "2" ] ; then
+1254     DB_ENV_STATUS_BEFORE_REFRESH
+1255      if [ -n "$step_end" ] && (("$step_begin" < "step_end")) ; then
+1256         ((step_begin += 1))
+1257         export step_begin
+1258      fi
+1259 fi
+1260 if [ -z "$step_begin" ] || [ "$step_begin" == "3" ] ; then
+1261     DROP_DATABASE
+1262      if [ -n "$step_end" ] && (("$step_begin" < "step_end")) ; then
+1263         ((step_begin += 1))
+1264         export step_begin
+1265      fi
+1266 fi
+1267 if [ -z "$step_begin" ] || [ "$step_begin" == "4" ] ; then
+1268     DUPLICATE_DATABASE
+1269      if [ -n "$step_end" ] && (("$step_begin" < "step_end")) ; then
+1270         ((step_begin += 1))
+1271         export step_begin
+1272      fi
+1273 fi
+1274 if [ -z "$step_begin" ] || [ "$step_begin" == "5" ] ; then
+1275     CONFIGURE_DB_CRS
+1276      if [ -n "$step_end" ] && (("$step_begin" < "step_end")) ; then
+1277         ((step_begin += 1))
+1278         export step_begin
+1279      fi
+1280 fi
+1281 if [ -z "$step_begin" ] || [ "$step_begin" == "6" ] ; then
+1282     TO_ARCHIVE
+1283      if [ -n "$step_end" ] && (("$step_begin" < "step_end")) ; then
+1284         ((step_begin += 1))
+1285         export step_begin
+1286      fi
+1287 fi
+1288 if [ -z "$step_begin" ] || [ "$step_begin" == "7" ] ; then
+1289     CLUSTER_DATABASE
+1290      if [ -n "$step_end" ] && (("$step_begin" < "step_end")) ; then
+1291         ((step_begin += 1))
+1292         export step_begin
+1293      fi
+1294 fi
+1295 if [ -z "$step_begin" ] || [ "$step_begin" == "8" ] ; then
+1296     TO_NOARCHIVE
+1297      if [ -n "$step_end" ] && (("$step_begin" < "step_end")) ; then
+1298         ((step_begin += 1))
+1299         export step_begin
+1300      fi
+1301 fi
+1302 if [ -z "$step_begin" ] || [ "$step_begin" == "9" ] ; then
+1303     POST_REFRESH
+1304      if [ -n "$step_end" ] && (("$step_begin" < "step_end")) ; then
+1305         ((step_begin += 1))
+1306         export step_begin
+1307      fi
+1308 fi
+1309 if [ -z "$step_begin" ] || [ "$step_begin" == "10" ] ; then
+1310     RSYNC_ORAPWDFILE
+1311      if [ -n "$step_end" ] && (("$step_begin" < "step_end")) ; then
+1312         ((step_begin += 1))
+1313         export step_begin
+1314      fi
+1315 fi
+1316 if [ -z "$step_begin" ] || [ "$step_begin" == "11" ] ; then
+1317     SET_PARMS_JOBS
+1318      if [ -n "$step_end" ] && (("$step_begin" < "step_end")) ; then
+1319         ((step_begin += 1))
+1320         export step_begin
+1321      fi
+1322 fi
+1323 if [ -z "$step_begin" ] || [ "$step_begin" == "12" ] ; then
+1324     FINAL_STATUS
+1325      if [ -n "$step_end" ] && (("$step_begin" < "step_end")) ; then
+1326         ((step_begin += 1))
+1327         export step_begin
+1328      fi
+1329 fi
+1330 ###########################################################################################################################################
+1331 ################################################## *** END OF SCRIPT OPERATION *** ########################################################
+1332 ###########################################################################################################################################
+                                                                                                                                1332,1        Bot
+                                                    
+                                             

@@ -1,0 +1,103 @@
+SQL> @nas
+
+DOMAIN_NAME          LOGON_NAME                     LAST_LOGIN          ROLE                 STATUS                                                                                                     
+-------------------- ------------------------------ ------------------- -------------------- --------------------                                                                                       
+washdc\afolabima     afolabima@state.gov            11-AUG-22           developer            Account Active                                                                                             
+washdc\alcidea       alcidea@state.gov              12-AUG-22           developer            Account Active                                                                                             
+washdc\banksma2      banksma2@state.gov             25-JUL-22           developer            Account Active                                                                                             
+washdc\bauerde       bauerde@state.gov              16-MAY-22           secref_admin         Account Active                                                                                             
+washdc\bogant        bogant@state.gov               12-JUL-22           IPMS Support         Account Active                                                                                             
+washdc\borysa        borysa@state.gov               16-AUG-22           support              Account Active                                                                                             
+washdc\borysa        borysa@state.gov               16-AUG-22           developer            Account Active                                                                                             
+washdc\borysa        borysa@state.gov               16-AUG-22           IPMS Support         Account Active                                                                                             
+washdc\borysa        borysa@state.gov               16-AUG-22           secref_admin         Account Active                                                                                             
+washdc\butlerr       butlerr@state.gov              31-MAY-22           developer            Account Active                                                                                             
+washdc\caotv         caotv@state.gov                23-AUG-22           support              Account Active                                                                                             
+
+DOMAIN_NAME          LOGON_NAME                     LAST_LOGIN          ROLE                 STATUS                                                                                                     
+-------------------- ------------------------------ ------------------- -------------------- --------------------                                                                                       
+washdc\caotv         caotv@state.gov                23-AUG-22           developer            Account Active                                                                                             
+washdc\caotv         caotv@state.gov                23-AUG-22           secref_admin         Account Active                                                                                             
+washdc\chichesterlm  chichesterlm@state.gov         07-JUN-22           secref_admin         Account Active                                                                                             
+washdc\clarkta2      clarkta2@state.gov             13-JUN-22           IPMS Support         Account Active                                                                                             
+washdc\clementad     clementad@state.gov            11-MAY-22           developer            Account Active                                                                                             
+washdc\conradhr      conradhr@state.gov             12-JUL-22           secref_admin         Account Active                                                                                             
+washdc\crewsec       crewsec@state.gov              30-MAY-20           IPMS Support         Account currently di                                                                                       
+                                                                                             abled                                                                                                      
+                                                                                                                                                                                                        
+washdc\curleyyj      curleyyj@state.gov             12-JUL-22           secref_admin         Account Active                                                                                             
+washdc\futuriw       futuriw@state.gov              23-JUN-22           IPMS Support         Account Active                                                                                             
+
+DOMAIN_NAME          LOGON_NAME                     LAST_LOGIN          ROLE                 STATUS                                                                                                     
+-------------------- ------------------------------ ------------------- -------------------- --------------------                                                                                       
+washdc\glascoecw     glascoecw@state.gov            12-JUL-22           developer            Account Active                                                                                             
+washdc\grewalhs      grewalhs@state.gov             12-JUL-22           secref_admin         Account Active                                                                                             
+washdc\grewalhs      grewalhs@state.gov             12-JUL-22           support              Account Active                                                                                             
+neasa\hallbl         hallbl@state.gov               28-JUN-22           developer            Account Active                                                                                             
+washdc\hefleyac      hefleyac@state.gov             12-JUL-22           IPMS Support         Account Active                                                                                             
+washdc\hoeftwe       hoeftwe@state.gov              22-AUG-22           developer            Account Active                                                                                             
+washdc\iwuedeno      iwuedeno@state.gov             15-JUL-22           secref_admin         Account Active                                                                                             
+washdc\iwuedeno      iwuedeno@state.gov             15-JUL-22           support              Account Active                                                                                             
+washdc\jarmansj      jarmansj@state.gov             11-JUL-22           IPMS Support         Account Active                                                                                             
+washdc\jenkinslc     jenkinslc@state.gov            20-JUL-22           developer            Account Active                                                                                             
+washdc\larayjc       larayjc2@state.gov             11-AUG-22           developer            Account Active                                                                                             
+
+DOMAIN_NAME          LOGON_NAME                     LAST_LOGIN          ROLE                 STATUS                                                                                                     
+-------------------- ------------------------------ ------------------- -------------------- --------------------                                                                                       
+washdc\larayjc       larayjc2@state.gov             11-AUG-22           IPMS Support         Account Active                                                                                             
+washdc\libertsf      libertsf@state.gov             25-JUL-22           developer            Account Active                                                                                             
+washdc\luukqn        luukqn@state.gov               02-JUN-22           support              Account Active                                                                                             
+washdc\luukqn        luukqn@state.gov               02-JUN-22           secref_admin         Account Active                                                                                             
+washdc\macdonaldcp   macdonaldcp@state.gov          25-JUL-22           developer            Account Active                                                                                             
+washdc\manchenoj     manchenoj@state.gov            27-JUL-22           developer            Account Active                                                                                             
+washdc\moutonnl      moutonnl@state.gov             11-JUL-22           developer            Account Active                                                                                             
+washdc\myersk2       myersk2@state.gov              11-JUL-22           IPMS Support         Account Active                                                                                             
+washdc\nguyencb      nguyencb@state.gov             01-OCT-14           IPMS Support         Account currently di                                                                                       
+                                                                                             abled                                                                                                      
+                                                                                                                                                                                                        
+
+DOMAIN_NAME          LOGON_NAME                     LAST_LOGIN          ROLE                 STATUS                                                                                                     
+-------------------- ------------------------------ ------------------- -------------------- --------------------                                                                                       
+washdc\palmermz      palmermz@state.gov             21-FEB-14           IPMS Support         Account currently di                                                                                       
+                                                                                             abled                                                                                                      
+                                                                                                                                                                                                        
+washdc\phamsj        phamsj@state.gov               09-AUG-22           developer            Account Active                                                                                             
+washdc\psyhosna      psyhosna@state.gov             27-JUL-22           developer            Account Active                                                                                             
+washdc\quanderrm     quanderrm@state.gov            02-APR-21           IPMS Support         Account currently di                                                                                       
+                                                                                             abled                                                                                                      
+                                                                                                                                                                                                        
+washdc\quanderrm     quanderrm@state.gov            02-APR-21           developer            Account currently di                                                                                       
+                                                                                             abled                                                                                                      
+                                                                                                                                                                                                        
+
+DOMAIN_NAME          LOGON_NAME                     LAST_LOGIN          ROLE                 STATUS                                                                                                     
+-------------------- ------------------------------ ------------------- -------------------- --------------------                                                                                       
+washdc\rajagopals    rajagopals@state.gov           12-AUG-22           developer            Account Active                                                                                             
+washdc\reynonjj      reynonjj@state.gov                                 developer            Account currently di                                                                                       
+                                                                                             abled                                                                                                      
+                                                                                                                                                                                                        
+washdc\rwakaaragw    rwakaaragw@state.gov           19-AUG-22           support              Account Active                                                                                             
+washdc\rwakaaragw    rwakaaragw@state.gov           19-AUG-22           secref_admin         Account Active                                                                                             
+washdc\schwierre     schwierre@state.gov            15-AUG-22           secref_admin         Account Active                                                                                             
+washdc\schwierre     schwierre@state.gov            15-AUG-22           support              Account Active                                                                                             
+washdc\schwierre     schwierre@state.gov            15-AUG-22           IPMS Support         Account Active                                                                                             
+washdc\schwierre     schwierre@state.gov            15-AUG-22           developer            Account Active                                                                                             
+washdc\selphrm       selphrm@state.gov              08-JUL-22           developer            Account Active                                                                                             
+
+DOMAIN_NAME          LOGON_NAME                     LAST_LOGIN          ROLE                 STATUS                                                                                                     
+-------------------- ------------------------------ ------------------- -------------------- --------------------                                                                                       
+washdc\shuklarv      shuklarv@state.gov             16-AUG-22           secref_admin         Account Active                                                                                             
+washdc\shuklarv      shuklarv@state.gov             16-AUG-22           IPMS Support         Account Active                                                                                             
+washdc\simoncd       simoncd@state.gov              17-OCT-21           IPMS Support         Account currently di                                                                                       
+                                                                                             abled                                                                                                      
+                                                                                                                                                                                                        
+washdc\smithj5       smithj5@state.gov              12-JUL-22           IPMS Support         Account Active                                                                                             
+washdc\stewartrw2    stewartrw2@state.gov           20-JUL-22           developer            Account Active                                                                                             
+washdc\talbotcs      talbotcs@state.gov             04-AUG-22           developer            Account Active                                                                                             
+washdc\townsenddd    townsenddd@state.gov           12-JUL-22           secref_admin         Account Active                                                                                             
+washdc\washingtonlv  washingtonlv@state.gov         12-JUL-22           developer            Account Active                                                                                             
+washdc\wheelersd2    wheelersd2@state.gov           08-JUL-22           IPMS Support         Account Active                                                                                             
+
+63 rows selected.
+
+SQL> spool off;

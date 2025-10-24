@@ -1,0 +1,98 @@
+#!/bin/bash
+export ORAENV_ASK=NO
+
+
+db_list=`ps -ef|grep pmon|grep ora_pmon_$1|grep -v grep|awk '{print $8}'|cut -d_ -f3`
+
+for db in $db_list
+do
+  export ORACLE_SID=$db
+  . oraenv > /dev/null
+
+sqlplus -s "/ as sysdba" << EOF
+     set feedback off
+     set head off
+     select 'dblinks status for database --> '|| name from v\$database;
+     select '---------------------------------------------------------' from dual;
+     @/infshare/oracle/scripts/dba/dblink.sql
+     select '' from dual;
+     select '' from dual;
+     exit;
+EOF
+
+
+
+done
+
+
+
+
+
+CREATE OR REPLACE PROCEDURE test_any_db_link ( p_owner IN varchar2
+                                             , p_link  IN varchar2
+                                             )
+AS
+   l_owner  varchar2(100);
+BEGIN
+   IF p_owner = 'PUBLIC' THEN
+      l_owner := 'SYSTEM';
+   ELSE
+      l_owner := p_owner;
+   END IF;
+   --
+   BEGIN
+     EXECUTE IMMEDIATE 'create procedure '||l_owner||'.test_any_db_link_temp '||
+                       'as '||
+                       '  l_dummy varchar2(1); '||
+                       'begin '||
+                       '  select * into l_dummy from dual@'||p_link||'; '||
+                       '  dbms_output.put_line(''OK : '||p_owner||'.'||
+                                                         p_link||'''); '||
+                       'exception '||
+                       ' when others then '||
+                       '   dbms_output.put_line(''NOK: '||p_owner||'.'||
+                                                          p_link||'''||'' ''||
+                                                          sqlcode); '||
+                       'end;';
+     EXECUTE IMMEDIATE 'begin '||l_owner||'.test_any_db_link_temp; end;';
+   EXCEPTION
+     WHEN OTHERS THEN
+       dbms_output.put_line('ERR: '||p_owner||'.'||p_link||' '||sqlcode);
+   END;
+   EXECUTE IMMEDIATE 'drop procedure '||l_owner||'.test_any_db_link_temp';
+END;
+/
+
+set serveroutput on size 1000000;
+
+
+BEGIN
+ FOR r_stmt IN (select 'begin test_any_db_link('''||owner||''','''||
+                                                     db_link||'''); end;' stmt
+                   from dba_db_links
+                  order by owner, db_link
+                )
+  LOOP
+    execute immediate r_stmt.stmt;
+  END LOOP;
+END;
+/
+
+
+drop procedure test_any_db_link;
+
+
+
+
+
+
+
+expdp \"/ as sysdba\"  schemas=ACRS,EOPF_DOS,ESRT,ESRT_INTERFACE,REETA,SECREF,SYSADM dumpfile=dp_rfrsh_dmp:DBlink1.dmp logfile=dp_rfrsh_dmp:DBlink1.log  INCLUDE=DB_LINK REUSE_DUMPFILES=Y
+
+impdp \"/ as sysdba\"   dumpfile=dp_rfrsh_dmp:DBlink1.dmp logfile=dp_rfrsh_dmp:imp_DBlink1.log
+
+
+
+expdp \"/ as sysdba\"  parfile=/infshare/oracle/scripts/refresh/bin/build/CPY/parfile.par dumpfile=dp_rfrsh_dmp:DBlink2.dmp logfile=dp_rfrsh_dmp:DBlink2.log   REUSE_DUMPFILES=Y full=y
+
+impdp \"/ as sysdba\"  dumpfile=dp_rfrsh_dmp:DBlink2.dmp logfile=dp_rfrsh_dmp:imp_DBlink2.log

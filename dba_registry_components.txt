@@ -1,0 +1,24 @@
+PRD
+---
+
+SQL> /
+
+COMP_ID                                  COMP_NAME                                VERSION              STATUS
+---------------------------------------- ---------------------------------------- -------------------- -----------
+CATALOG                                  Oracle Database Catalog Views            19.0.0.0.0           VALID
+CATPROC                                  Oracle Database Packages and Types       19.0.0.0.0           VALID
+JAVAVM                                   JServer JAVA Virtual Machine             19.0.0.0.0           VALID
+XML                                      Oracle XDK                               19.0.0.0.0           VALID
+CATJAVA                                  Oracle Database Java Packages            19.0.0.0.0           VALID
+APS                                      OLAP Analytic Workspace                  19.0.0.0.0           VALID
+RAC                                      Oracle Real Application Clusters         19.0.0.0.0           VALID
+OWM                                      Oracle Workspace Manager                 19.0.0.0.0           VALID
+CONTEXT                                  Oracle Text                              19.0.0.0.0           VALID
+XDB                                      Oracle XML Database                      19.0.0.0.0           VALID
+ORDIM                                    Oracle Multimedia                        19.0.0.0.0           VALID
+SDO                                      Spatial                                  19.0.0.0.0           VALID
+XOQ                                      Oracle OLAP API                          19.0.0.0.0           VALID
+AMD                                      OLAP Catalog                             11.2.0.4.0           OPTION OFF
+APEX                                     Oracle Application Express               3.2.1.00.12          VALID
+
+15 rows selected.

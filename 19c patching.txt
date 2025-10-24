@@ -1,0 +1,117 @@
+1.2.1.4 Run OPatch Conflict Check
+Determine whether any currently installed one-off patches conflict with this patch 30116789 as follows:
+
+For Grid Infrastructure Home, as home user:
+
+% $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir /tmp/30133178/30116789/30125133
+% $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir /tmp/30133178/30116789/30122149
+% $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir /tmp/30133178/30116789/30122167
+% $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir /tmp/30133178/30116789/
+% $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir /tmp/30133178/30116789/29401763
+For Database home, as home user:
+
+% $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir /tmp/30133178/30116789/30125133
+% $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir /tmp/30133178/30116789/30122149
+
+
+
+
+
+
+/tmp/30133178/30116789/30125133
+/tmp/30133178/30116789/30122149
+/tmp/30133178/30116789/30122167
+/tmp/30133178/30116789/
+/tmp/30133178/30116789/29401763
+
+
+
+$ORACLE_HOME/OPatch/opatch prereq CheckSystemSpace -phBaseFile /tmp/patch_list_gihome.txt
+
+
+
+opatchauto apply /tmp/30133178/30116789
+
+
+
+[root@hrvltstdb7602 OPatch]# ./opatchauto apply /tmp/30133178/30116789 &
+[1] 1049
+[root@hrvltstdb7602 OPatch]#
+OPatchauto session is initiated at Sat Oct 26 15:44:52 2019
+
+System initialization log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchautodb/systemconfig2019-10-26_03-44-56PM.log.
+
+Session log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchauto/opatchauto2019-10-26_03-45-03PM.log
+The id for this session is VZGK
+
+Executing OPatch prereq operations to verify patch applicability on home /u02/app/oracle/product/19.3.0/db_1
+Patch applicability verified successfully on home /u02/app/oracle/product/19.3.0/db_1
+
+
+Verifying SQL patch applicability on home /u02/app/oracle/product/19.3.0/db_1
+SQL patch applicability verified successfully on home /u02/app/oracle/product/19.3.0/db_1
+
+
+Executing OPatch prereq operations to verify patch applicability on home /u02/app/19.3.0/grid
+Patch applicability verified successfully on home /u02/app/19.3.0/grid
+
+
+Preparing to bring down database service on home /u02/app/oracle/product/19.3.0/db_1
+Successfully prepared home /u02/app/oracle/product/19.3.0/db_1 to bring down database service
+
+
+Bringing down database service on home /u02/app/oracle/product/19.3.0/db_1
+Following database has been stopped and will be restarted later during the session: ptgems01
+Database service successfully brought down on home /u02/app/oracle/product/19.3.0/db_1
+
+
+Bringing down CRS service on home /u02/app/19.3.0/grid
+Prepatch operation log file location: /u02/app/19.3.0/crsdata/hrvltstdb7602/crsconfig/hapatch_2019-10-26_03-46-35PM.log
+CRS service brought down successfully on home /u02/app/19.3.0/grid
+
+
+Start applying binary patch on home /u02/app/oracle/product/19.3.0/db_1
+Binary patch applied successfully on home /u02/app/oracle/product/19.3.0/db_1
+
+
+Start applying binary patch on home /u02/app/19.3.0/grid
+timed out waiting for input: auto-logout
+[oracle@hrvltstdb7602 tmp]$
+
+
+
+
+
+
+[oracle@hrvltstdb7602 OPatch]$ cd
+[oracle@hrvltstdb7602 ~]$ cd $ORACLE_HOME
+[oracle@hrvltstdb7602 db_1]$ cd OPatch
+[oracle@hrvltstdb7602 OPatch]$ ./datapatch -verbose
+SQL Patching tool version 19.5.0.0.0 Production on Sat Oct 26 16:25:21 2019
+Copyright (c) 2012, 2019, Oracle.  All rights reserved.
+
+Log file for this invocation: /u02/app/oracle/cfgtoollogs/sqlpatch/sqlpatch_7078_2019_10_26_16_25_21/sqlpatch_invocation.log
+
+Connecting to database...OK
+Gathering database info...done
+Bootstrapping registry and package to current versions...done
+Determining current state...done
+
+Current state of interim SQL patches:
+  No interim patches found
+
+Current state of release update SQL patches:
+  Binary registry:
+    19.5.0.0.0 Release_Update 190909180549: Installed
+  SQL registry:
+    Applied 19.5.0.0.0 Release_Update 190909180549 with errors on 26-OCT-19 04.13.00.254331 PM
+
+Adding patches to installation queue and performing prereq checks...done
+Installation queue:
+  No interim patches need to be rolled back
+  Patch 30125133 (Database Release Update : 19.5.0.0.191015 (30125133)):
+    Apply from 19.1.0.0.0 Feature Release to 19.5.0.0.0 Release_Update 190909180549
+  No interim patches need to be applied
+
+Installing patches...
+

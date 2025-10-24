@@ -1,0 +1,47 @@
+sqlplus /nolog
+
+conn sys@PRD as sysdba
+
+set lines 200
+set TERMOUT ON
+set FEEDBACK ON
+col database_schema format a40
+
+select substr(global_name,1,30) || ' ('||user||')' database_schema from global_name;
+
+select cir_dsbl_ind from secref.circuit where cir_id in (39,65);
+
+update secref.circuit
+set cir_dsbl_ind = 1
+where cir_id in (39,65)
+/
+
+commit;
+
+select cir_dsbl_ind from secref.circuit where cir_id in (39,65);
+
+---------------------------------------------------------------------------------------
+
+select hac_dsbl_ind from secref.hr_app_catalog where hac_id in (63,64);
+
+update secref.hr_app_catalog
+set hac_dsbl_ind = 1
+where hac_id in (63,64)
+/
+
+commit
+/
+
+select hac_dsbl_ind from secref.hr_app_catalog where hac_id in (63,64);
+
+----------------------------------------------------------------------------------------
+
+select hac_url_prd_text from secref.hr_app_catalog where hac_secref_cir_id in (39,65);
+
+update secref.hr_app_catalog
+set hac_url_prd_text = 'https://usdos.sharepoint.com/sites/Intranet-HR'
+where hac_secref_cir_id in (39,65)
+/ 
+commit;
+
+select hac_url_prd_text from secref.hr_app_catalog where hac_secref_cir_id in (39,65);

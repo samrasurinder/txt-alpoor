@@ -1,0 +1,27 @@
+name
+ls -altrh
+
+
+
+
+SQL> set linesize 120
+SQL> /
+
+SQL> select adg.name,ad.name,ad.GROUP_NUMBER,ad.DISK_NUMBER,ad.state,ad.total_mb,ad.os_mb,ad.free_mb from v$asm_disk ad,v$asm_diskgroup adg where ad.name like 'OPS%' and adg.group_number = ad.group_number
+  2  ;
+
+NAME                 NAME                 GROUP_NUMBER DISK_NUMBER STATE      TOTAL_MB      OS_MB    FREE_MB
+-------------------- -------------------- ------------ ----------- -------- ---------- ---------- ----------
+OPS_DATA             OPSDATA01                       8           0 NORMAL       204799     204799     173508
+OPS_DATA             OPSDATA02                       8           1 NORMAL       204799     204799     173509
+OPS_DATA             OPSDATA03                       8           2 NORMAL       204799     204799     173502
+OPS_FRA              OPSFRA01                        9           0 NORMAL       204799     204799     152819
+OPS_FRA              OPSFRA02                        9           1 NORMAL       204799     204799     152811
+OPS_FRA              OPSFRA03                        9           2 NORMAL       204799     204799     152814
+OPS_FRA              OPSFRA04                        9           3 NORMAL       204799     204799     152845
+OPS_FRA              OPSFRA05                        9           4 NORMAL       204799     204799     152848
+OPS_FRA              OPSFRA06                        9           5 NORMAL       204799     204799     152864
+
+9 rows selected.
+
+SQL>

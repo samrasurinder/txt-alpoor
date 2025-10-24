@@ -1,0 +1,5 @@
+alter profile HR_PROFILE_PSOFT limit LOGICAL_READS_PER_CALL unlimited;
+
+alter profile HR_PROFILE_PSOFT limit LOGICAL_READS_PER_SESSION unlimited;
+
+Profile altered.

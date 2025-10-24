@@ -1,0 +1,184 @@
+
+
+
+PLAN A:
+-------
+
+
+Unzip the patch as grid home owner except for installations that do not have any grid homes. For installations where this patch will be applied to the Database home only, the patch needs to be unzipped as the database home owner.
+
+$ unzip p29301687_122010_Linux-x86-64.zip  ( THIS IS DONE)
+
+
+
+
+STEP 1) Run OPatch Conflict Check
+---------------------------------
+Determine whether any currently installed one-off patches conflict with this patch 29301687 as follows:
+
+For Grid Infrastructure Home, as grid user:
+------------------------------------------
+
+% $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir <UNZIPPED_PATCH_LOCATION>/29301687/29314339
+
+ $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir /u02/PSU/APR2019/29301687/29314339
+  
+% $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir <UNZIPPED_PATCH_LOCATION>/29301687/29314424
+  
+ $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir /u02/PSU/APR2019/29301687/29314424 
+
+
+% $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir <UNZIPPED_PATCH_LOCATION>/29301687/29301676
+
+ $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir /u02/PSU/APR2019/29301687/29301676
+ 
+% $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir <UNZIPPED_PATCH_LOCATION>/29301687/26839277
+
+ $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir /u02/PSU/APR2019/29301687/26839277
+ 
+% $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir <UNZIPPED_PATCH_LOCATION>/29301687/28566910
+
+ $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir /u02/PSU/APR2019/29301687/28566910
+
+
+For Database home, as oracle user:
+-------------------------------
+% $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir <UNZIPPED_PATCH_LOCATION>/29301687/29314339
+  
+ $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir /u02/PSU/APR2019/29301687/29314339
+
+% $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir <UNZIPPED_PATCH_LOCATION>/29301687/29314424
+
+ $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir /u02/PSU/APR2019/29301687/29314424
+
+
+
+
+
+
+
+STEP 2) Run OPatch SystemSpace Check
+------------------------------------
+
+Check if enough free space is available on the ORACLE_HOME filesystem for the patches to be applied as given below:
+
+For Grid Infrastructure Home, as GRID user:
+
+Create file /tmp/patch_list_gihome.txt with the following content:
+
+% cat /tmp/patch_list_gihome.txt
+
+/u02/PSU/APR2019/29301687/29314339
+/u02/PSU/APR2019/29301687/29314424
+/u02/PSU/APR2019/29301687/29301676
+/u02/PSU/APR2019/29301687/26839277
+/u02/PSU/APR2019/29301687/28566910
+Run the opatch command to check if enough free space is available in the Grid Infrastructure Home:
+
+% $ORACLE_HOME/OPatch/opatch prereq CheckSystemSpace -phBaseFile /tmp/patch_list_gihome.txt
+
+
+For Database home, as ORACLE user:
+
+Create file /tmp/patch_list_dbhome.txt with the following content:
+
+% cat /tmp/patch_list_dbhome.txt
+
+/u02/PSU/APR2019/29301687/29314339
+/u02/PSU/APR2019/29301687/29314424
+Run opatch command to check if enough free space is available in the Database Home:
+
+% $ORACLE_HOME/OPatch/opatch prereq CheckSystemSpace -phBaseFile /tmp/patch_list_dbhome.txt
+
+The command output reports pass and fail messages as per the system space availability:
+
+If OPatch reports Prereq "checkSystemSpace" failed., then cleanup the system space as the required amount of space is not available.
+
+If OPatch reports Prereq "checkSystemSpace" passed., then no action is needed. Proceed with patch installation.
+
+
+
+
+STEP 3) One-off Patch Conflict Detection and Resolution     ( This is OPTIONAL, but check it anyways)
+-----------------------------------------------------------------------------------------------------
+
+
+run as ROOT, For GRID HOME
+
+# $GRID_HOME/OPatch/opatchauto apply /u02/PSU/APR2019/29301687 -analyze
+
+
+In case you are rolling back the patch, run this command:
+
+# $GRID_HOME/OPatch/opatchauto rollback /u02/PSU/APR2019/29301687 -analyze
+
+
+
+
+
+
+STEP 4) OPatch Automation for GI
+--------------------------------
+
+
+Patching Oracle Restart Home
+----------------------------
+
+You must keep the Oracle Restart stack up and running when you are patching. Use the following instructions to patch Oracle Restart home.
+
+
+
+Add the directory containing the opatch to the $PATH environment variable. For example:
+
+$ export PATH=$PATH:<GI_HOME>/OPatch
+To patch GI home and all Oracle RAC database homes of the same version:
+
+As a ROOT
+
+# opatchauto apply /u02/PSU/APR2019/29301687
+
+
+
+
+
+
+Step 5) Patch Post-Installation Instructions
+--------------------------------------------
+
+Loading Modified SQL Files into the Database
+--------------------------------------------
+
+For each separate database running on the same shared Oracle home being patched, run the datapatch utility as described
+
+
+sqlplus / as sysdba
+startup
+quit
+
+at command prompt
+
+cd $ORACLE_HOME/OPatch
+./datapatch -verbose
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

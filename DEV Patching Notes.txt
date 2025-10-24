@@ -1,0 +1,135 @@
+
+
+
+Select count(*) from dba_invalid_objects
+
+select owner, object_name,object_type, status from dba_invalid_objects order by 1,2
+
+crsctl stat res -t
+
+
+
+As a grid user (Go to the Patch Number Location):
+------------------------------------------------
+$opatch lsinventory -detail -oh $GRID_HOME
+$opatch prereq CheckConflictAgainstOHWithDetail -ph ./
+$opatch lsinventory -detail -oh $GRID_HOME
+ 
+
+
+
+As an oracle user (Go to the Patch Number Location):
+---------------------------------------------------
+$opatchlsinventory -detail -oh $ORACLE_HOME
+$opatch prereq CheckConflictgainstOhWithDetail -ph ./
+$opatch lsinventory -detail -oh $ORACLE_HOME
+
+
+
+
+Check current registry entries:
+-------------------------------
+
+set lines 300 pages 3000
+col action_time for a34
+col version for a14
+col comments for a28
+col bundle_series for a28
+col action_name for a23
+col action for a10
+col namespace for a9
+select action,bundle_series,comments,action_time,version from registry$history;
+
+
+As root User:
+-------------
+#crsctl check cluster -all
+
+
+
+
+Take Backup of Binaries
+-----------------------
+
+Take tar backup of Both Grid and Oracle Home
+
+By grid User:
+$tar -cvzf /backup_location/TAR_BKP_Oracle_Binaries.tar.gz $GRID_HOME
+
+By Oracle User:
+$tar -cvzf /backup_location/TAR_BKP_Oracle_Binaries.tar.gz $ORACLE_HOME
+
+
+
+
+
+Step 8: OCM Configuration
+You need to create OCM (Oracle Configuration Manager) response file which is not an optional. You can create it by either oracle user or grid user.
+
+$cd $GRID_HOME
+/u01/app/11.2.0/grid
+
+
+$GRID_HOME/OPatch/ocm/bin/emocmrsp  -no_banner -output /<infshare location>/response_rac1.rsp
+
+Provide your email address to be informed of security issues, install and
+
+initiate Oracle Configuration Manager. Easier for you if you use your My
+
+Oracle Support Email address/User Name.
+
+Visit http://www.oracle.com/support/policies.html for details.
+
+Email address/User Name:
+
+
+
+You have not provided an email address for notification of security issues.
+
+Do you wish to remain uninformed of security issues ([Y]es, [N]o) [N]:  Y
+
+The OCM configuration response file /home/grid/response_rac1.rsp) was successfully created.
+
+
+
+
+
+
+
+Patching Starts Here:
+--------------------
+
+
+Case 1: GI Home and the Database Homes that are not shared and ACFS file system is not configured.
+
+As root user, execute the following command on each node of the cluster:
+
+
+export JAVA_HOME=
+
+# opatch auto <UNZIPPED_PATCH_LOCATION>/29255947 -ocmrf <ocm response file> -local
+
+
+
+
+Post-Patch Installations
+------------------------
+Perform these steps on only one node.?
+For each database instance running on the Oracle home being patched, connect to the database using SQL*Plus. Connect as SYSDBA and run the
+Bu Oracle User:
+cd $ORACLE_HOME/rdbms/admin
+sqlplus /nolog
+SQL> CONNECT / AS SYSDBA
+SQL> STARTUP
+SQL> @catbundle.sql psu apply
+SQL> QUIT
+
+Check the following log files in $ORACLE_BASE/cfgtoollogs/catbundle for any errors: catbundle_PSU_<database SID>_APPLY_<TIMESTAMP>.log
+catbundle_PSU_<database SID>_GENERATE_<TIMESTAMP>.log
+
+
+Step 13: Run below object compilation script
+cd $ORACLE_HOME/rdbms/admin
+sqlplus /nolog
+SQL> CONNECT / AS SYSDBA
+SQL> @utlrp.sql

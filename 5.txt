@@ -1,0 +1,84 @@
+5.sql
+
+
+
+Tables:
+
+dbo.Claim_Fact
+dbo.Date_Dimension
+dbo.DEA_Dimension
+dbo.Drug_Dimension
+dbo.Patient_Dimension
+
+
+
+Coulumns:
+
+dbo.Claim_Fact.AdminFeeAmount 2
+dbo.Claim_Fact.AdminFeeType 6
+dbo.Claim_Fact.AuthorizationNumber 1
+dbo.Claim_Fact.ClaimStatus 1
+dbo.Claim_Fact.CompoundCode 1
+dbo.Claim_Fact.DateDispensedKey 12
+dbo.Claim_Fact.DateProcessedKey 1
+dbo.Claim_Fact.DateWrittenKey 1
+dbo.Claim_Fact.DaysSupply 1
+dbo.Claim_Fact.DEAKey 1
+dbo.Claim_Fact.DrugKey 1
+dbo.Claim_Fact.IncentiveFee 2
+dbo.Claim_Fact.MCSCCode 3
+dbo.Claim_Fact.MetricDecimalQuantity 1
+dbo.Claim_Fact.NewRefillCode 2
+dbo.Claim_Fact.OthPayerAmtPd 4
+dbo.Claim_Fact.PatientKey 1
+dbo.Claim_Fact.PharmacyKey 1
+dbo.Claim_Fact.RxNumber 1
+dbo.Claim_Fact.SubmitCopayAmount 2
+dbo.Claim_Fact.SubmitDEANumber 1
+dbo.Claim_Fact.SubmitDispensingFee 6
+dbo.Claim_Fact.SubmitIngrCost 2
+dbo.Claim_Fact.SubmitSalesTax 2
+
+dbo.Date_Dimension.Date, 1
+dbo.Date_Dimension.DateKey 1
+
+dbo.DEA_Dimension.AddressLine1 1
+dbo.DEA_Dimension.AddressLine2 1
+dbo.DEA_Dimension.City 1
+dbo.DEA_Dimension.DEAKey 1
+dbo.DEA_Dimension.DEANumber 1
+dbo.DEA_Dimension.Name 1
+dbo.DEA_Dimension.NPINumber 1
+dbo.DEA_Dimension.State 1
+dbo.DEA_Dimension.ZipCode 1
+
+dbo.Drug_Dimension.DEAClass 1
+dbo.Drug_Dimension.DosageFormDescription 1
+dbo.Drug_Dimension.DrugKey 1
+dbo.Drug_Dimension.GCNDescription 1
+dbo.Drug_Dimension.NDC 1
+dbo.Drug_Dimension.ProductName 1
+dbo.Drug_Dimension.ProductStrength 1
+dbo.Drug_Dimension.TherapeuticClass 1
+dbo.Drug_Dimension.TherapeuticClassDescription 1
+
+dbo.Patient_Dimension.BirthDate 1
+dbo.Patient_Dimension.FirstName 1
+dbo.Patient_Dimension.LastName 1
+dbo.Patient_Dimension.MemberProfile 1
+dbo.Patient_Dimension.MemberSSN 1
+dbo.Patient_Dimension.PatientKey 1
+dbo.Patient_Dimension.SponsorPersID 1
+dbo.Pharmacy_Dimension.NPINumber 1
+dbo.Pharmacy_Dimension.PharmacyAddressLine1 1
+dbo.Pharmacy_Dimension.PharmacyAddressLine2 1
+dbo.Pharmacy_Dimension.PharmacyCity 1
+dbo.Pharmacy_Dimension.PharmacyKey 1
+dbo.Pharmacy_Dimension.PharmacyName 1
+dbo.Pharmacy_Dimension.PharmacyPhoneNumber 1
+dbo.Pharmacy_Dimension.PharmacyState 1
+dbo.Pharmacy_Dimension.PharmacyZip 1
+dbo.Pharmacy_Dimension.ProviderCode 1
+
+
+----------------------------------------------------

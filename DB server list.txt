@@ -1,0 +1,40 @@
+1       Up               host                  hrewoel42.washdc.state.sbu
+1       Up               host                  hrewoel43.washdc.state.sbu
+1       Up               host                  hrewoel44.washdc.state.sbu
+
+1       Up               host                  hrewoel45.washdc.state.sbu
+1       Up               host                  hrewoel46.washdc.state.sbu
+1       Up               host                  hrewoel47.washdc.state.sbu
+
+1       Up               host                  hrewoel48.washdc.state.sbu
+1       Up               host                  hrewoel49.washdc.state.sbu
+
+1       Up               host                  HRVLCPYDB25.hr.state.sbu
+1       Up               host                  HRVLCPYDB26.hr.state.sbu
+
+1       Up               host                  hrvlcpydb7601.hr.state.sbu
+1       Up               host                  hrvlcpydb7606.hr.state.sbu
+1       Up               host                  hrvlcpydb7607.hr.state.sbu
+1       Up               host                  hrvlcpydb7608.hr.state.sbu
+
+1       Up               host                  hrvlprddb7601.hr.state.sbu
+1       Up               host                  hrvlprddb7602.hr.state.sbu
+1       Up               host                  hrvlprddb7603.hr.state.sbu
+1       Up               host                  HRVLPRDDB7606.hr.state.sbu
+1       Up               host                  hrvlprddb7607.hr.state.sbu
+
+1       Up               host                  hrvlprdoem7603.hr.state.sbu
+
+1       Up               host                  HRVLTRNDB23.hr.state.sbu
+1       Up               host                  HRVLTRNDB24.hr.state.sbu
+
+1       Up               host                  hrvltstdb20.washdc.state.sbu
+1       Up               host                  hrvltstdb21.hr.state.sbu
+1       Up               host                  hrvltstdb22.hr.state.sbu
+
+1       Up               host                  hrvltstdb7601.hr.state.sbu
+1       Up               host                  hrvltstdb7602.hr.state.sbu
+1       Up               host                  hrvltstdb7603.hr.state.sbu
+1       Up               host                  hrvltstdb7606.hr.state.sbu
+1       Up               host                  hrvltstdb7609.hr.state.sbu
+

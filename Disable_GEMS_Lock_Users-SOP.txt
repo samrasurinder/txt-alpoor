@@ -1,0 +1,125 @@
+sqlplus /nolog
+
+conn sys@PRD as sysdba
+
+set lines 200
+set TERMOUT ON
+set FEEDBACK ON
+col database_schema format a40
+
+select substr(global_name,1,30) || ' ('||user||')' database_schema from global_name;
+
+select cir_dsbl_ind from secref.circuit where cir_id in (39,65);
+
+update secref.circuit
+set cir_dsbl_ind = 1
+where cir_id in (39,65)
+/
+
+commit;
+
+select cir_dsbl_ind from secref.circuit where cir_id in (39,65);
+
+---------------------------------------------------------------------------------------
+
+select hac_dsbl_ind from secref.hr_app_catalog where hac_id in (63,64);
+
+update secref.hr_app_catalog
+set hac_dsbl_ind = 1
+where hac_id in (63,64)
+/
+
+commit
+/
+
+select hac_dsbl_ind from secref.hr_app_catalog where hac_id in (63,64);
+
+----------------------------------------------------------------------------------------
+
+select hac_url_prd_text from secref.hr_app_catalog where hac_secref_cir_id in (39,65);
+
+update secref.hr_app_catalog
+set hac_url_prd_text = 'https://usdos.sharepoint.com/sites/Intranet-HR'
+where hac_secref_cir_id in (39,65)
+/ 
+commit;
+
+select hac_url_prd_text from secref.hr_app_catalog where hac_secref_cir_id in (39,65);
+
+---------------------------------------------------------------------------------------
+
+select cir_dsbl_ind from secref.circuit where cir_id = 65;
+
+update secref.circuit set cir_dsbl_ind = 0 where cir_id = 65
+/
+commit;
+
+select hac_url_prd_text from secref.hr_app_catalog where hac_secref_cir_id in (39,65);
+
+select cir_dsbl_ind from secref.circuit where cir_id = 65;
+
+
+====================================================================
+
+set lines 200
+set TERMOUT ON
+set FEEDBACK ON
+col database_schema format a40
+
+select substr(global_name,1,30) || ' ('||user||')' database_schema from global_name;
+
+
+* Back up the sysadm.psoprdefn table in PRD
+
+CREATE TABLE sysadm.psoprdefn_bkup_20200121 AS SELECT * FROM sysadm.psoprdefn;
+
+* Create a temp table sysadm.locked_oper with locked users only.
+
+CREATE TABLE sysadm.locked_oper_20200121 AS SELECT * from sysadm.psoprdefn where ACCTLOCK = 1;
+
+
+* Compare the tables
+
+SELECT count(*) FROM sysadm.psoprdefn
+MINUS   
+SELECT count(*) FROM sysadm.psoprdefn_bkup;
+
+SELECT count(*) FROM sysadm.psoprdefn where ACCTLOCK = 1  
+MINUS   
+SELECT count(*) FROM sysadm.locked_oper ;
+
+
+
+
+UPDATE sysadm.psoprdefn SET ACCTLOCK = 1 WHERE OPRID NOT IN 
+(
+'PS', 
+'PSAPPS', 
+'PTWEBSERVER', 
+'PERIMBJA',
+'PERIMSMC',
+'HRSODACH',
+'HRSODDDT',
+'BATCHSOD',
+'ZHRSDDDV',
+'PERADMRM',
+'PERADMJF',
+'HRRIMSLB',
+'HRRIMAES',
+'HRRIMCNN',
+'HRRIMIGW',
+'HRSODEHB',
+'HRSODPEP',
+'HRSODDH',
+'HRSODDLB',
+'HRSODMTC',
+'HRSODSDW',
+'ZHRSODCMF'
+)
+AND ACCTLOCK = 0;
+COMMIT;
+
+
+SELECT count (*) FROM sysadm.psoprdefn WHERE ACCTLOCk = 1 ;
+
+SELECT count(oprid|| oprdefndesc) FROM sysadm.psoprdefn WHERE acctlock = 0;

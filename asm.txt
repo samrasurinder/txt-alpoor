@@ -1,0 +1,25 @@
+column name format a10
+column group_name format a2
+
+select
+b.name,a.group_number, a.name, a.state
+from v$asm_disk a, v$asm_diskgroup b where a.group_number=b.group_number;
+
+NAME                 GROUP_NUMBER NAME                 STATE
+-------------------- ------------ -------------------- --------------------
+DATA                            1 PRAS_DATA01          NORMAL
+DATA                            1 PRAS_DATA02          NORMAL
+FRA                             2 PRAS_FRA01           NORMAL
+FRA                             2 PRAS_FRA02           NORMAL
+FRA                             2 PRAS_FRA03           NORMAL
+
+
+
+WALLET		Application Account	PRASPMU	PmcKNAMR6zus$	PmcKNAMR6zus$	7/8/2016 1:15 PM
+WALLET		Application Account	RMAD	SbkRMADBN56$$	SbkRMADBN56$$	7/8/2016 1:15 PM
+WALLET		Application Account	RMAG	SfM$GAMR2ndbo	SfM$GAMR2ndbo	7/8/2016 1:15 PM
+WALLET		Application Account	RMAN	SfcJNAMR6yt$$	SfcJNAMR6yt$$	7/8/2016 1:15 PM
+WALLET		Application Account	STATEUP	STATSyJYs3ed$	STATSyJYs3ed$	7/8/2016 1:15 PM
+
+
+

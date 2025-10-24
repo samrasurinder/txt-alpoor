@@ -1,0 +1,118 @@
+
+
+DEVCPY Daily Refresh SOP
+------------------------
+
+
+Step 1) DEVCPY_DAILY_REFRESH job is scheduled via OEM daily at 6.30AM and expected to finish by 7.30AM
+
+Step 2) After Refresh, following schema passwords will be set to a new password everyday. 
+
+ GRB_FRAMEWORK_2
+ GRB_WEB_USER_2
+ STAFFING_PATTERN
+ TM
+ FOLDERAPP
+ EMS
+ RDT
+ KCREPORTUSER
+ ACRS
+ ETLUP
+ FOLDER
+ FLOSUB
+ CAREER
+ EVAC
+ PATS
+ DS_DBSCAN_USER
+ EWORK
+ DSMWEB
+ MEDICAL
+ BPOC
+ DW
+ DSUSER
+ TM2
+ BIGIP
+ ERETIREMENT
+ EPPLUS
+ EOPF
+ RNET
+ BOXIPRD3
+ GRB_ASSIST_2
+ NEWEMP
+ BOXIPRD
+ TELEWORK
+ POSTARCH
+ EOPF_CORE
+ CDB_FTP
+ CABLE
+ ESRT
+ IDBEXEC
+ STAGING
+ SECREF
+ GADTRK
+ FAPR
+ REETA_RO
+ EMPLOYEE
+ REETA
+ WFR
+ ELECTRONIC_DOCUMENT
+ TSP
+ GRB_SERVICE_USER
+ LM_USER
+ MONITOR_USER
+ BMTS
+ PS
+ GRBINSTALLUSER
+ INFP
+ INFP_DC
+ INFP_MR
+ BOXIPRD4
+ SYSADM
+ HRPSINS
+ INFREAD
+
+
+Step 3) Run encode/decode script to decrypt HRSVCDEVLDAP ldap account password by logging in as SECREF account. This is very important step 
+        after refresh and password resets, otherwise, frontend application will not work 
+
+
+
+Step 4) Following Developer accounts will be unlocked.
+
+AFOLABIMA
+BACKMEYERSM
+BHOJANIKG
+CAOTV
+DIXONTM
+ENGERCC
+GILMOREBS
+KHANFM1
+MAHMUDI
+MAHMUDIQBALI
+NGUYENE
+NGUYENFD
+SCHWIERRE
+VARGASFE
+
+
+Step 5) By 8AM everyday,following people will be notified with encrypted password 
+        If for any reason, DEVCPY is not expected to be ready by 8AM, Developers will be notified about the status before 8AM
+
+HR-EX-ESD-OAB <HR-EX-ESD-OAB@state.gov>;
+Grewal, Hardeep S <GrewalHS@state.gov>;
+Schwier, Robert E <SchwierRE@state.gov>;
+Cao, Todd V <CaoTV@state.gov>;
+Enger, Craig C <EngerCC@state.gov>;
+Nguyen, Fuji D <NguyenFD@state.gov>;
+Afolabi, Modinat A <AfolabiMA@state.gov>; 
+Mahmud Iqbal, Iffat <MahmudIqbalI@state.gov>;
+Bhojani, Kishor G <BhojaniKG@state.gov>; 
+Backmeyer, Stephen M <BackmeyerSM@state.gov>;
+Vargas, Franklin E <VargasFE@state.gov>;
+Gilmore, Brent S <GilmoreBS@state.gov>;
+Nguyen, Eric H <NguyenEH@state.gov>;
+Khan, Ali <KhanA9@state.gov>;
+Dixon, Timothy M <DixonTM@state.gov>;
+Singh, Baljinder <SinghB1@state.gov>;
+
+

@@ -1,0 +1,67 @@
+Determine whether any currently installed one-off patches conflict with this patch 32226239 as follows:
+
+For Grid Infrastructure Home, as home user:
+
+% $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir <UNZIPPED_PATCH_LOCATION>/32226239/32218454
+% $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir <UNZIPPED_PATCH_LOCATION>/32226239/32222571
+% $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir <UNZIPPED_PATCH_LOCATION>/32226239/32218663
+% $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir <UNZIPPED_PATCH_LOCATION>/32226239/29340594
+% $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir <UNZIPPED_PATCH_LOCATION>/32226239/32240590
+For Database home, as home user:
+
+% $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir <UNZIPPED_PATCH_LOCATION>/32226239/32218454
+% $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir <UNZIPPED_PATCH_LOCATION>/32226239/32222571
+
+
+1.2.1.5 Run OPatch SystemSpace Check
+Check if enough free space is available on the ORACLE_HOME filesystem for the patches to be applied as given below:
+
+For Grid Infrastructure Home, as home user:
+
+Create file /tmp/patch_list_gihome.txt with the following content:
+
+% cat /tmp/patch_list_gihome.txt
+
+<UNZIPPED_PATCH_LOCATION>/32226239/32218454
+<UNZIPPED_PATCH_LOCATION>/32226239/32222571
+<UNZIPPED_PATCH_LOCATION>/32226239/32218663
+<UNZIPPED_PATCH_LOCATION>/32226239/29340594
+<UNZIPPED_PATCH_LOCATION>/32226239/32240590
+Run the opatch command to check if enough free space is available in the Grid Infrastructure Home:
+
+% $ORACLE_HOME/OPatch/opatch prereq CheckSystemSpace -phBaseFile /tmp/patch_list_gihome.txt
+For Database home, as home user:
+
+Create file /tmp/patch_list_dbhome.txt with the following content:
+
+% cat /tmp/patch_list_dbhome.txt
+<UNZIPPED_PATCH_LOCATION>/32226239/32218454
+<UNZIPPED_PATCH_LOCATION>/32226239/32222571
+Run opatch command to check if enough free space is available in the Database Home:
+
+% $ORACLE_HOME/OPatch/opatch prereq CheckSystemSpace -phBaseFile /tmp/patch_list_dbhome.txt
+
+
+
+#GRID_HOME/OPatch/opatchauto apply <UNZIPPED_PATCH_LOCATION>/32226239 -analyze
+
+
+
+Any databases that have invalid objects after the execution of datapatch should have utlrp.sql run to revalidate those objects.
+
+For example:
+cd $ORACLE_HOME/rdbms/admin
+sqlplus /nolog
+SQL> CONNECT / AS SYSDBA
+SQL> @utlrp.sql
+
+
+
+
+1.2.6.3 Upgrade Oracle Recovery Manager Catalog
+If you are using the Oracle Recovery Manager, the catalog needs to be upgraded. Enter the following command to upgrade it. The UPGRADE CATALOG command must be entered twice to confirm the upgrade.
+
+$ rman catalog username/password@alias
+RMAN> UPGRADE CATALOG;
+RMAN> UPGRADE CATALOG;
+RMAN> EXIT;

@@ -1,0 +1,87 @@
+[root@hrvlprddb7603 logs]# /home/grid/asm_disk_map_to_device.sh
+The ASM disk: 'DATA01' mapped to '/dev/sdc1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA02' mapped to '/dev/sdd1'  Totalsize=144.8 GB,
+The ASM disk: 'DATA03' mapped to '/dev/sde1'  Totalsize=144.8 GB,
+The ASM disk: 'FRA01' mapped to '/dev/sdf1'  Totalsize=144.8 GB,
+
+
+
+[root@hrvlprddb7603 logs]# blkid | grep oracleasm
+/dev/sdd1: LABEL="DATA02" TYPE="oracleasm"
+/dev/sdc1: LABEL="DATA01" TYPE="oracleasm"
+/dev/sde1: LABEL="DATA03" TYPE="oracleasm"
+/dev/sdf1: LABEL="FRA01" TYPE="oracleasm"
+[root@hrvlprddb7603 logs]
+
+
+
+[grid@hrvlprddb7603 grid1]$ ./gridSetup.sh -silent -ignorePrereqFailure -responseFile /home/grid/g.rsp
+Launching Oracle Grid Infrastructure Setup Wizard...
+
+[WARNING] [INS-41812] OSDBA and OSASM are the same OS group.
+   CAUSE: The chosen values for OSDBA group and the chosen value for OSASM group are the same.
+   ACTION: Select an OS group that is unique for ASM administrators. The OSASM group should not be the same as the OS groups that grant privileges for Oracle ASM access, or for database administration.
+[WARNING] [INS-41874] Oracle ASM Administrator (OSASM) Group specified is same as the inventory group.
+   CAUSE: Operating system group oinstall specified for OSASM Group is same as the inventory group.
+   ACTION: It is not recommended to have OSASM group same as inventory group. Select any of the group other than the inventory group to avoid incorrect configuration.
+[WARNING] [INS-32022] Grid infrastructure software for a cluster installation must not be under an Oracle base directory.
+   CAUSE: Grid infrastructure for a cluster installation assigns root ownership to all parent directories of the Grid home location. As a result, ownership of all named directories in the software location path is changed to root, creating permissions errors for all subsequent installations into the same Oracle base.
+   ACTION: Specify software location outside of an Oracle base directory for grid infrastructure for a cluster installation.
+[WARNING] [INS-13014] Target environment does not meet some optional requirements.
+   CAUSE: Some of the optional prerequisites are not met. See logs for details. /u02/app/oraInventory/logs/GridSetupActions2020-06-27_02-44-18PM/gridSetupActions2020-06-27_02-44-18PM.log
+   ACTION: Identify the list of failed prerequisite checks from the log: /u02/app/oraInventory/logs/GridSetupActions2020-06-27_02-44-18PM/gridSetupActions2020-06-27_02-44-18PM.log. Then either from the log file or from installation manual find the appropriate configuration to meet the prerequisites and fix it manually.
+The response file for this session can be found at:
+ /u02/app/19.3.0/grid1/install/response/grid_2020-06-27_02-44-18PM.rsp
+
+You can find the log of this install session at:
+ /u02/app/oraInventory/logs/GridSetupActions2020-06-27_02-44-18PM/gridSetupActions2020-06-27_02-44-18PM.log
+
+As a root user, execute the following script(s):
+        1. /u02/app/19.3.0/grid1/root.sh
+
+Execute /u02/app/19.3.0/grid1/root.sh on the following nodes:
+[hrvlprddb7603]
+
+
+Successfully Setup Software with warning(s).
+[grid@hrvlprddb7603 grid1]$
+
+ /u02/app/19.3.0/grid1/perl/bin/perl  -I/u02/app/19.3.0/grid1/perl/lib -I/u02/app/19.3.0/grid1/crs/install /u02/app/19.3.0/grid1/crs/install/roothas.pl
+
+
+
+
+
+
+
+[root@hrvlprddb7603 grid1]# /u02/app/19.3.0/grid1/perl/bin/perl  -I/u02/app/19.3.0/grid1/perl/lib -I/u02/app/19.3.0/grid1/crs/install /u02/app/19.3.0/grid1/crs/install/roothas.pl
+Using configuration parameter file: /u02/app/19.3.0/grid1/crs/install/crsconfig_params
+The log of current session can be found at:
+  /u02/app/19.3.0/crsdata/hrvlprddb7603/crsconfig/roothas_2020-06-27_02-54-45PM.log
+2020/06/27 14:55:00 CLSRSC-363: User ignored prerequisites during installation
+Failure in execution (rc=-1, 0, No such file or directory) for command /u02/app/19.3.0/grid/bin/crsctl query crs activeversion
+2020/06/27 14:55:01 CLSRSC-180: An error occurred while executing the command '/u02/app/19.3.0/grid/bin/crsctl query crs activeversion'
+Died at /u02/app/19.3.0/grid1/crs/install/crsutils.pm line 14279.
+
+[root@hrvlprddb7603 oracle]# /u02/app/19.3.0/grid1/root.sh
+Check /u02/app/19.3.0/grid1/install/root_hrvlprddb7603.hr.state.sbu_2020-06-27_16-07-50-101673367.log for the output of root script
+[root@hrvlprddb7603 oracle]# /u02/app/19.3.0/grid1/perl/bin/perl  -I/u02/app/19.3.0/grid1/perl/lib -I/u02/app/19.3.0/grid1/crs/install /u02/app/19.3.0/grid1/crs/install/roothas.pl
+Using configuration parameter file: /u02/app/19.3.0/grid1/crs/install/crsconfig_params
+The log of current session can be found at:
+  /u02/app/19.3.0/crsdata/hrvlprddb7603/crsconfig/roothas_2020-06-27_04-08-16PM.log
+2020/06/27 16:08:25 CLSRSC-363: User ignored prerequisites during installation
+LOCAL ADD MODE
+Creating OCR keys for user 'grid', privgrp 'oinstall'..
+Operation successful.
+LOCAL ONLY MODE
+Successfully accumulated necessary OCR keys.
+Creating OCR keys for user 'root', privgrp 'root'..
+Operation successful.
+CRS-4664: Node hrvlprddb7603 successfully pinned.
+2020/06/27 16:08:33 CLSRSC-330: Adding Clusterware entries to file 'oracle-ohasd.service'
+
+hrvlprddb7603     2020/06/27 16:09:14     /u02/app/19.3.0/crsdata/hrvlprddb7603/olr/backup_20200627_160914.olr     724960844
+2020/06/27 16:09:14 CLSRSC-327: Successfully configured Oracle Restart for a standalone server
+[root@hrvlprddb7603 oracle]# pwd
+/etc/oracle
+[root@hrvlprddb7603 oracle]#

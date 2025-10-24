@@ -1,0 +1,334 @@
+
+ dbca -silent   \
+ -createDatabase                      \
+ -responseFile NO_VALUE               \
+ -templateName General_Purpose.dbc    \
+ -sid testdb                          \
+ -gdbname TESTDB                      \
+ -characterSet AL32UTF8               \
+ -sysPassword Oracle_4U               \
+ -systemPassword Oracle_4U            \
+ -createAsContainerDatabase FALSE     \
+ -databaseType MULTIPURPOSE           \
+ -automaticMemoryManagement FALSE     \
+ -totalMemory 2048                    \
+ -datafileDestination +DATA           \
+ -recoveryAreaDestination +RECO       \
+ -redoLogFileSize 50                  \
+ -emConfiguration NONE                \
+ -sampleSchema FALSE                  \
+ -enableArchive TRUE                  \
+ -ignorePreReqs
+
+
+
+https://www.trustwave.com/en-us/resources/blogs/spiderlabs-blog/how-to-setting-up-encrypted-communications-channels-in-oracle-database/
+
+
+
+
+
+
+
+
+
+
+How to Enable Unified Audit Trail:
+----------------------------------
+This is pre-requisite step before we start using unified audit option:
+
+
+Shutdown databases ( Nothing should be running of $ORACLE_HOME).
+Recommneded (Optional): Shutdown HAS also and make sure no process running wih oracle/grid
+
+
+
+$ cd $ORACLE_HOME/rdbms/lib
+$ make -f ins_rdbms.mk uniaud_on ioracle
+
+
+select * from gv$option where parameter like 'Unified Auditing';
+This should return true
+
+
+
+
+
+Enable pre-defined oracle Supplied audit policies:
+--------------------------------------------------
+
+
+
+Step 1 ) Following are Oracle Supplied Audit policies:
+-----------------------------------------------------
+
+select distinct policy_name  from audit_unified_policies;
+
+ORA_DV_AUDPOL2
+ORA_CIS_RECOMMENDATIONS
+ORA_ACCOUNT_MGMT
+ORA_DATABASE_PARAMETER
+ORA_LOGON_FAILURES
+ORA_DV_AUDPOL
+ORA_SECURECONFIG
+ORA_RAS_SESSION_MGMT
+ORA_RAS_POLICY_MGMT
+
+**************************************************************************************************
+https://www.oracle.com/webfolder/technetwork/tutorials/obe/db/12c/r1/security/sec_uni_audit/sec_uni_audit.html#:~:text=Enabling%20the%20Unified%20Auditing%20Mode&text=Relink%20Oracle%20with%20the%20uniaud_on%20option.&text=Restart%20all%20Oracle%20processes%3A%20Enterprise,be%20started%20and%20the%20listener.&text=Verify%20that%20unified%20auditing%20is%20now%20enabled.
+
+**************************************************************************************************
+
+
+
+Step 2)
+------
+
+Check to see what tablespace it uses to store audit data
+
+SELECT * FROM DBA_AUDIT_MGMT_CONFIG_PARAMS;
+
+If it is using default tablespace SYSAUX, Please create a tablespace called AUDIT_TABLESPACE
+and make it as defualt tablespace for all audit needs as follows:
+
+create tablespace AUDIT_TABLESPACE datafile '+PRD_DATA' size 100M autoextend on maxsize unlimited;
+exec dbms_audit_mgmt.set_audit_trail_location(audit_trail_type=>DBMS_AUDIT_MGMT.AUDIT_TRAIL_UNIFIED,audit_trail_location_value=>'AUDIT_TABLESPACE');
+
+
+
+Tablespace created.
+
+exec dbms_audit_mgmt.set_audit_trail_location(audit_trail_type=>DBMS_AUDIT_MGMT.AUDIT_TRAIL_UNIFIED,audit_trail_location_value=>'AUDIT_TABLESPACE');
+
+
+
+
+
+
+*************************************************************************************************
+Step 3)
+--------
+
+Login to each database and enable audit policies as follows:
+
+--Enable unified audit policies
+
+audit policy ORA_SECURECONFIG;
+audit policy ORA_LOGON_FAILURES;
+audit policy ORA_CIS_RECOMMENDATIONS;
+audit policy ORA_ACCOUNT_MGMT;
+
+
+
+************************************************************************************************
+Step 4)
+-------
+
+Check what audits are enabled:
+-----------------------------
+
+select  audit_option from audit_unified_policies where policy_name = 'ORA_ACCOUNT_MGMT'
+union
+select  audit_option from audit_unified_policies where policy_name = 'ORA_SECURECONFIG'
+union
+select  audit_option from audit_unified_policies where policy_name = 'ORA_LOGON_FAILURES'
+union
+select  audit_option from audit_unified_policies where policy_name = 'ORA_CIS_RECOMMENDATIONS'
+
+
+
+ADMINISTER KEY MANAGEMENT
+ALTER ANY PROCEDURE
+ALTER ANY SQL TRANSLATION PROFILE
+ALTER ANY TABLE
+ALTER DATABASE
+ALTER DATABASE DICTIONARY
+ALTER DATABASE LINK
+ALTER FUNCTION
+ALTER PACKAGE
+ALTER PACKAGE BODY
+ALTER PLUGGABLE DATABASE
+ALTER PROCEDURE
+ALTER PROFILE
+ALTER ROLE
+ALTER SYNONYM
+ALTER SYSTEM
+ALTER TRIGGER
+ALTER USER
+AUDIT SYSTEM
+BECOME USER
+CREATE ANY JOB
+CREATE ANY LIBRARY
+CREATE ANY PROCEDURE
+CREATE ANY SQL TRANSLATION PROFILE
+CREATE ANY TABLE
+CREATE DATABASE LINK
+CREATE DIRECTORY
+CREATE EXTERNAL JOB
+CREATE FUNCTION
+CREATE PACKAGE
+CREATE PACKAGE BODY
+CREATE PLUGGABLE DATABASE
+CREATE PROCEDURE
+CREATE PROFILE
+CREATE PUBLIC SYNONYM
+CREATE ROLE
+CREATE SQL TRANSLATION PROFILE
+CREATE SYNONYM
+CREATE TRIGGER
+CREATE USER
+DROP ANY PROCEDURE
+DROP ANY SQL TRANSLATION PROFILE
+DROP ANY TABLE
+DROP DATABASE LINK
+DROP DIRECTORY
+DROP FUNCTION
+DROP PACKAGE
+DROP PACKAGE BODY
+DROP PLUGGABLE DATABASE
+DROP PROCEDURE
+DROP PROFILE
+DROP PUBLIC SYNONYM
+DROP ROLE
+DROP SYNONYM
+DROP TRIGGER
+DROP USER
+EXECUTE
+EXEMPT ACCESS POLICY
+EXEMPT REDACTION POLICY
+GRANT
+GRANT ANY OBJECT PRIVILEGE
+GRANT ANY PRIVILEGE
+GRANT ANY ROLE
+LOGMINING
+LOGON
+PURGE DBA_RECYCLEBIN
+REVOKE
+SELECT ANY DICTIONARY
+SET ROLE
+TRANSLATE ANY SQL
+
+*********************************************************************************************
+
+Step 5)
+-------
+
+
+View Audit Data:
+----------------
+select * from AUDSYS.AUD$UNIFIED order by event_timestamp desc;
+select * from unified_audit_trail  order by event_timestamp desc
+select unified_audit_policies,action_name,count(*) from unified_audit_trail group by unified_audit_policies,action_name;
+
+*********************************************************************************************
+
+
+-- Set the last archive timestamp.
+BEGIN
+  DBMS_AUDIT_MGMT.set_last_archive_timestamp(
+    audit_trail_type     => DBMS_AUDIT_MGMT.audit_trail_all,
+    last_archive_time    => SYSTIMESTAMP - 365 
+      );
+END;
+/
+
+BEGIN
+DBMS_AUDIT_MGMT.CLEAN_AUDIT_TRAIL(
+   audit_trail_type         =>  DBMS_AUDIT_MGMT.AUDIT_TRAIL_UNIFIED,
+   use_last_arch_timestamp  =>  TRUE);
+END;
+
+/
+
+
+select VALUE from GV$OPTION where PARAMETER='Unified Auditing';
+select * from SYS.DBA_AUDIT_MGMT_CONFIG_PARAMS;
+Select count(*) from unified_audit_trail;
+Select count(*) from dba_audit_trail;
+select policy_name,ENABLED_OPTION,success,failure from audit_unified_enabled_policies;
+SELECT table_name, tablespace_name FROM dba_tables WHERE table_name in ('AUD$','AUD$UNIFIED','FGA_LOG$');
+SELECT * FROM dba_audit_mgmt_last_arch_ts;
+select min(timestamp) from dba_audit_trail;
+select min(EVENT_TIMESTAMP) from unified_audit_trail;
+SELECT JOB_NAME,JOB_STATUS,AUDIT_TRAIL,JOB_FREQUENCY FROM DBA_AUDIT_MGMT_CLEANUP_JOBS ;
+sELECT ACTION_NAME, count(*) from unified_audit_trail GROUP BY ACTION_NAME;
+http://hrvltstdb7602.washdc.state.sbu:8080/apex/apex_admin
+
+
+
+
+-- Set the last archive timestamp.
+BEGIN
+  DBMS_AUDIT_MGMT.set_last_archive_timestamp(
+    audit_trail_type     => DBMS_AUDIT_MGMT.AUDIT_TRAIL_UNIFIED,
+    last_archive_time    => SYSTIMESTAMP - 365 
+      );
+END;
+/
+
+BEGIN
+DBMS_AUDIT_MGMT.CLEAN_AUDIT_TRAIL(
+   audit_trail_type         =>  DBMS_AUDIT_MGMT.AUDIT_TRAIL_UNIFIED,
+   use_last_arch_timestamp  =>  TRUE);
+END;
+/
+
+BEGIN
+  DBMS_AUDIT_MGMT.set_last_archive_timestamp(
+    audit_trail_type     => DBMS_AUDIT_MGMT.AUDIT_TRAIL_AUD_STD,
+    last_archive_time    => SYSTIMESTAMP - 365 
+      );
+END;
+/
+
+BEGIN
+DBMS_AUDIT_MGMT.CLEAN_AUDIT_TRAIL(
+   audit_trail_type         =>  DBMS_AUDIT_MGMT.AUDIT_TRAIL_AUD_STD,
+   use_last_arch_timestamp  =>  TRUE);
+END;
+/
+
+BEGIN
+  DBMS_AUDIT_MGMT.set_last_archive_timestamp(
+    audit_trail_type     => DBMS_AUDIT_MGMT.AUDIT_TRAIL_FGA_STD,
+    last_archive_time    => SYSTIMESTAMP - 365 
+      );
+END;
+/
+
+BEGIN
+DBMS_AUDIT_MGMT.CLEAN_AUDIT_TRAIL(
+   audit_trail_type         =>  DBMS_AUDIT_MGMT.AUDIT_TRAIL_FGA_STD,
+   use_last_arch_timestamp  =>  TRUE);
+END;
+/
+
+BEGIN
+  DBMS_AUDIT_MGMT.set_last_archive_timestamp(
+    audit_trail_type     => DBMS_AUDIT_MGMT.AUDIT_TRAIL_OS,
+    last_archive_time    => SYSTIMESTAMP - 365 
+      );
+END;
+/
+
+BEGIN
+DBMS_AUDIT_MGMT.CLEAN_AUDIT_TRAIL(
+   audit_trail_type         =>  DBMS_AUDIT_MGMT.AUDIT_TRAIL_OS,
+   use_last_arch_timestamp  =>  TRUE);
+END;
+/
+
+BEGIN
+  DBMS_AUDIT_MGMT.set_last_archive_timestamp(
+    audit_trail_type     => DBMS_AUDIT_MGMT.AUDIT_TRAIL_OS,
+    last_archive_time    => SYSTIMESTAMP - 365 
+      );
+END;
+/
+
+BEGIN
+DBMS_AUDIT_MGMT.CLEAN_AUDIT_TRAIL(
+   audit_trail_type         =>  DBMS_AUDIT_MGMT.AUDIT_TRAIL_OS,
+   use_last_arch_timestamp  =>  TRUE);
+END;
+/

@@ -1,0 +1,29 @@
+HOSTNAME                       DBNAME                         OWNER                DB_LINK                                            USERNAME                       HOST                 CREATED
+hrewoel02.hr.state.sbu         ASB.HR.STATE.SBU               ESRT                 CONTDB.HR.STATE.SBU                                HRSVCTSTCDBLINKORASQLTEST      TST2_CONTDB          28-JAN-19
+hrewoel02.hr.state.sbu         TST4.HR.STATE.SBU              ESRT                 CONTDB.HR.STATE.SBU                                HRSVCTSTCDBLINKORASQLTEST      TST2_CONTDB          21-FEB-19
+hrewoel02.hr.state.sbu         IVV1.HR.STATE.SBU              SYS                  CONTDB.HR.STATE.SBU                                HRSVCIVVCDBLINKORACLESQLTEST   IVV_CONTDB           27-NOV-18
+hrewoel02.hr.state.sbu         IVV1.HR.STATE.SBU              ESRT                 CONTDB.HR.STATE.SBU                                HRSVCIVVCDBLINKORACLESQLTEST   IVV1_CONTDB          10-JAN-19
+
+hrewoel03.hr.state.sbu         UAT.HR.STATE.SBU               ESRT                 CONTDB.HR.STATE.SBU                                HRSVCTSTCDBLINKORACLESQLTEST   UAT_CONTDB           13-FEB-19
+hrewoel03.hr.state.sbu         IVV1.HR.STATE.SBU              SYS                  CONTDB.HR.STATE.SBU                                HRSVCIVVCDBLINKORACLESQLTEST   IVV_CONTDB           27-NOV-18
+hrewoel03.hr.state.sbu         IVV1.HR.STATE.SBU              ESRT                 CONTDB.HR.STATE.SBU                                HRSVCIVVCDBLINKORACLESQLTEST   IVV1_CONTDB          10-JAN-19
+hrewoel03.hr.state.sbu         TST4.HR.STATE.SBU              ESRT                 CONTDB.HR.STATE.SBU                                HRSVCTSTCDBLINKORASQLTEST      TST2_CONTDB          21-FEB-19
+hrewoel03.hr.state.sbu         TST3.HR.STATE.SBU              ESRT                 CONTDB.HR.STATE.SBU                                HRSVCTSTCDBLINKORASQLTEST      TST2_CONTDB          15-JAN-19
+hrewoel03.hr.state.sbu         TST2.HR.STATE.SBU              ESRT                 CONTDB.HR.STATE.SBU                                HRSVCTSTCDBLINKORASQLTEST      TST2_CONTDB          28-FEB-19
+
+hrewoel10.hr.state.sbu         TST3.HR.STATE.SBU              ESRT                 CONTDB.HR.STATE.SBU                                HRSVCTSTCDBLINKORASQLTEST      TST2_CONTDB          15-JAN-19
+hrewoel10.hr.state.sbu         UAT.HR.STATE.SBU               ESRT                 CONTDB.HR.STATE.SBU                                HRSVCTSTCDBLINKORACLESQLTEST   UAT_CONTDB           13-FEB-19
+hrewoel10.hr.state.sbu         TST1.HR.STATE.SBU              ESRT                 CONTDB.HR.STATE.SBU                                HRSVCTSTCDBLINKORASQLTEST      TST2_CONTDB          15-JAN-19
+hrewoel10.hr.state.sbu         OPSSTG3.HR.STATE.SBU           ESRT                 CONTDB.HR.STATE.SBU                                HRSVCTSTCDBLINKORASQLTEST      TST2_CONTDB          16-JAN-19
+hrewoel10.hr.state.sbu         TST5.HR.STATE.SBU              ESRT                 CONTDB.HR.STATE.SBU                                HRSVCTSTCDBLINKORASQLTEST      TST2_CONTDB          15-JAN-19
+
+hrewoel18.hr.state.sbu         TST5.HR.STATE.SBU              ESRT                 CONTDB.HR.STATE.SBU                                HRSVCTSTCDBLINKORASQLTEST      TST2_CONTDB          15-JAN-19
+hrewoel18.hr.state.sbu         TST1.HR.STATE.SBU              ESRT                 CONTDB.HR.STATE.SBU                                HRSVCTSTCDBLINKORASQLTEST      TST2_CONTDB          15-JAN-19
+
+hrewoel30.hr.state.sbu         PRDMASK.HR.STATE.SBU           ESRT                 CONTDB.HR.STATE.SBU                                HRSVCTSTCDBLINKORASQLTEST      TST2_CONTDB          22-OCT-18
+hrewoel30.hr.state.sbu         CPY2.HR.STATE.SBU              ESRT                 CONTDB.HR.STATE.SBU                                HRSVCTSTCDBLINKORASQLTEST      TST2_CONTDB          15-JAN-19
+hrewoel30.hr.state.sbu         CPY1.HR.STATE.SBU              ESRT                 CONTDB.HR.STATE.SBU                                HRSVCTSTCDBLINKORASQLTEST      TST2_CONTDB          04-MAR-19
+
+hrewoel29.hr.state.sbu         PRDMASK.HR.STATE.SBU           ESRT                 CONTDB.HR.STATE.SBU                                HRSVCTSTCDBLINKORASQLTEST      TST2_CONTDB          22-OCT-18
+hrewoel29.hr.state.sbu         CPY2.HR.STATE.SBU              ESRT                 CONTDB.HR.STATE.SBU                                HRSVCTSTCDBLINKORASQLTEST      TST2_CONTDB          15-JAN-19
+hrewoel29.hr.state.sbu         CPY1.HR.STATE.SBU              ESRT                 CONTDB.HR.STATE.SBU                                HRSVCTSTCDBLINKORASQLTEST      TST2_CONTDB          04-MAR-19

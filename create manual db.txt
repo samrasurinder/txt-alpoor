@@ -1,0 +1,116 @@
+SQL> select tablespace_name from dba_tablespaces;
+
+TABLESPACE_NAME
+------------------------------
+SYSTEM
+SYSAUX
+UNDOTBS1
+TEMP
+UNDOTBS2
+UNDOTBS3
+USERS
+
+
+SQL>  select file_name from dba_data_fileS where tablespace_name in ('SYSTEM','SYSAUX','TEMP','UNDOTBS1','UNDOTBS2');
+
+FILE_NAME
+--------------------------------------------------------------------------------
++DATA/tstkc1/datafile/system.3857.858613283
++DATA/tstkc1/datafile/undotbs1.2218.875879393
++DATA/tstkc1/datafile/undotbs2.3889.875958773
++DATA/tstkc1/datafile/sysaux.3800.858613281
++DATA/tstkc1/datafile/undotbs1.3419.858613273
++DATA/tstkc1/datafile/undotbs2.3552.858613263
+
+6 rows selected.
+
+SQL>
+
+
+
+/hrewwnonprdfs01/Output/UATKC
+
+
+
+
+asmcmd cp +DATA/tstkc1/datafile/system.3857.858613283    /hrewwnonprdfs01/Output/UATKC/system.dbf
+asmcmd cp +DATA/tstkc1/datafile/undotbs1.2218.875879393  /hrewwnonprdfs01/Output/UATKC/undotbs1.dbf
+asmcmd cp +DATA/tstkc1/datafile/undotbs2.3889.875958773  /hrewwnonprdfs01/Output/UATKC/undotbs2.dbf
+asmcmd cp +DATA/tstkc1/datafile/sysaux.3800.858613281    /hrewwnonprdfs01/Output/UATKC/sysaux.dbf
+asmcmd cp +DATA/tstkc1/datafile/undotbs1.3419.858613273  /hrewwnonprdfs01/Output/UATKC/undotbs11.dbf
+asmcmd cp +DATA/tstkc1/datafile/undotbs2.3552.858613263  /hrewwnonprdfs01/Output/UATKC/undotbs21.dbf
+
+SQL> select * from global_name;
+
+GLOBAL_NAME
+--------------------------------------------------------------------------------
+TSTKC1.HR.STATE.SBU
+
+SQL> archive log list;
+Database log mode              No Archive Mode
+Automatic archival             Disabled
+Archive destination            USE_DB_RECOVERY_FILE_DEST
+Oldest online log sequence     251781
+Current log sequence           251783
+SQL>
+
+
+
+
+
+
+CREATE DATABASE UATKC
+   USER SYS IDENTIFIED BY Testing123#
+   USER SYSTEM IDENTIFIED BY Testing123#
+   LOGFILE GROUP 1 ('+DATA','+FRA') SIZE 256M BLOCKSIZE 512,
+           GROUP 2 ('+DATA','+FRA') SIZE 256M BLOCKSIZE 512,
+           GROUP 3 ('+DATA','+FRA') SIZE 256M BLOCKSIZE 512
+   MAXLOGFILES 192
+   MAXLOGMEMBERS 3
+   MAXLOGHISTORY 12270
+   MAXINSTANCES 32
+   MAXDATAFILES 1024
+   CHARACTER SET AL32UTF8
+   NATIONAL CHARACTER SET AL16UTF16
+   EXTENT MANAGEMENT LOCAL
+   DATAFILE '/u01/app/oracle/oradata/mynewdb/system01.dbf' SIZE 325M REUSE
+   SYSAUX DATAFILE '/u01/app/oracle/oradata/mynewdb/sysaux01.dbf' SIZE 325M REUSE
+   DEFAULT TABLESPACE users
+      DATAFILE '/u01/app/oracle/oradata/mynewdb/users01.dbf'
+      SIZE 500M REUSE AUTOEXTEND ON MAXSIZE UNLIMITED
+   DEFAULT TEMPORARY TABLESPACE tempts1
+      TEMPFILE '/u01/app/oracle/oradata/mynewdb/temp01.dbf'
+      SIZE 20M REUSE
+   UNDO TABLESPACE undotbs
+      DATAFILE '/u01/app/oracle/oradata/mynewdb/undotbs01.dbf'
+      SIZE 200M REUSE AUTOEXTEND ON MAXSIZE UNLIMITED;
+
+
+
+
+
+
+
+
+
+control_files = (+DATA, +FRA)
+
+undo_management = auto
+db_name = UATKC
+db_block_size = 16384
+
+DB_CREATE_FILE_DEST = +DATA
+DB_RECOVERY_FILE_DEST = +FRA
+DB_RECOVERY_FILE_DEST_SIZE = 10G
+
+
+
+
+
+
+create database UATKC
+  LOGFILE GROUP 1 ('+DATA','+FRA') SIZE 256M BLOCKSIZE 512,
+           GROUP 2 ('+DATA','+FRA') SIZE 256M BLOCKSIZE 512,
+           GROUP 3 ('+DATA','+FRA') SIZE 256M BLOCKSIZE 512
+ CHARACTER SET AL32UTF8
+ NATIONAL CHARACTER SET AL16UTF16;

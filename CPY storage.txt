@@ -1,0 +1,169 @@
+[root@hrvlcpydb25 ~]# asmcmd afd_lslbl
+--------------------------------------------------------------------------------
+Label                     Duplicate  Path
+================================================================================
+ASM_DISK01                            /dev/sdah1
+ASM_DISK02                            /dev/sdai1
+ASM_DISK03                            /dev/sdaj1
+ASM_DISK04                            /dev/sdr1
+ASM_DISK05                            /dev/sds1
+ASM_DISK06                            /dev/sdt1
+ASM_DISK07                            /dev/sdu1
+ASM_DISK08                            /dev/sdak1
+ASM_DISK09                            /dev/sdal1
+ASM_DISK10                            /dev/sdg1
+ASM_DISK11                            /dev/sdh1
+ASM_DISK12                            /dev/sdi1
+ASM_DISK13                            /dev/sdj1
+ASM_DISK14                            /dev/sdk1
+ASM_DISK15                            /dev/sdl1
+ASM_DISK16                            /dev/sdm1
+ASM_DISK17                            /dev/sdn1
+ASM_DISK18                            /dev/sdo1
+ASM_DISK19                            /dev/sdp1
+ASM_DISK20                            /dev/sdq1
+ASM_DISK21                            /dev/sdaa1
+ASM_DISK22                            /dev/sdab1
+ASM_DISK23                            /dev/sdac1
+ASM_DISK24                            /dev/sdad1
+ASM_DISK25                            /dev/sdae1
+ASM_DISK26                            /dev/sdaf1
+ASM_DISK27                            /dev/sdag1
+ASM_DISK28                            /dev/sdv1
+ASM_DISK29                            /dev/sdw1
+ASM_DISK30                            /dev/sdx1
+ASM_DISK31                            /dev/sdy1
+ASM_DISK32                            /dev/sdz1
+
+
+
+[root@hrvlcpydb25 ~]# asmcmd lsdsk -k
+Total_MB  Free_MB    OS_MB  Name          Failgroup     Site_Name  Site_GUID                         Site_Status  Failgroup_Type  Library                                      Label         Failgroup_Label  Site_Label  UDID  Product  Redund   Path
+    4996     4832     4999  ASM_DISK01    ASM_DISK01               00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK01                                                UNKNOWN  AFD:ASM_DISK01
+    4996     4892     4999  ASM_DISK02    ASM_DISK02               00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK02                                                UNKNOWN  AFD:ASM_DISK02
+    4996     4864     4999  ASM_DISK03    ASM_DISK03               00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK03                                                UNKNOWN  AFD:ASM_DISK03
+  219954     4844   219954  ASM_DISK04    ASM_DISK04               00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK04                                                UNKNOWN  AFD:ASM_DISK04
+  219954     4812   219954  ASM_DISK05    ASM_DISK05               00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK05                                                UNKNOWN  AFD:ASM_DISK05
+  219954    84069   219954  ASM_DISK06    ASM_DISK06               00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK06                                                UNKNOWN  AFD:ASM_DISK06
+  219954     4838   219954  ASM_DISK07    ASM_DISK07               00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK07                                                UNKNOWN  AFD:ASM_DISK07
+  219851     4840   219851  ASM_DISK08    ASM_DISK08               00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK08                                                UNKNOWN  AFD:ASM_DISK08
+  219851     4830   219851  ASM_DISK09    ASM_DISK09               00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK09                                                UNKNOWN  AFD:ASM_DISK09
+  219851     4838   219851  ASM_DISK10    ASM_DISK10               00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK10                                                UNKNOWN  AFD:ASM_DISK10
+  219851     4809   219851  ASM_DISK11    ASM_DISK11               00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK11                                                UNKNOWN  AFD:ASM_DISK11
+  219851     4830   219851  ASM_DISK12    ASM_DISK12               00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK12                                                UNKNOWN  AFD:ASM_DISK12
+  219851     4841   219851  ASM_DISK13    ASM_DISK13               00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK13                                                UNKNOWN  AFD:ASM_DISK13
+  219851     4837   219851  ASM_DISK14    ASM_DISK14               00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK14                                                UNKNOWN  AFD:ASM_DISK14
+  219851     4834   219851  ASM_DISK15    ASM_DISK15               00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK15                                                UNKNOWN  AFD:ASM_DISK15
+  219851     4844   219851  ASM_DISK16    ASM_DISK16               00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK16                                                UNKNOWN  AFD:ASM_DISK16
+  219851     4812   219851  ASM_DISK17    ASM_DISK17               00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK17                                                UNKNOWN  AFD:ASM_DISK17
+  219851     4834   219851  ASM_DISK18    ASM_DISK18               00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK18                                                UNKNOWN  AFD:ASM_DISK18
+  219851     4835   219851  ASM_DISK19    ASM_DISK19               00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK19                                                UNKNOWN  AFD:ASM_DISK19
+  219851     4855   219851  ASM_DISK20    ASM_DISK20               00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK20                                                UNKNOWN  AFD:ASM_DISK20
+ 1572864  1004904  1572864  GEMS_DRSHARE  GEMS_DRSHARE             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  GEMS_DRSHARE                                              UNKNOWN  AFD:GEMS_DRSHARE
+[root@hrvlcpydb25 ~]#
+
+[root@hrvlcpydb25 ~]# asmcmd lsdsk -k --candidate
+Total_MB  Free_MB    OS_MB  Name          Failgroup     Site_Name  Site_GUID                         Site_Status  Failgroup_Type  Library                                      Label         Failgroup_Label  Site_Label  UDID  Product  Redund   Path
+       0        0   109976                                                                                        REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK21                                                UNKNOWN  AFD:ASM_DISK21
+       0        0   109976                                                                                        REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK22                                                UNKNOWN  AFD:ASM_DISK22
+       0        0   109976                                                                                        REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK23                                                UNKNOWN  AFD:ASM_DISK23
+       0        0   109976                                                                                        REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK24                                                UNKNOWN  AFD:ASM_DISK24
+       0        0   109976                                                                                        REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK25                                                UNKNOWN  AFD:ASM_DISK25
+       0        0   109976                                                                                        REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK26                                                UNKNOWN  AFD:ASM_DISK26
+       0        0   109976                                                                                        REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK27                                                UNKNOWN  AFD:ASM_DISK27
+       0        0   109976                                                                                        REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK28                                                UNKNOWN  AFD:ASM_DISK28
+       0        0   109976                                                                                        REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK29                                                UNKNOWN  AFD:ASM_DISK29
+       0        0   109976                                                                                        REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK30                                                UNKNOWN  AFD:ASM_DISK30
+       0        0   109976                                                                                        REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK31                                                UNKNOWN  AFD:ASM_DISK31
+       0        0   109976                                                                                        REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK32                                                UNKNOWN  AFD:ASM_DISK32
+[root@hrvlcpydb25 ~]#
+
+17 * 200G
+12 * 100G
+
+Total = 4.5TB
+
+
+[root@hrvlcpydb25 ~]# asmcmd lsdsk -k --candidate
+Total_MB  Free_MB    OS_MB  Name        Failgroup   Site_Name  Site_GUID                         Site_Status  Failgroup_Type  Library                                      Label         Failgroup_Label  Site_Label  UDID  Product  Redund   Path
+       0        0   109976                                                                                    REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK21                                                UNKNOWN  AFD:ASM_DISK21
+       0        0   109976                                                                                    REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK22                                                UNKNOWN  AFD:ASM_DISK22
+       0        0   109976                                                                                    REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK23                                                UNKNOWN  AFD:ASM_DISK23
+       0        0   109976                                                                                    REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK24                                                UNKNOWN  AFD:ASM_DISK24
+       0        0   109976                                                                                    REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK25                                                UNKNOWN  AFD:ASM_DISK25
+       0        0   109976                                                                                    REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK26                                                UNKNOWN  AFD:ASM_DISK26
+       0        0   109976                                                                                    REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK27                                                UNKNOWN  AFD:ASM_DISK27
+       0        0   109976                                                                                    REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK28                                                UNKNOWN  AFD:ASM_DISK28
+       0        0   109976                                                                                    REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK29                                                UNKNOWN  AFD:ASM_DISK29
+       0        0   109976                                                                                    REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK30                                                UNKNOWN  AFD:ASM_DISK30
+       0        0   109976                                                                                    REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK31                                                UNKNOWN  AFD:ASM_DISK31
+       0        0   109976                                                                                    REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK32                                                UNKNOWN  AFD:ASM_DISK32
+[root@hrvlcpydb25 ~]# asmcmd lsdsk -k
+Total_MB  Free_MB   OS_MB  Name        Failgroup   Site_Name  Site_GUID                         Site_Status  Failgroup_Type  Library                                      Label       Failgroup_Label  Site_Label  UDID  Product  Redund   Path
+    4996     4840    4999  ASM_DISK01  ASM_DISK01             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK01                                              UNKNOWN  AFD:ASM_DISK01
+    4996     4892    4999  ASM_DISK02  ASM_DISK02             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK02                                              UNKNOWN  AFD:ASM_DISK02
+    4996     4856    4999  ASM_DISK03  ASM_DISK03             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK03                                              UNKNOWN  AFD:ASM_DISK03
+  219954     4858  219954  ASM_DISK04  ASM_DISK04             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK04                                              UNKNOWN  AFD:ASM_DISK04
+  219954     4817  219954  ASM_DISK05  ASM_DISK05             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK05                                              UNKNOWN  AFD:ASM_DISK05
+  219954    25303  219954  ASM_DISK06  ASM_DISK06             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK06                                              UNKNOWN  AFD:ASM_DISK06
+  219954     4826  219954  ASM_DISK07  ASM_DISK07             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK07                                              UNKNOWN  AFD:ASM_DISK07
+  219851     4848  219851  ASM_DISK08  ASM_DISK08             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK08                                              UNKNOWN  AFD:ASM_DISK08
+  219851     4823  219851  ASM_DISK09  ASM_DISK09             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK09                                              UNKNOWN  AFD:ASM_DISK09
+  219851     4816  219851  ASM_DISK10  ASM_DISK10             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK10                                              UNKNOWN  AFD:ASM_DISK10
+  219851     4812  219851  ASM_DISK11  ASM_DISK11             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK11                                              UNKNOWN  AFD:ASM_DISK11
+  219851     4832  219851  ASM_DISK12  ASM_DISK12             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK12                                              UNKNOWN  AFD:ASM_DISK12
+  219851     4825  219851  ASM_DISK13  ASM_DISK13             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK13                                              UNKNOWN  AFD:ASM_DISK13
+  219851     4825  219851  ASM_DISK14  ASM_DISK14             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK14                                              UNKNOWN  AFD:ASM_DISK14
+  219851     4852  219851  ASM_DISK15  ASM_DISK15             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK15                                              UNKNOWN  AFD:ASM_DISK15
+  219851     4828  219851  ASM_DISK16  ASM_DISK16             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK16                                              UNKNOWN  AFD:ASM_DISK16
+  219851     4827  219851  ASM_DISK17  ASM_DISK17             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK17                                              UNKNOWN  AFD:ASM_DISK17
+  219851     4850  219851  ASM_DISK18  ASM_DISK18             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK18                                              UNKNOWN  AFD:ASM_DISK18
+  219851     4844  219851  ASM_DISK19  ASM_DISK19             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK19                                              UNKNOWN  AFD:ASM_DISK19
+  219851     4850  219851  ASM_DISK20  ASM_DISK20             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK20                                              UNKNOWN  AFD:ASM_DISK20
+[root@hrvlcpydb25 ~]#
+
+[root@hrvlcpydb25 ~]# lsblk | grep 500G
+sdf                           8:80   0   500G  0 disk
+sdm                           8:192  0   500G  0 disk
+sdk                           8:160  0   500G  0 disk
+sdi                           8:128  0   500G  0 disk
+sdg                           8:96   0   500G  0 disk
+sdn                           8:208  0   500G  0 disk
+sdl                           8:176  0   500G  0 disk
+sdj                           8:144  0   500G  0 disk
+sdh                           8:112  0   500G  0 disk
+[root@hrvlcpydb25 ~]#
+
+[root@hrvlcpydb25 ~]# lsblk | grep 500G
+sdf                           8:80   0   500G  0 disk
+└─sdf1                        8:81   0   500G  0 part
+sdm                           8:192  0   500G  0 disk
+└─sdm1                        8:193  0   500G  0 part
+sdk                           8:160  0   500G  0 disk
+└─sdk1                        8:161  0   500G  0 part
+sdi                           8:128  0   500G  0 disk
+└─sdi1                        8:129  0   500G  0 part
+sdg                           8:96   0   500G  0 disk
+└─sdg1                        8:97   0   500G  0 part
+sdn                           8:208  0   500G  0 disk
+└─sdn1                        8:209  0   500G  0 part
+sdl                           8:176  0   500G  0 disk
+└─sdl1                        8:177  0   500G  0 part
+sdj                           8:144  0   500G  0 disk
+└─sdj1                        8:145  0   500G  0 part
+sdh                           8:112  0   500G  0 disk
+└─sdh1                        8:113  0   500G  0 part
+[root@hrvlcpydb25 ~]#
+
+
+[root@hrvlcpydb25 ~]# asmcmd afd_label ASM_DISK33 /dev/sdf1
+[root@hrvlcpydb25 ~]# asmcmd afd_label ASM_DISK34 /dev/sdm1
+[root@hrvlcpydb25 ~]# asmcmd afd_label ASM_DISK35 /dev/sdk1
+[root@hrvlcpydb25 ~]# asmcmd afd_label ASM_DISK36 /dev/sdi1
+[root@hrvlcpydb25 ~]# asmcmd afd_label ASM_DISK37 /dev/sdg1
+[root@hrvlcpydb25 ~]# asmcmd afd_label ASM_DISK38 /dev/sdn1
+[root@hrvlcpydb25 ~]# asmcmd afd_label ASM_DISK39 /dev/sdl1
+[root@hrvlcpydb25 ~]# asmcmd afd_label ASM_DISK40 /dev/sdj1
+[root@hrvlcpydb25 ~]# asmcmd afd_label ASM_DISK41 /dev/sdh1
+
+

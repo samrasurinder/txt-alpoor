@@ -1,0 +1,52 @@
+set controlfile autobackup format for device type disk to '/kcbackups/CONTROLFILE.%F'
+
+
+
+set DBID=1836890876
+set controlfile autobackup format for device type disk to "/kcbackups/CONTROLFILE.%F";
+run {
+set until time "to_date('01-JUN-202107:00:00','dd-mm-yyyyhh24:mi:ss')";
+restore controlfile from '/kcbackups/CONTROLFILE.c-1836890876-20210601-02'  
+}
+
+
+
+set DBID=1836890876
+set controlfile autobackup format for device type disk to "/kcbackups/CONTROLFILE.%F";
+run {
+set until time "to_date('01-JUN-202107:00:00','dd-mm-yyyyhh24:mi:ss')";
+restore controlfile from autobackup MAXSEQ=02;
+}
+
+
+Notes:
+
+RMAN> connect target /
+
+RMAN> set dbid DB_ID
+
+RMAN> startup force nomount
+
+ 
+
+-- Restore spfile to default location (default is for last 7 days)
+
+RMAN> restore spfile from autobackup;
+
+ 
+
+-- Restore spfile to default location (set number of days)
+
+RMAN> restore spfile from autobackup maxdays 20; -- for instance, last 20 days.
+
+ 
+
+-- Restore spfile to other location
+
+RMAN> restore spfile to '/tmp/' from autobackup;
+
+ 
+
+-- Restore spfile to pfile
+
+RMAN> restore spfile to pfile '/tmp/init.ora';

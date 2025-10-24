@@ -1,0 +1,186 @@
+SQL> SET SERVEROUTPUT ON
+SQL> show user;
+USER is "SYS"
+SQL> select * from global_name;
+
+GLOBAL_NAME                                                                     
+--------------------------------------------------------------------------------
+ASB.HR.STATE.SBU                                                                
+
+SQL> select sysdate from dual;
+
+SYSDATE                                                                         
+---------                                                                       
+28-JUN-22                                                                       
+
+SQL> --DATABASE ASB
+SQL> ----------------------ESRT.FSIPEOPLEXREF--------------------------
+SQL> TRUNCATE TABLE ESRT.FSIPEOPLEXREF;
+
+Table truncated.
+
+SQL> INSERT INTO ESRT.FSIPEOPLEXREF
+  2  SELECT * FROM ESRT.FSIPEOPLEXREF_BCK_20220524;
+
+230055 rows created.
+
+SQL> COMMIT;
+
+Commit complete.
+
+SQL> ----------------------ESRT.FSI_EMPLOYEE--------------------------
+SQL> TRUNCATE TABLE ESRT.FSI_EMPLOYEE;
+
+Table truncated.
+
+SQL> INSERT INTO ESRT.FSI_EMPLOYEE
+  2  SELECT * FROM ESRT.FSI_EMPLOYEE_BCK_20220524;
+
+294292 rows created.
+
+SQL> COMMIT;
+
+Commit complete.
+
+SQL> ----------------------ESRT.FSIRSTMSTOGEMSETRNG------------------
+SQL> TRUNCATE TABLE ESRT.FSIRSTMSTOGEMSETRNG;
+
+Table truncated.
+
+SQL> INSERT INTO ESRT.FSIRSTMSTOGEMSETRNG
+  2  SELECT * FROM ESRT.FSIRSTMSTOGEMSETRNG_BCK_20220524;
+
+99989 rows created.
+
+SQL> COMMIT;
+
+Commit complete.
+
+SQL> ----------------------ESRT.FSI_EMP_EXTERNAL_TRAINING------------
+SQL> TRUNCATE TABLE ESRT.FSI_EMP_EXTERNAL_TRAINING;
+
+Table truncated.
+
+SQL> INSERT INTO ESRT.FSI_EMP_EXTERNAL_TRAINING
+  2  SELECT * FROM ESRT.FSI_EMP_EXTERNAL_TRAINING_BCK_20220524;
+
+101368 rows created.
+
+SQL> COMMIT;
+
+Commit complete.
+
+SQL> ----------------------ESRT.FSIRSTMSTOGEMSLPT-------------------
+SQL> TRUNCATE TABLE ESRT.FSIRSTMSTOGEMSLPT;
+
+Table truncated.
+
+SQL> INSERT INTO ESRT.FSIRSTMSTOGEMSLPT
+  2  SELECT * FROM ESRT.FSIRSTMSTOGEMSLPT_BCK_20220524;
+
+101289 rows created.
+
+SQL> COMMIT;
+
+Commit complete.
+
+SQL> ----------------------ESRT.FSI_EMPLOYEE_LANGUAGE-------------------
+SQL> TRUNCATE TABLE ESRT.FSI_EMPLOYEE_LANGUAGE;
+
+Table truncated.
+
+SQL> INSERT INTO ESRT.FSI_EMPLOYEE_LANGUAGE
+  2  SELECT * FROM ESRT.FSI_EMPLOYEE_LANGUAGE_BCK_20220524;
+
+176148 rows created.
+
+SQL> COMMIT;
+
+Commit complete.
+
+SQL> ----------------------ESRT.FSIRSTMSTOGEMSMLAT----------------------
+SQL> TRUNCATE TABLE ESRT.FSIRSTMSTOGEMSMLAT;
+
+Table truncated.
+
+SQL> INSERT INTO ESRT.FSIRSTMSTOGEMSMLAT
+  2  SELECT * FROM ESRT.FSIRSTMSTOGEMSMLAT_BCK_20220524;
+
+16872 rows created.
+
+SQL> COMMIT;
+
+Commit complete.
+
+SQL> ----------------------ESRT.FSI_EMP_LANG_APPTITUDE_TEST--------------
+SQL> TRUNCATE TABLE ESRT.FSI_EMP_LANG_APPTITUDE_TEST;
+
+Table truncated.
+
+SQL> INSERT INTO ESRT.FSI_EMP_LANG_APPTITUDE_TEST
+  2  SELECT * FROM ESRT.FSI_EMP_LANG_APPTITUDE_TEST_BCK_20220524;
+
+30702 rows created.
+
+SQL> COMMIT;
+
+Commit complete.
+
+SQL> ----------------------ESRT.FSIRSTMSTOGEMSTRNG-----------------------
+SQL> TRUNCATE TABLE ESRT.FSIRSTMSTOGEMSTRNG;
+
+Table truncated.
+
+SQL> INSERT INTO ESRT.FSIRSTMSTOGEMSTRNG
+  2  SELECT * FROM  ESRT.FSIRSTMSTOGEMSTRNG_BCK_20220524;
+
+2745918 rows created.
+
+SQL> COMMIT;
+
+Commit complete.
+
+SQL> ----------------------ESRT.FSI_EMP_INTERNAL_TRAINING---------------
+SQL> TRUNCATE TABLE ESRT.FSI_EMP_INTERNAL_TRAINING;
+
+Table truncated.
+
+SQL> INSERT INTO ESRT.FSI_EMP_INTERNAL_TRAINING
+  2  SELECT * FROM  ESRT.FSI_EMP_INTERNAL_TRAINING_BCK_20220524;
+
+3629769 rows created.
+
+SQL> COMMIT;
+
+Commit complete.
+
+SQL> ----------------------STAGING.PS_GM_STMS_STAGING---------------
+SQL> TRUNCATE TABLE STAGING.PS_GM_STMS_STAGING;
+
+Table truncated.
+
+SQL> INSERT INTO STAGING.PS_GM_STMS_STAGING
+  2  SELECT * FROM  STAGING.PS_GM_STMS_STAGING_BCK_20220524;
+
+292498 rows created.
+
+SQL> COMMIT;
+
+Commit complete.
+
+SQL> 
+SQL> 
+SQL> UPDATE ESRT.FSI_EMP_EXTERNAL_TRAINING
+  2  SET ET_IDENTIFIER = TO_NUMBER('5'||LPAD(TO_CHAR(ET_IDENTIFIER),6,'0'));
+
+101368 rows updated.
+
+SQL> COMMIT;
+
+Commit complete.
+
+SQL> 
+SQL> 
+SQL> SHOW ERRORS
+No errors.
+SQL> SPOOL OFF

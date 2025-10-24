@@ -1,0 +1,204 @@
+[root@hrvltstdb21 ~]# oracleasm scandisks
+Reloading disk partitions: done
+Cleaning any stale ASM disks...
+Scanning system for ASM disks...
+[root@hrvltstdb21 ~]# oracleasm listdisks
+ASM_DISK01
+[root@hrvltstdb21 ~]# oracleasm deletedisk ASM_DISK01
+Clearing disk header: done
+Dropping disk: done
+[root@hrvltstdb21 ~]# oracleasm listdisks
+[root@hrvltstdb21 ~]# oracleasm scandisks
+Reloading disk partitions: done
+Cleaning any stale ASM disks...
+Scanning system for ASM disks...
+[root@hrvltstdb21 ~]# oracleasm configure -d
+Writing Oracle ASM library driver configuration: done
+[root@hrvltstdb21 ~]# rpm -e oracleasm-support
+warning: /etc/sysconfig/oracleasm saved as /etc/sysconfig/oracleasm.rpmsave
+[root@hrvltstdb21 ~]#  rpm -qa| grep oracleasm
+kmod-oracleasm-2.0.8-27.0.1.el7.x86_64
+[root@hrvltstdb21 ~]#
+
+
+
+[root@hrvltstdb20 bin]# lsblk | grep 5G
+sdag                         66:0    0    5G  0 disk
+sdae                         65:224  0    5G  0 disk
+‚‚sda3                        8:3    0 89.5G  0 part
+‚ ‚‚ol_basevg-usr           252:1    0   15G  0 lvm   /usr
+‚ ‚‚ol_basevg-var           252:2    0   15G  0 lvm   /var
+sdaf                         65:240  0    5G  0 disk
+[root@hrvltstdb20 bin]# fdisk /dev/sdag
+Welcome to fdisk (util-linux 2.23.2).
+
+Changes will remain in memory only, until you decide to write them.
+Be careful before using the write command.
+
+Device does not contain a recognized partition table
+Building a new DOS disklabel with disk identifier 0x24108116.
+
+Command (m for help): n
+Partition type:
+   p   primary (0 primary, 0 extended, 4 free)
+   e   extended
+Select (default p): p
+Partition number (1-4, default 1): 1
+First sector (2048-10485759, default 2048):
+Using default value 2048
+Last sector, +sectors or +size{K,M,G} (2048-10485759, default 10485759):
+Using default value 10485759
+Partition 1 of type Linux and of size 5 GiB is set
+
+Command (m for help): w
+The partition table has been altered!
+
+Calling ioctl() to re-read partition table.
+Syncing disks.
+[root@hrvltstdb20 bin]# fdisk /dev/sdae
+Welcome to fdisk (util-linux 2.23.2).
+
+Changes will remain in memory only, until you decide to write them.
+Be careful before using the write command.
+
+Device does not contain a recognized partition table
+Building a new DOS disklabel with disk identifier 0xe023412a.
+
+Command (m for help): n
+Partition type:
+   p   primary (0 primary, 0 extended, 4 free)
+   e   extended
+Select (default p):
+Using default response p
+Partition number (1-4, default 1):
+First sector (2048-10485759, default 2048):
+Using default value 2048
+Last sector, +sectors or +size{K,M,G} (2048-10485759, default 10485759):
+Using default value 10485759
+Partition 1 of type Linux and of size 5 GiB is set
+
+Command (m for help): w
+The partition table has been altered!
+
+Calling ioctl() to re-read partition table.
+Syncing disks.
+[root@hrvltstdb20 bin]# fdisk /dev/sdaf
+Welcome to fdisk (util-linux 2.23.2).
+
+Changes will remain in memory only, until you decide to write them.
+Be careful before using the write command.
+
+Device does not contain a recognized partition table
+Building a new DOS disklabel with disk identifier 0xf6aaa9e5.
+
+Command (m for help): n
+Partition type:
+   p   primary (0 primary, 0 extended, 4 free)
+   e   extended
+Select (default p):
+Using default response p
+Partition number (1-4, default 1):
+First sector (2048-10485759, default 2048):
+Using default value 2048
+Last sector, +sectors or +size{K,M,G} (2048-10485759, default 10485759):
+Using default value 10485759
+Partition 1 of type Linux and of size 5 GiB is set
+
+Command (m for help): w
+The partition table has been altered!
+
+Calling ioctl() to re-read partition table.
+Syncing disks.
+[root@hrvltstdb20 bin]#
+
+
+
+[root@hrvltstdb20 bin]# ls /dev/sdah*
+/dev/sdah  /dev/sdah1
+[root@hrvltstdb20 bin]# ls -altrh /dev/sdah*
+brw-rw----. 1 root disk 66, 16 Mar  1 11:24 /dev/sdah
+brw-rw----. 1 root disk 66, 17 Mar  1 11:24 /dev/sdah1
+[root@hrvltstdb20 bin]# ./afd
+afdboot         afddriverstate  afdload         afdroot         afdtool         afdtool.bin
+[root@hrvltstdb20 bin]# ./afddriverstate supported
+
+AFD-9200: Supported
+[root@hrvltstdb20 bin]#
+[root@hrvltstdb20 bin]# ./asmcmd dsget
+[root@hrvltstdb20 bin]# ./asmcmd dsset 'AFD:*'
+[root@hrvltstdb20 bin]# ./asmcmd dsget
+[root@hrvltstdb20 bin]# ./asmcmd afd_state
+[root@hrvltstdb20 bin]# lsblk | grep 5G
+sdag                         66:0    0    5G  0 disk
+‚‚sdag1                      66:1    0    5G  0 part
+sdah                         66:16   0    5G  0 disk
+‚‚sdah1                      66:17   0    5G  0 part
+‚‚sda3                        8:3    0 89.5G  0 part
+‚ ‚‚ol_basevg-usr           252:1    0   15G  0 lvm   /usr
+‚ ‚‚ol_basevg-var           252:2    0   15G  0 lvm   /var
+sdaf                         65:240  0    5G  0 disk
+‚‚sdaf1                      65:241  0    5G  0 part
+[root@hrvltstdb20 bin]# ls /dev/sde*
+/dev/sde
+[root@hrvltstdb20 bin]#
+
+
+[root@hrvltstdb20 bin]# ./asmcmd afd_label ASM_DISK01 /dev/sdae1 --init
+[root@hrvltstdb20 bin]# ./asmcmd afd_label ASM_DISK01 /dev/sdaf1 --init
+[root@hrvltstdb20 bin]# ./asmcmd afd_label ASM_DISK03 /dev/sdag1 --init
+[root@hrvltstdb20 bin]# ./asmcmd afd_label ASM_DISK03 /dev/sdah1 --init
+[root@hrvltstdb20 bin]#
+
+
+dd if=/dev/zero of=/dev/sdae1 bs=1024
+dd if=/dev/zero of=/dev/sdaf1 bs=1024
+dd if=/dev/zero of=/dev/sdag1 bs=1024
+
+[root@hrvltstdb20 bin]# ./asmcmd afd_lslbl
+Could not open pfile '/etc/oracleafd.conf'--------------------------------------------------------------------------------
+Label                     Duplicate  Path
+================================================================================
+ASM_DISK01                            /dev/sdae1
+ASM_DISK02                            /dev/sdaf1
+ASM_DISK03                            /dev/sdag1
+[root@hrvltstdb20 bin]# mv /etc/afd.conf /etc/oracleafd.conf
+[root@hrvltstdb20 bin]# cd
+--------------------------------------------------------------------------------
+Label                     Duplicate  Path
+================================================================================
+ASM_DISK01                            /dev/sdae1
+ASM_DISK02                            /dev/sdaf1
+ASM_DISK03                            /dev/sdag1
+[root@hrvltstdb20 bin]#
+
+
+
+
+[root@hrvltstdb20 bin]# ls /dev/sdah*
+/dev/sdah  /dev/sdah1
+[root@hrvltstdb20 bin]# ls -altrh /dev/sdah*
+brw-rw----. 1 root disk 66, 16 Mar  1 11:24 /dev/sdah
+brw-rw----. 1 root disk 66, 17 Mar  1 11:24 /dev/sdah1
+[root@hrvltstdb20 bin]# ./afd
+afdboot         afddriverstate  afdload         afdroot         afdtool         afdtool.bin
+[root@hrvltstdb20 bin]# ./afddriverstate supported
+
+AFD-9200: Supported
+[root@hrvltstdb20 bin]#
+[root@hrvltstdb20 bin]# ./asmcmd dsget
+[root@hrvltstdb20 bin]# ./asmcmd dsset 'AFD:*'
+[root@hrvltstdb20 bin]# ./asmcmd dsget
+[root@hrvltstdb20 bin]# ./asmcmd afd_state
+[root@hrvltstdb20 bin]# lsblk | grep 5G
+sdag                         66:0    0    5G  0 disk
+‚‚sdag1                      66:1    0    5G  0 part
+sdah                         66:16   0    5G  0 disk
+‚‚sdah1                      66:17   0    5G  0 part
+‚‚sda3                        8:3    0 89.5G  0 part
+‚ ‚‚ol_basevg-usr           252:1    0   15G  0 lvm   /usr
+‚ ‚‚ol_basevg-var           252:2    0   15G  0 lvm   /var
+sdaf                         65:240  0    5G  0 disk
+‚‚sdaf1                      65:241  0    5G  0 part
+[root@hrvltstdb20 bin]# ls /dev/sde*
+/dev/sde
+[root@hrvltstdb20 bin]#

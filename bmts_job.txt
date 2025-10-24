@@ -1,0 +1,32 @@
+BEGIN
+    SYS.DBMS_SCHEDULER.CREATE_JOB (
+            job_name => '"BMTS"."BMTS_BKP"',
+            job_type => 'PLSQL_BLOCK',
+            job_action => 'begin bmts.pull_from_external_tables_pr; end; ',
+            number_of_arguments => 0,
+            start_date => TO_TIMESTAMP_TZ('2017-08-25 20:52:25 America/New_York','YYYY-MM-DD HH24.MI.SS TZR'),
+            repeat_interval => 'FREQ=DAILY;BYHOUR=7',
+            end_date => NULL,
+            job_class => '"SYS"."DEFAULT_JOB_CLASS"',
+            enabled => FALSE,
+            auto_drop => TRUE,
+            comments => 'Pulling data from GFMS posted files to process into BATS',
+            credential_name => NULL,
+            destination_name => NULL);
+
+         
+    SYS.DBMS_SCHEDULER.SET_ATTRIBUTE( 
+             name => '"BMTS"."BMTS_BKP"', 
+             attribute => 'restartable', value => TRUE);
+     
+ 
+    SYS.DBMS_SCHEDULER.SET_ATTRIBUTE( 
+             name => '"BMTS"."BMTS_BKP"', 
+             attribute => 'logging_level', value => DBMS_SCHEDULER.LOGGING_OFF);
+      
+  
+    
+    SYS.DBMS_SCHEDULER.enable(
+             name => '"BMTS"."BMTS_BKP"');
+END; 
+/

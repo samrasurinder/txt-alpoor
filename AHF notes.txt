@@ -1,0 +1,190 @@
+[root@hrvlprddb7606 alpoor_software]# ./ahf_setup
+
+AHF Installer for Platform Linux Architecture x86_64
+
+AHF Installation Log : /tmp/ahf_install_107082_2020_05_14-21_11_31.log
+
+Starting Autonomous Health Framework (AHF) Installation
+
+AHF Version: 193200 Build Date: 201911251327
+
+Default AHF Location : /opt/oracle.ahf
+
+Do you want to change AHF Location (/opt/oracle.ahf) ? Y|[N] : N
+
+AHF Location : /opt/oracle.ahf
+
+AHF Data Directory stores diagnostic collections and metadata.
+AHF Data Directory requires at least 5GB (Recommended 10GB) of free space.
+
+Choose Data Directory from below options :
+
+1. /opt/oracle.ahf [Free Space : 20393 MB]
+2. /u02/app/19.3.0 [Free Space : 52434 MB]
+3. Enter a different Location
+
+Choose Option [1 - 3] : 3
+
+Please Enter AHF Data Directory : /u02/AHFDIR
+
+AHF Data Directory : /u02/AHFDIR/oracle.ahf/data
+
+Do you want to add AHF Notification Email IDs ? [Y]|N : Y
+
+Enter Email IDs separated by space : reddya1@state.gov
+
+Extracting AHF to /opt/oracle.ahf
+
+Configuring TFA Services
+
+Discovering Nodes and Oracle Resources
+
+Not generating certificates as GI discovered
+
+Starting TFA Services
+Created symlink from /etc/systemd/system/multi-user.target.wants/oracle-tfa.service to /etc/systemd/system/oracle-tfa.service.
+Created symlink from /etc/systemd/system/graphical.target.wants/oracle-tfa.service to /etc/systemd/system/oracle-tfa.service.
+TFA-00104 Cannot establish connection with TFA Server. Please check TFA Certificates
+TFA-00002 Oracle Trace File Analyzer (TFA) is not running
+
+.------------------------------------------------------------------.
+|                   Summary of AHF Configuration                   |
++-----------------+------------------------------------------------+
+| Parameter       | Value                                          |
++-----------------+------------------------------------------------+
+| AHF Location    | /opt/oracle.ahf                                |
+| TFA Location    | /opt/oracle.ahf/tfa                            |
+| Orachk Location | /opt/oracle.ahf/orachk                         |
+| Data Directory  | /u02/AHFDIR/oracle.ahf/data                    |
+| Repository      | /u02/AHFDIR/oracle.ahf/data/repository         |
+| Diag Directory  | /u02/AHFDIR/oracle.ahf/data/hrvlprddb7606/diag |
+'-----------------+------------------------------------------------'
+
+
+Starting orachk daemon from AHF ...
+
+AHF binaries are available in /opt/oracle.ahf/bin
+
+AHF is successfully installed
+
+
+
+
+Data collections completed. Checking best practices on hrvlprddb7606.
+------------------------------------------------------------
+
+
+
+ INFO =>     Important Automatic Storage Management (ASM) Notes and Technical White Papers
+ INFO =>     Oracle Data Pump Best practices.
+ WARNING =>  Package gcc-4.8.2-16.el7-x86_64 is recommended but not installed
+ WARNING =>  Package gcc-c++-4.8.2-16.el7-x86_64 is recommended but not installed
+ INFO =>     Most recent ADR incidents for /u02/app/oracle/product/19.3.0/db_1
+ INFO =>     Oracle GoldenGate failure prevention best practices
+ INFO =>     oracleasm (asmlib) module is loaded
+
+
+ INFO =>     At some times checkpoints are not being completed for GRBPRD
+ CRITICAL => ORAchk Daemon/Scheduler is not configured correctly
+ WARNING =>  Some user sessions lack proper failover mode (BASIC) and method (SELECT) for RMANCATP
+ WARNING =>  Some user sessions lack proper failover mode (BASIC) and method (SELECT) for GRBPRD
+ CRITICAL => Temporary location is not configured for auto cleanup
+
+ WARNING =>  Primary database is not protected with Data Guard (standby database) for real-time data protection and availability for RMANCATP
+ WARNING =>  Primary database is not protected with Data Guard (standby database) for real-time data protection and availability for GRBPRD
+ WARNING =>  Flashback on PRIMARY is not configured for RMANCATP
+ WARNING =>  Flashback on PRIMARY is not configured for GRBPRD
+ INFO =>     Important Storage Minimum Requirements for Grid & Database Homes
+ CRITICAL => Operating system hugepages count does not satisfy total SGA requirements
+ WARNING =>  NIC bonding is not configured for interconnect
+ WARNING =>  NIC bonding is NOT configured for public network (VIP)
+ WARNING =>  OSWatcher is not running as is recommended.
+ WARNING =>  All disk groups should have compatible.rdbms attribute set to recommended values
+ FAIL =>     Database parameter DB_LOST_WRITE_PROTECT is not set to recommended value on RMANCATP instance
+ FAIL =>     Database parameter DB_LOST_WRITE_PROTECT is not set to recommended value on GRBPRD instance
+ WARNING =>  Database parameter DB_BLOCK_CHECKING on PRIMARY is NOT set to the recommended value. for RMANCATP
+ WARNING =>  Database parameter DB_BLOCK_CHECKING on PRIMARY is NOT set to the recommended value. for GRBPRD
+ INFO =>     Operational Best Practices
+ INFO =>     Database Consolidation Best Practices
+ INFO =>     Computer failure prevention best practices
+ INFO =>     Data corruption prevention best practices
+ INFO =>     Logical corruption prevention best practices
+ INFO =>     Database/Cluster/Site failure prevention best practices
+ INFO =>     Client failover operational best practices
+ WARNING =>  fast_start_mttr_target should be greater than or equal to 300. on RMANCATP instance
+ WARNING =>  fast_start_mttr_target should be greater than or equal to 300. on GRBPRD instance
+ INFO =>     Information about hanganalyze and systemstate dump
+ FAIL =>     Table AUD$[FGA_LOG$] should use Automatic Segment Space Management for RMANCATP
+ FAIL =>     Table AUD$[FGA_LOG$] should use Automatic Segment Space Management for GRBPRD
+ INFO =>     Database failure prevention best practices
+ WARNING =>  TFA Collector is either not installed or not running
+ INFO =>     Parallel Execution Health-Checks and Diagnostics Reports for RMANCATP
+ INFO =>     Parallel Execution Health-Checks and Diagnostics Reports for GRBPRD
+ WARNING =>  vm.min_free_kbytes should be set as recommended.
+ WARNING =>  fast_start_mttr_target should be greater than or equal to 300. on GRBPRD instance
+ INFO =>     Information about hanganalyze and systemstate dump
+ FAIL =>     Table AUD$[FGA_LOG$] should use Automatic Segment Space Management for RMANCATP
+ FAIL =>     Table AUD$[FGA_LOG$] should use Automatic Segment Space Management for GRBPRD
+ INFO =>     Database failure prevention best practices
+ WARNING =>  TFA Collector is either not installed or not running
+ INFO =>     Parallel Execution Health-Checks and Diagnostics Reports for RMANCATP
+ INFO =>     Parallel Execution Health-Checks and Diagnostics Reports for GRBPRD
+ WARNING =>  vm.min_free_kbytes should be set as recommended.
+ INFO =>     Oracle recovery manager(rman) best practices
+ WARNING =>  Consider investigating changes to the schema objects such as DDLs or new object creation for RMANCATP
+ WARNING =>  Consider investigating changes to the schema objects such as DDLs or new object creation for GRBPRD
+Best Practice checking completed. Checking recommended patches on hrvlprddb7606
+--------------------------------------------------------------------------------
+Collecting patch inventory on CRS_HOME /u02/app/19.3.0/grid
+Collecting patch inventory on ORACLE_HOME /u02/app/oracle/product/19.3.0/db_1
+--------------------------------------------------------------------------------
+1 Recommended CRS patches for 190000 from /u02/app/19.3.0/grid on hrvlprddb7606
+--------------------------------------------------------------------------------
+Patch#   CRS  ASM    RDBMS RDBMS_HOME                              Patch-Description
+--------------------------------------------------------------------------------
+ 30869156yes         yes   /u02/app/oracle/product/19.3.0/db_1 Tomcat Release Update 19.0.0.0.0
+ 30869156yes         yes   /u02/app/oracle/product/19.3.0/db_1 Database Release Update 19.4.0.0.190716
+ 30869156yes         yes   /u02/app/oracle/product/19.3.0/db_1 OCW Release Update 19.4.0.0.190716
+ 30869156yes         yes   /u02/app/oracle/product/19.3.0/db_1 ACFS Release Update 19.4.0.0.190716
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+1 Recommended RDBMS patches for 190000 from /u02/app/oracle/product/19.3.0/db_1 on hrvlprddb7606
+--------------------------------------------------------------------------------
+Patch#   RDBMS    ASM     type                Patch-Description
+--------------------------------------------------------------------------------
+ 30869156yes              merge
+ 30869156yes              merge
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+              ASM patches summary report
+--------------------------------------------------------------------------------
+Total patches  Applied on CRS Applied on RDBMS Applied on ASM
+--------------------------------------------------------------------------------
+1              1              1                0
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+              RDBMS homes patches summary report
+--------------------------------------------------------------------------------
+Total patches  Applied on RDBMS Applied on ASM ORACLE_HOME
+--------------------------------------------------------------------------------
+1              1              0                /u02/app/oracle/product/19.3.0/db_1
+--------------------------------------------------------------------------------
+
+
+------------------------------------------------------------
+                      CLUSTERWIDE CHECKS
+------------------------------------------------------------
+
+------------------------------------------------------------
+
+------------------------------------------------------------
+Detailed report (html) -  /u02/AHFDIR/oracle.ahf/data/hrvlprddb7606/orachk/orachk_hrvlprddb7606_GRBPRD_051420_212849/orachk_hrvlprddb7606_GRBPRD_051420_212849.html
+
+
+
+
+
+UPLOAD [if required] - /u02/AHFDIR/oracle.ahf/data/hrvlprddb7606/orachk/orachk_hrvlprddb7606_GRBPRD_051420_212849.zip
+
+

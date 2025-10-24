@@ -1,0 +1,60 @@
+
+
+dbca -silent   \
+ -createDatabase                      \
+ -responseFile NO_VALUE               \
+ -templateName General_Purpose.dbc    \
+ -sid SAMPLEDB                          \
+ -gdbname SAMPLEDB                      \
+ -characterSet AL32UTF8               \
+ -sysPassword Testing123#Testing123#               \
+ -systemPassword Testing123#Testing123# \
+ -createAsContainerDatabase FALSE     \
+ -databaseType MULTIPURPOSE           \
+ -automaticMemoryManagement FALSE     \
+ -totalMemory 2048                    \
+ -datafileDestination +DATA           \
+ -recoveryAreaDestination +FRA       \
+ -redoLogFileSize 50                  \
+ -emConfiguration NONE                \
+ -sampleSchema FALSE                  \
+ -enableArchive TRUE                  \
+ -ignorePreReqs
+
+
+
+-----------------  TDE creation ------------------------------------------------------------------------------------------
+
+ADMINISTER KEY MANAGEMENT CREATE KEYSTORE '/u02/app/oracle/WALLETS/SAMPLEDB' IDENTIFIED BY Testing123#Testing123#;
+
+ADMINISTER KEY MANAGEMENT SET KEYSTORE OPEN IDENTIFIED BY Testing123#Testing123# ;
+
+
+
+
+ADMINISTER KEY MANAGEMENT SET KEY IDENTIFIED BY Testing123#Testing123# WITH BACKUP ;
+
+
+ADMINISTER KEY MANAGEMENT CREATE  AUTO_LOGIN KEYSTORE FROM KEYSTORE '/u02/app/oracle/WALLETS/SAMPLEDB' IDENTIFIED BY Testing123#Testing123#;
+
+SET LINESIZE 100
+SELECT con_id, key_id FROM v$encryption_keys;
+
+SET LINESIZE 200
+COLUMN wrl_parameter FORMAT A50
+SELECT * FROM v$encryption_wallet;
+
+CREATE TABLESPACE hr_ts
+DATAFILE SIZE 128K
+AUTOEXTEND ON NEXT 64K
+ENCRYPTION USING 'AES256'
+DEFAULT STORAGE(ENCRYPT);
+
+----------------------------------------------------------------------------------------------------------------------------
+
+
+
+orapki wallet pkcs12_to_jks -wallet sampledbsrvc.hr.state.sbu.pfx -jksKeyStoreLoc samlpledbsrvc.jks -jksKeyStorepwd C3rtificate1!
+
+
+orapki wallet add -wallet . -trusted_cert -cert /u02/app/oracle/WALLETS/SAMPLEDB/dos_ha_root.cer.txt  -pwd Testing123#Testing123#

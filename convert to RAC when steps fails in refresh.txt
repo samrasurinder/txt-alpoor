@@ -1,0 +1,200 @@
+[oracle@hrewoel02 alpoor_scripts]$ ps -ef | grep pmon
+oracle    2486     1  0 Jun25 ?        00:11:36 ora_pmon_TST31
+oracle    3126     1  0 May02 ?        00:28:45 ora_pmon_UATKC1
+oracle    6331     1  0 10:32 ?        00:00:00 ora_pmon_TST4
+oracle   11011     1  0 Jun26 ?        00:12:43 ora_pmon_IVV11
+oracle   11659     1  0 Jul29 ?        00:00:36 ora_pmon_TST11
+oracle   12635     1  0 Jun25 ?        00:11:28 ora_pmon_TST51
+oracle   12953     1  0 Jul21 ?        00:03:10 ora_pmon_CRMASB1
+oracle   18145     1  0 Jun30 ?        00:09:47 ora_pmon_CRMUAT2
+grid     18524     1  0 May02 ?        00:25:48 asm_pmon_+ASM1
+oracle   23015     1  0 May02 ?        00:24:15 ora_pmon_HREWVCS
+oracle   23024     1  0 May02 ?        00:28:55 ora_pmon_HRUATREP1
+oracle   23241     1  0 May02 ?        00:29:47 ora_pmon_HRTSTREP1
+oracle   23324     1  0 May02 ?        00:29:07 ora_pmon_EODTST22
+oracle   23338     1  0 May02 ?        00:31:02 ora_pmon_TSTKC11
+oracle   26650     1  0 Jul22 ?        00:03:47 ora_pmon_ASB1
+oracle   27222 31769  0 10:54 pts/2    00:00:00 grep pmon
+oracle   35084     1  0 Jun26 ?        00:11:13 ora_pmon_CRMTST51
+oracle   35980     1  0 Jun30 ?        00:11:29 ora_pmon_UAT2
+[oracle@hrewoel02 alpoor_scripts]$ . oraenv
+ORACLE_SID = [IVV1] ? TST4
+The Oracle base remains unchanged with value /u02/app/oracle
+[oracle@hrewoel02 alpoor_scripts]$ sqlplus / as sysdba
+
+SQL*Plus: Release 11.2.0.4.0 Production on Fri Jul 31 10:56:42 2020
+
+Copyright (c) 1982, 2013, Oracle.  All rights reserved.
+
+
+Connected to:
+Oracle Database 11g Enterprise Edition Release 11.2.0.4.0 - 64bit Production
+With the Partitioning, Real Application Clusters, Automatic Storage Management, OLAP,
+Data Mining and Real Application Testing options
+
+SQL> show parameters remote
+
+NAME                                 TYPE        VALUE
+------------------------------------ ----------- ------------------------------
+remote_dependencies_mode             string      TIMESTAMP
+remote_listener                      string      tst-ew-scan:1526
+remote_login_passwordfile            string      EXCLUSIVE
+remote_os_authent                    boolean     FALSE
+remote_os_roles                      boolean     FALSE
+result_cache_remote_expiration       integer     0
+SQL> show parameters spfile
+
+NAME                                 TYPE        VALUE
+------------------------------------ ----------- ------------------------------
+spfile                               string      /u02/app/oracle/product/11.2.0
+                                                 .4/db_1/dbs/spfileTST4.ora
+SQL> show parameters local
+
+NAME                                 TYPE        VALUE
+------------------------------------ ----------- ------------------------------
+_local_communication_costing_enabled boolean     TRUE
+local_listener                       string       (ADDRESS=(PROTOCOL=TCP)(HOST=
+                                                 10.68.26.102)(PORT=1521))
+log_archive_local_first              boolean     TRUE
+parallel_force_local                 boolean     FALSE
+SQL> create pfile='/tmp/tst4.ora' from spfile;
+
+File created.
+
+SQL>
+
+
+add following to ora file
+and set environment to first instance TST41
+
+
+*.cluster_database_instances=2
+*.cluster_database=true
+TST41.instance_number=1
+TST42.instance_number=2
+TST41.thread=1
+TST42.thread=2
+TST41.undo_tablespace='UNDOTBS1'
+TST42.undo_tablespace='UNDOTBS2'
+
+*.cluster_database_instances=2
+*.cluster_database=true
+ASB1.instance_number=1
+ASB2.instance_number=2
+ASB1.thread=1
+ASB2.thread=2
+ASB1.undo_tablespace='UNDOTBS1'
+ASB2.undo_tablespace='UNDOTBS2'
+
+
+*.cluster_database_instances=2
+*.cluster_database=true
+CRMASB1.instance_number=1
+CRMASB2.instance_number=2
+CRMASB1.thread=1
+CRMASB2.thread=2
+CRMASB1.undo_tablespace='UNDOTBS1'
+CRMASB2.undo_tablespace='UNDOTBS2'
+
+*.cluster_database_instances=2
+*.cluster_database=true
+CPY11.instance_number=1
+CPY12.instance_number=2
+CPY11.thread=1
+CPY12.thread=2
+CPY11.undo_tablespace='UNDOTBS1'
+CPY12.undo_tablespace='UNDOTBS2'
+
+[oracle@hrewoel02 tmp]$ vi tst4.ora
+[oracle@hrewoel02 tmp]$ . oraenv
+ORACLE_SID = [TST4] ? TST41
+The Oracle base remains unchanged with value /u02/app/oracle
+[oracle@hrewoel02 tmp]$
+[oracle@hrewoel02 tmp]$
+[oracle@hrewoel02 tmp]$
+[oracle@hrewoel02 tmp]$ sqlplus / as sysdba
+
+SQL*Plus: Release 11.2.0.4.0 Production on Fri Jul 31 11:04:33 2020
+
+Copyright (c) 1982, 2013, Oracle.  All rights reserved.
+
+Connected to an idle instance.
+
+SQL> startup pfile='/tmp/tst4.ora';
+ORA-32006: BACKGROUND_DUMP_DEST initialization parameter has been deprecated
+ORA-32006: USER_DUMP_DEST initialization parameter has been deprecated
+ORACLE instance started.
+
+Total System Global Area 1603411968 bytes
+Fixed Size                  2253664 bytes
+Variable Size             671091872 bytes
+Database Buffers          905969664 bytes
+Redo Buffers               24096768 bytes
+Database mounted.
+Database opened.
+SQL>
+
+[oracle@hrewoel02 tmp]$ srvctl config database -d TST4
+Database unique name: TST4
+Database name: TST4
+Oracle home: /u02/app/oracle/product/11.2.0.4/db_1
+Oracle user: oracle
+Spfile: +DATA/TST4/spfileTST4.ora
+Domain:
+Start options: open
+Stop options: immediate
+Database role: PRIMARY
+Management policy: AUTOMATIC
+Server pools: TST4
+Database instances: TST4
+Disk Groups: DATA,FRA
+Mount point paths:
+Services:
+Type: RAC
+Database is administrator managed
+[oracle@hrewoel02 tmp]$ . oraenv
+ORACLE_SID = [TST41] ?
+The Oracle base remains unchanged with value /u02/app/oracle
+[oracle@hrewoel02 tmp]$ sqlplus / as sysdba
+
+SQL*Plus: Release 11.2.0.4.0 Production on Fri Jul 31 11:06:41 2020
+
+Copyright (c) 1982, 2013, Oracle.  All rights reserved.
+
+
+Connected to:
+Oracle Database 11g Enterprise Edition Release 11.2.0.4.0 - 64bit Production
+With the Partitioning, Real Application Clusters, Automatic Storage Management, OLAP,
+Data Mining and Real Application Testing options
+
+SQL> create spfile='+DATA/CRMASB/spfileCRMASB.ora' from pfile='/tmp/crmasb.ora';
+srvctl setenv database -d CRMASB -env "ORACLE_UNQNAME=CRMASB"
+File created.
+
+SQL>
+
+[oracle@hrewoel03 ~]$ srvctl add database -d TST4 -o $ORACLE_HOME
+[oracle@hrewoel03 ~]$ srvctl add instance -i TST41 -d TST4 -n hrewoel02
+[oracle@hrewoel03 ~]$ srvctl add instance -i TST42 -d TST4 -n hrewoel03
+
+
+[oracle@hrewoel03 ~]$ srvctl modify database -d TST4 -p '+DATA/TST4/spfileTST4.ora'
+[oracle@hrewoel03 ~]$ srvctl config database -d TST4
+Database unique name: TST4
+Database name:
+Oracle home: /u02/app/oracle/product/11.2.0.4/db_1
+Oracle user: oracle
+Spfile: +DATA/TST4/spfileTST4.ora
+Domain:
+Start options: open
+Stop options: immediate
+Database role: PRIMARY
+Management policy: AUTOMATIC
+Server pools: TST4
+Database instances: TST41,TST42
+Disk Groups:
+Mount point paths:
+Services:
+Type: RAC
+Database is administrator managed
+[oracle@hrewoel03 ~]$

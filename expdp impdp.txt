@@ -1,0 +1,29 @@
+What is the reasons and possible solutions for issue mentioned in subject ?
+
+Reasons:
+
+indexes was created as NOPARALLEL at source database, so during import they will be creating with NOPARALLEL
+IMPDP wasn’t developed to create several indexes in parallel
+IMPDP BUGs, like this one – 8604502
+Possible Solutions:
+
+modify indexes’ PARALLEL clause at source system before export
+ALTER INDEX xxx PARALLEL desired_parallel_level_for_import;
+EXPDP …
+ALTER INDEX xxx PARALLEL old_parallel_level;
+IMPDP …
+create indexes separately after modifying DDL (check good post about procedure)
+EXPDP …
+IMPDP EXCLUDE=INDEX,CONSTRAINT,REF_CONSTRAINT
+IMPDP SQLFILE=index_ddls.sql INCLUDE=INDEX,CONSTRAINT,REF_CONSTRAINT
+modify index_ddls.sql to correct PARALLEL clause
+execute index_ddls.sql to build indexes(may be split in parts and run simultaneously)
+after patching IMPDB is able to create indexes concurrently (read more on this)
+install PATCH:22273229 at the target system (you don’t require to shutdown instance during installation)
+IMPDP PARALLEL=XXX   will create XXX indexes simultaneously
+Warning:
+
+if you are prohibited to touch source system – method 1 is not for you.
+don’t combine several methods to not overload the target system
+for any method used, temporary increase PGA_AGGREGATE_TARGET to the largest possible value
+8604502 – IMPDP creates indexes with parallel degree 1 during import”

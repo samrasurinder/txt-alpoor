@@ -1,0 +1,91 @@
+
+
+chkctbundle.bash
+
+#!/bin/bash
+export ORAENV_ASK=NO
+
+
+db_list=`ps -efZ | grep [p]mon | grep -v asm | awk '{print $NF}' | sed s/ora_pmon_// | grep -v / | grep -v "-"`
+
+for db in $db_list
+do
+  export ORACLE_SID=$db
+  . oraenv > /dev/null
+
+RETVAL=`sqlplus -s "/ as sysdba" << EOF
+     SET PAGESIZE 0 FEEDBACK OFF VERIFY OFF HEADING OFF ECHO OFF
+     select count(*) from registry\\$history where comments like '%1907%';
+     exit;
+EOF`
+
+if [ $RETVAL = 0 ]; then
+  echo "run catbundle"
+  @$ORACLE_HOME/rdbms/admin/catbundle.sql psu apply
+  @$ORACLE_HOME/rdbms/admin/utlrp.sql
+else
+  echo "donot run catbundle"
+fi
+done
+
+
+
+runctbundle.bash
+
+#!/bin/bash
+export ORAENV_ASK=NO
+export ORACLE_SID=$1
+. oraenv > /dev/null
+
+sqlplus -s "/ as sysdba" << EOF
+  spool ${ORACLE_SID}_catbundle.log
+  @$ORACLE_HOME/rdbms/admin/catbundle.sql psu apply
+  @$ORACLE_HOME/rdbms/admin/utlrp.sql
+  spool off;
+  exit;
+EOF
+
+
+
+
+col action format a15
+col action_time format a30
+col namespace format a10
+col version format a30
+col comments format a30
+col bundle_series format a5
+set linesize 180
+set pagesize 200
+
+select * from registry$history
+
+
+
+
+
+
+
+
+
+col owner format a30
+col object_name format a30
+col object_type format a30
+set linesize 150
+set pagesize 400
+select owner,object_name,object_type from dba_invalid_objects order by owner,object_name;
+
+
+
+
+
+
+
+col comp_id format a10
+col comp_name format a30
+ col version format a10
+
+select comp_id,comp_name,version,status from dba_registry;
+
+
+
+select count(*) as invalid_obj_cnt from dba_invalid_objects;

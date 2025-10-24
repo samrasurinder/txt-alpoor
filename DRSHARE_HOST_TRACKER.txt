@@ -1,0 +1,30 @@
+#!/bin/bash
+
+export ASM_SID=`ps -ef|grep pmon|grep asm_pmon_${from_asm}|grep -v grep|awk '{print $8}'|cut -d_ -f3`
+
+. oraenv <<EOFASM
+${ASM_SID}
+EOFASM
+
+export      NODE_LIST=$( olsnodes | (readarray -t ARRAY;IFS=','; echo "${ARRAY[*]}"))
+export ASM_DISK_GROUP="DRSHARE"
+
+echo Looking for ${ASM_DISK_GROUP} on nodes "${NODE_LIST}"
+
+srvctl status diskgroup -diskgroup "${ASM_DISK_GROUP}" -n "${NODE_LIST}"
+
+export FOUND_IT=$(srvctl status diskgroup -diskgroup "${ASM_DISK_GROUP}" -n "${NODE_LIST}" | grep "is running" | wc -l)
+
+echo ${FOUND_IT}
+
+if [ ${FOUND_IT} = 0 ]; then
+   echo "NOT FOUND"
+   exit 1
+else
+   echo "FOUND IT"
+   echo "Dismounting it"
+   srvctl status diskgroup -diskgroup "${ASM_DISK_GROUP}" -n "${NODE_LIST}"
+   srvctl stop diskgroup -diskgroup "${ASM_DISK_GROUP}" -n "${NODE_LIST}"
+   srvctl status diskgroup -diskgroup "${ASM_DISK_GROUP}" -n "${NODE_LIST}"
+   exit 0
+fi

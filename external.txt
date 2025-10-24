@@ -1,0 +1,17 @@
+create user jdoe identified externally as 'CN=DOE.JOHN.I.1234567890,OU=CONTRACTOR,OU=PKI,OU=Federal,O=U.S. Government,C=US';
+
+create user admstenpeckmv identified externally as 'CN=Stenpeck, Mark V,OU=Admin Accounts,OU=HR,DC=washdc,DC=state,DC=sbu';
+
+
+
+create user ADMSTENPECKMV IDENTIFIED EXTERNALLY AS 'CN=Stenpeck\, Mark V,OU=Admin Accounts,OU=HR,DC=washdc,DC=state,dc=sbu';
+grant create session to ADMSTENPECKMV;
+alter system set remote_os_authent=false scope=spfile;
+alter system set os_authent_prefix='' scope=spfile;
+
+
+
+
+create user ADMREDDYA1 IDENTIFIED EXTERNALLY AS 'CN=Reddy\, Alpoor, OU=Oracle DBAs,OU=Operations,OU=Admin Accounts,OU=HR,DC=washdc,DC=state,dc=sbu';
+
+grant dba to ADMREDDYA1;

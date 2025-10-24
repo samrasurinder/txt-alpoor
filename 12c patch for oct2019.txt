@@ -1,0 +1,167 @@
+1.2.1.4 Run OPatch Conflict Check
+Determine whether any currently installed one-off patches conflict with this patch 30116802 as follows:
+
+For Grid Infrastructure Home, as home user:
+
+% $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir <UNZIPPED_PATCH_LOCATION>/30116802/30138470
+% $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir <UNZIPPED_PATCH_LOCATION>/30116802/30122814
+% $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir <UNZIPPED_PATCH_LOCATION>/30116802/30122828
+% $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir <UNZIPPED_PATCH_LOCATION>/30116802/26839277
+% $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir <UNZIPPED_PATCH_LOCATION>/30116802/30093408
+For Database home, as home user:
+
+% $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir <UNZIPPED_PATCH_LOCATION>/30116802/30138470
+% $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir <UNZIPPED_PATCH_LOCATION>/30116802/30122814
+The report will indicate the interim patches that conflict with the patch 30116802 and the interim patches for which patch 30116802 is a superset.
+
+Note:
+
+When OPatch starts, it validates the patch and ensures that there are no conflicts with the software already installed in the ORACLE_HOME. OPatch categorizes conflicts into the following types:
+
+Conflicts with a patch already applied to the ORACLE_HOME.
+
+In this case, stop the patch installation and contact Oracle Support Services.
+
+Conflicts with subset patch already applied to the ORACLE_HOME.
+
+In this case, continue with the patch installation because as the new patch contains all the fixes from the existing patch in the ORACLE_HOME. And, in any case, the subset patch will automatically be rolled back prior to the installation of the new patch.
+
+1.2.1.5 Run OPatch SystemSpace Check
+Check if enough free space is available on the ORACLE_HOME filesystem for the patches to be applied as given below:
+
+For Grid Infrastructure Home, as home user:
+
+Create file /tmp/patch_list_gihome.txt with the following content:
+
+% cat /tmp/patch_list_gihome.txt
+
+<UNZIPPED_PATCH_LOCATION>/30116802/30138470
+<UNZIPPED_PATCH_LOCATION>/30116802/30122814
+<UNZIPPED_PATCH_LOCATION>/30116802/30122828
+<UNZIPPED_PATCH_LOCATION>/30116802/26839277
+<UNZIPPED_PATCH_LOCATION>/30116802/30093408
+Run the opatch command to check if enough free space is available in the Grid Infrastructure Home:
+
+% $ORACLE_HOME/OPatch/opatch prereq CheckSystemSpace -phBaseFile /tmp/patch_list_gihome.txt
+For Database home, as home user:
+
+Create file /tmp/patch_list_dbhome.txt with the following content:
+
+% cat /tmp/patch_list_dbhome.txt
+<UNZIPPED_PATCH_LOCATION>/30116802/30138470
+<UNZIPPED_PATCH_LOCATION>/30116802/30122814
+Run opatch command to check if enough free space is available in the Database Home:
+
+% $ORACLE_HOME/OPatch/opatch prereq CheckSystemSpace -phBaseFile /tmp/patch_list_dbhome.txt
+The command output reports pass and fail messages as per the system space availability:
+
+If OPatch reports Prereq "checkSystemSpace" failed., then cleanup the system space as the required amount of space is not available.
+
+If OPatch reports Prereq "checkSystemSpace" passed., then no action is needed. Proceed with patch installation.
+
+1.2.2 One-off Patch Conflict Detection and Resolution
+The fastest and easiest way to determine whether you have one-off patches in the Oracle home that conflict with the patch, and to get the necessary conflict resolution patches, is to use the Patch Recommendations and Patch Plans features on the Patches & Updates tab in My Oracle Support. These features work in conjunction with the My Oracle Support Configuration Manager. Recorded training sessions on these features can be found in Document 603505.1.
+
+However, if you are not using My Oracle Support Patch Plans, the My Oracle Support Conflict Checker tool enables you to upload an OPatch inventory and check the patches that you want to apply to your environment for conflicts.
+
+If no conflicts are found, you can download the patches. If conflicts are found, the tool finds an existing resolution to download. If no resolution is found, it will automatically request a resolution, which you can monitor in the Plans and Patch Requests region of the Patches & Updates tab.
+
+For more information, see Knowledge Document 1091294.1, How to use the My Oracle Support Conflict Checker Tool.
+
+Or, manually determine whether any currently installed one-off patches conflict with the PSU patch as follows:
+
+In the unzipped directory as described in Download and Unzip the Patch.
+
+The following commands check for conflicts in both the 12.1 GI home and the 12.1 DB homes.
+
+In case you are applying the patch, run this command:
+
+#GRID_HOME/OPatch/opatchauto apply <UNZIPPED_PATCH_LOCATION>/30116802 -analyze
+In case you are rolling back the patch, run this command:
+
+#GRID_HOME/OPatch/opatchauto rollback <UNZIPPED_PATCH_LOCATION>/30116802 -analyze
+Note that Oracle proactively generates interim patches for common conflicts.
+
+See My Oracle Support Document 1061295.1 Patch Set Updates - One-off Patch Conflict Resolution to determine, for each conflicting patch, whether a conflict resolution patch is already available, and if you need to request a new conflict resolution patch or if the conflict may be ignored.
+
+1.2.3 opatchauto
+The Opatch utility has automated the patch application for the Oracle Grid Infrastructure (GI) home and the Oracle RAC database homes. It operates by querying existing configurations and automating the steps required for patching each Oracle RAC database home of same version and the GI home.
+
+The utility must be executed by an operating system (OS) user with root privileges, and it must be executed on each node in the cluster if the GI home or Oracle RAC database home is in non-shared storage. The utility should not be run in parallel on the cluster nodes.
+
+Depending on command line options specified, one invocation of opatchauto can patch the GI home, Oracle RAC database homes, or both GI and Oracle RAC database homes of the same Oracle release version as the patch. You can also roll back the patch with the same selectivity.
+
+Add the directory containing the opatchauto to the $PATH environment variable. For example:
+
+# export PATH=$PATH:<GI_HOME>/OPatch
+To patch the GI home and all Oracle RAC database homes of the same version:
+
+# opatchauto apply <UNZIPPED_PATCH_LOCATION>/30116802
+To patch only the GI home:
+
+# opatchauto apply <UNZIPPED_PATCH_LOCATION>/30116802 -oh <GI_HOME>
+To patch one or more Oracle RAC database homes:
+
+# opatchauto apply <UNZIPPED_PATCH_LOCATION>/30116802 -oh <oracle_home1_path>,<oracle_home2_path>
+To roll back the patch from the GI home and each Oracle RAC database home:
+
+# opatchauto rollback <UNZIPPED_PATCH_LOCATION>/30116802 
+To roll back the patch from the GI home:
+
+# opatchauto rollback <UNZIPPED_PATCH_LOCATION>/30116802 -oh <path to GI home>  
+To roll back the patch from the Oracle RAC database home:
+
+# opatchauto rollback <UNZIPPED_PATCH_LOCATION>/30116802 -oh <oracle_home1_path>,<oracle_home2_path> 
+For more information about opatchauto, see Oracle® OPatch User's Guide.
+
+For detailed patch installation instructions, see Patch Installation.
+
+1.2.4 Patch Installation
+The patch instructions will differ based on the configuration of the Grid infrastructure and the Oracle RAC database homes. Patching instructions for Oracle RAC Database Homes and GI together are listed below.
+
+The most common configurations are listed as follows:
+
+Case 1: Oracle RAC, where the GI Home and the Database Homes are not shared and ACFS file system is not configured
+
+Case 2: Oracle RAC, where the GI Home is not shared, Database Home is shared, ACFS may be used
+
+Case 3: Non-Oracle RAC Database homes
+
+For other configurations listed below, see My Oracle Support Document 2246888.1:
+
+GI Home is not shared, the Database Home is not shared, ACFS may be used.
+
+Patching Oracle RAC Database Homes.
+
+Patching GI Home alone.
+
+Patching Oracle Restart Home.
+
+Patching a software only GI Home installation or before the GI Home is configured.
+
+
+
+
+
+You must keep the Oracle Restart stack up and running when you are patching. Use the following instructions to patch Oracle Restart home.
+
+As root user execute:
+
+# opatchauto apply <UNZIPPED_PATCH_LOCATION>/%BUGNO%
+
+
+(Only for Installation) Determine whether any currently installed interim patches conflict with this patch 26635944 as shown as follows:
+
+$ cd <PATCH_TOP_DIR>/30133625
+$ opatch prereq CheckConflictAgainstOHWithDetail -ph ./
+
+
+
+
+Set your current directory to the directory where the patch is located and then run the OPatch utility by entering the following commands:
+
+$ cd <PATCH_TOP_DIR>/30133625
+Install the patch by running the following command:
+
+$ opatch apply
+

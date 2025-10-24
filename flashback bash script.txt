@@ -1,0 +1,40 @@
+alter session set nls_date_format = 'DD-MON-YYYY HH24:MI:SS';
+
+
+
+#!/bin/bash
+#
+# file name: flashback.sh
+# author: itabas
+#
+ORACLE_UNQNAME=perfcli
+ORACLE_SID=perfcli2
+echo stopping RAC database
+srvctl stop database -d perfcli
+srvctl status database -d perfcli
+rm -f flashback.log
+echo starting sqlplus
+sqlplus "/ as sysdba" @flashback.sql
+cat flashback.log
+srvctl start instance -d perfcli -i "perfcli1"
+srvctl status database -d perfcli
+echo stopping  oracle services
+srvctl stop service -d perfcli
+echo starting oracle services
+srvctl start service -d perfcli
+srvctl status service -d perfcli
+
+
+
+
+
+
+
+
+-- flashback.sql
+spool flashback.log
+startup mount;
+flashback database to restore point "ICC_20161014"
+alter database open resetlogs;
+spool off
+exit

@@ -1,0 +1,33 @@
+1) Set the environment to correct instance.
+
+ps -ef | grep pmon
+. oraenv
+
+2) Get restore point name and make note of it from sqlplus.
+
+SQL> select name, host_name, status from gv$instance;
+SQL> select log_mode,flashback_on from v$database;
+SQL> select name,time from v$restore_point;
+
+3) Stop the database and put it in mount state using srvctl
+
+srvctl status database -d MYTESTDB
+srvctl stop database -d MYTESTDB
+srvctl status database -d MYTESTDB
+srvctl start instance -d MYTESTDB -i MYTESTDB1 -o mount
+
+4) Flashback to restore point using sqlplus
+
+SQL> select instance_name,status from gv$instance;
+
+SQL> flashback database to restore point REST_POINT;
+
+SQL> alter database open resetlogs;
+
+Database altered.
+
+5) Stop and start the database and make sure all instances are up, using srvctl.
+
+srvctl stop database -d MYTESTDB
+srvctl start database -d MYTESTDB
+srvctl status database -d MYTESTDB

@@ -1,0 +1,11 @@
+/bin/bash /infshare/oracle/scripts/dba/delete_drshare_backup.bash hrewoel13.hr.state.sbu
+
+/infshare/oracle/scripts/backup/RMAN_BACKUP_FOR_REFRESH_DRSHARE.bash HFPRD hrewoel13.hr.state.sbu
+
+/bin/bash /infshare/oracle/scripts/dba/dismount_asm_diskgroup.bash hrewoel13.hr.state.sbu
+
+/bin/bash /infshare/oracle/scripts/dba/mount_asm_diskgroup.bash hrewoel29.hr.state.sbu
+
+/infshare/oracle/scripts/refresh/bin/db_refresh_BACKUP.bash CPY1 hrewoel29.hr.state.sbu
+
+/bin/bash /infshare/oracle/scripts/dba/dismount_asm_diskgroup.bash hrewoel29.hr.state.sbu

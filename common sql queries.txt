@@ -1,0 +1,11 @@
+COL DB_LINK FORMAT A30
+COL DBNAME FORMAT A30
+COL OWNER FORMAT A20
+COL DB_LINK FORMAT A50
+COL HOST FORMAT A20
+COL CREATED FORMAT A20
+SET LINESIZE 200
+select owner,db_link,username,host,created from dba_db_links;
+
+select ( select host_name from v$instance) as host, (select * from global_name) as dbname (select * from global_name) as dbname, owner,db_link,username,host,created from dba_db_links
+

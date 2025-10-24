@@ -1,0 +1,108 @@
+
+PRDMDC RAC - 3 nodes
+---------------------
+
+hrmdc1oel01
+hrmdc1oel02
+hrmdc1oel03
+
+
+SCAN name: prdmdc-scan, Network: 1/10.65.34.0/255.255.255.0/eth1
+SCAN VIP name: scan1, IP: /prdmdc-scan/10.65.34.103
+SCAN VIP name: scan2, IP: /prdmdc-scan/10.65.34.102
+SCAN VIP name: scan3, IP: /prdmdc-scan/10.65.34.101
+
+10.65.34.23 hrmdc1oel01.hr.state.sbu hrmdc1oel01
+10.65.34.24 hrmdc1oel03.hr.state.sbu hrmdc1oel03
+10.65.34.31 hrmdc1oel02.hr.state.sbu hrmdc1oel02
+
+10.65.204.23 hrmdc1oel01-sl.hr.state.sbu hrmdc1oel01-sl
+10.65.204.24 hrmdc1oel03-sl.hr.state.sbu hrmdc1oel03-sl
+10.65.204.31 hrmdc1oel02-sl.hr.state.sbu hrmdc1oel02-sl
+
+10.65.34.123 hrmdc1oel01-vip.hr.state.sbu hrmdc1oel01-vip
+10.65.34.124 hrmdc1oel03-vip.hr.state.sbu hrmdc1oel03-vip
+10.65.34.131 hrmdc1oel02-vip.hr.state.sbu hrmdc1oel02-vip
+
+192.168.140.1 hrmdc1oel01-priv1.hr.state.sbu hrmdc1oel01-priv1
+192.168.140.2 hrmdc1oel02-priv1.hr.state.sbu hrmdc1oel02-priv1
+192.168.140.3 hrmdc1oel03-priv1.hr.state.sbu hrmdc1oel03-priv1
+
+192.168.141.1 hrmdc1oel01-priv2.hr.state.sbu hrmdc1oel01-priv2
+192.168.141.2 hrmdc1oel02-priv2.hr.state.sbu hrmdc1oel02-priv2
+192.168.141.3 hrmdc1oel03-priv2.hr.state.sbu hrmdc1oel03-priv2
+
+
+
+
+
+HFMDC RAC - 3 nodes
+-------------------
+
+hrmdc1oel04
+hrmdc1oel05
+hrmdc1oel06
+
+
+SCAN name: hfmdc-scan, Network: 1
+Subnet IPv4: 10.65.34.0/255.255.255.0/enp183s0f1, static
+
+SCAN 1 IPv4 VIP: 10.65.34.106
+SCAN VIP is enabled.
+SCAN 2 IPv4 VIP: 10.65.34.105
+SCAN VIP is enabled.
+SCAN 3 IPv4 VIP: 10.65.34.104
+
+
+10.65.34.25 hrmdc1oel05.washdc.state.sbu hrmdc1oel05
+10.65.34.32 hrmdc1oel04.washdc.state.sbu hrmdc1oel04
+10.65.34.33 hrmdc1oel06.washdc.state.sbu hrmdc1oel06
+
+10.65.204.25 hrmdc1oel05-sl.hr.state.sbu hrmdc1oel05-sl
+10.65.204.32 hrmdc1oel04-sl.hr.state.sbu hrmdc1oel04-sl
+10.65.204.33 hrmdc1oel06-sl.hr.state.sbu hrmdc1oel06-sl
+
+10.65.34.125 hrmdc1oel05-vip.hr.state.sbu hrmdc1oel05-vip
+10.65.34.132 hrmdc1oel04-vip.hr.state.sbu hrmdc1oel04-vip
+10.65.34.133 hrmdc1oel06-vip.hr.state.sbu hrmdc1oel06-vip
+
+192.168.142.4 hrmdc1oel04-priv1.hr.state.sbu hrmdc1oel04-priv1
+192.168.142.5 hrmdc1oel05-priv1.hr.state.sbu hrmdc1oel05-priv1
+192.168.142.6 hrmdc1oel06-priv1.hr.state.sbu hrmdc1oel06-priv1
+
+192.168.143.4 hrmdc1oel04-priv2.hr.state.sbu hrmdc1oel04-priv2
+192.168.143.5 hrmdc1oel05-priv2.hr.state.sbu hrmdc1oel05-priv2
+192.168.143.6 hrmdc1oel06-priv2.hr.state.sbu hrmdc1oel06-priv2
+
+
+KCMDC RAC - 2 nodes
+-------------------
+
+hrmdc1oel07
+hrmdc1oel08
+
+
+SCAN name: kcmdc-scan, Network: 1/10.65.34.0/255.255.255.0/eth1
+SCAN VIP name: scan1, IP: /kcmdc-scan/10.65.34.107
+SCAN VIP name: scan2, IP: /kcmdc-scan/10.65.34.108
+SCAN VIP name: scan3, IP: /kcmdc-scan/10.65.34.109
+
+10.65.34.26 hrmdc1oel07.hr.state.sbu hrmdc1oel07
+10.65.34.34 hrmdc1oel08.hr.state.sbu hrmdc1oel08
+
+
+10.65.204.26 hrmdc1oel07-sl.hr.state.sbu hrmdc1oel07-sl
+10.65.204.34 hrmdc1oel08-sl.hr.state.sbu hrmdc1oel08-sl
+
+
+10.65.34.126 hrmdc1oel07-vip.hr.state.sbu hrmdc1oel07-vip
+10.65.34.134 hrmdc1oel08-vip.hr.state.sbu hrmdc1oel08-vip
+
+
+192.168.144.7 hrmdc1oel07-priv1.hr.state.sbu hrmdc1oel07-priv1
+192.168.144.8 hrmdc1oel08-priv1.hr.state.sbu hrmdc1oel08-priv1
+
+192.168.145.7 hrmdc1oel07-priv2.hr.state.sbu hrmdc1oel07-priv2
+192.168.145.8 hrmdc1oel08-priv2.hr.state.sbu hrmdc1oel08-priv2
+
+

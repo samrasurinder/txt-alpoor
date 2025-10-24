@@ -1,0 +1,92 @@
+BEGIN
+  FOR cur_obj IN (SELECT owner, object_name, object_type
+                  FROM   all_objects
+                  WHERE  owner IN ('REETA')
+                  AND    object_type IN ('TABLE','VIEW','SEQUENCE', 'PACKAGE', 'PROCEDURE', 'FUNCTION', 'TYPE'))
+  LOOP
+    CASE 
+      WHEN cur_obj.object_type IN ('TABLE','VIEW') THEN
+        EXECUTE IMMEDIATE 'GRANT SELECT, INSERT, UPDATE, DELETE ON ' || cur_obj.owner || '."' || cur_obj.object_name || '" TO BHOJANIKG';
+      WHEN cur_obj.object_type IN ('SEQUENCE') THEN
+        EXECUTE IMMEDIATE 'GRANT SELECT ON ' || cur_obj.owner || '."' || cur_obj.object_name || '" TO BHOJANIKG';
+      WHEN cur_obj.object_type IN ('PACKAGE', 'PROCEDURE', 'FUNCTION', 'TYPE') THEN
+        EXECUTE IMMEDIATE 'GRANT EXECUTE ON ' || cur_obj.owner || '."' || cur_obj.object_name || '" TO BHOJANIKG';
+    END CASE;
+  END LOOP;
+END;
+
+
+
+
+
+
+BEGIN
+    FOR t IN (
+        SELECT
+            object_name,
+            object_type
+        FROM
+            all_objects
+        WHERE
+            owner = 'OWNER_SCHEMA_NAME'
+            AND   object_type IN (
+                'TABLE',
+                'VIEW',
+                'PROCEDURE',
+                'FUNCTION',
+                'PACKAGE',
+                'SEQUENCE'
+            )
+    ) LOOP
+        IF
+            t.object_type IN (
+                'TABLE',
+                'VIEW'
+            )
+        THEN
+            EXECUTE IMMEDIATE 'GRANT SELECT, UPDATE, INSERT, DELETE ON OWNER_SCHEMA_NAME.'
+            || t.object_name
+            || ' TO NEW_TARGET_SCHEMA_NAME';
+
+        ELSIF
+            t.object_type IN (
+
+                'SEQUENCE'
+            )
+        THEN
+            EXECUTE IMMEDIATE 'GRANT SELECT ON OWNER_SCHEMA_NAME.'
+            || t.object_name
+            || ' TO NEW_TARGET_SCHEMA_NAME';
+
+        ELSIF t.object_type IN (
+            'PROCEDURE',
+            'FUNCTION',
+            'PACKAGE'
+        ) THEN
+            EXECUTE IMMEDIATE 'GRANT EXECUTE ON OWNER_SCHEMA_NAME.'
+            || t.object_name
+            || ' TO NEW_TARGET_SCHEMA_NAME';
+
+        END IF;
+    END LOOP;
+END;
+
+
+
+
+CREATE ANY PROCEDURE 
+ALTER
+DROP
+EXECUTE 
+
+CREATE ANY SYNONYM
+CREATE PUBLIC SYNONYM
+DROP ANY SY
+DROP PUBLIC
+
+
+grant connect , resource
+
+
+
+

@@ -1,0 +1,96 @@
+hrewoel29.hr.state.sbu
+
+:q CPY1
+
+
+
+
+
+
+dblinks status for database --> CPY1
+
+---------------------------------------------------------
+ERR: ACRS.DB_LINK_MIGRATE_CIRCUIT.HR.STATE.GOV -24344
+OK : EOPF_DOS.EOPF_PRD.WASHDC.STATE.SBU
+ERR: ESRT.EDW_SRC_LNK.HR.STATE.SBU -24344
+OK : ESRT_INTERFACE.EAPS.HR.STATE.SBU
+OK : PUBLIC.GEMS_CRM_LINK.HR.STATE.SBU
+OK : REETA.REETA_DB_LINK.HR.STATE.SBU
+OK : SECREF.CRM.HR.STATE.SBU
+OK : SECREF.DB_LINK_REETA_UAT.HR.STATE.SBU
+OK : SECREF.EAPS.HR.STATE.SBU
+OK : SYSADM.EOD.HR.STATE.SBU
+
+
+/infshare/oracle/scripts/refresh/bin/db_refresh_BACKUP.bash CPY1
+
+[oracle@hrewoel29 CPY]$ vi build_driver_CPY.pre
+[oracle@hrewoel29 CPY]$ pwd
+/infshare/oracle/scripts/refresh/bin/build/CPY
+[oracle@hrewoel29 CPY]$ cp build_driver_CPY.pre build_driver_CPY.pre-ORIG
+[oracle@hrewoel29 CPY]$ vi build_driver_CPY.pre
+[oracle@hrewoel29 CPY]$ pwd
+/infshare/oracle/scripts/refresh/bin/build/CPY
+[oracle@hrewoel29 CPY]$
+
+/infshare/oracle/scripts/dba/dblink_db.check 
+
+
+expdp \"/ as sysdba\"  schemas=ACRS,EOPF_DOS,ESRT,ESRT_INTERFACE,REETA,SECREF,SYSADM dumpfile=dp_rfrsh_dmp:DBlink1.dmp logfile=dp_rfrsh_dmp:DBlink1.log  INCLUDE=DB_LINK REUSE_DUMPFILES=Y
+
+impdp \"/ as sysdba\"   dumpfile=dp_rfrsh_dmp:DBlink1.dmp logfile=dp_rfrsh_dmp:imp_DBlink1.log
+
+
+
+expdp \"/ as sysdba\"  parfile=/infshare/oracle/scripts/refresh/bin/build/CPY/parfile.par dumpfile=dp_rfrsh_dmp:DBlink2.dmp logfile=dp_rfrsh_dmp:DBlink2.log   REUSE_DUMPFILES=Y full=y
+
+impdp \"/ as sysdba\"  dumpfile=dp_rfrsh_dmp:DBlink2.dmp logfile=dp_rfrsh_dmp:imp_DBlink2.log
+
+
+/bin/bash ${builds_dir}/POST_${to_db}_rsync_orapwd.bash
+/bin/bash /infshare/oracle/scripts/dba/dblink_db.check ${to_db}
+
+
+dblinks status for database --> PRD
+
+---------------------------------------------------------
+OK : BMA.BMA_DW.HR.STATE.SBU
+OK : EOPF_DOS.EOPF_PRD.HR.STATE.SBU
+OK : ESRT.CAMPUS7.HR.STATE.SBU
+OK : ESRT.CONTDB.HR.STATE.SBU
+OK : ESRT.EDW_SRC_LNK.HR.STATE.SBU
+OK : ESRT.EOPFLINK.HR.STATE.SBU
+OK : ESRT_INTERFACE.EAPS.HR.STATE.SBU
+ERR: REETA.REETA_DB_LINK.HR.STATE.SBU -24344
+OK : SECREF.CRM.HR.STATE.SBU
+OK : SECREF.DB_LINK_REETA_UAT.HR.STATE.SBU
+OK : SECREF.EAPS.HR.STATE.SBU
+ERR: SYS.GEMS_CRM_LINK.HR.STATE.SBU -24344
+OK : SYSADM.EAPS.HR.STATE.SBU
+OK : SYSADM.EOD.HR.STATE.SBU
+OK : SYSADM.GEMS_CRM_LINK.HR.STATE.SBU
+
+
+ORA-39166: Object SYSADM.PSACCESSPRF was not found.
+ORA-39166: Object SYSADM.PSOPRDEF was not found.
+ORA-39166: Object SYSADM.PSSTATU was not found.
+ORA-39166: Object SYSADM.PSPROJECTDEF was not found.
+ORA-39166: Object SYSADM.PSPROJECTITE was not found.
+ORA-39166: Object SYSADM.PSPROJDEFNLAN was not found.
+ORA-39166: Object SYSADM.PSPROJECTDE was not found.
+ORA-39166: Object SYSADM.PSPROJECTIN was not found.
+ORA-39166: Object SYSADM.PSPROJECTMS was not found.
+ORA-39166: Object SYSADM.PSPROJECTSE was not found.
+ORA-39166: Object SYSADM.PSOPTION was not found.
+ORA-39166: Object SYSADM.PSRECDEF was not found.
+ORA-39166: Object SYSADM.PSRECDEFNLAN was not found.
+ORA-39166: Object SYSADM.PSRECFIEL was not found.
+ORA-39166: Object SYSADM.PSINDEXDEF was not found.
+ORA-39166: Object SYSADM.PSKEYDEF was not found.
+ORA-39166: Object SYSADM.PSDDLMODE was not found.
+ORA-39166: Object SYSADM.PSDDLDEFPARM was not found.
+ORA-39166: Object SYSADM.PSSPCDDLPAR was not found.
+ORA-39166: Object SYSADM.PSRECDDLPAR was not found.
+ORA-39166: Object SYSADM.PSIDXDDLPAR was not found.
+ORA-39166: Object SYSADM.PSRECFIELDD was not found.
+

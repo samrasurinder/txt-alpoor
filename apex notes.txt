@@ -1,0 +1,40 @@
+Thank you for installing Oracle Application Express 18.2.0.00.12
+
+Oracle Application Express is installed in the APEX_180200 schema.
+
+The structure of the link to the Application Express administration services is as follows:
+http://host:port/pls/apex/apex_admin (Oracle HTTP Server with mod_plsql)
+http://host:port/apex/apex_admin     (Oracle XML DB HTTP listener with the embedded PL/SQL gateway)
+http://host:port/apex/apex_admin     (Oracle REST Data Services)
+
+The structure of the link to the Application Express development interface is as follows:
+http://host:port/pls/apex (Oracle HTTP Server with mod_plsql)
+http://host:port/apex     (Oracle XML DB HTTP listener with the embedded PL/SQL gateway)
+http://host:port/apex     (Oracle REST Data Services)
+
+timing for: Phase 3 (Switch)
+Elapsed: 00:00:11.70
+timing for: Complete Installation
+Elapsed: 00:11:25.37
+
+PL/SQL procedure successfully completed.
+
+
+
+
+
+1 row selected.
+
+...null1.sql
+SYS>
+
+
+
+DECLARE
+  l_passwd VARCHAR2(40);
+BEGIN
+  l_passwd := DBMS_RANDOM.string('a',10) || DBMS_RANDOM.string('x',10) || '1#';
+  -- Remove CONTAINER=ALL for non-CDB environments.
+  EXECUTE IMMEDIATE 'ALTER USER anonymous IDENTIFIED BY ' || l_passwd || ' ACCOUNT UNLOCK ';
+END;
+/

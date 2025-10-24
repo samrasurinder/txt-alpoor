@@ -1,0 +1,9 @@
+Please reimport tables into SYSADM@ASB from the following backup:
+
+PLEASE SKIP TABLE PS_JPMINSTALLATION.
+
+ /hrewwnonprdfs01/Output/ESSR80826 
+  -rw-rw----. 1 oracle oinstall 108658688 Jun 17 13:00 ESSR80826_expdp_SYSADM_7tables_CPY1.dmp.save 
+
+
+Please restart Peoplesoft ASB App and Web Servers after the restore.

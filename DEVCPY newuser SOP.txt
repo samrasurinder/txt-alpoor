@@ -1,0 +1,13 @@
+
+For any new devcpy user request:
+
+1) create user with just "CREATE SESSION" privilege
+
+2) GRANT ROLE_FULL_SCHEMA_OWNER to the user
+
+3) Add user to the following parfile on HREWOEL29 for preserve
+
+/infshare/oracle/scripts/dba/devcpy_refresh_scripts/devcpy_users.par 
+
+
+For dropping user, simply remove entry from above parfile

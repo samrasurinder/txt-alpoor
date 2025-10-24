@@ -1,0 +1,8 @@
+The ASM disk: 'DATA01' mapped to '/dev/sdi1'  Totalsize=214.7 GB,
+The ASM disk: 'DATA02' mapped to '/dev/sdj1'  Totalsize=214.7 GB,
+The ASM disk: 'DATA03' mapped to '/dev/sdk1'  Totalsize=214.7 GB,
+The ASM disk: 'FRA01' mapped to '/dev/sdc1'  Totalsize=214.7 GB,
+The ASM disk: 'FRA02' mapped to '/dev/sdd1'  Totalsize=214.7 GB,
+The ASM disk: 'FRA03' mapped to '/dev/sde1'  Totalsize=214.7 GB,
+The ASM disk: 'OCR_VOTE1' mapped to '/dev/sdl1'  Totalsize=53.7 GB,
+[root@hrvlcpydb7601 12.2.0]#

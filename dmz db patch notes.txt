@@ -1,0 +1,32 @@
+
+
+
+Step 1) as oracle, srvctl status home -o oracle_home -s state_file
+
+Step 2) as oracle, srvctl stop home -o oracle_home -s state_file 
+
+Step 3)  as root, unlock 
+       <GI_HOME>/crs/install/roothas.pl -unlock
+
+
+
+
+
+Patch Steps goes here
+
+
+
+
+
+Step 4) <GI_HOME>/crs/install/roothas.pl -unlock
+
+Step 5) srvctl stop home -o oracle_home -s state_file 
+
+
+
+
+
+
+
+
+

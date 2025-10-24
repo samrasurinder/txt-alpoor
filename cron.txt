@@ -1,0 +1,1 @@
+01 00 * * * /infshare/oracle/scripts/dba/expdp_dblinks.bash > /infshare/oracle/scripts/dba/log/$(hostname)_expdp_dblinks_$(date +\%m\%d\%y).log 2>&1
