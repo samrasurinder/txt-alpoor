@@ -1,0 +1,158 @@
+SQL> select * from global_name;
+
+GLOBAL_NAME
+--------------------------------------------------------------------------------
+TNTMPPRD.HR.STATE.SBU
+
+SQL> SELECT log_mode FROM v$database;
+
+LOG_MODE
+------------
+ARCHIVELOG
+
+SQL> ALTER DATABASE FORCE LOGGING;
+
+Database altered.
+
+SQL> ALTER SYSTEM SWITCH LOGFILE;
+
+System altered.
+
+SQL> SELECT GROUP#, BYTES/1024/1024 MB FROM V$LOG;
+
+    GROUP#         MB
+---------- ----------
+         1        100
+         2        100
+         3        100
+
+SQL> SELECT THREAD#, INSTANCE FROM V$THREAD ;
+
+   THREAD# INSTANCE
+   TNTMPPRD   1
+
+
+
+ALTER DATABASE ADD STANDBY LOGFILE THREAD 1 GROUP 4 SIZE 100M;
+ALTER DATABASE ADD STANDBY LOGFILE THREAD 1 GROUP 5 SIZE 100M;
+ALTER DATABASE ADD STANDBY LOGFILE THREAD 1 GROUP 6 SIZE 100M;
+ALTER DATABASE ADD STANDBY LOGFILE THREAD 1 GROUP 7 SIZE 100M;
+
+SQL> show parameter db_name
+
+
+NAME                                 TYPE        VALUE
+------------------------------------ ----------- ------------------------------
+db_name                              string      TNTMPPRD
+SQL> SQL>
+SQL> show parameter db_name
+
+
+NAME                                 TYPE        VALUE
+------------------------------------ ----------- ------------------------------
+db_name                              string      TNTMPPRD
+SQL> SQL>
+SQL> show parameter db_uniq_name;
+SQL> show parameter db_uniqe_name;
+SQL> show parameter db_unique_name;
+
+NAME                                 TYPE        VALUE
+------------------------------------ ----------- ------------------------------
+db_unique_name                       string      TNTMPPRD
+SQL> ALTER SYSTEM SET STANDBY_FILE_MANAGEMENT=AUTO scope=both;
+
+System altered.
+
+SQL> archive log list;
+Database log mode              Archive Mode
+Automatic archival             Enabled
+Archive destination            USE_DB_RECOVERY_FILE_DEST
+Oldest online log sequence     128
+Next log sequence to archive   130
+Current log sequence           130
+SQL>
+
+
+TNS entries on Both Primary and Standby:
+---------------------------------------
+
+
+TNTMPPRD =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = hrvlprddb7606.hr.state.sbu)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SID = TNTMPPRD)
+    )
+  )
+
+TNTMPSBY =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = hrvlprddb7607.hr.state.sbu)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SID = TNTMPSBY)
+    )
+  )
+
+
+
+Listener entries on Primary:
+---------------------------
+
+LISTENER =
+  (DESCRIPTION_LIST =
+    (DESCRIPTION =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = hrvlprddb7606.hr.state.sbu)(PORT = 1521))
+      (ADDRESS = (PROTOCOL = IPC)(KEY = EXTPROC1521))
+    )
+  )
+
+SID_LIST_LISTENER =
+  (SID_LIST =
+    (SID_DESC =
+      (GLOBAL_DBNAME = TNTMPPRD_DGMGRL)
+      (ORACLE_HOME = /u02/app/oracle/product/19.3.0/db_1)
+      (SID_NAME = TNTMPPRD)
+      (ENVS="TNS_ADMIN=/u02/app/oracle/product/19.3.0/db_1/network/admin")
+    )
+  )
+
+ADR_BASE_LISTENER = /u02/app/oracle
+
+
+
+
+
+
+Listener entries on Standby:
+---------------------------
+
+LISTENER =
+  (DESCRIPTION_LIST =
+    (DESCRIPTION =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = hrvlprddb7607.hr.state.sbu)(PORT = 1521))
+      (ADDRESS = (PROTOCOL = IPC)(KEY = EXTPROC1521))
+    )
+  )
+
+SID_LIST_LISTENER =
+  (SID_LIST =
+    (SID_DESC =
+      (GLOBAL_DBNAME = TNTMPSBY_DGMGRL)
+      (ORACLE_HOME = /u02/app/oracle/product/19.3.0/db_1)
+      (SID_NAME = TNTMPSBY)
+      (ENVS="TNS_ADMIN=/u02/app/oracle/product/19.3.0/db_1/network/admin")
+    )
+  )
+
+ADR_BASE_LISTENER = /u02/app/oracle
+
+
+
+
+
+
+srvctl add database -db TNTMPSBY-instance TNTMPSBY-oraclehome $ORACLE_HOME -startoption MOUNT -stopoption IMMEDIATE -policy AUTOMATIC -role physical_standby -spfile $ORACLE_HOME/dbs/spfileTNTMPSBY.ora

@@ -1,0 +1,60 @@
+11) Unused database components, 
+DBMS software, and database objects must be removed.
+
+31)
+The DBMS must support organizational requirements to enforce
+password encryption for storage.
+
+
+36)
+ Remote database or other external access must use 
+fully-qualified names.
+
+38)
+The DBMS must use multifactor authentication for local access to
+non-privileged accounts
+
+47)
+The DBMS must employ cryptographic mechanisms to protect the integrity and confidentiality of nonlocal maintenance 
+and diagnostic communications.
+
+58)
+ The directory assigned to the AUDIT_FILE_DEST parameter must be protected from unauthorized access and must be stored in a dedicated directory or disk partition
+separate from software or other application files.
+
+63)
+ The DBMS must use NIST-validated FIPS 140-2-compliant cryptography for authentication mechanisms.
+
+68)
+ The DBMS must limit the number of concurrent sessions for each system account to a maximum of one.
+
+77)
+ The Oracle WITH GRANT OPTION privilege must not be 
+   granted to non-DBA or non-Application administrator user accounts.
+
+82)
+ The DBMS must provide a mechanism to automatically identify 
+   accounts designated as temporary or emergency accounts.
+
+84)
+ The DBMS must disable/delete inactive user accounts in accordance
+with 12 FAH-10 H-112-1(f).The DBMS must disable/delete inactive
+user accounts in accordance with 12 FAH-10 H-112-1(f).
+Unused or expired DBMS accounts provide a means for undetected,
+ unauthorized access to the database.
+
+90)
+ Procedures for establishing temporary passwords that meet 
+DOS password requirements for new accounts must be defined, documented, and implemented
+
+91)
+ The DBMS must automatically terminate emergency accounts after
+ an organization-defined time period for each type of account.
+
+120)
+ The DBMS must use multifactor authentication for network 
+access to privileged accounts.
+
+127)
+ The DBMS must provide a mechanism to automatically terminate accounts designated as temporary 
+or emergency accounts after an organization-defined time period.

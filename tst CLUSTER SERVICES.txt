@@ -1,0 +1,28 @@
+     : Has been restarted less than 24 hours ago
+
+         DB       |     Service    |         db20        |         db21        |         db22        |
+  ---------------------------------------------------------------------------------------------------
+   asb            | asbsrvc        |        Online       |        Online       |        Online       |
+   botst          | botstsrvc      |        Online       |        Online       |        Online       |
+   bouat          | bouatsrvc      |        Online       |        Online       |        Online       |
+   infaasb        | infaasbsrvc    |        Online       |        Online       |        Online       |
+   infatst        | infatstsrvc    |        Online       |        Online       |        Online       |
+   infauat        | infauatsrvc    |        Online       |        Online       |        Online       |
+   ivv1           | ivv1srvc       |        Online       |        Online       |        Online       |
+   kcasb          | inflasb        |          -          |        Online       |          -          |
+   kctst1         | infltst1       |        Online       |          -          |          -          |
+   kcuat          | kcuatsrvc      |        Online       |          -          |          -          |
+   tst2           | upgtst2        |        Online       |        Online       |        Online       |
+   uat            | uatsrvc        |        Online       |        Online       |        Online       |
+  ---------------------------------------------------------------------------------------------------
+
+
+srvctl modify service -db ASB -service ASBSRVC -modifyconfig -preferred "ASB1,ASB2" -available "ASB3" -force
+srvctl modify service -db BOTST -service BOTSTSRVC -modifyconfig -preferred "BOTST1,BOTST2" -available "BOTST3" 
+srvctl modify service -db INFAASB -service INFAASBSRVC -modifyconfig -preferred "INFAASB1,INFAASB2" -available "INFAASB3"-force
+srvctl modify service -db INFATST -service INFATSTSRVC -modifyconfig -preferred "INFATST1,INFATST2" -available "INFATST3"-force
+srvctl modify service -db INFAUAT -service INFAUATSRVC -modifyconfig -preferred "INFAUAT1,INFAUAT2" -available "INFAUAT3"-force
+srvctl modify service -db IVV1    -service IVV1SRVC -modifyconfig -preferred "IVV11,IVV12" -available "IVV13" -force
+srvctl modify service -db TST2    -service upgtst2 -modifyconfig -preferred "TST21,TST22" -available "TST23" -force
+srvctl modify service -db BOUAT -service BOUATSRVC -modifyconfig -preferred "BOUAT1,BOUAT2" -available "BOUAT3"-force
+srvctl modify service -db UAT -service UATSRVC -modifyconfig -preferred "UAT1,UAT2" -available "UAT3" -force

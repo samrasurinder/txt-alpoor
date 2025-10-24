@@ -1,0 +1,3 @@
+https://www.integrigy.com/oracle-security-blog/what-mode-oracle-12c-unified-auditing-are-you-using-and-default-auditing
+
+https://mikedietrichde.com/2020/10/21/check-your-unified-auditing-policies-after-upgrading-to-oracle-19c/

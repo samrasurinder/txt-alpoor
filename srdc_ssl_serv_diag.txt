@@ -1,0 +1,96 @@
+ Diagnostic-Name: ssl_serv_diag
+ Hostname: server.washdc.state.sbu
+ Instance: VMRACDB1
+
+SSL1
+VMRACDB1
+SSL2
+LISTENER_SCAN1
+SSL3
+19.0.0.0.0
+SSL4
+#SQLNET.ORA Network Configuration File
+#Created by Oracle Enterprise Manager Clone Database tool
+SQLNET.INBOUND_CONNECT_TIMEOUT=50
+SQLNET.EXPIRE_TIME=150
+
+SQLNET.ENCRYPTION_TYPES_SERVER= (AES256)
+SQLNET.AUTHENTICATION_SERVICES = (TCPS,beq)
+SQLNET.CRYPTO_CHECKSUM_TYPES_SERVER = (SHA1,SHA256,SHA384,SHA512)
+SQLNET.ENCRYPTION_SERVER = REQUIRED
+SQLNET.CRYPTO_CHECKSUM_SERVER = REQUIRED
+
+ENCRYPTION_WALLET_LOCATION = (SOURCE = (METHOD = FILE) (METHOD_DATA =(DIRECTORY =/u02/app/oracle/WALLETS/${ORACLE_UNQNAME})))
+WALLET_LOCATION = (SOURCE = (METHOD = FILE) (METHOD_DATA =(DIRECTORY =/u02/app/oracle/WALLETS/VMRACDB-TCPS2)))
+
+NAMES.DIRECTORY_PATH= (TNSNAMES, ONAMES, HOSTNAME)
+SQLNET.ENCRYPTION_CLIENT=REQUIRED
+SQLNET.CRYPTO_CHECKSUM_CLIENT=REQUIRED
+SQLNET.ENCRYPTION_TYPES_CLIENT=(AES256,AES192,AES128)
+SQLNET.CRYPTO_CHECKSUM_TYPES_CLIENT=(SHA256,SHA384,SHA512)
+#SQLNET.FIPS_140=TRUE
+#New line adds begin here..
+SQLNET.IGNORE_ANO_ENCRYPTION_FOR_TCPS=TRUE
+SSL_VERSION=1.2
+## MVS USE THIS LINE BELOW
+SSL_CIPHER_SUITES = (SSL_RSA_WITH_AES_256_CBC_SHA,SSL_RSA_WITH_AES_256_GCM_SHA384)
+##SSL_CIPHER_SUITES = (TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256)
+trace_level_server=16
+trace_directory_server=/tmp
+diag_adr_enabled=off
+
+
+SSL5
+SSL6
+
+LSNRCTL for Linux: Version 19.0.0.0.0 - Production on 29-AUG-2022 08:32:41
+
+Copyright (c) 1991, 2022, Oracle.  All rights reserved.
+
+TNS-01101: Could not find listener name or service name LISTENER_SCAN1
+SSL7
+total 52
+-rw-r-----. 1 oracle oinstall 9445 Jul 21 15:10 cwallet.sso
+-rw-r-----. 1 oracle oinstall    0 Jul 15 10:27 cwallet.sso.lck
+-rw-r-----. 1 oracle oinstall 9400 Jul 18 15:56 ewallet.p12
+-rw-r-----. 1 oracle oinstall    0 Jul 15 10:17 ewallet.p12.lck
+-rw-r--r--. 1 root   root     3602 Jul 18 15:54 ha_ca.crt
+-rw-------. 1 root   root     9400 Jul 21 15:09 orig.p12
+-rw-r--r--. 1 root   root     2310 Jul 18 15:54 root.crt
+-rw-r--r--. 1 root   root     3447 Jul 18 15:53 vmracdb.crt
+-rw-------. 1 oracle oinstall 1101 Jul 15 10:28 vmracdb.csr
+SSL8
+oracle
+SSL9
+grid
+SSL10
+uid=54321(oracle) gid=54321(oinstall) groups=54321(oinstall),10(wheel),54322(dba),54326(oper),54327(backupdba),54328(dgdba),54329(kmdba),54330(racdba)
+SSL11
+uid=54331(grid) gid=54321(oinstall) groups=54321(oinstall),10(wheel),54322(dba),54323(asmadmin),54324(asmdba),54325(asmoper)
+SSL12
+SSLCU: 0
+SSLCT: 3
+CN=U.S. Department of State AD Root CA,CN=AIA,CN=Public Key Services,CN=Services,CN=Configuration,DC=state,DC=sbu
+SSL13
+CN=U.S. Department of State AD High Assurance CA,CN=AIA,CN=Public Key Services,CN=Services,CN=Configuration,DC=state,DC=sbu
+SSL14
+CN=vmracdb.hr.state.sbu,OU=Web Servers,OU=PKI,OU=Enterprise Services,DC=appservices,DC=state,DC=sbu
+SSL15
+sha256WithRSAEncryption
+SSL16
+DC=sbu, DC=state, CN=Configuration, CN=Services, CN=Public Key Services, CN=AIA, CN=U.S. Department of State AD Root CA
+SSL17
+DC=sbu, DC=state, CN=Configuration, CN=Services, CN=Public Key Services, CN=AIA, CN=U.S. Department of State AD Root CA
+SSL18
+sha256WithRSAEncryption
+SSL19
+DC=sbu, DC=state, CN=Configuration, CN=Services, CN=Public Key Services, CN=AIA, CN=U.S. Department of State AD High Assurance CA
+SSL20
+DC=sbu, DC=state, CN=Configuration, CN=Services, CN=Public Key Services, CN=AIA, CN=U.S. Department of State AD Root CA
+SSL21
+sha256WithRSAEncryption
+SSL22
+DC=sbu, DC=state, DC=appservices, OU=Enterprise Services, OU=PKI, OU=Web Servers, CN=vmracdb.hr.state.sbu
+SSL23
+DC=sbu, DC=state, CN=Configuration, CN=Services, CN=Public Key Services, CN=AIA, CN=U.S. Department of State AD High Assurance CA
+SSL24

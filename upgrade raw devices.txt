@@ -1,0 +1,586 @@
+
+PRD-Cluster:
+-----------
+
+PR_CLONE1 500GB   WWN: DE43CDEDEAF74266002BD046
+PR_CLONE2 500GB   WWN: DE43CDEDEAF74266002BD05A
+PR_CLONE3 500GB   WWN: DE43CDEDEAF74266002BD05B
+PR_CLONE4 500GB   WWN: DE43CDEDEAF74266002BD05C
+
+
+
+KC-Cluster on 48/49
+-------------------
+
+KC_CLONE1 500GB  WWN: DE43CDEDEAF74266002BD0F1  - 3624a9370de43cdedeaf74266002bd0f1 -> ../dm-43
+KC_CLONE2 500GB  WWN: DE43CDEDEAF74266002BD0F2  - 3624a9370de43cdedeaf74266002bd0f2 -> ../dm-42
+KC_CLONE3 500GB  WWN: DE43CDEDEAF74266002BD115  - 3624a9370de43cdedeaf74266002bd115 -> ../dm-41
+KC_CLONE4 500GB  WWN: DE43CDEDEAF74266002BD129  - 3624a9370de43cdedeaf74266002bd129 -> ../dm-40
+
+[root@hrewoel48 ~]# fdisk -l /dev/mapper/3624a9370de43cdedeaf74266002bd0f1
+
+Disk /dev/mapper/3624a9370de43cdedeaf74266002bd0f1: 536.9 GB, 536870912000 bytes, 1048576000 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 4194304 bytes
+
+[root@hrewoel48 ~]#
+
+
+[root@hrewoel48 ~]# fdisk /dev/mapper/3624a9370de43cdedeaf74266002bd0f1
+Welcome to fdisk (util-linux 2.23.2).
+
+Changes will remain in memory only, until you decide to write them.
+Be careful before using the write command.
+
+Device does not contain a recognized partition table
+Building a new DOS disklabel with disk identifier 0xbcde55ca.
+
+Command (m for help): n
+Partition type:
+   p   primary (0 primary, 0 extended, 4 free)
+   e   extended
+Select (default p): p
+Partition number (1-4, default 1):
+First sector (8192-1048575999, default 8192):
+Using default value 8192
+Last sector, +sectors or +size{K,M,G} (8192-1048575999, default 1048575999):
+Using default value 1048575999
+Partition 1 of type Linux and of size 500 GiB is set
+
+Command (m for help): w
+The partition table has been altered!
+
+Calling ioctl() to re-read partition table.
+
+WARNING: Re-reading the partition table failed with error 22: Invalid argument.
+The kernel still uses the old table. The new table will be used at
+the next reboot or after you run partprobe(8) or kpartx(8)
+Syncing disks.
+[root@hrewoel48 ~]#
+
+[root@hrewoel48 ~]# fdisk -l /dev/dm-43
+
+Disk /dev/dm-43: 536.9 GB, 536870912000 bytes, 1048576000 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 4194304 bytes
+Disk label type: dos
+Disk identifier: 0xbcde55ca
+
+      Device Boot      Start         End      Blocks   Id  System
+/dev/dm-43p1            8192  1048575999   524283904   83  Linux
+[root@hrewoel48 ~]#
+
+
+
+
+[root@hrewoel48 ~]# fdisk  -l /dev/mapper/3624a9370de43cdedeaf74266002bd0f2
+
+Disk /dev/mapper/3624a9370de43cdedeaf74266002bd0f2: 536.9 GB, 536870912000 bytes, 1048576000 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 4194304 bytes
+Disk label type: dos
+Disk identifier: 0x829db75c
+
+                                         Device Boot      Start         End      Blocks   Id  System
+/dev/mapper/3624a9370de43cdedeaf74266002bd0f2p1            8192  1048575999   524283904   83  Linux
+[root@hrewoel48 ~]#
+
+
+
+[root@hrewoel48 ~]# fdisk -l /dev/dm-42
+
+Disk /dev/dm-42: 536.9 GB, 536870912000 bytes, 1048576000 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 4194304 bytes
+Disk label type: dos
+Disk identifier: 0x829db75c
+
+      Device Boot      Start         End      Blocks   Id  System
+/dev/dm-42p1            8192  1048575999   524283904   83  Linux
+[root@hrewoel48 ~]#
+
+
+[root@hrewoel48 ~]# fdisk -l /dev/mapper/3624a9370de43cdedeaf74266002bd115
+
+Disk /dev/mapper/3624a9370de43cdedeaf74266002bd115: 536.9 GB, 536870912000 bytes, 1048576000 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 4194304 bytes
+
+[root@hrewoel48 ~]# fdisk  /dev/mapper/3624a9370de43cdedeaf74266002bd115
+Welcome to fdisk (util-linux 2.23.2).
+
+Changes will remain in memory only, until you decide to write them.
+Be careful before using the write command.
+
+Device does not contain a recognized partition table
+Building a new DOS disklabel with disk identifier 0x16cf9de2.
+
+Command (m for help): n
+Partition type:
+   p   primary (0 primary, 0 extended, 4 free)
+   e   extended
+Select (default p):
+Using default response p
+Partition number (1-4, default 1):
+First sector (8192-1048575999, default 8192):
+Using default value 8192
+Last sector, +sectors or +size{K,M,G} (8192-1048575999, default 1048575999):
+Using default value 1048575999
+Partition 1 of type Linux and of size 500 GiB is set
+
+Command (m for help): w
+The partition table has been altered!
+
+Calling ioctl() to re-read partition table.
+
+WARNING: Re-reading the partition table failed with error 22: Invalid argument.
+The kernel still uses the old table. The new table will be used at
+the next reboot or after you run partprobe(8) or kpartx(8)
+Syncing disks.
+[root@hrewoel48 ~]# fdisk -l /dev/mapper/3624a9370de43cdedeaf74266002bd115
+
+Disk /dev/mapper/3624a9370de43cdedeaf74266002bd115: 536.9 GB, 536870912000 bytes, 1048576000 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 4194304 bytes
+Disk label type: dos
+Disk identifier: 0x16cf9de2
+
+                                         Device Boot      Start         End      Blocks   Id  System
+/dev/mapper/3624a9370de43cdedeaf74266002bd115p1            8192  1048575999   524283904   83  Linux
+[root@hrewoel48 ~]# fdisk -l /dev/dm-41
+
+Disk /dev/dm-41: 536.9 GB, 536870912000 bytes, 1048576000 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 4194304 bytes
+Disk label type: dos
+Disk identifier: 0x16cf9de2
+
+      Device Boot      Start         End      Blocks   Id  System
+/dev/dm-41p1            8192  1048575999   524283904   83  Linux
+[root@hrewoel48 ~]#
+
+[root@hrewoel48 ~]# fdisk -l /dev/mapper/3624a9370de43cdedeaf74266002bd129
+
+Disk /dev/mapper/3624a9370de43cdedeaf74266002bd129: 536.9 GB, 536870912000 bytes, 1048576000 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 4194304 bytes
+
+[root@hrewoel48 ~]# fdisk -l /dev/dm-40
+
+Disk /dev/dm-40: 536.9 GB, 536870912000 bytes, 1048576000 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 4194304 bytes
+
+[root@hrewoel48 ~]# fdisk  /dev/mapper/3624a9370de43cdedeaf74266002bd129
+Welcome to fdisk (util-linux 2.23.2).
+
+Changes will remain in memory only, until you decide to write them.
+Be careful before using the write command.
+
+Device does not contain a recognized partition table
+Building a new DOS disklabel with disk identifier 0xbe0b7778.
+
+Command (m for help): n
+Partition type:
+   p   primary (0 primary, 0 extended, 4 free)
+   e   extended
+Select (default p):
+Using default response p
+Partition number (1-4, default 1):
+First sector (8192-1048575999, default 8192):
+Using default value 8192
+Last sector, +sectors or +size{K,M,G} (8192-1048575999, default 1048575999):
+Using default value 1048575999
+Partition 1 of type Linux and of size 500 GiB is set
+
+Command (m for help): w
+The partition table has been altered!
+
+Calling ioctl() to re-read partition table.
+
+WARNING: Re-reading the partition table failed with error 22: Invalid argument.
+The kernel still uses the old table. The new table will be used at
+the next reboot or after you run partprobe(8) or kpartx(8)
+Syncing disks.
+[root@hrewoel48 ~]# fdisk  -l /dev/mapper/3624a9370de43cdedeaf74266002bd129
+
+Disk /dev/mapper/3624a9370de43cdedeaf74266002bd129: 536.9 GB, 536870912000 bytes, 1048576000 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 4194304 bytes
+Disk label type: dos
+Disk identifier: 0xbe0b7778
+
+                                         Device Boot      Start         End      Blocks   Id  System
+/dev/mapper/3624a9370de43cdedeaf74266002bd129p1            8192  1048575999   524283904   83  Linux
+[root@hrewoel48 ~]# fdisk -l /dev/dm-40
+
+Disk /dev/dm-40: 536.9 GB, 536870912000 bytes, 1048576000 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 4194304 bytes
+Disk label type: dos
+Disk identifier: 0xbe0b7778
+
+      Device Boot      Start         End      Blocks   Id  System
+/dev/dm-40p1            8192  1048575999   524283904   83  Linux
+[root@hrewoel48 ~]#
+
+Now check what's already there
+
+
+[root@hrewoel48 ~]# asmcmd afd_lslbl
+--------------------------------------------------------------------------------
+Label                     Duplicate  Path
+================================================================================
+ASM_DISK01                            /dev/dm-26
+ASM_DISK02                            /dev/dm-24
+ASM_DISK03                            /dev/dm-23
+ASM_DISK04                            /dev/dm-7
+ASM_DISK05                            /dev/dm-15
+ASM_DISK06                            /dev/dm-8
+ASM_DISK07                            /dev/dm-16
+ASM_DISK08                            /dev/dm-9
+ASM_DISK10                            /dev/dm-6
+ASM_DISK11                            /dev/dm-28
+ASM_DISK12                            /dev/dm-10
+ASM_DISK13                            /dev/dm-18
+CLONE_DISK_01                         /dev/dm-17
+CLONE_DISK_02                         /dev/dm-0
+CLONE_DISK_03                         /dev/dm-3
+CLONE_DISK_04                         /dev/dm-1
+CLONE_DISK_05                         /dev/dm-11
+CLONE_DISK_06                         /dev/dm-2
+CLONE_DISK_07                         /dev/dm-12
+CLONE_DISK_08                         /dev/dm-5
+CLONE_DISK_09                         /dev/dm-13
+CLONE_DISK_10                         /dev/dm-4
+CLONE_DISK_11                         /dev/dm-14
+GEMS_DRSHARE                          /dev/dm-21
+[root@hrewoel48 ~]#
+
+
+[root@hrewoel48 ~]#  asmcmd afd_lsdsk
+--------------------------------------------------------------------------------
+Label                     Filtering   Path
+================================================================================
+ASM_DISK01                  ENABLED   /dev/dm-26
+ASM_DISK02                  ENABLED   /dev/dm-24
+ASM_DISK03                  ENABLED   /dev/dm-23
+ASM_DISK04                  ENABLED   /dev/dm-7
+ASM_DISK05                  ENABLED   /dev/dm-15
+ASM_DISK06                  ENABLED   /dev/dm-8
+ASM_DISK07                  ENABLED   /dev/dm-16
+ASM_DISK08                  ENABLED   /dev/dm-9
+ASM_DISK10                  ENABLED   /dev/dm-6
+ASM_DISK11                  ENABLED   /dev/dm-28
+ASM_DISK12                  ENABLED   /dev/dm-10
+ASM_DISK13                  ENABLED   /dev/dm-18
+CLONE_DISK_01               ENABLED   /dev/dm-17
+CLONE_DISK_02               ENABLED   /dev/dm-0
+CLONE_DISK_03               ENABLED   /dev/dm-3
+CLONE_DISK_04               ENABLED   /dev/dm-1
+CLONE_DISK_05               ENABLED   /dev/dm-11
+CLONE_DISK_06               ENABLED   /dev/dm-2
+CLONE_DISK_07               ENABLED   /dev/dm-12
+CLONE_DISK_08               ENABLED   /dev/dm-5
+CLONE_DISK_09               ENABLED   /dev/dm-13
+CLONE_DISK_10               ENABLED   /dev/dm-4
+CLONE_DISK_11               ENABLED   /dev/dm-14
+GEMS_DRSHARE                ENABLED   /dev/dm-21
+[root@hrewoel48 ~]#
+
+
+Now time to label:
+
+asmcmd afd_label UPG_DISK01 /dev/dm-43
+[root@hrewoel48 ~]# asmcmd afd_lslbl
+--------------------------------------------------------------------------------
+Label                     Duplicate  Path
+================================================================================
+ASM_DISK01                            /dev/dm-26
+ASM_DISK02                            /dev/dm-24
+ASM_DISK03                            /dev/dm-23
+ASM_DISK04                            /dev/dm-7
+ASM_DISK05                            /dev/dm-15
+ASM_DISK06                            /dev/dm-8
+ASM_DISK07                            /dev/dm-16
+ASM_DISK08                            /dev/dm-9
+ASM_DISK10                            /dev/dm-6
+ASM_DISK11                            /dev/dm-28
+ASM_DISK12                            /dev/dm-10
+ASM_DISK13                            /dev/dm-18
+CLONE_DISK_01                         /dev/dm-17
+CLONE_DISK_02                         /dev/dm-0
+CLONE_DISK_03                         /dev/dm-3
+CLONE_DISK_04                         /dev/dm-1
+CLONE_DISK_05                         /dev/dm-11
+CLONE_DISK_06                         /dev/dm-2
+CLONE_DISK_07                         /dev/dm-12
+CLONE_DISK_08                         /dev/dm-5
+CLONE_DISK_09                         /dev/dm-13
+CLONE_DISK_10                         /dev/dm-4
+CLONE_DISK_11                         /dev/dm-14
+GEMS_DRSHARE                          /dev/dm-21
+UPG_DISK01                            /dev/dm-43
+[root@hrewoel48 ~]#
+
+[root@hrewoel48 ~]# asmcmd afd_label UPG_DISK02 /dev/dm-42
+[root@hrewoel48 ~]# asmcmd afd_label UPG_DISK03 /dev/dm-41
+[root@hrewoel48 ~]# asmcmd afd_label UPG_DISK04 /dev/dm-40
+[root@hrewoel48 ~]# asmcmd afd_lslbl
+--------------------------------------------------------------------------------
+Label                     Duplicate  Path
+================================================================================
+ASM_DISK01                            /dev/dm-26
+ASM_DISK02                            /dev/dm-24
+ASM_DISK03                            /dev/dm-23
+ASM_DISK04                            /dev/dm-7
+ASM_DISK05                            /dev/dm-15
+ASM_DISK06                            /dev/dm-8
+ASM_DISK07                            /dev/dm-16
+ASM_DISK08                            /dev/dm-9
+ASM_DISK10                            /dev/dm-6
+ASM_DISK11                            /dev/dm-28
+ASM_DISK12                            /dev/dm-10
+ASM_DISK13                            /dev/dm-18
+CLONE_DISK_01                         /dev/dm-17
+CLONE_DISK_02                         /dev/dm-0
+CLONE_DISK_03                         /dev/dm-3
+CLONE_DISK_04                         /dev/dm-1
+CLONE_DISK_05                         /dev/dm-11
+CLONE_DISK_06                         /dev/dm-2
+CLONE_DISK_07                         /dev/dm-12
+CLONE_DISK_08                         /dev/dm-5
+CLONE_DISK_09                         /dev/dm-13
+CLONE_DISK_10                         /dev/dm-4
+CLONE_DISK_11                         /dev/dm-14
+GEMS_DRSHARE                          /dev/dm-21
+UPG_DISK01                            /dev/dm-43
+UPG_DISK02                            /dev/dm-42
+UPG_DISK03                            /dev/dm-41
+UPG_DISK04                            /dev/dm-40
+
+
+Then go to each member of RAC cluster, do the following
+
+[root@hrewoel49 ~]# asmcmd afd_scan
+[root@hrewoel49 ~]# asmcmd afd_lsdsk
+--------------------------------------------------------------------------------
+Label                     Filtering   Path
+================================================================================
+ASM_DISK01                  ENABLED   /dev/dm-21
+ASM_DISK02                  ENABLED   /dev/dm-24
+ASM_DISK03                  ENABLED   /dev/dm-26
+ASM_DISK04                  ENABLED   /dev/dm-6
+ASM_DISK05                  ENABLED   /dev/dm-27
+ASM_DISK06                  ENABLED   /dev/dm-7
+ASM_DISK07                  ENABLED   /dev/dm-28
+ASM_DISK08                  ENABLED   /dev/dm-10
+ASM_DISK10                  ENABLED   /dev/dm-11
+ASM_DISK11                  ENABLED   /dev/dm-30
+ASM_DISK12                  ENABLED   /dev/dm-16
+ASM_DISK13                  ENABLED   /dev/dm-31
+CLONE_DISK_01               ENABLED   /dev/dm-29
+CLONE_DISK_02               ENABLED   /dev/dm-2
+CLONE_DISK_03               ENABLED   /dev/dm-1
+CLONE_DISK_04               ENABLED   /dev/dm-3
+CLONE_DISK_05               ENABLED   /dev/dm-18
+CLONE_DISK_06               ENABLED   /dev/dm-5
+CLONE_DISK_07               ENABLED   /dev/dm-19
+CLONE_DISK_08               ENABLED   /dev/dm-0
+CLONE_DISK_09               ENABLED   /dev/dm-23
+CLONE_DISK_10               ENABLED   /dev/dm-4
+CLONE_DISK_11               ENABLED   /dev/dm-25
+GEMS_DRSHARE                ENABLED   /dev/dm-17
+UPG_DISK01                  ENABLED   /dev/dm-43
+UPG_DISK02                  ENABLED   /dev/dm-42
+UPG_DISK03                  ENABLED   /dev/dm-41
+UPG_DISK04                  ENABLED   /dev/dm-40
+[root@hrewoel49 ~]# asmcmd afd_lslbl
+--------------------------------------------------------------------------------
+Label                     Duplicate  Path
+================================================================================
+ASM_DISK01                            /dev/dm-21
+ASM_DISK02                            /dev/dm-24
+ASM_DISK03                            /dev/dm-26
+ASM_DISK04                            /dev/dm-6
+ASM_DISK05                            /dev/dm-27
+ASM_DISK06                            /dev/dm-7
+ASM_DISK07                            /dev/dm-28
+ASM_DISK08                            /dev/dm-10
+ASM_DISK10                            /dev/dm-11
+ASM_DISK11                            /dev/dm-30
+ASM_DISK12                            /dev/dm-16
+ASM_DISK13                            /dev/dm-31
+CLONE_DISK_01                         /dev/dm-29
+CLONE_DISK_02                         /dev/dm-2
+CLONE_DISK_03                         /dev/dm-1
+CLONE_DISK_04                         /dev/dm-3
+CLONE_DISK_05                         /dev/dm-18
+CLONE_DISK_06                         /dev/dm-5
+CLONE_DISK_07                         /dev/dm-19
+CLONE_DISK_08                         /dev/dm-0
+CLONE_DISK_09                         /dev/dm-23
+CLONE_DISK_10                         /dev/dm-4
+CLONE_DISK_11                         /dev/dm-25
+GEMS_DRSHARE                          /dev/dm-17
+UPG_DISK01                            /dev/dm-43
+UPG_DISK02                            /dev/dm-42
+UPG_DISK03                            /dev/dm-41
+UPG_DISK04                            /dev/dm-40
+[root@hrewoel49 ~]#
+
+
+
+[grid@hrewoel48 ~]$ ls -altrh /dev/oracleafd/disks/
+total 112K
+-rw-rw-r--. 1 grid oinstall  11 Feb 26 15:42 GEMS_DRSHARE
+-rw-rw-r--. 1 grid oinstall  11 Feb 26 15:42 CLONE_DISK_11
+-rw-rw-r--. 1 grid oinstall  10 Feb 26 15:42 CLONE_DISK_10
+-rw-rw-r--. 1 grid oinstall  11 Feb 26 15:42 CLONE_DISK_09
+-rw-rw-r--. 1 grid oinstall  10 Feb 26 15:42 CLONE_DISK_08
+-rw-rw-r--. 1 grid oinstall  11 Feb 26 15:42 CLONE_DISK_07
+-rw-rw-r--. 1 grid oinstall  10 Feb 26 15:42 CLONE_DISK_06
+-rw-rw-r--. 1 grid oinstall  11 Feb 26 15:42 CLONE_DISK_05
+-rw-rw-r--. 1 grid oinstall  10 Feb 26 15:42 CLONE_DISK_04
+-rw-rw-r--. 1 grid oinstall  10 Feb 26 15:42 CLONE_DISK_03
+-rw-rw-r--. 1 grid oinstall  10 Feb 26 15:42 CLONE_DISK_02
+-rw-rw-r--. 1 grid oinstall  11 Feb 26 15:42 CLONE_DISK_01
+-rw-rw-r--. 1 grid oinstall  11 Feb 26 15:42 ASM_DISK13
+-rw-rw-r--. 1 grid oinstall  11 Feb 26 15:42 ASM_DISK12
+-rw-rw-r--. 1 grid oinstall  11 Feb 26 15:42 ASM_DISK11
+-rw-rw-r--. 1 grid oinstall  10 Feb 26 15:42 ASM_DISK10
+-rw-rw-r--. 1 grid oinstall  10 Feb 26 15:42 ASM_DISK08
+-rw-rw-r--. 1 grid oinstall  11 Feb 26 15:42 ASM_DISK07
+-rw-rw-r--. 1 grid oinstall  10 Feb 26 15:42 ASM_DISK06
+-rw-rw-r--. 1 grid oinstall  11 Feb 26 15:42 ASM_DISK05
+-rw-rw-r--. 1 grid oinstall  10 Feb 26 15:42 ASM_DISK04
+-rw-rw-r--. 1 grid oinstall  11 Feb 26 15:42 ASM_DISK03
+-rw-rw-r--. 1 grid oinstall  11 Feb 26 15:42 ASM_DISK02
+-rw-rw-r--. 1 grid oinstall  11 Feb 26 15:42 ASM_DISK01
+drwxrwx---. 3 grid oinstall  80 Feb 26 15:42 ..
+-rw-rw-r--. 1 grid oinstall  11 Mar 10 07:58 UPG_DISK01
+-rw-rw-r--. 1 grid oinstall  11 Mar 10 07:59 UPG_DISK02
+-rw-rw-r--. 1 grid oinstall  11 Mar 10 08:00 UPG_DISK03
+-rw-rw-r--. 1 grid oinstall  11 Mar 10 08:00 UPG_DISK04
+drwxrwx---. 2 grid oinstall 600 Mar 10 08:00 .
+[grid@hrewoel48 ~]$
+
+
+[oracle@hrewoel49 ~]$  ls -altrh /dev/oracleafd/disks/
+total 112K
+-rw-rw-r--. 1 grid oinstall  11 Feb 26 15:42 GEMS_DRSHARE
+-rw-rw-r--. 1 grid oinstall  11 Feb 26 15:42 CLONE_DISK_11
+-rw-rw-r--. 1 grid oinstall  10 Feb 26 15:42 CLONE_DISK_10
+-rw-rw-r--. 1 grid oinstall  11 Feb 26 15:42 CLONE_DISK_09
+-rw-rw-r--. 1 grid oinstall  10 Feb 26 15:42 CLONE_DISK_08
+-rw-rw-r--. 1 grid oinstall  11 Feb 26 15:42 CLONE_DISK_07
+-rw-rw-r--. 1 grid oinstall  10 Feb 26 15:42 CLONE_DISK_06
+-rw-rw-r--. 1 grid oinstall  11 Feb 26 15:42 CLONE_DISK_05
+-rw-rw-r--. 1 grid oinstall  10 Feb 26 15:42 CLONE_DISK_04
+-rw-rw-r--. 1 grid oinstall  10 Feb 26 15:42 CLONE_DISK_03
+-rw-rw-r--. 1 grid oinstall  10 Feb 26 15:42 CLONE_DISK_02
+-rw-rw-r--. 1 grid oinstall  11 Feb 26 15:42 CLONE_DISK_01
+-rw-rw-r--. 1 grid oinstall  11 Feb 26 15:42 ASM_DISK13
+-rw-rw-r--. 1 grid oinstall  11 Feb 26 15:42 ASM_DISK12
+-rw-rw-r--. 1 grid oinstall  11 Feb 26 15:42 ASM_DISK11
+-rw-rw-r--. 1 grid oinstall  11 Feb 26 15:42 ASM_DISK10
+-rw-rw-r--. 1 grid oinstall  11 Feb 26 15:42 ASM_DISK08
+-rw-rw-r--. 1 grid oinstall  11 Feb 26 15:42 ASM_DISK07
+-rw-rw-r--. 1 grid oinstall  10 Feb 26 15:42 ASM_DISK06
+-rw-rw-r--. 1 grid oinstall  11 Feb 26 15:42 ASM_DISK05
+-rw-rw-r--. 1 grid oinstall  10 Feb 26 15:42 ASM_DISK04
+-rw-rw-r--. 1 grid oinstall  11 Feb 26 15:42 ASM_DISK03
+-rw-rw-r--. 1 grid oinstall  11 Feb 26 15:42 ASM_DISK02
+-rw-rw-r--. 1 grid oinstall  11 Feb 26 15:42 ASM_DISK01
+drwxrwx---. 3 grid oinstall  80 Feb 26 15:42 ..
+-rw-rw-r--. 1 grid oinstall  11 Mar 10 07:58 UPG_DISK01
+-rw-rw-r--. 1 grid oinstall  11 Mar 10 07:59 UPG_DISK02
+-rw-rw-r--. 1 grid oinstall  11 Mar 10 08:00 UPG_DISK03
+-rw-rw-r--. 1 grid oinstall  11 Mar 10 08:00 UPG_DISK04
+drwxrwx---. 2 grid oinstall 600 Mar 10 08:00 .
+[oracle@hrewoel49 ~]$
+
+
+
+Once you make sure, you see new lables on all cluster nodes,
+
+It's time to create ASMDDISK group using newly created disks
+
+SQL> l
+  1* select name,label,path,HEADER_STATUS from v$asm_disk
+SQL> select name,label,path,HEADER_STATUS from v$asm_disk where path like '%UPG%';
+
+NAME                           LABEL                           PATH                           HEADER_STATU
+------------------------------ ------------------------------- ------------------------------ ------------
+                               UPG_DISK03                      AFD:UPG_DISK03                 PROVISIONED
+                               UPG_DISK01                      AFD:UPG_DISK01                 PROVISIONED
+                               UPG_DISK04                      AFD:UPG_DISK04                 PROVISIONED
+                               UPG_DISK02                      AFD:UPG_DISK02                 PROVISIONED
+
+SQL>
+
+
+SQL> l
+  1* select name,label,path,HEADER_STATUS from v$asm_disk
+SQL> select name,label,path,HEADER_STATUS from v$asm_disk where path like '%UPG%';
+
+NAME                           LABEL                           PATH                           HEADER_STATU
+------------------------------ ------------------------------- ------------------------------ ------------
+                               UPG_DISK03                      AFD:UPG_DISK03                 PROVISIONED
+                               UPG_DISK01                      AFD:UPG_DISK01                 PROVISIONED
+                               UPG_DISK04                      AFD:UPG_DISK04                 PROVISIONED
+                               UPG_DISK02                      AFD:UPG_DISK02                 PROVISIONED
+
+SQL> create diskgroup UPG_DATA external redundancy disk 'AFD:UPG_DISK01';
+
+Diskgroup created.
+
+SQL> alter diskgroup UPG_DATA add disk 'AFD:UPG_DISK02';
+
+Diskgroup altered.
+
+SQL> alter diskgroup UPG_DATA add disk 'AFD:UPG_DISK03';
+
+Diskgroup altered.
+
+SQL>  create diskgroup UPG_FRA external redundancy disk 'AFD:UPG_DISK04';
+
+Diskgroup created.
+
+SQL> !asmcmd lsdg
+State    Type    Rebal  Sector  Logical_Sector  Block       AU  Total_MB  Free_MB  Req_mir_free_MB  Usable_file_MB  Offline_disks  Voting_files  Name
+MOUNTED  EXTERN  N         512             512   4096  1048576   1024000   206444                0          206444              0             N  DATA/
+MOUNTED  EXTERN  N         512             512   4096  1048576    512000   422289                0          422289              0             N  FRA/
+MOUNTED  EXTERN  N         512             512   4096  1048576   1536000   508845                0          508845              0             N  HFKC_DATA/
+MOUNTED  EXTERN  N         512             512   4096  1048576    512000   509455                0          509455              0             N  HFKC_FRA/
+MOUNTED  EXTERN  N         512             512   4096  1048576   2048000   919600                0          919600              0             N  HFPRD_DATA/
+MOUNTED  EXTERN  N         512             512   4096  1048576   1536000   293427                0          293427              0             N  HFPRD_FRA/
+MOUNTED  EXTERN  N         512             512   4096  4194304     15360    14996                0           14996              0             Y  OCR_VD_DG/
+MOUNTED  EXTERN  N         512             512   4096  1048576   1536000  1535922                0         1535922              0             N  UPG_DATA/
+MOUNTED  EXTERN  N         512             512   4096  1048576    512000   511934                0          511934              0             N  UPG_FRA/
+
+SQL>
+
+
+
+bd046
+bd05a
+bd05b
+bd05c
+
+
+bd0f1
+bdof2
+bd115
+bd129

@@ -1,0 +1,24 @@
+/bin/bash /infshare/oracle/scripts/dba/delete_asmsharedg_backup.bash      on hrewoel13.hr.state.sbu
+
+/infshare/oracle/scripts/backup/RMAN_BACKUP_FOR_REFRESH_ASMSHAREDG.bash HFPRD on hrewoel13.hr.state.sbu
+
+/infshare/oracle/scripts/backup/RMAN_BACKUP_FOR_REFRESH_ASMSHAREDG.bash HFCRM on hrewoel13.hr.state.sbu
+
+/bin/bash /infshare/oracle/scripts/dba/dismount_asmsharedg_diskgroup.bash on hrewoel13.hr.state.sbu
+
+/bin/bash /infshare/oracle/scripts/dba/mount_asmsharedg_diskgroup.bash on hrewoel03.hr.state.sbu
+
+
+/infshare/oracle/scripts/refresh/bin/db_refresh_asmsharedg_BACKUP.bash UAT on hrewoel03.hr.state.sbu
+
+/bin/bash /infshare/oracle/scripts/refresh/bin/db_refresh_asmsharedg_BACKUP.bash CRMCPY on hrewoel03.hr.state.sbu
+
+/bin/bash /infshare/oracle/scripts/dba/dismount_asmsharedg_diskgroup.bash on hrewoel03.hr.state.sbu
+
+
+
+
+
+
+
+

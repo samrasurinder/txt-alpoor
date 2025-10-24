@@ -1,0 +1,48 @@
+ EXEC DBMS_STATS.CREATE_STAT_TABLE('SYSADM','STATS_TABLE');
+
+ select count(*) from sYSADM.STATS_TABLE;
+
+
+exec dbms_stats.export_schema_stats(ownname => 'SYSADM',stattab => 'STATS_TABLE');
+
+
+SQL> exec dbms_stats.export_schema_stats(ownname => 'SYSADM',stattab => 'STATS_TABLE');
+
+
+PL/SQL procedure successfully completed.
+
+SQL> SQL>  select count(*) from sYSADM.STATS_TABLE;
+
+  COUNT(*)
+----------
+    540746
+
+SQL>
+
+
+
+expdp \"/ AS SYSDBA /\" directory=DATA_PUMP_DIR dumpfile=SYSADM_stats.dmp logfile=stats.log tables=SYSADM.STATS_TABLE
+
+
+[oracle@hrvltstdb7601 ~]$ expdp \"/ AS SYSDBA \" directory=DATA_PUMP_DIR dumpfile=SYSADM_stats.dmp logfile=stats.log tables=SYSADM.STATS_TABLE
+
+Export: Release 12.2.0.1.0 - Production on Wed May 27 22:27:29 2020
+
+Copyright (c) 1982, 2017, Oracle and/or its affiliates.  All rights reserved.
+
+Connected to: Oracle Database 12c Enterprise Edition Release 12.2.0.1.0 - 64bit Production
+Starting "SYS"."SYS_EXPORT_TABLE_02":  "/******** AS SYSDBA" directory=DATA_PUMP_DIR dumpfile=SYSADM_stats.dmp logfile=stats.log tables=SYSADM.STATS_TABLE
+Processing object type TABLE_EXPORT/TABLE/TABLE_DATA
+Processing object type TABLE_EXPORT/TABLE/INDEX/STATISTICS/INDEX_STATISTICS
+Processing object type TABLE_EXPORT/TABLE/STATISTICS/TABLE_STATISTICS
+Processing object type TABLE_EXPORT/TABLE/STATISTICS/MARKER
+Processing object type TABLE_EXPORT/TABLE/TABLE
+Processing object type TABLE_EXPORT/TABLE/INDEX/INDEX
+. . exported "SYSADM"."STATS_TABLE"                      44.08 MB  540746 rows
+Master table "SYS"."SYS_EXPORT_TABLE_02" successfully loaded/unloaded
+******************************************************************************
+Dump file set for SYS.SYS_EXPORT_TABLE_02 is:
+  /u02/app/oracle/product/12.0.2/db_1/rdbms/log/SYSADM_stats.dmp
+Job "SYS"."SYS_EXPORT_TABLE_02" successfully completed at Wed May 27 22:29:02 2020 elapsed 0 00:01:26
+
+[oracle@hrvltstdb7601 ~]$

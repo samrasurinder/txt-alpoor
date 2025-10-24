@@ -1,0 +1,68 @@
+
+
+On hrvwuatap1218
+
+cd D:\Informatica\10.1.1>
+
+pmrep connect -r etluu -d domain_hruat -n Administrator  -x Infatr3UATp0sit0ry
+
+
+
+
+
+pmrep updateconnection -t "Oracle" -d ACRSSource -u ACRS -p TSTUEo6rm$8O2Az -c KCSOURCE
+pmrep updateconnection -t "Oracle" -d BMA -u BMA -p TSTKM9Ew1x$ar3T -c kcload
+pmrep updateconnection -t "Oracle" -d BMA_SOURCE -u BMA -p TSTQ1VVg1wsa0F$ -c KCSOURCE
+pmrep updateconnection -t "Oracle" -d bmts -u bmts -p TSTBt$ileV6J64Z -c interface
+pmrep updateconnection -t "Oracle" -d Business_Objects_Security -u busobj -p TSTDF85qktLQx1$ -c kcborep
+pmrep updateconnection -t "Oracle" -d Cable -u cable -p TSTTu$SnYSb0l50 -c interface
+pmrep updateconnection -t "Oracle" -d CFMS_STAR -u CFMS_STAR -p TSTC2lXFwMe3$y3 -c kcload
+pmrep updateconnection -t "Oracle" -d CRMSource -u DW -p TSTZ7$SaUqq9Im1 -c CRMSOURCE
+pmrep updateconnection -t "Oracle" -d EBISII -u EBISII -p TSTR$ha43KM6soN -c KCSOURCE
+pmrep updateconnection -t "Oracle" -d ePerformance -u eperf -p TSTSAD26$t6Whct -c kcload
+pmrep updateconnection -t "Oracle" -d ERETIRE -u ERETIRE -p TSTZamyLQn0$3F3 -c kcload
+pmrep updateconnection -t "Oracle" -d ER_KC -u er -p TSTREy71rx$1jQL -c kcload
+pmrep updateconnection -t "Oracle" -d esrt -u esrt -p TSTQqDrBw$E16a0 -c interface
+pmrep updateconnection -t "Oracle" -d Etravel -u Etravel -p TSTV9n4u5DdkEX$ -c kcload
+pmrep updateconnection -t "Oracle" -d eTravel_Stage -u PCSTRAVEL_STAGE -p TSTQ702YzScwE$b -c kcload
+pmrep updateconnection -t "Oracle" -d EVT -u evt -p TSTNbS$io80N0bU -c interface
+pmrep updateconnection -t "Oracle" -d fsbid -u fsbid -p TSTBfN8Ibl4$Qv8 -c interface
+pmrep updateconnection -t "Oracle" -d GADTRK -u GADTRK -p TSTW0$uTP4ar0iP -c kcload
+pmrep updateconnection -t "Oracle" -d HRCC -u HRCC -p TSTR0X9vBH$5qzi -c kcload
+pmrep updateconnection -t "Oracle" -d INFP_REP -u INFU -p TSTC53DqSP$2zfc -c hruatrep
+pmrep updateconnection -t "Oracle" -d INFREAD_REP -u INFREAD -p TSTT3$Ll1JoDh1n -c hruatrep
+pmrep updateconnection -t "Oracle" -d INFU_MR -u INFU_MR -p TSTN96$FTq1veMc -c hruatrep
+pmrep updateconnection -t "Oracle" -d KCSource -u DW -p TSTOmCT38Rm$7gp -c KCSOURCE
+pmrep updateconnection -t "Oracle" -d KCSource_LIVE -u DW -p TSTOmCT38Rm$7gp -c KCSource_LIVE
+pmrep updateconnection -t "Oracle" -d KC_ACRS -u ACRS -p TSTR$L9n3mxNo5P -c KCLOAD
+pmrep updateconnection -t "Oracle" -d KC_DW -u dw -p TSTR6TxNqq7hX3$ -c kcload
+pmrep updateconnection -t "Oracle" -d KC_EAPS -u EAPS -p TSTRmH6ll2w7CO$ -c kcload
+pmrep updateconnection -t "Oracle" -d PATS_STAR -u PATS_STAR -p TSTF$mfI4aF3h9K -c kcload
+pmrep updateconnection -t "Oracle" -d Promotion -u sysadm -p UB9s7Ym$ -c promotion
+pmrep updateconnection -t "Oracle" -d REETA -u REETA -p TSTG0k$nKF95Vll -c KCSOURCE
+pmrep updateconnection -t "Oracle" -d REPORTS_USER -u REPORTS_USER -p TSTWpXupa72HS$5 -c KCLOAD
+pmrep updateconnection -t "Oracle" -d RNET -u webapp -p TSTAkDO9$7p2fSv -c kcload
+pmrep updateconnection -t "Oracle" -d RNET_EPPLUS -u RNET -p TSTZ9S6$bYuj0Zx -c kcload
+pmrep updateconnection -t "Oracle" -d Scorecard -u Scorecard -p TSTF$2p45AgSvrY -c KCSource_LIVE
+pmrep updateconnection -t "Oracle" -d Secref -u SECREF -p TSTVoBV1$zy42Hg -c KCSource
+pmrep updateconnection -t "Oracle" -d WAREHOUSE -u dw -p TSTR6TxNqq7hX3$ -c kcload
+pmrep updateconnection -t "Oracle" -d WAREHOUSE_STAGE -u DWETL -p TSTUhL5$6c4kUKr -c kcload
+pmrep updateconnection -t "Oracle" -d WEBAPP_MART -u WEBAPP -p TSTAkDO9$7p2fSv -c kcload
+pmrep updateconnection -t "Oracle" -d WEBSTAGE -u webstage -p TSTFQLxkm$32I1s -c kcload
+pmrep updateconnection -t "Oracle" -d WEB_STAGE -u WEBSTAGE -p TSTFQLxkm$32I1s -c kcload
+
+
+
+
+
+
+
+
+pmcmd  startworkflow -sv is_hruat_1 -d domain_hruat_1   -u "Administrator" -p "Infatr3UATp0sit0ry" -f "~KC_MAINTENANCE" wf_s_m_Relational_Conn_String
+
+
+
+
+
+notepad \\hrewwnonprdfs01\InfaUAT\infa_shared\TgtFiles\rltnl_cnctn_status_summary1.OUT
+notepad \\hrewwnonprdfs01\InfaUAT\infa_shared\TgtFiles\rltnl_cnctn_status1.OUT

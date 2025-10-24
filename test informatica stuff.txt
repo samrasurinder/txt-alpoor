@@ -1,0 +1,20 @@
+D:\Informatica\10.1.1\server>pmrep connect -r etlut -d domain_hrtst -n Administrator -x Infatr3p0sit0ry
+
+Informatica(r) PMREP, version [10.1.1], build [1394.1118], Windows 64-bit
+Copyright (c) 1993-2016 Informatica LLC. All Rights Reserved.
+See patents at https://www.informatica.com/legal/patents.html.
+
+
+Invoked at Mon Jul 01 17:24:01 2019
+
+Connected to repository etlut in domain_hrtst as user Administrator
+connect completed successfully.
+
+Completed at Mon Jul 01 17:24:06 2019
+
+D:\Informatica\10.1.1\server>
+
+
+
+
+

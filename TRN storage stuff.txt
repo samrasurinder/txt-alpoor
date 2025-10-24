@@ -1,0 +1,111 @@
+[root@hrvltrndb23 ~]# lsblk | grep 500G
+sdam                         66:96   0   500G  0 disk
+sdak                         66:64   0   500G  0 disk
+sdai                         66:32   0   500G  0 disk
+sdaq                         66:160  0   500G  0 disk
+sdag                         66:0    0   500G  0 disk
+sdan                         66:112  0   500G  0 disk
+sdal                         66:80   0   500G  0 disk
+sdaj                         66:48   0   500G  0 disk
+sdah                         66:16   0   500G  0 disk
+sdap                         66:144  0   500G  0 disk
+sdaf                         65:240  0   500G  0 disk
+sdao                         66:128  0   500G  0 disk
+[root@hrvltrndb23 ~]# lsblk | grep 500G | wc -l
+12
+[root@hrvltrndb23 ~]#
+
+[root@hrvltrndb23 ~]# lsblk | grep 500G
+sdam                         66:96   0   500G  0 disk
+└─sdam1                      66:97   0   500G  0 part
+sdak                         66:64   0   500G  0 disk
+└─sdak1                      66:65   0   500G  0 part
+sdai                         66:32   0   500G  0 disk
+└─sdai1                      66:33   0   500G  0 part
+sdaq                         66:160  0   500G  0 disk
+└─sdaq1                      66:161  0   500G  0 part
+sdag                         66:0    0   500G  0 disk
+└─sdag1                      66:1    0   500G  0 part
+sdan                         66:112  0   500G  0 disk
+└─sdan1                      66:113  0   500G  0 part
+sdal                         66:80   0   500G  0 disk
+└─sdal1                      66:81   0   500G  0 part
+sdaj                         66:48   0   500G  0 disk
+└─sdaj1                      66:49   0   500G  0 part
+sdah                         66:16   0   500G  0 disk
+└─sdah1                      66:17   0   500G  0 part
+sdap                         66:144  0   500G  0 disk
+└─sdap1                      66:145  0   500G  0 part
+sdaf                         65:240  0   500G  0 disk
+└─sdaf1                      65:241  0   500G  0 part
+sdao                         66:128  0   500G  0 disk
+└─sdao1                      66:129  0   500G  0 part
+[root@hrvltrndb23 ~]#
+[root@hrvltrndb23 ~]# asmcmd lsdsk -k
+Total_MB  Free_MB   OS_MB  Name        Failgroup   Site_Name  Site_GUID                         Site_Status  Failgroup_Type  Library                                      Label       Failgroup_Label  Site_Label  UDID  Product  Redund   Path
+    5116     5000    5119  ASM_DISK01  ASM_DISK01             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK01                                              UNKNOWN  AFD:ASM_DISK01
+    5116     4956    5119  ASM_DISK02  ASM_DISK02             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK02                                              UNKNOWN  AFD:ASM_DISK02
+    5116     4992    5119  ASM_DISK03  ASM_DISK03             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK03                                              UNKNOWN  AFD:ASM_DISK03
+  219954    61423  219954  ASM_DISK04  ASM_DISK04             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK04                                              UNKNOWN  AFD:ASM_DISK04
+  219954   210134  219954  ASM_DISK05  ASM_DISK05             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK05                                              UNKNOWN  AFD:ASM_DISK05
+  219954    61415  219954  ASM_DISK06  ASM_DISK06             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK06                                              UNKNOWN  AFD:ASM_DISK06
+  219954    61395  219954  ASM_DISK07  ASM_DISK07             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK07                                              UNKNOWN  AFD:ASM_DISK07
+  219954    61410  219954  ASM_DISK08  ASM_DISK08             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK08                                              UNKNOWN  AFD:ASM_DISK08
+  219954    61419  219954  ASM_DISK09  ASM_DISK09             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK09                                              UNKNOWN  AFD:ASM_DISK09
+  219954    61409  219954  ASM_DISK10  ASM_DISK10             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK10                                              UNKNOWN  AFD:ASM_DISK10
+  219954    61406  219954  ASM_DISK11  ASM_DISK11             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK11                                              UNKNOWN  AFD:ASM_DISK11
+  219954    61410  219954  ASM_DISK12  ASM_DISK12             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK12                                              UNKNOWN  AFD:ASM_DISK12
+  219954    61403  219954  ASM_DISK13  ASM_DISK13             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK13                                              UNKNOWN  AFD:ASM_DISK13
+  219954    61402  219954  ASM_DISK14  ASM_DISK14             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK14                                              UNKNOWN  AFD:ASM_DISK14
+  219954    61391  219954  ASM_DISK15  ASM_DISK15             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK15                                              UNKNOWN  AFD:ASM_DISK15
+  219954    61401  219954  ASM_DISK16  ASM_DISK16             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK16                                              UNKNOWN  AFD:ASM_DISK16
+  219954    61400  219954  ASM_DISK17  ASM_DISK17             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK17                                              UNKNOWN  AFD:ASM_DISK17
+  219954   210149  219954  ASM_DISK18  ASM_DISK18             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK18                                              UNKNOWN  AFD:ASM_DISK18
+[root@hrvltrndb23 ~]# asmcmd lsdsk -k --candidate
+Total_MB  Free_MB    OS_MB  Name        Failgroup   Site_Name  Site_GUID                         Site_Status  Failgroup_Type  Library                                      Label         Failgroup_Label  Site_Label  UDID  Product  Redund   Path
+       0        0   219954                                                                                    REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK19                                                UNKNOWN  AFD:ASM_DISK19
+       0        0   219954                                                                                    REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK20                                                UNKNOWN  AFD:ASM_DISK20
+       0        0   219954                                                                                    REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK21                                                UNKNOWN  AFD:ASM_DISK21
+       0        0   219954                                                                                    REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK22                                                UNKNOWN  AFD:ASM_DISK22
+       0        0   219954                                                                                    REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK23                                                UNKNOWN  AFD:ASM_DISK23
+       0        0   219954                                                                                    REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK24                                                UNKNOWN  AFD:ASM_DISK24
+       0        0   219954                                                                                    REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK25                                                UNKNOWN  AFD:ASM_DISK25
+       0        0   219954                                                                                    REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK26                                                UNKNOWN  AFD:ASM_DISK26
+       0        0   219954                                                                                    REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK27                                                UNKNOWN  AFD:ASM_DISK27
+       0        0   219954                                                                                    REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK28                                                UNKNOWN  AFD:ASM_DISK28
+[root@hrvltrndb23 ~]#
+                                       
+
+[root@hrvltrndb23 ~]# asmcmd afd_lslbl
+--------------------------------------------------------------------------------
+Label                     Duplicate  Path
+================================================================================
+ASM_DISK01                            /dev/sdar1
+ASM_DISK02                            /dev/sdas1
+ASM_DISK03                            /dev/sdat1
+ASM_DISK04                            /dev/sdaa1
+ASM_DISK05                            /dev/sdab1
+ASM_DISK06                            /dev/sdac1
+ASM_DISK07                            /dev/sdad1
+ASM_DISK08                            /dev/sdae1
+ASM_DISK09                            /dev/sdg1
+ASM_DISK10                            /dev/sdh1
+ASM_DISK11                            /dev/sdi1
+ASM_DISK12                            /dev/sdj1
+ASM_DISK13                            /dev/sdk1
+ASM_DISK14                            /dev/sdl1
+ASM_DISK15                            /dev/sdm1
+ASM_DISK16                            /dev/sdn1
+ASM_DISK17                            /dev/sdo1
+ASM_DISK18                            /dev/sdp1
+ASM_DISK19                            /dev/sdq1
+ASM_DISK20                            /dev/sdr1
+ASM_DISK21                            /dev/sds1
+ASM_DISK22                            /dev/sdt1
+ASM_DISK23                            /dev/sdu1
+ASM_DISK24                            /dev/sdv1
+ASM_DISK25                            /dev/sdw1
+ASM_DISK26                            /dev/sdx1
+ASM_DISK27                            /dev/sdy1
+ASM_DISK28                            /dev/sdz1
+GEMS_DRSHARE                          /dev/sdau

@@ -1,0 +1,161 @@
+Who is locking your accounts (ORA-01017 and ORA-28000 errors) ?
+Posted on  November 26, 2012, updated on  June 18, 2015 by  Yannick Jaquier
+ Oracle	 Security
+Table of contents
+Preamble
+ORA-01017/ORA-28000 with AUDIT_TRAIL
+ORA-01017/ORA-28000 without AUDIT_TRAIL
+
+Preamble
+I have decided to write this blog post after second time I received question on how to know from where are coming connections that are locking an account in an Oracle database…
+
+Do not smile, I have seen at least two situations where, after a password change, a batch job was initiating plenty of connection (with previous wrong password) and no one was able to know from where this batch job was running (!!).
+
+As a reminder, with default profile in Oracle 11g, accounts are automatically locked 1 day (PASSWORD_LOCK_TIME) after 10 failed login attempt (FAILED_LOGIN_ATTEMPTS):
+
+SQL> SET lines 200
+SQL> SET pages 200
+SQL> SELECT * FROM dba_profiles WHERE PROFILE='DEFAULT' ORDER BY resource_name;
+ 
+PROFILE                        RESOURCE_NAME                    RESOURCE LIMIT
+------------------------------ -------------------------------- -------- ----------------------------------------
+DEFAULT                        COMPOSITE_LIMIT                  KERNEL   UNLIMITED
+DEFAULT                        CONNECT_TIME                     KERNEL   UNLIMITED
+DEFAULT                        CPU_PER_CALL                     KERNEL   UNLIMITED
+DEFAULT                        CPU_PER_SESSION                  KERNEL   UNLIMITED
+DEFAULT                        FAILED_LOGIN_ATTEMPTS            PASSWORD 10
+DEFAULT                        IDLE_TIME                        KERNEL   UNLIMITED
+DEFAULT                        LOGICAL_READS_PER_CALL           KERNEL   UNLIMITED
+DEFAULT                        LOGICAL_READS_PER_SESSION        KERNEL   UNLIMITED
+DEFAULT                        PASSWORD_GRACE_TIME              PASSWORD 7
+DEFAULT                        PASSWORD_LIFE_TIME               PASSWORD 180
+DEFAULT                        PASSWORD_LOCK_TIME               PASSWORD 1
+DEFAULT                        PASSWORD_REUSE_MAX               PASSWORD UNLIMITED
+DEFAULT                        PASSWORD_REUSE_TIME              PASSWORD UNLIMITED
+DEFAULT                        PASSWORD_VERIFY_FUNCTION         PASSWORD NULL
+DEFAULT                        PRIVATE_SGA                      KERNEL   UNLIMITED
+DEFAULT                        SESSIONS_PER_USER                KERNEL   UNLIMITED
+ 
+16 ROWS selected.
+Oracle client session will received 10 times ORA-01017: invalid username/password; logon denied error message and then ORA-28000: the account is locked error message (for one day and then back to ORA-01017 error message).
+
+The final question is how to identify from where (client IP address/name) are coming those tentative connections… I have done my testing using Oracle 11.2.0.3 running on Oracle Linux Server release 6.3.
+
+ORA-01017/ORA-28000 with AUDIT_TRAIL
+The first and preferred solution is with Oracle standard auditing feature. Start by setting initialization parameter AUDIT_TRAIL to db and restart your Oracle database as it is static parameter.
+
+Then activate network auditing with (as SYS):
+
+SQL> AUDIT network BY ACCESS;
+ 
+AUDIT succeeded.
+With below query you get everything needed:
+
+SELECT *
+FROM dba_audit_session
+ORDER BY sessionid DESC;
+Returncode column contains Oracle error code and so different of 0 if logon/logoff issue. The invalid password is the error we are chasing:
+
+[oracle@server1 ~]$ oerr ora 1017
+01017, 00000, "invalid username/password; logon denied"
+// *Cause:
+// *Action:
+So if you find 1017 values in this column then we have found what we were looking for. For example with my test case where I intentionally specify a wrong password for my account:
+
+SQL> SELECT username,userhost,returncode
+     FROM dba_audit_session
+     WHERE username='YJAQUIER'
+     ORDER BY sessionid DESC;
+ 
+USERNAME                       USERHOST             RETURNCODE
+------------------------------ -------------------- ----------
+YJAQUIER                       server1                    1017
+YJAQUIER                       GVADT30596                    0
+YJAQUIER                       server1                       0
+YJAQUIER                       server1                       0
+.
+.
+.
+And if you insist, as explained, you get:
+
+SQL> SELECT username, account_status,lock_date, PROFILE FROM dba_users WHERE username='YJAQUIER';
+ 
+USERNAME                       ACCOUNT_STATUS                   LOCK_DATE            PROFILE
+------------------------------ -------------------------------- -------------------- ------------------------------
+YJAQUIER                       LOCKED(TIMED)                    23-nov-2012 10:30:37 DEFAULT
+If you set AUDIT_TRAIL to db behave the size of SYS.AUD$ table as a small list of audits are already implemented by default:
+
+SQL> SET lines 200
+SQL> SET pages 200
+SQL> SELECT * FROM DBA_STMT_AUDIT_OPTS;
+ 
+USER_NAME                      PROXY_NAME                     AUDIT_OPTION                             SUCCESS    FAILURE
+------------------------------ ------------------------------ ---------------------------------------- ---------- ----------
+                                                              ALTER SYSTEM                             BY ACCESS  BY ACCESS
+                                                              SYSTEM AUDIT                             BY ACCESS  BY ACCESS
+                                                              CREATE SESSION                           BY ACCESS  BY ACCESS
+                                                              CREATE USER                              BY ACCESS  BY ACCESS
+                                                              ALTER USER                               BY ACCESS  BY ACCESS
+                                                              DROP USER                                BY ACCESS  BY ACCESS
+                                                              PUBLIC SYNONYM                           BY ACCESS  BY ACCESS
+                                                              DATABASE LINK                            BY ACCESS  BY ACCESS
+                                                              ROLE                                     BY ACCESS  BY ACCESS
+                                                              PROFILE                                  BY ACCESS  BY ACCESS
+                                                              CREATE ANY TABLE                         BY ACCESS  BY ACCESS
+                                                              ALTER ANY TABLE                          BY ACCESS  BY ACCESS
+                                                              DROP ANY TABLE                           BY ACCESS  BY ACCESS
+                                                              CREATE PUBLIC DATABASE LINK              BY ACCESS  BY ACCESS
+                                                              GRANT ANY ROLE                           BY ACCESS  BY ACCESS
+                                                              SYSTEM GRANT                             BY ACCESS  BY ACCESS
+                                                              ALTER DATABASE                           BY ACCESS  BY ACCESS
+                                                              CREATE ANY PROCEDURE                     BY ACCESS  BY ACCESS
+                                                              ALTER ANY PROCEDURE                      BY ACCESS  BY ACCESS
+                                                              DROP ANY PROCEDURE                       BY ACCESS  BY ACCESS
+                                                              ALTER PROFILE                            BY ACCESS  BY ACCESS
+                                                              DROP PROFILE                             BY ACCESS  BY ACCESS
+                                                              GRANT ANY PRIVILEGE                      BY ACCESS  BY ACCESS
+                                                              CREATE ANY LIBRARY                       BY ACCESS  BY ACCESS
+                                                              EXEMPT ACCESS POLICY                     BY ACCESS  BY ACCESS
+                                                              GRANT ANY OBJECT PRIVILEGE               BY ACCESS  BY ACCESS
+                                                              CREATE ANY JOB                           BY ACCESS  BY ACCESS
+                                                              CREATE EXTERNAL JOB                      BY ACCESS  BY ACCESS
+So you must put in place a purging policy for this table.
+
+ORA-01017/ORA-28000 without AUDIT_TRAIL
+The only drawback of the previous solution is that you have to restart the database. And maybe two times because after problem solved you would like to deactivate auditing. This is most probably not reliable solution on a production database so I have been looking for a better solution with no database reboot.
+
+I initially thought of the AFTER LOGON trigger but you need to be logged-in and the BEFORE LOGON does not exits. Then at same documentation place I found the AFTER SERVERERROR trigger and decided to give it a try.
+
+First I created a dummy table to log server error (columns inherited from dba_audit_session dictionary table):
+
+CREATE TABLE sys.logon_trigger
+(
+USERNAME VARCHAR2(30),
+USERHOST VARCHAR2(128),
+TIMESTAMP DATE
+);
+Second I created below trigger:
+
+CREATE OR REPLACE TRIGGER sys.logon_trigger
+AFTER SERVERERROR ON DATABASE
+BEGIN
+  IF (IS_SERVERERROR(1017)) THEN
+    INSERT INTO logon_trigger VALUES(SYS_CONTEXT('USERENV', 'AUTHENTICATED_IDENTITY'), SYS_CONTEXT('USERENV', 'HOST'), SYSDATE);
+    COMMIT;
+  END IF;
+END;
+/
+Then third simulated a wrong password access with my account and issued:
+
+SQL> ALTER SESSION SET nls_date_format='dd-mon-yyyy hh24:mi:ss';
+ 
+SESSION altered.
+ ALTER SESSION SET nls_date_format='dd-mon-yyyy hh24:mi:ss';
+ SET lines 200
+ col USERHOST FOR a30
+ SELECT * FROM sys.logon_trigger ORDER BY TIMESTAMP DESC;
+ 
+USERNAME                       USERHOST                       TIMESTAMP
+------------------------------ ------------------------------ --------------------
+yjaquier                       ST\GVADT30596                  23-nov-2012 11:05:56
+And that’s it !!

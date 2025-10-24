@@ -1,0 +1,265 @@
+[root@hrvltstdb7601 alpoor_scripts]# ./ahf_setup
+
+AHF Installer for Platform Linux Architecture x86_64
+
+AHF Installation Log : /tmp/ahf_install_3443_2019_11_19-11_56_12.log
+
+Starting Autonomous Health Framework (AHF) Installation
+
+AHF Version: 193100 Build Date: 201911121127
+
+Default AHF Location : /opt/oracle.ahf
+
+Do you want to change AHF Location (/opt/oracle.ahf) ? Y|[N] :
+
+AHF Location : /opt/oracle.ahf
+
+AHF Data Directory stores diagnostic collections and metadata.
+AHF Data Directory requires at least 5GB (Recommended 10GB) of free space.
+
+Choose Data Directory from below options :
+
+1. /opt/oracle.ahf [Free Space : 47506 MB]
+2. /u02/app [Free Space : 48405 MB]
+3. Enter a different Location
+
+Choose Option [1 - 3] : 2
+
+AHF Data Directory : /u02/app/oracle.ahf/data
+
+Do you want to add AHF Notification Email IDs ? [Y]|N : Y
+
+Enter Email IDs separated by space : reddya1@state.gov
+Extracting AHF to /opt/oracle.ahf
+
+
+Extracting AHF to /opt/oracle.ahf
+Can't locate Digest/MD5.pm in @INC (@INC contains: /usr/local/lib64/perl5 /usr/local/share/perl5 /usr/lib64/perl5/vendor_perl /usr/share/perl5/vendor_perl /usr/lib64/perl5 /usr/share/perl5 . /opt/oracle.ahf/tfa/bin /opt/oracle.ahf/tfa/bin/common /opt/oracle.ahf/tfa/bin/modules /opt/oracle.ahf/tfa/bin/common/exceptions /opt/oracle.ahf/tfa/bin/.. /opt/oracle.ahf/tfa/bin/../common/exceptions /opt/oracle.ahf/tfa/bin/.. /opt/oracle.ahf/tfa/bin/../common/exceptions /opt/oracle.ahf/tfa/bin/.. /opt/oracle.ahf/tfa/bin/../common/exceptions /opt/oracle.ahf/tfa/bin/.. /opt/oracle.ahf/tfa/bin/../common/exceptions) at /opt/oracle.ahf/tfa/bin/common/tfactlshare.pm line 8956.
+BEGIN failed--compilation aborted at /opt/oracle.ahf/tfa/bin/common/tfactlshare.pm line 8956.
+Compilation failed in require at /opt/oracle.ahf/tfa/bin/tfasetup.pl line 106.
+BEGIN failed--compilation aborted at /opt/oracle.ahf/tfa/bin/tfasetup.pl line 106.
+
+Failed to start TFA Services
+
+AHF binaries are available in /opt/oracle.ahf/bin
+
+AHF is successfully installed
+
+Moving /tmp/ahf_install_3443_2019_11_19-11_56_12.log to /u02/app/oracle.ahf/data/hrvltstdb7601/diag/ahf/
+
+
+
+
+/u02/app/12.2.0/grid/perl/lib/5.22.0/x86_64-linux-thread-multi/Digest/MD5.pm
+
+
+
+
+
+
+
+
+
+
+
+yum install -y perl-Digest-MD5
+
+
+
+
+
+[root@hrvltstdb7601 alpoor_scripts]# ./ahf_setup
+
+AHF Installer for Platform Linux Architecture x86_64
+
+AHF Installation Log : /tmp/ahf_install_18230_2019_11_19-12_42_16.log
+
+Starting Autonomous Health Framework (AHF) Installation
+
+AHF Version: 193100 Build Date: 201911121127
+
+Default AHF Location : /opt/oracle.ahf
+
+Do you want to change AHF Location (/opt/oracle.ahf) ? Y|[N] : N
+
+AHF Location : /opt/oracle.ahf
+
+AHF Data Directory stores diagnostic collections and metadata.
+AHF Data Directory requires at least 5GB (Recommended 10GB) of free space.
+
+Choose Data Directory from below options :
+
+1. /opt/oracle.ahf [Free Space : 47506 MB]
+2. /u02/app [Free Space : 48375 MB]
+3. Enter a different Location
+
+Choose Option [1 - 3] : 2
+
+AHF Data Directory : /u02/app/oracle.ahf/data
+
+Do you want to add AHF Notification Email IDs ? [Y]|N : Y
+
+Enter Email IDs separated by space : reddya1@state.gov
+
+Extracting AHF to /opt/oracle.ahf
+
+Configuring TFA Services
+
+Discovering Nodes and Oracle Resources
+
+Not generating certificates as GI discovered
+
+Starting TFA Services
+Created symlink from /etc/systemd/system/multi-user.target.wants/oracle-tfa.service to /etc/systemd/system/oracle-tfa.service.
+Created symlink from /etc/systemd/system/graphical.target.wants/oracle-tfa.service to /etc/systemd/system/oracle-tfa.service.
+
+.----------------------------------------------------------------------------------.
+| Host          | Status of TFA | PID   | Port | Version    | Build ID             |
++---------------+---------------+-------+------+------------+----------------------+
+| hrvltstdb7601 | RUNNING       | 19789 | 5000 | 19.3.1.0.0 | 19310020191112112743 |
+'---------------+---------------+-------+------+------------+----------------------'
+
+Running TFA Inventory...
+
+Adding default users to TFA Access list...
+
+.---------------------------------------------------------------.
+|                  Summary of AHF Configuration                 |
++-----------------+---------------------------------------------+
+| Parameter       | Value                                       |
++-----------------+---------------------------------------------+
+| AHF Location    | /opt/oracle.ahf                             |
+| TFA Location    | /opt/oracle.ahf/tfa                         |
+| Orachk Location | /opt/oracle.ahf/orachk                      |
+| Data Directory  | /u02/app/oracle.ahf/data                    |
+| Repository      | /u02/app/oracle.ahf/data/repository         |
+| Diag Directory  | /u02/app/oracle.ahf/data/hrvltstdb7601/diag |
+'-----------------+---------------------------------------------'
+
+AHF binaries are available in /opt/oracle.ahf/bin
+
+AHF is successfully installed
+
+Moving /tmp/ahf_install_18230_2019_11_19-12_42_16.log to /u02/app/oracle.ahf/data/hrvltstdb7601/diag/ahf/
+
+[root@hrvltstdb7601 alpoor_scripts]#
+
+
+
+
+[root@hrvltstdb7601 alpoor_scripts]# orachk -autostart
+Started orachk discovery caching....
+
+
+
+Clusterware stack is running from /u02/app/12.2.0/grid. Is this the correct Clusterware Home?[y/n][y] y
+
+List of running databases
+
+1. OPSUAT
+2. RMANCTLG
+3. OPSTST2
+4. OPSMASK
+5. OPSASB
+6. OPSSTG3
+7. OPSSTG2
+8. OPSSND
+9. OPSIVV1
+10. OPSTST1
+11. All of above
+12. None of above
+
+Select databases from list for checking best practices. For multiple databases, select 11 for All or comma separated number like 1,2 etc [1-12][11].
+Searching out ORACLE_HOME for selected databases.
+
+.  .  .  .  .  .  .  .  .  .  .
+.  .
+
+Checking Status of Oracle Software Stack - Clusterware, ASM, RDBMS
+
+.  .  . . . .  .  . . . .  .  . . . .  .  . . . .  .  . . . .  .  . . . .  .  . . . .  .  . . . .  .  . . . .  .  . . . .
+.  .  .  . . . .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .
+-------------------------------------------------------------------------------------------------------
+                                                 Oracle Stack Status
+-------------------------------------------------------------------------------------------------------
+  Host Name       CRS Installed       ASM HOME  RDBMS Installed    CRS UP    ASM UP  RDBMS UP    DB Instance Name
+-------------------------------------------------------------------------------------------------------
+hrvltstdb7601              Yes           No          Yes          Yes      Yes      Yes          OPSUAT OPSSND OPSTST2 OPSASB OPSIVV1 OPSTST1 OPSSTG2 OPSSTG3 RMANCTLG OPSMASK
+-------------------------------------------------------------------------------------------------------
+
+
+
+Copying plug-ins
+
+. .
+.  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .
+
+Collections and audit checks log file is
+/u02/app/oracle.ahf/data/hrvltstdb7601/orachk/orachk_111919_124617_discovery/log/orachk.log
+
+
+Successfully completed orachk discovery caching.
+
+Setting up orachk auto restart functionality
+
+
+oracle-orachkscheduler start/running, process 5095
+
+Starting orachk daemon. . . . . . . . . . . . . . .
+
+orachk daemon started successfully
+
+
+Daemon log file location is : /u02/app/oracle.ahf/data/hrvltstdb7601/orachk/orachk_daemon.log
+
+
+[root@hrvltstdb7601 alpoor_scripts]#
+[root@hrvltstdb7601 alpoor_scripts]#
+
+
+
+[root@hrvltstdb7601 alpoor_scripts]# systemctl status oracle-orachkscheduler.service
+т oracle-orachkscheduler.service - Oracle orachk scheduler initsetup
+   Loaded: loaded (/etc/systemd/system/oracle-orachkscheduler.service; enabled; vendor preset: disabled)
+   Active: active (running) since Tue 2019-11-19 12:51:06 EST; 1min 39s ago
+ Main PID: 5095 (init.orachksche)
+   CGroup: /system.slice/oracle-orachkscheduler.service
+           тт5095 /bin/sh /etc/init.d/init.orachkscheduler run >/dev/null 2>&1 </dev/null
+           тт6350 /bin/sleep 30
+
+Nov 19 12:51:06 hrvltstdb7601.hr.state.sbu systemd[1]: Started Oracle orachk scheduler initsetup.
+Nov 19 12:51:06 hrvltstdb7601.hr.state.sbu su[5133]: PAM unable to dlopen(/usr/lib64/security/pam_fprintd.so): /usr/lib64/security/pam_f...rectory
+Nov 19 12:51:06 hrvltstdb7601.hr.state.sbu su[5133]: PAM adding faulty module: /usr/lib64/security/pam_fprintd.so
+Nov 19 12:51:06 hrvltstdb7601.hr.state.sbu su[5133]: (to root) root on none
+Hint: Some lines were ellipsized, use -l to show in full.
+[root@hrvltstdb7601 alpoor_scripts]#
+
+
+
+[root@hrvltstdb7601 alpoor_scripts]# systemctl status oracle-tfa.service
+т oracle-tfa.service - Oracle Trace File Analyzer
+   Loaded: loaded (/etc/systemd/system/oracle-tfa.service; enabled; vendor preset: disabled)
+   Active: active (running) since Tue 2019-11-19 12:43:13 EST; 10min ago
+ Main PID: 19631 (init.tfa)
+   CGroup: /system.slice/oracle-tfa.service
+           тт 7012 /bin/sleep 30
+           тт19631 /bin/sh /etc/init.d/init.tfa run >/dev/null 2>&1 </dev/null
+           тт19789 /opt/oracle.ahf/jre/bin/java -server -Xms128m -Xmx256m -Djava.awt.headless=true -Ddisable.checkForUpdate=true -XX:HeapDumpPa...
+
+Nov 19 12:50:19 hrvltstdb7601.hr.state.sbu su[4297]: (to grid) root on none
+Nov 19 12:51:20 hrvltstdb7601.hr.state.sbu su[5352]: PAM unable to dlopen(/usr/lib64/security/pam_fprintd.so): /usr/lib64/security/pam_f...rectory
+Nov 19 12:51:20 hrvltstdb7601.hr.state.sbu su[5352]: PAM adding faulty module: /usr/lib64/security/pam_fprintd.so
+Nov 19 12:51:20 hrvltstdb7601.hr.state.sbu su[5352]: (to grid) root on none
+Nov 19 12:52:21 hrvltstdb7601.hr.state.sbu su[6167]: PAM unable to dlopen(/usr/lib64/security/pam_fprintd.so): /usr/lib64/security/pam_f...rectory
+Nov 19 12:52:21 hrvltstdb7601.hr.state.sbu su[6167]: PAM adding faulty module: /usr/lib64/security/pam_fprintd.so
+Nov 19 12:52:21 hrvltstdb7601.hr.state.sbu su[6167]: (to grid) root on none
+Nov 19 12:53:21 hrvltstdb7601.hr.state.sbu su[6867]: PAM unable to dlopen(/usr/lib64/security/pam_fprintd.so): /usr/lib64/security/pam_f...rectory
+Nov 19 12:53:21 hrvltstdb7601.hr.state.sbu su[6867]: PAM adding faulty module: /usr/lib64/security/pam_fprintd.so
+Nov 19 12:53:22 hrvltstdb7601.hr.state.sbu su[6867]: (to grid) root on none
+Hint: Some lines were ellipsized, use -l to show in full.
+[root@hrvltstdb7601 alpoor_scripts]
+
+
+d:\FunctionalComponents\GEMStoFSI\GEMS_to_FSI_xfer.cmd
+
+

@@ -1,0 +1,127 @@
+
+
+set SQLPATH=\\hrewwnonprdfs01\SystemOperation\Scripts\DBA\OracleUtilityScripts;\\hrewwnonprdfs01\SystemOperation\Scripts\DBA\OracleUtilityScripts\CD
+
+Pre-Migration Steps:
+--------------------
+
+Step 1): Grant roles to repoleved:
+
+
+
+grant db_public to repoleved;
+grant SELECT_CATALOG_ALL_VIEWS to repoleved;
+grant SELECT_CATALOG_ROLE to repoleved;
+
+
+Step 2): BACKUP: Create Oracle Flashback Database guarantee restore point before release 
+
+connect as sysdba;
+
+SQL> create  restore  point  BEFORE_RELEASE_CHANGES  guarantee  flashback  database;
+
+SQL> select * from v$restore_point;      /* verify creation of above restore point */
+
+
+Caution: Do not go beyond this point unless you want to flasback the database
+
+Note:  See doc to flashback database
+\\esocomsntap101\hrpublic$\Office Shares\Hr ex sdd dba\public\Flashback Database.docx
+               Execute Flashback Database via SQLPlus: (Used to rewind entire database back to a point) 
+                      [oracle@hrinfdb1001 ~]$ . oraenv
+                      ORACLE_SID = [PRD1] ? PRD1
+                      [oracle@hrinfdb1001 ~]$  srvctl stop database -d PRD /* all instances need to be down */
+                      [oracle@hrinfdb1001 ~]$  sqlplus / as sysdba
+                      SQL> startup mount; /* startup only one instance */
+                      SQL> flashback database to restore point BEFORE_RELEASE_CHANGES;
+                      SQL> alter database open resetlogs;
+
+
+Step 3) SYS: @preservegrants
+
+
+SQLPLUS as SYS
+SQL>@PreserveGrants
+Three tables dropped
+Three tables created
+
+
+Step 4) INVALID OBJECTS:  Get pre-release list of any invalid objects 
+
+1.Login to PRD database as System 
+2.Run @invstat - spool to file.
+Take note of number of invaid objects if any-should be the same by end of the release.
+
+Step 5) HRONLINE: Lock the HROnline Account;
+
+Alter user hronline account lock;
+
+Step 6) EOPF: Lock EOPF  Account  --  UPDATE: Do NOT do this until eOPF Services have all been stopped
+
+Alter user EOPF account lock;
+HREWWPRDAP1618
+
+Step 7) Kill all EOPF sessions in all 3 Databases instances
+
+@luangeopf
+
+To identify EOPF sessions.
+
+select unique 'alter system kill session ' ||'''' ||  sid ||''  || ',' ||  serial#||',@'||inst_id||''''||' immediate;'
+from gv$session where schemaname in ('HRONLINE');
+select unique 'alter system kill session ' ||'''' ||  sid ||''  || ',' ||  serial#||',@'||inst_id||''''||' immediate;'
+from gv$session where schemaname in ('EOPF');
+
+
+Step 8) SYS: Capture setting for Job_Queue_Processes parameter
+
+@dbparm job
+
+Step 9) SYS:  Set job queue processes to zero.
+
+@dbparm job_queue_processes
+/* note the value for later */
+ALTER SYSTEM SET job_queue_processes=0;
+
+Step 10) SYS:  Kill sessions of running jobs.
+
+DECLARE
+    PROCEDURE KILL_ALL_USER_SESSION_DBMS_SQL(P_USERNAME_SESSION IN VARCHAR2 := '')
+    IS
+    V_CURSOR_NAME_SESSION NUMBER := DBMS_SQL.OPEN_CURSOR;
+    V_STMT_SESSION VARCHAR2(500) := 'SELECT SID AS SID, SERIAL# AS SERIAL
+        FROM GV$SESSION
+        WHERE USERNAME IS NOT NULL AND USERNAME = '||''''||P_USERNAME_SESSION||'''';
+    V_EXEC_SESSION NUMBER;
+    V_SID_SESSION NUMBER;
+    V_SERIAL_SESSION NUMBER;
+    V_CURSOR_NAME_SESSION_KILL NUMBER;
+    V_STMT_SESSION_KILL VARCHAR2(500);
+    V_EXEC_SESSION_KILL NUMBER;
+    BEGIN
+        DBMS_SQL.PARSE(V_CURSOR_NAME_SESSION, V_STMT_SESSION, DBMS_SQL.NATIVE);
+        V_EXEC_SESSION := DBMS_SQL.EXECUTE(V_CURSOR_NAME_SESSION);
+        DBMS_SQL.DEFINE_COLUMN(V_CURSOR_NAME_SESSION,1,V_SID_SESSION);
+        DBMS_SQL.DEFINE_COLUMN(V_CURSOR_NAME_SESSION,2,V_SERIAL_SESSION);
+        LOOP
+            EXIT WHEN DBMS_SQL.FETCH_ROWS(V_CURSOR_NAME_SESSION) = 0;
+            DBMS_SQL.COLUMN_VALUE(V_CURSOR_NAME_SESSION,1,V_SID_SESSION);
+            DBMS_SQL.COLUMN_VALUE(V_CURSOR_NAME_SESSION,2,V_SERIAL_SESSION);
+            V_STMT_SESSION_KILL := 'ALTER SYSTEM KILL SESSION '''
+                ||V_SID_SESSION||','||V_SERIAL_SESSION||'''';
+            V_CURSOR_NAME_SESSION_KILL := DBMS_SQL.OPEN_CURSOR;
+            DBMS_SQL.PARSE(V_CURSOR_NAME_SESSION_KILL, V_STMT_SESSION_KILL, DBMS_SQL.NATIVE);
+            V_EXEC_SESSION_KILL := DBMS_SQL.EXECUTE(V_CURSOR_NAME_SESSION_KILL);
+            DBMS_SQL.CLOSE_CURSOR(V_CURSOR_NAME_SESSION_KILL);
+        END LOOP;
+        DBMS_SQL.CLOSE_CURSOR(V_CURSOR_NAME_SESSION);
+        EXCEPTION
+            WHEN OTHERS THEN
+                DBMS_SQL.CLOSE_CURSOR(V_CURSOR_NAME_SESSION_KILL);
+        DBMS_SQL.CLOSE_CURSOR(V_CURSOR_NAME_SESSION);
+    END;
+BEGIN
+    KILL_ALL_USER_SESSION_DBMS_SQL('HRONLINE');
+    KILL_ALL_USER_SESSION_DBMS_SQL('EOPF');
+    -- specify additional calls if necessary
+END;

@@ -1,0 +1,70 @@
+[oracle@hrewoel48 ~]$
+[oracle@hrewoel48 ~]$ last reboot
+reboot   system boot  4.14.35-2047.503 Wed Oct 27 08:39 - 13:45  (05:06)
+reboot   system boot  4.14.35-2047.503 Wed Oct 27 07:29 - 13:45  (06:16)
+reboot   system boot  4.14.35-2047.503 Wed Oct 27 06:28 - 13:45  (07:17)
+reboot   system boot  4.14.35-2047.503 Wed Oct 27 05:47 - 13:45  (07:58)
+reboot   system boot  4.14.35-2047.503 Wed Oct 27 04:27 - 13:45  (09:18)
+reboot   system boot  4.14.35-2047.503 Wed Oct 27 03:35 - 13:45  (10:09)
+reboot   system boot  4.14.35-2047.503 Tue Oct 26 16:06 - 13:45  (21:38)
+reboot   system boot  4.14.35-2047.503 Tue Oct 26 10:11 - 16:05  (05:53)
+reboot   system boot  4.14.35-2047.503 Tue Oct 26 09:40 - 16:05  (06:24)
+reboot   system boot  4.14.35-2047.503 Tue Oct 26 08:32 - 16:05  (07:32)
+reboot   system boot  4.14.35-2047.503 Tue Oct 26 07:49 - 16:05  (08:15)
+reboot   system boot  4.14.35-2047.503 Tue Oct 26 06:29 - 16:05  (09:35)
+reboot   system boot  4.14.35-2047.503 Tue Oct 26 05:28 - 16:05  (10:36)
+reboot   system boot  4.14.35-2047.503 Tue Oct 26 04:13 - 16:05  (11:51)
+reboot   system boot  4.14.35-2047.503 Tue Oct 26 03:40 - 16:05  (12:24)
+
+wtmp begins Fri Oct  1 13:10:13 2021
+[oracle@hrewoel48 ~]$ sudo su -
+Last login: Wed Oct 27 13:03:30 EDT 2021 on pts/1
+Last failed login: Wed Oct 27 13:20:48 EDT 2021 from dsr7scan21-sa26.ds.state.sbu on ssh:notty
+There were 7 failed login attempts since the last successful login.
+[root@hrewoel48 ~]# tfactl set redact=mask
+Successfully set redact=mask
+.-------------------------------------------------------------------.
+|                             hrewoel48                             |
++-----------------------------------------------------------+-------+
+| Configuration Parameter                                   | Value |
++-----------------------------------------------------------+-------+
+| Setting for ACR redaction (none|SANITIZE|MASK) ( redact ) | mask  |
+'-----------------------------------------------------------+-------'
+
+[root@hrewoel48 ~]# tfactl diagcollect -from "Oct/27/2021 01:00:00" -to "Oct/27/2021 10:15:00" -node local
+Collecting data for local node(s).
+Scanning files from Oct/27/2021 01:00:00 to Oct/27/2021 10:15:00
+
+Collection Id : 20211027135613hrewoel48
+
+Detailed Logging at : /u01/ahf_data_dir/oracle.ahf/data/repository/collection_Wed_Oct_27_13_56_14_EDT_2021_node_local/diagcollect_20211027135613_hrewoel48.log
+2021/10/27 13:56:18 EDT : NOTE : Any file or directory name containing the string .com will be renamed to replace .com with dotcom
+2021/10/27 13:56:18 EDT : Collection Name : tfa_Wed_Oct_27_13_56_14_EDT_2021.zip
+2021/10/27 13:56:21 EDT : Scanning of files for Collection in progress...
+2021/10/27 13:56:21 EDT : Collecting additional diagnostic information...
+
+Successfully set redact=mask
+.-------------------------------------------------------------------.
+|                             hrewoel48                             |
++-----------------------------------------------------------+-------+
+| Configuration Parameter                                   | Value |
++-----------------------------------------------------------+-------+
+| Setting for ACR redaction (none|SANITIZE|MASK) ( redact ) | mask  |
+'-----------------------------------------------------------+-------'
+
+[root@hrewoel48 ~]# tfactl diagcollect -from "Oct/27/2021 01:00:00" -to "Oct/27/2021 10:15:00" -node local
+Collecting data for local node(s).
+Scanning files from Oct/27/2021 01:00:00 to Oct/27/2021 10:15:00
+
+Collection Id : 20211027135613hrewoel48
+
+Detailed Logging at : /u01/ahf_data_dir/oracle.ahf/data/repository/collection_Wed_Oct_27_13_56_14_EDT_2021_node_local/diagcollect_20211027135613_hrewoel48.log
+2021/10/27 13:56:18 EDT : NOTE : Any file or directory name containing the string .com will be renamed to replace .com with dotcom
+2021/10/27 13:56:18 EDT : Collection Name : tfa_Wed_Oct_27_13_56_14_EDT_2021.zip
+2021/10/27 13:56:21 EDT : Scanning of files for Collection in progress...
+2021/10/27 13:56:21 EDT : Collecting additional diagnostic information...
+2021/10/27 13:59:01 EDT : Completed collection of additional diagnostic information...
+2021/10/27 13:59:51 EDT : Getting list of files satisfying time range [10/27/2021 01:00:00 EDT, 10/27/2021 10:15:00 EDT]
+2021/10/27 14:00:35 EDT : Collecting ADR incident files...
+2021/10/27 14:00:36 EDT : Completed Local Collection
+2021/10/27 14:00:36 EDT : Redacting the collection...

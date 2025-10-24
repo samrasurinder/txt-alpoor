@@ -1,0 +1,65 @@
+
+cd /u01/WALLETS/
+cp -r /infshare/oracle/scripts/WALLETS/PRD2-EW-SCAN-TCPS/ .
+orapki wallet display -wallet /u01/WALLETS/PRD2-EW-SCAN-TCPS
+mkstore -wrl /u01/WALLETS/PRD2-EW-SCAN-TCPS -listCredential
+orapki wallet change_pwd -wallet /u01/WALLETS/PRD2-EW-SCAN-TCPS
+orapki wallet create -wallet /u01/WALLETS/PRD2-EW-SCAN-TCPS -auto_login
+orapki wallet display -wallet /u01/WALLETS/PRD2-EW-SCAN-TCPS
+
+
+
+
+cd /u01/WALLETS/
+cp -r /infshare/oracle/scripts/WALLETS/HF2-EW-SCAN-TCPS/ .
+orapki wallet display -wallet /u01/WALLETS/HF2-EW-SCAN-TCPS
+mkstore -wrl /u01/WALLETS/HF2-EW-SCAN-TCPS -listCredential
+orapki wallet change_pwd -wallet /u01/WALLETS/HF2-EW-SCAN-TCPS
+orapki wallet create -wallet /u01/WALLETS/HF2-EW-SCAN-TCPS -auto_login
+orapki wallet display -wallet /u01/WALLETS/HF2-EW-SCAN-TCPS
+
+
+
+cd /u01/WALLETS/
+cp -r /infshare/oracle/scripts/WALLETS/KC2-EW-SCAN-TCPS/ .
+orapki wallet display -wallet /u01/WALLETS/KC2-EW-SCAN-TCPS
+mkstore -wrl /u01/WALLETS/KC2-EW-SCAN-TCPS -listCredential
+orapki wallet change_pwd -wallet /u01/WALLETS/KC2-EW-SCAN-TCPS
+orapki wallet create -wallet /u01/WALLETS/KC2-EW-SCAN-TCPS -auto_login
+orapki wallet display -wallet /u01/WALLETS/KC2-EW-SCAN-TCPS
+
+cd /u02/app/oracle/WALLETS/HRVLPRDDB7601-TCPS
+orapki wallet display -wallet /u02/app/oracle/WALLETS/HRVLPRDDB7601-TCPS
+mkstore -wrl /u02/app/oracle/WALLETS/HRVLPRDDB7601-TCPS -listCredential
+orapki wallet change_pwd -wallet /u02/app/oracle/WALLETS/HRVLPRDDB7601-TCPS
+orapki wallet create -wallet /u02/app/oracle/WALLETS/HRVLPRDDB7601-TCPS -auto_login
+orapki wallet display -wallet /u02/app/oracle/WALLETS/HRVLPRDDB7601-TCPS
+
+
+
+
+cd /u02/app/oracle/WALLETS/HRVLPRDDB7602-TCPS
+orapki wallet display -wallet /u02/app/oracle/WALLETS/HRVLPRDDB7602-TCPS
+mkstore -wrl /u02/app/oracle/WALLETS/HRVLPRDDB7602-TCPS -listCredential
+orapki wallet change_pwd -wallet /u02/app/oracle/WALLETS/HRVLPRDDB7602-TCPS
+orapki wallet create -wallet /u02/app/oracle/WALLETS/HRVLPRDDB7602-TCPS -auto_login
+orapki wallet display -wallet /u02/app/oracle/WALLETS/HRVLPRDDB7602-TCPS
+
+
+
+cd /u02/app/oracle/WALLETS/HRVLPRDDB7603-TCPS
+orapki wallet display -wallet /u02/app/oracle/WALLETS/HRVLPRDDB7603-TCPS
+mkstore -wrl /u02/app/oracle/WALLETS/HRVLPRDDB7603-TCPS -listCredential
+orapki wallet change_pwd -wallet /u02/app/oracle/WALLETS/HRVLPRDDB7603-TCPS
+orapki wallet create -wallet /u02/app/oracle/WALLETS/HRVLPRDDB7603-TCPS -auto_login
+orapki wallet display -wallet /u02/app/oracle/WALLETS/HRVLPRDDB7603-TCPS
+
+
+
+
+cd /u02/app/oracle/WALLETS/HRVLPRDDB7607-TCPS
+orapki wallet display -wallet /u02/app/oracle/WALLETS/HRVLPRDDB7607-TCPS
+mkstore -wrl /u02/app/oracle/WALLETS/HRVLPRDDB7607-TCPS -listCredential
+orapki wallet change_pwd -wallet /u02/app/oracle/WALLETS/HRVLPRDDB7607-TCPS
+orapki wallet create -wallet /u02/app/oracle/WALLETS/HRVLPRDDB7607-TCPS -auto_login
+orapki wallet display -wallet /u02/app/oracle/WALLETS/HRVLPRDDB7607-TCPS

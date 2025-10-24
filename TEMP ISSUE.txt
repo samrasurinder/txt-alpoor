@@ -1,0 +1,43 @@
+col inst_id format 999
+col sid format 99999
+col status format a11
+col program format a20 trunc
+col machine format a17 trunc
+col action format a39
+col module format a39
+col blocks heading "TEMP BLOCKS"
+SELECT b.blocks, s.inst_id, s.sid, s.status,
+s.action,
+s.program,
+s.machine,
+s.module
+FROM gv$session s,
+gv$sort_usage b
+WHERE s.saddr = b.session_addr
+and s.inst_id = b.inst_id
+and b.blocks > 100000
+order by b.blocks desc;
+
+
+
+
+declare
+cmd varchar2(400);
+sname varchar2(400);
+begin
+cmd := 'create  index DW.IDX$$_420D00002 on DW.FSBID_STATUS_UPDATE_DT("FSBID_CDC_DIM_SEQ_NUM")';
+EXECUTE IMMEDIATE cmd;
+
+END;
+
+declare
+cmd varchar2(400);
+sname varchar2(400);
+begin
+cmd := 'create  index DW.IDX$$_420D40002 on DW.FSBID_STATUS_UPDATE_DT("FSBID_CDC_DIM_SEQ_NUM")';
+EXECUTE IMMEDIATE cmd;
+
+END;
+
+
+DROP TABLESPACE temp1 INCLUDING CONTENTS AND DATAFILES;

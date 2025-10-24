@@ -1,0 +1,154 @@
+/bin/bash /infshare/oracle/scripts/refresh/bin/db_refresh_BACKUP.bash ASB  hrewoel02.hr.state.sbu
+
+
+
+ - Refresh Steps:
+
+          1- PRE Refresh
+          2- Current Database Status
+          3- Drop database
+          4- Duplicate Database
+          5- Configure Database in CRS
+          6- Convert database to Archivelog Mode
+          7- Cluster Database
+          8- Convert Database to NOarchivelog Mode
+          9- POST Refresh
+         10- Resync PasswordFiles
+         11- Reset Spfile Parameters
+         12- Final Status
+
+
+
+/bin/bash  build_driver_${ENV}.pre $to_db |tee -a -i  $log/build_driver_${ENV}.pre.MASTER 2>&1
+
+/bin/bash PRE_preserve_pwd.bash ${to_db}
+echo "Preserved Accounts"
+# PRESERVE PEOPLESOFT SCHEMAS PASSWORDS
+/bin/bash PRE_PS_SchemaPwd.bash ${to_db}
+echo "Preserved PS Accounts PWD"
+# PRESERVE ALL DBLINKS
+/bin/bash PRE_TST_All_dblinks.bash ${to_db}
+echo "Preserved All Private DB Links"
+# PRESERVE BMA DBLINKS
+#/bin/bash PRE_TST_BMA_dblinks.bash ${to_db}
+#echo "Preserved BMA DB Links"
+###########
+
+
+--- @$builds_dir/PRE_TST_dSECREF_USER_ROLE.sql --> not needed per essr 45534
+
+
+
+
+if [ -z $1 ]
+then
+echo "*** Please Specify Database Name To Proceed *** "
+exit 1
+fi
+###
+. /infshare/oracle/scripts/refresh/bin/parm.${1}
+export ORACLE_SID=`ps -ef|grep pmon|grep ora_pmon_${to_db}|grep -v grep|awk '{print $8}'|cut -d_ -f3`
+###
+. oraenv <<EOFORAENV
+$ORACLE_SID
+EOFORAENV
+###############################################
+
+########
+impdp \"/ as sysdba\" REMAP_SCHEMA=OAB_REFRESH:SECREF dumpfile=dp_rfrsh_dmp:expdp_PRE_${ENV}_GalPwd.dmp logfile=dp_rfrsh_lg:impdp_POST_${ENV}_GalPwd.log table_exists_action=Truncate
+# This will import and update EOPF_IMPERSONATION PWD for an ENV. All DB in that ENV will share this dump file.
+sqlplus  / as sysdba <<EOF
+exec SECREF.SECREF_GalPwdSet;
+@$builds_dir/POST_SECREF_config.sql;
+@$builds_dir/POST_SECREF_ProxyRoles_OAB.sql;
+--- @$builds_dir/POST_SECREF_ProxyRoles.sql; --> not needed per essr 45534
+@$builds_dir/POST_SECREF_update_env_parameter.sql;
+@$builds_dir/POST_SECREF_ipms_support_role_rquest.sql;
+@$builds_dir/OPSWEBServiceCall.sql
+--- @$builds_dir/POST_TST_cSECREF_USER_ROLE.sql --> not needed per essr 45534
+commit;
+EOF
+
+
+
+SYS                            DP_RFRSH_LG
+/infshare/oracle/scripts/refresh/log/ASB
+
+SYS                            DP_RFRSH_DMP
+/infshare/oracle/scripts/refresh/bin/build/ASB
+
+
+
+if [ -z $1 ]
+then
+echo "*** Please Specify Database Name To Proceed *** "
+exit 1
+fi
+###
+. /infshare/oracle/scripts/refresh/bin/parm.${1}
+export ORACLE_SID=`ps -ef|grep pmon|grep ora_pmon_${to_db}|grep -v grep|awk '{print $8}'|cut -d_ -f3`
+###
+. oraenv <<EOFORAENV
+$ORACLE_SID
+EOFORAENV
+###############################################
+
+########
+impdp \"/ as sysdba\" REMAP_SCHEMA=OAB_REFRESH:SECREF dumpfile=dp_rfrsh_dmp:expdp_PRE_${ENV}_GalPwd.dmp logfile=dp_rfrsh_lg:impdp_POST_${ENV}_GalPwd.log table_exists_action=Truncate
+# This will import and update EOPF_IMPERSONATION PWD for an ENV. All DB in that ENV will share this dump file.
+sqlplus  / as sysdba <<EOF
+exec SECREF.SECREF_GalPwdSet;
+@$builds_dir/POST_SECREF_config.sql;
+@$builds_dir/POST_SECREF_ProxyRoles_OAB.sql;
+--- @$builds_dir/POST_SECREF_ProxyRoles.sql; --> not needed per essr 45534
+@$builds_dir/POST_SECREF_update_env_parameter.sql;
+@$builds_dir/POST_SECREF_ipms_support_role_rquest.sql;
+@$builds_dir/OPSWEBServiceCall.sql
+--- @$builds_dir/POST_TST_cSECREF_USER_ROLE.sql --> not needed per essr 45534
+commit;
+EOF
+
+POST_SECREF_ProxyRoles_OAB.sql
+------------------------------
+INSERT INTO secref.user_role
+       (hru_id, rl_cd, ur_dsbl_ind, ur_dlgt_ind, ur_rgstr_rule_ovrd_ind, ur_create_tmsmp_dt, ur_create_user_id, ur_last_updt_tmsmp_dt, ur_last_updt_user_id)
+SELECT hru_id, 'developer', 0, 0, 0, SYSDATE, 1, SYSDATE, 1
+FROM secref.hr_user
+WHERE uls_cd <> 'AA'
+AND hru_logon_nm IN
+('boatengbediakok@state.gov',
+'bookwalterdm@state.gov',
+'komolafeoa@state.gov',
+'reynonjj@state.gov',
+'yungk@state.gov')
+AND (hru_id, 'developer') NOT IN (SELECT hru_id, rl_cd FROM secref.user_role);
+
+
+POST_SECREF_ProxyRoles.sql:
+--------------------------
+
+/*************************************************************/
+/* HRRefreshes.xls : Preserve Proxy Roles                    */
+/*************************************************************/
+SET SCAN OFF;
+
+insert into secref.user_role ur (ur.HRU_ID, ur.RL_CD, ur.UR_CREATE_TMSMP_DT, ur.UR_CREATE_USER_ID, ur.UR_DLGT_IND, ur.UR_DSBL_IND, ur.UR_LAST_UPDT_TMSMP_DT, ur.UR_LAST_UPDT_USER_ID, ur.UR_RGSTR_RULE_OVRD_IND) values (9973, 'developer', sysdate, 1, 0, 0, sysdate, 1, 0);
+
+insert into secref.user_role ur (ur.HRU_ID, ur.RL_CD, ur.UR_CREATE_TMSMP_DT, ur.UR_CREATE_USER_ID, ur.UR_DLGT_IND, ur.UR_DSBL_IND, ur.UR_LAST_UPDT_TMSMP_DT, ur.UR_LAST_UPDT_USER_ID, ur.UR_RGSTR_RULE_OVRD_IND) values (43122, 'developer', sysdate, 1, 0, 0, sysdate, 1, 0);
+
+insert into secref.user_role ur (ur.HRU_ID, ur.RL_CD, ur.UR_CREATE_TMSMP_DT, ur.UR_CREATE_USER_ID, ur.UR_DLGT_IND, ur.UR_DSBL_IND, ur.UR_LAST_UPDT_TMSMP_DT, ur.UR_LAST_UPDT_USER_ID, ur.UR_RGSTR_RULE_OVRD_IND) values (41827, 'developer', sysdate, 1, 0, 0, sysdate, 1, 0);
+
+INSERT INTO secref.user_role (hru_id, rl_cd, ur_dsbl_ind, ur_dlgt_ind, ur_rgstr_rule_ovrd_ind, ur_create_tmsmp_dt, ur_create_user_id, ur_last_updt_tmsmp_dt, ur_last_updt_user_id) SELECT hru_id, 'developer', 0, 0, 0, SYSDATE, 1, SYSDATE, 1 FROM secref.hr_user WHERE uls_cd <> 'AA' AND hru_logon_nm IN ('comiskeytg@state.gov', 'hainesek@state.gov', 'hasanj@state.gov', 'trecartengr@state.gov', 'vannd@state.gov', 'babalolajo@state.gov', 'bookerum@state.gov', 'clarklh@state.gov', 'corderok@state.gov', 'galeysc@state.gov', 'gennect@state.gov', 'hensleyme@state.gov', 'rowells@state.gov', 'dennislj@state.gov', 'nguyentk@state.gov', 'sheplerma2@state.gov') AND (hru_id, 'developer') NOT IN (SELECT hru_id, rl_cd FROM secref.user_role);
+
+INSERT INTO SECREF.USER_ROLE (HRU_ID, RL_CD, UR_DSBL_IND, UR_DLGT_IND, UR_RGSTR_RULE_OVRD_IND, UR_CREATE_TMSMP_DT, UR_CREATE_USER_ID, UR_LAST_UPDT_TMSMP_DT, UR_LAST_UPDT_USER_ID) VALUES (47038, 'secref_admin', 0, 0, 0, SYSDATE, 1, SYSDATE, 1);
+
+insert into secref.user_role ur (ur.HRU_ID, ur.RL_CD, ur.UR_CREATE_TMSMP_DT, ur.UR_CREATE_USER_ID, ur.UR_DLGT_IND, ur.UR_DSBL_IND, ur.UR_LAST_UPDT_TMSMP_DT, ur.UR_LAST_UPDT_USER_ID, ur.UR_RGSTR_RULE_OVRD_IND ) values ( 30499, 'developer', sysdate, 1, 0, 0, sysdate, 1, 0);
+
+insert into secref.user_role ur (ur.HRU_ID, ur.RL_CD, ur.UR_CREATE_TMSMP_DT, ur.UR_CREATE_USER_ID, ur.UR_DLGT_IND, ur.UR_DSBL_IND, ur.UR_LAST_UPDT_TMSMP_DT, ur.UR_LAST_UPDT_USER_ID, ur.UR_RGSTR_RULE_OVRD_IND ) values ( 1475, 'developer', sysdate, 1, 0, 0, sysdate, 1, 0);
+
+insert into secref.user_role ur (ur.HRU_ID, ur.RL_CD, ur.UR_CREATE_TMSMP_DT, ur.UR_CREATE_USER_ID, ur.UR_DLGT_IND, ur.UR_DSBL_IND, ur.UR_LAST_UPDT_TMSMP_DT, ur.UR_LAST_UPDT_USER_ID, ur.UR_RGSTR_RULE_OVRD_IND ) values ( 53372, 'developer', sysdate, 1, 0, 0, sysdate, 1, 0);
+
+COMMIT;
+
+
+

@@ -1,0 +1,160 @@
+
+Step 1) Scan devices
+
+/usr/bin/rescan-scsi-bus.sh
+
+
+
+
+
+[root@hrewoel03 ~]# ls -altrh /dev/emcpowerhb
+brw-rw----. 1 root disk 120, 3344 Oct 24 23:41 /dev/emcpowerhb
+[root@hrewoel03 ~]# fdisk /dev/emcpowerhb
+Device contains neither a valid DOS partition table, nor Sun, SGI or OSF disklabel
+Building a new DOS disklabel with disk identifier 0xfeb6c46f.
+Changes will remain in memory only, until you decide to write them.
+After that, of course, the previous content won't be recoverable.
+
+Warning: invalid flag 0x0000 of partition table 4 will be corrected by w(rite)
+
+WARNING: DOS-compatible mode is deprecated. It's strongly recommended to
+         switch off the mode (command 'c') and change display units to
+         sectors (command 'u').
+
+Command (m for help): n
+Command action
+   e   extended
+   p   primary partition (1-4)
+p
+Partition number (1-4):
+Value out of range.
+Partition number (1-4): 1
+First cylinder (1-17605, default 1):
+Using default value 1
+Last cylinder, +cylinders or +size{K,M,G} (1-17605, default 17605):
+Using default value 17605
+
+Command (m for help):
+Command (m for help): w
+The partition table has been altered!
+
+Calling ioctl() to re-read partition table.
+Syncing disks.
+[root@hrewoel03 ~]# ls -altrh /dev/emcpowerhb*
+brw-rw----. 1 root disk 120, 3344 Oct 25 07:31 /dev/emcpowerhb
+brw-rw----. 1 root disk 120, 3345 Oct 25 07:31 /dev/emcpowerhb1
+[root@hrewoel03 ~]#
+
+
+SQL> /
+
+NAME                           PATH                           LABEL
+------------------------------ ------------------------------ ------------------------------
+PRDDATA01                      ORCL:PRDDATA01                 PRDDATA01
+PRDDATA02                      ORCL:PRDDATA02                 PRDDATA02
+PRDDATA03                      ORCL:PRDDATA03                 PRDDATA03
+PRDDATA04                      ORCL:PRDDATA04                 PRDDATA04
+PRDDATA05                      ORCL:PRDDATA05                 PRDDATA05
+PRDDATA06                      ORCL:PRDDATA06                 PRDDATA06
+PRDDATA07                      ORCL:PRDDATA07                 PRDDATA07
+PRDDATA08                      ORCL:PRDDATA08                 PRDDATA08
+PRDDATA09                      ORCL:PRDDATA09                 PRDDATA09
+
+
+
+col name format a30
+  col path format a30
+ col label format a30
+
+
+select name,path,label from v$asm_disk where group_number = 10
+
+
+
+
+[grid@hrewoel06 ~]$ asmcmd lsdg
+State    Type    Rebal  Sector  Block       AU  Total_MB  Free_MB  Req_mir_free_MB  Usable_file_MB  Offline_disks  Voting_files  Name
+MOUNTED  EXTERN  N         512   4096  1048576    552416   315645                0          315645              0             N  CRM_DATA/
+MOUNTED  EXTERN  N         512   4096  1048576    690520   373776                0          373776              0             N  CRM_FRA/
+MOUNTED  EXTERN  N         512   4096  1048576    614415   590266                0          590266              0             N  DATA/
+MOUNTED  EXTERN  N         512   4096  1048576   1024025   707371                0          707371              0             N  FRA/
+MOUNTED  EXTERN  N         512   4096  1048576   1104832   123809                0          123809              0             N  HFKC_DATA/
+MOUNTED  EXTERN  N         512   4096  1048576    138104   135412                0          135412              0             N  HFKC_FRA/
+MOUNTED  EXTERN  N         512   4096  1048576      2047     1609                0            1609              0             Y  OCR_VOTE/
+MOUNTED  EXTERN  N         512   4096  1048576    614397   422212                0          422212              0             N  OPS_DATA/
+MOUNTED  EXTERN  N         512   4096  1048576   1228794   850635                0          850635              0             N  OPS_FRA/
+MOUNTED  EXTERN  N         512   4096  1048576   1242936   134789                0          134789              0             N  PRD_DATA/
+MOUNTED  EXTERN  N         512   4096  1048576   2071560   350031                0          350031              0             N  PRD_FRA/
+[grid@hrewoel06 ~]$
+
+
+
+SQL> !ls -altrh /dev/oracleasm/disks/PRDDATA*
+brw-rw----. 1 grid asmdba 120,  385 Oct 19 13:54 /dev/oracleasm/disks/PRDDATA05
+brw-rw----. 1 grid asmdba 120,  321 Oct 19 13:54 /dev/oracleasm/disks/PRDDATA01
+brw-rw----. 1 grid asmdba 120,  305 Oct 19 13:54 /dev/oracleasm/disks/PRDDATA08
+brw-rw----. 1 grid asmdba 120,  273 Oct 19 13:54 /dev/oracleasm/disks/PRDDATA07
+brw-rw----. 1 grid asmdba 120,  225 Oct 19 13:54 /dev/oracleasm/disks/PRDDATA09
+brw-rw----. 1 grid asmdba 120,  209 Oct 19 13:54 /dev/oracleasm/disks/PRDDATA06
+brw-rw----. 1 grid asmdba 120,  193 Oct 19 13:54 /dev/oracleasm/disks/PRDDATA02
+brw-rw----. 1 grid asmdba 120,   81 Oct 19 13:54 /dev/oracleasm/disks/PRDDATA03
+brw-rw----. 1 grid asmdba 120,   33 Oct 19 13:54 /dev/oracleasm/disks/PRDDATA04
+brw-rw----. 1 grid asmdba 120, 1041 Oct 25 07:05 /dev/oracleasm/disks/PRDDATA10
+
+
+SQL> select name,state from v$asm_disk where name like 'PRDDATA%';
+
+NAME                           STATE
+------------------------------ --------
+PRDDATA01                      NORMAL
+PRDDATA02                      NORMAL
+PRDDATA03                      NORMAL
+PRDDATA04                      NORMAL
+PRDDATA05                      NORMAL
+PRDDATA06                      NORMAL
+PRDDATA07                      NORMAL
+PRDDATA08                      NORMAL
+PRDDATA09                      NORMAL
+
+9 rows selected.
+
+SQL> alter diskgroup prd_Data add disk 'ORCL:PRDDATA10';
+
+Diskgroup altered.
+
+SQL>
+SQL>
+SQL> select name,state from v$asm_disk where name like 'PRDDATA%';
+
+NAME                           STATE
+------------------------------ --------
+PRDDATA10                      NORMAL
+PRDDATA01                      NORMAL
+PRDDATA02                      NORMAL
+PRDDATA03                      NORMAL
+PRDDATA04                      NORMAL
+PRDDATA05                      NORMAL
+PRDDATA06                      NORMAL
+PRDDATA07                      NORMAL
+PRDDATA08                      NORMAL
+PRDDATA09                      NORMAL
+
+10 rows selected.
+
+SQL>
+
+
+
+[grid@hrewoel06 ~]$ asmcmd lsdg
+State    Type    Rebal  Sector  Block       AU  Total_MB  Free_MB  Req_mir_free_MB  Usable_file_MB  Offline_disks  Voting_files  Name
+MOUNTED  EXTERN  N         512   4096  1048576    552416   315645                0          315645              0             N  CRM_DATA/
+MOUNTED  EXTERN  N         512   4096  1048576    690520   373776                0          373776              0             N  CRM_FRA/
+MOUNTED  EXTERN  N         512   4096  1048576    614415   590266                0          590266              0             N  DATA/
+MOUNTED  EXTERN  N         512   4096  1048576   1024025   707371                0          707371              0             N  FRA/
+MOUNTED  EXTERN  N         512   4096  1048576   1104832   123809                0          123809              0             N  HFKC_DATA/
+MOUNTED  EXTERN  N         512   4096  1048576    138104   135412                0          135412              0             N  HFKC_FRA/
+MOUNTED  EXTERN  N         512   4096  1048576      2047     1609                0            1609              0             Y  OCR_VOTE/
+MOUNTED  EXTERN  N         512   4096  1048576    614397   422212                0          422212              0             N  OPS_DATA/
+MOUNTED  EXTERN  N         512   4096  1048576   1228794   850635                0          850635              0             N  OPS_FRA/
+MOUNTED  EXTERN  Y         512   4096  1048576   1381033   272883                0          272883              0             N  PRD_DATA/
+MOUNTED  EXTERN  N         512   4096  1048576   2071560   350031                0          350031              0             N  PRD_FRA/

@@ -1,0 +1,93 @@
+SQL> select CLONE_SNAP_DATE from pure_clone_user.clone_checker;
+
+CLONE_SNA
+---------
+20-OCT-21
+
+SQL> select * from global_name;
+
+GLOBAL_NAME
+--------------------------------------------------------------------------------
+KC2.HR.STATE.SBU
+
+SQL>  select CLONE_SNAP_DATE from pure_clone_user.clone_checker;
+
+CLONE_SNA
+---------
+20-OCT-21
+
+SQL> update  pure_clone_user.clone_checker set CLONE_SNAP_DATE=sysdate;
+
+1 row updated.
+
+SQL> commit;
+
+Commit complete.
+
+SQL> select CLONE_SNAP_DATE from pure_clone_user.clone_checker;
+
+CLONE_SNA
+---------
+21-OCT-21
+
+SQL>
+
+
+
+
+SQL> select * from global_name;
+
+GLOBAL_NAME
+--------------------------------------------------------------------------------
+KC1.HR.STATE.SBU
+
+SQL>  select CLONE_SNAP_DATE from pure_clone_user.clone_checker;
+
+CLONE_SNA
+---------
+19-OCT-21
+
+SQL>  update  pure_clone_user.clone_checker set CLONE_SNAP_DATE=sysdate-1;
+
+1 row updated.
+
+SQL> commit;
+
+Commit complete.
+
+SQL> select CLONE_SNAP_DATE from pure_clone_user.clone_checker;
+
+CLONE_SNA
+---------
+20-OCT-21
+
+SQL> select * from global_name;
+
+GLOBAL_NAME
+--------------------------------------------------------------------------------
+KC1.HR.STATE.SBU
+
+SQL>
+
+
+
+SQL> create user PURE_CLONE_USER identified by "Testing123#Testing123#";
+
+User created.
+
+SQL> grant dba to PURE_CLONE_USER;
+
+Grant succeeded.
+
+SQL> grant connect to PURE_CLONE_USER;
+
+Grant succeeded.
+
+SQL> create table pure_clone_user.clone_checker ( CLONE_TEXT VARCHAR2(100), CLONE_SNAP_DATE date, CLONE_SNAP_FLAG char);
+
+Table created.
+
+SQL>
+
+
+

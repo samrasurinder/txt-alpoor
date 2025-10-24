@@ -1,0 +1,15 @@
+create undo tablespace UNDOTBS01 datafile '+HFKC_DATA' size 32G AUTOEXTEND ON NEXT 100M MAXSIZE UNLIMITED;
+
+ SELECT tablespace_name,
+        SUM ( ( (bytes / 1024) / 1024) / 1024) size_gb,
+        COUNT (file_id) no_of_datafiles
+ FROM dba_data_files
+ WHERE tablespace_name LIKE 'UNDOTBS1'
+ GROUP BY tablespace_name;
+
+
+
+alter system set undo_tablespace=UNDOTBS01 scope=both SID='HFKC1'
+
+
+ drop tablespace UNDOTBS1 including contents and datafiles;

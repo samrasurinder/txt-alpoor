@@ -1,0 +1,8 @@
+hrvltstdb7601.hr.state.sbu   - 12C  Stage  in /u02/PSU/JAN2020
+hrvlcpydb7601.hr.state.sbu   - 12C  Staged in /u02/PSU/JAN2020
+hrvltstdb7602.hr.state.sbu   - 19C  Staged in /u02/PSU/JAN2020
+hrvltstdb7603.hr.state.sbu   - 19C  Staged in /u02/PSU/JAN2020
+
+
+
+

@@ -1,0 +1,24 @@
+select name from v$database;
+
+----------------------------------------------------------------------------------
+
+SELECT count(*) FROM sysadm.psoprdefn WHERE ACCTLOCK = 1;
+
+-----------------------------------------------------------------------------------
+
+UPDATE sysadm.psoprdefn SET ACCTLOCk = 0 WHERE OPRID NOT IN ( SELECT OPRID FROM sysadm.locked_oper_20210930 );
+
+commit;
+
+-----------------------------------------------------------------------------------
+
+SELECT count(*) FROM psoprdefn WHERE ACCTLOCK = 1
+MINUS
+SELECT count(*) FROM sysadm.locked_oper_20210930 WHERE ACCTLOCK = 1 ;
+
+-----------------------------------------------------------------------------------
+
+SELECT count(*) FROM sysadm.psoprdefn WHERE ACCTLOCK = 1;
+SELECT count(*) FROM sysadm.psoprdefn WHERE ACCTLOCK = 0;
+
+-----------------------------------------------------------------------------------

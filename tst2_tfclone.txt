@@ -1,0 +1,144 @@
+
+Allocate one raw device 135GB on hrewoel06/07/08. Make sure it's shared across all 3 nodes
+Allocate one raw device 135GB on hrewoel02/03. Make sure it's shared across all 2 nodes
+
+And add this device to device list for tst2 TFclone
+ 
+
+
+
+
+[root@hrewoel03 ~]# lsblk /dev/emcpowergp1
+NAME        MAJ:MIN  RM   SIZE RO TYPE MOUNTPOINT
+emcpowergp1 120:3153  0 134.9G  0 part
+[root@hrewoel03 ~]#
+TST2 clone on hrewoel03
+-----------------------
+
+Please allocate 135GB raw device on hrewoel03/04 - This device should be shared between hrewoel03/04
+
+
+#!/bin/bash
+
+#For the multiclones the above could be changed using the device files instead of a
+#device group.  The format for a device file is two columns of devices, the first is
+#the production volume and the second is the clone volume like:  0123   04BA
+#the above syntax would be the same except the -g would be replaced with a -file and
+#a -sid parameter.  The -sid xxxx is the last four digits of the VMAX serial number, I.E
+#1829 and the -file would point to the appropriate device file.  So the syntax would be:
+
+#this script assumes that the intial copy had been done prior to running this script.
+#In other words, the clone devices have been through at least one symclone session of
+#symclone "create" and "activate" and that both the -precopy and -differential options
+#were used with the initial create syntax.
+#For this script the device file names are:  four_volume_test_device_group and four_volume_test_device_group2
+#For this script issue the script name and then the argument of either four_volume_test_device_group or four_volume_test_device_group2
+
+export SID="000198701420"
+/opt/emc/SYMCLI/bin/symclone -sid $SID -f /opt/emc/SYMCLI/bin/devicecreate.txt query
+/opt/emc/SYMCLI/bin/symclone -sid $SID -f /opt/emc/SYMCLI/bin/devicecreate.txt recreate -precopy -noprompt
+/opt/emc/SYMCLI/bin/symclone -sid $SID -f /opt/emc/SYMCLI/bin/devicecreate.txt verify -cycled -precopy -i 60
+/opt/emc/SYMCLI/bin/symclone -sid $SID -f /opt/emc/SYMCLI/bin/devicecreate.txt activate -consistent -noprompt
+/opt/emc/SYMCLI/bin/symclone -sid $SID -f /opt/emc/SYMCLI/bin/devicecreate.txt verify -copied -i 60
+/opt/emc/SYMCLI/bin/symclone -sid $SID -f /opt/emc/SYMCLI/bin/devicecreate.txt query
+rm -rf /var/symapi/db/symapi_db.bin
+rm -rf /var/symapi/db/symapi_db.bin_xlock
+/opt/emc/SYMCLI/bin/symcfg discover
+/opt/emc/SYMCLI/bin/symcfg list
+/opt/emc/SYMCLI/bin/symclone -sid $SID -f /opt/emc/SYMCLI/bin/devicecreate.txt query
+#Notes  -noprompt is used as the equivalent of doing an ECHO Y | to a command to pass
+#a "Yes" to actually do the operation.  Without the above commands would halt waiting
+#user input before going to the next step.  The query and verify commands are only
+#output state commands and as such do not require a -noprompt
+
+
+
+[oracle@hrewoel03 ~]$ cat /opt/emc/SYMCLI/bin/devicecreate.txt
+02018 01f84
+02044 01fc4
+02014 01fb8
+02010 01fb0
+02040 01fac
+0200c 01fa4
+0203c 01f98
+02038 01f90
+02008 01f8c
+02034 01f70
+02004 01f78
+02000 01f6c
+02030 01fc8
+01ffc 01fc0
+0202c 01fbc
+02028 01fb4
+01FF8 01fa8
+02048 01fa0
+01ff4 01f9c
+01ff0 01f94
+02020 01f88
+01FEC 01f80
+02024 01f7c
+
+List of RAW devices on 02/03
+----------------------------
+
+[root@hrewoel03 ~]# /home/grid/asm_disk_map_to_device.sh | grep PRDDATA
+The ASM disk: 'PRDDATA01' mapped to '/dev/emcpowerfx1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDDATA02' mapped to '/dev/emcpowerft1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDDATA03' mapped to '/dev/emcpowerga1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDDATA04' mapped to '/dev/emcpowergn1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDDATA05' mapped to '/dev/emcpowerfz1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDDATA06' mapped to '/dev/emcpowerfp1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDDATA07' mapped to '/dev/emcpowergc1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDDATA08' mapped to '/dev/emcpowerfk1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDDATA09' mapped to '/dev/emcpowerfv1'  Totalsize=144.8 GB,
+[root@hrewoel03 ~]# /home/grid/asm_disk_map_to_device.sh | grep PRDFRA
+The ASM disk: 'PRDFRA01' mapped to '/dev/emcpowergp1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDFRA02' mapped to '/dev/emcpowerfw1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDFRA03' mapped to '/dev/emcpowerfo1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDFRA04' mapped to '/dev/emcpowergl1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDFRA05' mapped to '/dev/emcpowergq1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDFRA06' mapped to '/dev/emcpowerfq1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDFRA07' mapped to '/dev/emcpowerfn1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDFRA08' mapped to '/dev/emcpowerfy1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDFRA09' mapped to '/dev/emcpowergm1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDFRA10' mapped to '/dev/emcpowerfm1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDFRA11' mapped to '/dev/emcpowerfu1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDFRA12' mapped to '/dev/emcpowerfr1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDFRA13' mapped to '/dev/emcpowergo1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDFRA14' mapped to '/dev/emcpowerfs1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDFRA15' mapped to '/dev/emcpowergb1'  Totalsize=144.8 GB,
+[root@hrewoel03 ~]#
+
+
+
+List of RAW devices on 06/07/08
+-------------------------------
+
+
+[root@hrewoel06 ~]# /home/grid/asm_disk_map_to_device.sh | grep PRDDATA
+The ASM disk: 'PRDDATA01' mapped to '/dev/emcpoweru1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDDATA02' mapped to '/dev/emcpowerm1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDDATA03' mapped to '/dev/emcpowerf1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDDATA04' mapped to '/dev/emcpowerc1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDDATA05' mapped to '/dev/emcpowery1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDDATA06' mapped to '/dev/emcpowern1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDDATA07' mapped to '/dev/emcpowerr1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDDATA08' mapped to '/dev/emcpowert1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDDATA09' mapped to '/dev/emcpowero1'  Totalsize=144.8 GB,
+[root@hrewoel06 ~]# /home/grid/asm_disk_map_to_device.sh | grep PRDFRA
+The ASM disk: 'PRDFRA01' mapped to '/dev/emcpowerv1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDFRA02' mapped to '/dev/emcpowerd1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDFRA03' mapped to '/dev/emcpowerg1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDFRA04' mapped to '/dev/emcpowerp1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDFRA05' mapped to '/dev/emcpowers1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDFRA06' mapped to '/dev/emcpowerx1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDFRA07' mapped to '/dev/emcpoweri1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDFRA08' mapped to '/dev/emcpowerk1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDFRA09' mapped to '/dev/emcpowerw1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDFRA10' mapped to '/dev/emcpowerq1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDFRA11' mapped to '/dev/emcpowerj1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDFRA12' mapped to '/dev/emcpowerh1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDFRA13' mapped to '/dev/emcpowere1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDFRA14' mapped to '/dev/emcpowerb1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDFRA15' mapped to '/dev/emcpowerl1'  Totalsize=144.8 GB,
+[root@hrewoel06 ~]#

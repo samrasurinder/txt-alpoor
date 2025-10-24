@@ -1,0 +1,32 @@
+select max(id),min(id) from TALENTMAP_API_USER.STATS_LOGININSTANCE;
+ALTER SEQUENCE TALENTMAP_API_USER.STATS_LOGININSTANCE_SQ INCREMENT BY <>;
+
+
+select TALENTMAP_API_USER.STATS_LOGININSTANCE_SQ.nextval from dual;
+
+
+ALTER SEQUENCE TALENTMAP_API_USER.STATS_LOGININSTANCE_SQ INCREMENT BY 1;
+
+
+
+
+
+select TALENTMAP_API_USER.STATS_LOGININSTANCE_SQ.nextval from dual;
+
+   NEXTVAL
+----------
+    169128
+
+SQL>  select max(id),min(id) from TALENTMAP_API_USER.STATS_LOGININSTANCE;
+
+   MAX(ID)    MIN(ID)
+---------- ----------
+    169127          1
+
+SQL> select * from global_name;
+
+GLOBAL_NAME
+--------------------------------------------------------------------------------
+TNTMPTST.HR.STATE.SBU
+
+SQL>

@@ -1,0 +1,18 @@
+[oracle@hrvltstdb7601 OPSIVV1]$ srvctl add database -d $ORACLE_SID -o $ORACLE_HOME
+2020-07-14 16:35:06.403
+CLSD: A file system error occurred while attempting to create default permissions for file "/u02/app/oracle/product/19.3.0/db_1/log/hrvltstdb7601//alerthrvltstdb7601.log" during alert open processing for process "client". Additional diagnostics: LFI-00133: Trying to create file /u02/app/oracle/product/19.3.0/db_1/log/hrvltstdb7601//alerthrvltstdb7601.log that already exists.
+LFI-01517: open() failed(OSD return value = 13).
+
+2020-07-14 16:35:06.403
+CLSD: An error was encountered while attempting to open alert log "/u02/app/oracle/product/19.3.0/db_1/log/hrvltstdb7601//alerthrvltstdb7601.log". Additional diagnostics: (:CLSD00155:)
+2020-07-14 16:35:06.403
+CLSD: Alert logging terminated for process client. File name: "/u02/app/oracle/product/19.3.0/db_1/log/hrvltstdb7601//alerthrvltstdb7601.log"
+2020-07-14 16:35:06.403
+CLSD: A file system error occurred while attempting to create default permissions for file "/u02/app/oracle/product/19.3.0/db_1/log/hrvltstdb7601/client/java_26703.log" during log open processing for process "client". Additional diagnostics: LFI-00133: Trying to create file /u02/app/oracle/product/19.3.0/db_1/log/hrvltstdb7601/client/java_26703.log that already exists.
+LFI-01517: open() failed(OSD return value = 13).
+
+2020-07-14 16:35:06.403
+CLSD: An error was encountered while attempting to open log file "/u02/app/oracle/product/19.3.0/db_1/log/hrvltstdb7601/client/java_26703.log". Path: /u02/app/oracle/product/19.3.0/db_1/log/hrvltstdb7601/client. Filename: java_26703.rc = 3. Additional diagnostics: (:CLSD00153:)
+2020-07-14 16:35:06.403
+CLSD: Logging terminated for process client. File name: "/u02/app/oracle/product/19.3.0/db_1/log/hrvltstdb7601/client/java_26703.log"
+[oracle@hrvltstdb7601 OPSIVV1]$

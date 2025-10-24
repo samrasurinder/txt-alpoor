@@ -1,0 +1,214 @@
+set echo on
+set define off
+
+
+
+column filename   new_val filename
+column env        new_val env
+column host       new_val host
+column dbname     new_val dbname
+column schemaname new_val schemaname
+column rundate    new_val rundate
+column msr_number new_val msr_number
+
+
+
+
+ACCEPT msr_number NUMBER PROMPT 'Enter the MSR number >'
+
+select to_char(sysdate, 'yyyymmdd_hh24miss' ) as rundate from dual;
+
+SELECT
+CASE
+WHEN  instr(UPPER(instance_name),'DEV')  > 0 then 'DEV'
+WHEN  instr(UPPER(instance_name),'TST')  > 0 then 'TST'
+WHEN  instr(UPPER(instance_name),'ASB')  > 0 then 'ASB'
+WHEN  instr(UPPER(instance_name),'UAT')  > 0 then 'UAT'
+WHEN  instr(UPPER(instance_name),'CPY')  > 0 then 'CPY'
+WHEN  instr(UPPER(instance_name),'CPY1')  > 0 then 'CPY1'
+WHEN  instr(UPPER(instance_name),'TRN')  > 0 then 'TRN'
+WHEN  instr(UPPER(instance_name),'INS')  > 0 then 'INS'
+WHEN  instr(UPPER(instance_name),'IVV')  > 0 then 'IVV'
+WHEN  instr(UPPER(instance_name),'PRD')  > 0 then 'PRD'
+ELSE
+    'UNKNOWN_ENV'
+END as env
+FROM v$instance;
+
+def 
+select
+instance_name as dbname
+from v$instance;
+vi t.	
+
+select 
+user as schemaname 
+from dual;
+
+
+def filename=&MSR._&msr_number._&rundate._&rundate..log
+
+spool &filename
+
+select sysdate from dual;
+
+spool off
+
+
+
+
+ 
+
+var MSR varchar2(10)
+var msr number 
+
+exec :MSR := 'MSR'
+
+ACCEPT msr_number NUMBER PROMPT 'Enter the MSR number >'
+
+exec msr := &msr
+e
+select     :MSR
+        || '_'
+        || exmsr_number
+        || '_'
+        || &&env
+        || '_'
+        || &&dbname 
+        || '_'
+        || &&schemaname
+        || '_'
+        || rundate
+        || '.log'
+as filename
+from dual;
+
+
+
+var MSR varchar2(10)
+exec :MSR := 'MSR';
+
+var MSR_NUMBER number
+ACCEPT msr  NUMBER PROMPT 'Enter the MSR number >'
+exec :MSR_NUMBER := &msr;
+
+select   :MSR
+      || :MSR_NUMBER
+from dual;
+
+
+
+
+
+
+
+
+
+
+column env        new_val env
+column host       new_val host
+column dbname     new_val dbname
+column schemaname new_val schemaname
+column rundate    new_val rundate
+
+var MSR           varchar2(10)
+var MSR_NUMBER    number
+var ENVIRONMENT   varchar2(10)
+var HOSTNAME      varchar2(70)
+var INSTANCENAME  varchar2(50)
+var SCHEMANAME    varchar2(50)
+var RUNDATE       varchar2(100)
+
+
+
+
+
+
+
+
+ACCEPT msr  NUMBER PROMPT 'Enter the MSR number >'
+
+exec :MSR           := 'MSR';
+exec :MSR_NUMBER    := &msr;
+exec :ENVIRONMENT   := '&env';
+exec :HOSTNAME      := '&host';
+exec :INSTANCENAME  := '&dbname';
+exec :SCHEMANAME    := '&schemaname';
+exec :RUNDATE       := '&rundate';
+
+select
+REPLACE(host_name,'.hr.state.sbu','') as host
+from v$instance;
+
+
+
+
+
+
+SELECT
+CASE
+WHEN  instr(UPPER(instance_name),'DEV')  > 0 then 'DEV'
+WHEN  instr(UPPER(instance_name),'TST')  > 0 then 'TST'
+WHEN  instr(UPPER(instance_name),'ASB')  > 0 then 'ASB'
+WHEN  instr(UPPER(instance_name),'UAT')  > 0 then 'UAT'
+WHEN  instr(UPPER(instance_name),'CPY')  > 0 then 'CPY'
+WHEN  instr(UPPER(instance_name),'CPY1')  > 0 then 'CPY1'
+WHEN  instr(UPPER(instance_name),'TRN')  > 0 then 'TRN'
+WHEN  instr(UPPER(instance_name),'INS')  > 0 then 'INS'
+WHEN  instr(UPPER(instance_name),'IVV')  > 0 then 'IVV'
+WHEN  instr(UPPER(instance_name),'PRD')  > 0 then 'PRD'
+ELSE
+    'UNKNOWN_ENV'
+END as env
+FROM v$instance;
+
+
+select
+instance_name as dbname
+from v$instance;
+
+
+
+
+
+select
+instance_name as dbname
+from v$instance;
+
+
+
+
+
+
+
+
+
+select
+to_char(sysdate, 'yyyymmdd_hh24miss' ) as rundate
+from dual;
+
+
+
+
+select   :MSR
+      || :MSR_NUMBER
+      || '_'
+      || :HOSTNAME
+      || '_'
+      || :ENVIRONMENT
+      || '_'
+      || :INSTANCENAME
+      || '_'
+      || :SCHEMANAME
+      || '_'
+      || :RUNDATE
+      || '.log'
+from dual;
+
+
+
+
+
+
+       
+

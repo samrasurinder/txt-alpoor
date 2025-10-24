@@ -1,0 +1,23 @@
+sqlplus  sysadm/Nz08$vLV@tst2
+
+--1)         Create db link
+CREATE  DATABASE LINK EOD
+CONNECT TO SYSADM
+IDENTIFIED BY PLivU1$4
+USING 'EODTST';
+select * from global_name@eod;
+
+
+
+--2)            Scrub emails addresses:
+update sysadm.ps_OBL_CO_2F_EMAIL set email_addr = 'GEMSRefreshEmail' || rownum || '@state.gov' where trim(oprid) is not null and oprid in (select oprid from sysadm.ps_OBL_CO_2F_EMAIL where trim(oprid) is not null group by oprid having count(*) > 1);
+
+update sysadm.ps_OBL_CO_2F_EMAIL set email_addr = 'GEMSRefreshEmail@state.gov' where trim(oprid) is not null and oprid not in (select oprid from sysadm.ps_OBL_CO_2F_EMAIL where trim(oprid) is not null group by oprid having count(*) > 1);
+
+commit;
+
+hrewwstsap2000
+hrewwstsws2000
+
+
+D:\HR91\appserv

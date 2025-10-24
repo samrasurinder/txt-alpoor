@@ -1,0 +1,12 @@
+[root@hrvltstdb22 ~]# tfactl diagcollect -from "2021-06-08 10:00:00" -to "2021-06-08 14:00:00"
+Collecting data for all nodes and Evaluating Storage Cells for Collection.
+Scanning files from jun/08/2021 10:00:00 to jun/08/2021 14:00:00
+
+Collection Id : 20210608173850hrvltstdb22
+
+Detailed Logging at : /u01/ahf_data_dir/oracle.ahf/data/repository/collection_Tue_Jun_08_17_38_51_EDT_2021_node_all/diagcollect_20210608173850_hrvltstdb22.log
+2021/06/08 17:38:55 EDT : NOTE : Any file or directory name containing the string .com will be renamed to replace .com with dotcom
+2021/06/08 17:38:55 EDT : Collection Name : tfa_Tue_Jun_08_17_38_51_EDT_2021.zip
+2021/06/08 17:38:55 EDT : Collecting diagnostics from hosts : [hrvltstdb20, hrvltstdb21, hrvltstdb22]
+2021/06/08 17:38:56 EDT : Scanning of files for Collection in progress...
+2021/06/08 17:38:56 EDT : Collecting additional diagnostic information...

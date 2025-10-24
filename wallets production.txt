@@ -1,0 +1,194 @@
+[grid@hrewoel42 ~]$ srvctl modify scan_listener -p TCP:1526/TCPS:2484
+[grid@hrewoel42 ~]$ srvctl modify listener -p TCP:1521/TCPS:2484
+[grid@hrewoel42 ~]$ srvctl config listener
+Name: LISTENER
+Type: Database Listener
+Network: 1, Owner: grid
+Home: <CRS home>
+End points: TCP:1521/TCPS:2484
+Listener is enabled.
+Listener is individually enabled on nodes:
+Listener is individually disabled on nodes:
+[grid@hrewoel42 ~]$ srvctl config scan_listener
+SCAN Listeners for network 1:
+Registration invited nodes:
+Registration invited subnets:
+Endpoints: TCP:1526/TCPS:2484
+SCAN Listener LISTENER_SCAN1 exists
+SCAN Listener is enabled.
+SCAN Listener LISTENER_SCAN2 exists
+SCAN Listener is enabled.
+SCAN Listener LISTENER_SCAN3 exists
+SCAN Listener is enabled.
+[grid@hrewoel42 ~]$
+
+
+
+
+[grid@hrewoel42 ~]$ srvctl stop listener
+[grid@hrewoel42 ~]$ srvctl start listener
+[grid@hrewoel42 ~]$ srvctl stop scan_listener
+[grid@hrewoel42 ~]$ srvctl start scan_listener
+
+
+
+[grid@hrewoel42 ~]$ lsnrctl status
+
+LSNRCTL for Linux: Version 19.0.0.0.0 - Production on 08-APR-2023 07:26:38
+
+Copyright (c) 1991, 2022, Oracle.  All rights reserved.
+
+Connecting to (DESCRIPTION=(ADDRESS=(PROTOCOL=IPC)(KEY=LISTENER)))
+STATUS of the LISTENER
+------------------------
+Alias                     LISTENER
+Version                   TNSLSNR for Linux: Version 19.0.0.0.0 - Production
+Start Date                08-APR-2023 07:26:00
+Uptime                    0 days 0 hr. 0 min. 38 sec
+Trace Level               off
+Security                  ON: Local OS Authentication
+SNMP                      OFF
+Listener Parameter File   /u02/app/19.3.0/grid/network/admin/listener.ora
+Listener Log File         /u02/app/grid/diag/tnslsnr/hrewoel42/listener/alert/log.xml
+Listening Endpoints Summary...
+  (DESCRIPTION=(ADDRESS=(PROTOCOL=ipc)(KEY=LISTENER)))
+  (DESCRIPTION=(ADDRESS=(PROTOCOL=tcps)(HOST=10.68.105.50)(PORT=2484)))
+  (DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=10.68.105.42)(PORT=1521)))
+  (DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=10.68.105.50)(PORT=1521)))
+Services Summary...
+Service "+ASM" has 1 instance(s).
+  Instance "+ASM1", status READY, has 1 handler(s) for this service...
+Service "+ASM_DATA" has 1 instance(s).
+  Instance "+ASM1", status READY, has 1 handler(s) for this service...
+Service "+ASM_DRSHARE" has 1 instance(s).
+  Instance "+ASM1", status READY, has 1 handler(s) for this service...
+Service "+ASM_FRA" has 1 instance(s).
+  Instance "+ASM1", status READY, has 1 handler(s) for this service...
+Service "+ASM_HFKC_DATA" has 1 instance(s).
+  Instance "+ASM1", status READY, has 1 handler(s) for this service...
+Service "+ASM_HFKC_FRA" has 1 instance(s).
+  Instance "+ASM1", status READY, has 1 handler(s) for this service...
+Service "+ASM_OCR_VD_DG" has 1 instance(s).
+  Instance "+ASM1", status READY, has 1 handler(s) for this service...
+Service "+ASM_PRD_DATA" has 1 instance(s).
+  Instance "+ASM1", status READY, has 1 handler(s) for this service...
+Service "+ASM_PRD_FRA" has 1 instance(s).
+  Instance "+ASM1", status READY, has 1 handler(s) for this service...
+Service "+ASM_UPG_DATA" has 1 instance(s).
+  Instance "+ASM1", status READY, has 1 handler(s) for this service...
+Service "+ASM_UPG_FRA" has 1 instance(s).
+  Instance "+ASM1", status READY, has 1 handler(s) for this service...
+Service "ARC.HR.STATE.SBU" has 1 instance(s).
+  Instance "ARC1", status READY, has 1 handler(s) for this service...
+Service "HFKC.hr.state.sbu" has 1 instance(s).
+  Instance "HFKC1", status READY, has 1 handler(s) for this service...
+Service "HFKC1.HR.STATE.SBU" has 1 instance(s).
+  Instance "HFKC1", status READY, has 1 handler(s) for this service...
+Service "PRD" has 1 instance(s).
+  Instance "PRD1", status UNKNOWN, has 1 handler(s) for this service...
+Service "PRD.HR.STATE.SBU" has 1 instance(s).
+  Instance "PRD1", status READY, has 1 handler(s) for this service...
+Service "PRD_CFG.HR.STATE.SBU" has 1 instance(s).
+  Instance "PRD1", status READY, has 1 handler(s) for this service...
+Service "PRD_DGMGRL" has 1 instance(s).
+  Instance "PRD1", status UNKNOWN, has 1 handler(s) for this service...
+Service "arcsrvc.HR.STATE.SBU" has 1 instance(s).
+  Instance "ARC1", status READY, has 1 handler(s) for this service...
+Service "hfkcsrvc.hr.state.sbu" has 1 instance(s).
+  Instance "HFKC1", status READY, has 1 handler(s) for this service...
+Service "prdsrvc.HR.STATE.SBU" has 1 instance(s).
+  Instance "PRD1", status READY, has 1 handler(s) for this service...
+The command completed successfully
+[grid@hrewoel42 ~]$
+
+
+
+
+
+#SQLNET.ORA Network Configuration File
+#Created by Oracle Enterprise Manager Clone Database tool
+SQLNET.INBOUND_CONNECT_TIMEOUT=50
+SQLNET.EXPIRE_TIME=150
+
+SQLNET.ENCRYPTION_TYPES_SERVER= (AES256)
+SQLNET.AUTHENTICATION_SERVICES = (TCPS,beq)
+SQLNET.CRYPTO_CHECKSUM_TYPES_SERVER = (SHA1,SHA256,SHA384,SHA512)
+SQLNET.ENCRYPTION_SERVER = REQUIRED
+SQLNET.CRYPTO_CHECKSUM_SERVER = REQUIRED
+
+ENCRYPTION_WALLET_LOCATION = (SOURCE = (METHOD = FILE) (METHOD_DATA =(DIRECTORY =/u01/WALLETS/$ORACLE_UNQNAME)))
+WALLET_LOCATION = (SOURCE = (METHOD = FILE) (METHOD_DATA =(DIRECTORY =/u01/WALLETS/PRD2-EW-SCAN-TCPS)))
+
+NAMES.DIRECTORY_PATH= (TNSNAMES, ONAMES, HOSTNAME)
+SQLNET.ENCRYPTION_CLIENT=REQUIRED
+SQLNET.CRYPTO_CHECKSUM_CLIENT=REQUIRED
+SQLNET.ENCRYPTION_TYPES_CLIENT=(AES256,AES192,AES128)
+SQLNET.CRYPTO_CHECKSUM_TYPES_CLIENT=(SHA256,SHA384,SHA512)
+#SQLNET.FIPS_140=TRUE
+#New line adds begin here..
+SQLNET.IGNORE_ANO_ENCRYPTION_FOR_TCPS=TRUE
+##SSL_CLIENT_AUTHENTICATION=FALSE
+SSL_CLIENT_AUTHENTICATION=TRUE
+SSL_VERSION=1.2
+## MVS USE THIS LINE BELOW
+SSL_CIPHER_SUITES = (SSL_RSA_WITH_AES_256_CBC_SHA,SSL_RSA_WITH_AES_256_GCM_SHA384)
+##SSL_CIPHER_SUITES = (TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256)
+trace_level_server=16
+trace_directory_server=/u01/trace/
+diag_adr_enabled=off
+
+
+
+
+
+SSL_VERSION=1.2
+##SSL_CLIENT_AUTHENTICATION=FALSE
+SSL_CLIENT_AUTHENTICATION=TRUE
+WALLET_LOCATION = (SOURCE = (METHOD = FILE) (METHOD_DATA =(DIRECTORY =/u01/WALLETS/HF2-EW-SCAN-TCPS)))
+
+
+
+
+
+
+
+
+#SQLNET.ORA Network Configuration File
+#Created by Oracle Enterprise Manager Clone Database tool
+SQLNET.INBOUND_CONNECT_TIMEOUT=50
+SQLNET.EXPIRE_TIME=150
+
+SQLNET.ENCRYPTION_TYPES_SERVER= (AES256)
+SQLNET.AUTHENTICATION_SERVICES = (TCPS,beq)
+SQLNET.CRYPTO_CHECKSUM_TYPES_SERVER = (SHA1,SHA256,SHA384,SHA512)
+SQLNET.ENCRYPTION_SERVER = REQUIRED
+SQLNET.CRYPTO_CHECKSUM_SERVER = REQUIRED
+
+ENCRYPTION_WALLET_LOCATION = (SOURCE = (METHOD = FILE) (METHOD_DATA =(DIRECTORY ==/u02/app/oracle/WALLETS/$ORACLE_SID)))
+WALLET_LOCATION = (SOURCE = (METHOD = FILE) (METHOD_DATA =(DIRECTORY =/u02/app/oracle/WALLETS/HRVLPRDDB7603-TCPS)))
+
+NAMES.DIRECTORY_PATH= (TNSNAMES, ONAMES, HOSTNAME)
+SQLNET.ENCRYPTION_CLIENT=REQUIRED
+SQLNET.CRYPTO_CHECKSUM_CLIENT=REQUIRED
+SQLNET.ENCRYPTION_TYPES_CLIENT=(AES256,AES192,AES128)
+SQLNET.CRYPTO_CHECKSUM_TYPES_CLIENT=(SHA256,SHA384,SHA512)
+#SQLNET.FIPS_140=TRUE
+#New line adds begin here..
+SQLNET.IGNORE_ANO_ENCRYPTION_FOR_TCPS=TRUE
+##SSL_CLIENT_AUTHENTICATION=FALSE
+SSL_CLIENT_AUTHENTICATION=TRUE
+SSL_VERSION=1.2
+## MVS USE THIS LINE BELOW
+SSL_CIPHER_SUITES = (SSL_RSA_WITH_AES_256_CBC_SHA,SSL_RSA_WITH_AES_256_GCM_SHA384)
+##SSL_CIPHER_SUITES = (TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256)
+trace_level_server=16
+trace_directory_server=/u01/trace/
+diag_adr_enabled=off
+
+
+
+
+SSL_VERSION=1.2
+##SSL_CLIENT_AUTHENTICATION=FALSE
+SSL_CLIENT_AUTHENTICATION=TRUE
+WALLET_LOCATION = (SOURCE = (METHOD = FILE) (METHOD_DATA =(DIRECTORY =/u02/app/oracle/WALLETS/HRVLPRDDB7603-TCPS)))

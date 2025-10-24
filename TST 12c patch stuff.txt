@@ -1,0 +1,55 @@
+
+For GI HOME:
+-----------
+
+Patch  29249637     : applied on Thu May 09 08:09:05 EDT 2019
+Unique Patch ID:  22802302
+Patch description:  "OJVM RELEASE UPDATE: 12.2.0.1.190416 (29249637)"
+
+
+Patch  29314424     : applied on Thu May 09 08:02:13 EDT 2019
+Unique Patch ID:  22724570
+Patch description:  "OCW APR 2019 RELEASE UPDATE 12.2.0.1.190416 (29314424)"
+
+Patch  29314339     : applied on Thu May 09 07:33:33 EDT 2019
+Unique Patch ID:  22821655
+Patch description:  "Database Apr 2019 Release Update : 12.2.0.1.190416 (29314339)"
+
+Patch  29301676     : applied on Thu May 09 07:32:51 EDT 2019
+Unique Patch ID:  22720406
+Patch description:  "ACFS APR 2019 RELEASE UPDATE 12.2.0.1.190416 (29301676)"
+
+
+Patch  28566910     : applied on Thu May 09 07:31:47 EDT 2019
+Unique Patch ID:  22413436
+Patch description:  "TOMCAT RELEASE UPDATE 12.2.0.1.0(ID:180802.1448.S) (28566910)"
+ 
+
+Patch  26839277     : applied on Thu May 09 07:31:40 EDT 2019
+Unique Patch ID:  21578760
+Patch description:  "DBWLM RELEASE UPDATE 12.2.0.1.0(ID:170913) (26839277)"
+
+
+
+For ORACLE HOME
+---------------
+
+Patch  29249637     : applied on Thu May 09 08:08:00 EDT 2019
+Unique Patch ID:  22802302
+Patch description:  "OJVM RELEASE UPDATE: 12.2.0.1.190416 (29249637)
+
+
+Patch  29314424     : applied on Thu May 09 07:31:28 EDT 2019
+Unique Patch ID:  22724570
+Patch description:  "OCW APR 2019 RELEASE UPDATE 12.2.0.1.190416 (29314424)"
+
+Patch  29314339     : applied on Thu May 09 07:30:43 EDT 2019
+Unique Patch ID:  22821655
+Patch description:  "Database Apr 2019 Release Update : 12.2.0.1.190416 (29314339)"
+
+
+
+
+
+
+

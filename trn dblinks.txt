@@ -1,0 +1,71 @@
+[oracle@hrewoel29 bin]$ /infshare/oracle/scripts/dba/dblink_check.bash TRN11
+
+dblinks status for database --> TRN1
+
+---------------------------------------------------------
+ERR: ACRS.DB_LINK_MIGRATE_CIRCUIT.HR.STATE.GOV -24344
+OK : BMA.BMA_DW.HR.STATE.SBU
+ERR: EOPF_DOS.EOPF_INS.WASHDC.STATE.SBU -24344
+ERR: ESRT.EDW_SRC_LNK.HR.STATE.SBU -24344
+ERR: ESRT_INTERFACE.DB_LINK_REETA_UAT.HR.STATE.SBU -24344
+ERR: REETA.REETA_DB_LINK.HR.STATE.GOV -24344
+OK : SECREF.CRM.HR.STATE.SBU
+OK : SECREF.DB_LINK_REETA_UAT.HR.STATE.SBU
+ERR: SYSADM.EOD.HR.STATE.SBU -24344
+
+
+
+
+[oracle@hrewoel29 bin]$ /infshare/oracle/scripts/dba/dblink_check.bash TRN21
+
+dblinks status for database --> TRN2
+
+---------------------------------------------------------
+ERR: ACRS.DB_LINK_MIGRATE_CIRCUIT.HR.STATE.GOV -24344
+OK : BMA.BMA_DW.HR.STATE.SBU
+ERR: EOPF_DOS.EOPF_INS.WASHDC.STATE.SBU -24344
+ERR: ESRT.EDW_SRC_LNK.HR.STATE.SBU -24344
+ERR: ESRT_INTERFACE.DB_LINK_REETA_UAT.HR.STATE.SBU -24344
+ERR: REETA.REETA_DB_LINK.HR.STATE.GOV -24344
+OK : SECREF.CRM.HR.STATE.SBU
+OK : SECREF.DB_LINK_REETA_UAT.HR.STATE.SBU
+ERR: SYSADM.EOD.HR.STATE.SBU -24344
+
+
+
+
+[oracle@hrewoel29 bin]$
+
+
+SQL> select * from dba_db_links where db_link like 'CRM%';
+
+OWNER
+------------------------------
+DB_LINK
+--------------------------------------------------------------------------------
+USERNAME
+------------------------------
+HOST
+--------------------------------------------------------------------------------
+CREATED
+---------
+SECREF
+CRM.HR.STATE.SBU
+SYSADM
+
+OWNER
+------------------------------
+DB_LINK
+--------------------------------------------------------------------------------
+USERNAME
+------------------------------
+HOST
+--------------------------------------------------------------------------------
+CREATED
+---------
+CRMTST
+13-NOV-19
+
+
+SQL>
+

@@ -1,0 +1,12 @@
+expdp \"/ as sysdba\" schemas=REETA directory=PRD dumpfile=REETA_20191101_PRE_SOFTWARE_RELEASE.dmp logfile=REETA_20191101_PRE_SOFTWARE_RELEASE.log
+
+col owner format a30
+col object_name format a60
+col object_type format a30
+set linesize 150
+alter session set nls_date_format = 'DD-MON-YYYY HH24:MI:SS';
+show user
+select sysdate from dual;
+select * from global_name;
+select count(*) from dba_invalid_objects;
+select owner,object_name,object_type from dba_invalid_objects order by owner,object_name;

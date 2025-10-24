@@ -1,0 +1,39 @@
+
+
+//bin/bash /infshare/oracle/scripts/tfclone/bin/tfclone_KC.bash
+
+
+#!/bin/bash
+. /infshare/oracle/scripts/tfclone/bin/KC_tfclone.bash KC1
+
+
+#!/bin/bash
+
+
+export TFCLONE_WORKING_DIR=/infshare/oracle/scripts/tfclone/bin
+export TFCLONE_LOG_DIR=/infshare/oracle/scripts/tfclone/log
+
+export local_node=`hostname -s`
+########################################################################
+
+if [ "$1" = "KC1" ]
+then
+ if [ "$local_node" = "hrewoel13" ]
+ then
+   echo ""
+   echo "Executing KC1_tfclone.bash"
+   echo ""
+   ${TFCLONE_WORKING_DIR}/KC1_tfclone.bash
+ fi
+fi
+#####################################################
+if [ "$1" = "KC2" ]
+then
+ if [ "$local_node" = "hrewoel16" ]
+ then
+   echo ""
+   echo "Executing KC2_tfclone.bash"
+   echo ""
+   ${TFCLONE_WORKING_DIR}/KC2_tfclone.bash
+ fi
+fi

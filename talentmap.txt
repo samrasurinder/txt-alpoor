@@ -1,0 +1,31 @@
+prod=# UPDATE
+prod-# "available_positions_availablepositionfavorite"
+prod-# SET
+prod-# "archived" = 'f';
+UPDATE 3216
+prod=# UPDATE
+prod-# "projected_vacancies_projectedvacancyfavorite"
+prod-# SET
+prod-# "archived" = 'f';
+UPDATE 37015
+prod=# delete from available_positions_availablepositionfavorite
+prod-# where (id) Not in (
+prod(#     SELECT id FROM
+prod(# (
+prod(#     SELECT *, ROW_NUMBER() OVER (PARTITION BY
+prod(#              user_id order by user_id DESC) AS Row_ID FROM available_positions_availablepositionfavorite
+prod(# ) AS A
+prod(# WHERE Row_ID < 41 ORDER BY id DESC
+prod(# );
+DELETE 31
+prod=# delete from available_positions_availablepositionfavorite
+prod-# where (id) Not in (
+prod(#     SELECT id FROM
+prod(# (
+prod(#     SELECT *, ROW_NUMBER() OVER (PARTITION BY
+prod(#              user_id order by user_id DESC) AS Row_ID FROM available_positions_availablepositionfavorite
+prod(# ) AS A
+prod(# WHERE Row_ID < 41 ORDER BY id DESC
+prod(# );
+DELETE 0
+prod=#
