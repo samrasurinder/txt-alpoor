@@ -1,0 +1,21 @@
+
+CRM 
+alter system set log_archive_dest_state_2=defer scope=both sid='*';
+alter system switch logfile;
+
+OPS
+
+alter system set log_archive_dest_state_2=defer scope=both sid='*';
+alter system set log_archive_dest_state_3=defer scope=both sid='*';
+
+alter system switch logfile;
+
+
+PRD
+alter system set log_archive_dest_state_2=defer scope=both sid='*';
+alter system switch logfile;
+
+SNCPRD
+
+alter system set log_archive_dest_state_2=defer scope=both sid='*';
+alter system switch logfile;

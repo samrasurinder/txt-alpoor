@@ -1,0 +1,30 @@
+Starting restore at 17-JUL-19
+Starting implicit crosscheck backup at 17-JUL-19
+released channel: c1
+RMAN-00571: ===========================================================
+RMAN-00569: =============== ERROR MESSAGE STACK FOLLOWS ===============
+RMAN-00571: ===========================================================
+RMAN-03002: failure of restore command at 07/17/2019 08:13:01
+RMAN-06091: no channel allocated for maintenance (of an appropriate type)
+
+RMAN> allocate channel for maintenance device type disk;
+
+allocated channel: ORA_MAINT_DISK_1
+channel ORA_MAINT_DISK_1: SID=152 instance=PRD1 device type=DISK
+
+RMAN> crosscheck archivelog all;
+
+Starting implicit crosscheck backup at 17-JUL-19
+Crosschecked 97 objects
+Finished implicit crosscheck backup at 17-JUL-19
+
+Starting implicit crosscheck copy at 17-JUL-19
+Crosschecked 417 objects
+Finished implicit crosscheck copy at 17-JUL-19
+
+searching for all files in the recovery area
+cataloging files...
+no files cataloged
+
+specification does not match any archived log in the repository
+RMAN-08591: WARNING: invalid archived log deletion policy

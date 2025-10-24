@@ -1,0 +1,144 @@
+
+OCT CPU patch will take current patch level 19.11 to 19.13
+
+------------------------------------------------------------------------------------------------
+Conflicts :  ./opatch rollback -id 31602782   ( Oracle Home, run as oracle)
+             ./opatch rollback -id 31143146   ( Oracle Home,run as oracle)
+
+    ./opatchauto rollback /infshare/oracle/patches/32847378   ( For Grid, runas grid)
+
+Note: You need to re-apply patch 31602782  for 19.13 which is already staged
+31143146 is included in 19.13 so no need to do anything for this rollback patch
+
+
+You might run into issues during OJVM patch: Please set variables as follows
+
+export PATH=$ORACLE_HOME/perl/bin:$PATH
+export PERL5LIB=$ORACLE_HOME/perl/lib
+
+
+Bash script to loop thru all DBs for utlrp
+
+#!/bin/bash
+export ORAENV_ASK=NO
+
+ 
+
+
+db_list=`ps -efZ | grep [p]mon | grep -v asm | awk '{print $NF}' | sed s/ora_pmon_// | grep -v / | grep -v "-"`
+
+ 
+
+for db in $db_list
+do
+  export ORACLE_SID=$db
+  . oraenv > /dev/null
+
+ 
+
+sqlplus -s "/ as sysdba" << EOF
+     @?/rdbms/admin/utlrp.sql;
+     exit;
+EOF
+------------------------------------------------------------------------------------------------
+
+
+
+Patch Location : /infshare/oracle/patches/OCTPSU/33248471
+
+For Each RAC node:
+
+hrewoel42.washdc.state.sbu
+hrewoel43.washdc.state.sbu
+hrewoel44.washdc.state.sbu
+
+ 
+
+hrewoel45.washdc.state.sbu
+hrewoel46.washdc.state.sbu
+hrewoel47.washdc.state.sbu
+
+ 
+
+hrewoel48.washdc.state.sbu
+hrewoel49.washdc.state.sbu
+
+----------------------------------------------------------------------------------------------
+check Opatch version for both GRID and ORACLE homes:
+
+It shoud return as follows:
+
+[oracle@hrvltstdb20 OPatch]$ ./opatch version
+OPatch Version: 12.2.0.1.28
+
+OPatch succeeded.
+
+
+---------------------------------------------------------------------
+
+
+
+As the Grid  user:   ( sudo su - grid and then source the enviornment)
+
+$ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir /infshare/oracle/patches/OCTPSU/33248471/33182768/33192793
+
+$ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir /infshare/oracle/patches/OCTPSU/33248471/33182768/33208123
+
+$ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir /infshare/oracle/patches/OCTPSU/33248471/33182768/33208107
+
+$ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir /infshare/oracle/patches/OCTPSU/33248471/33182768/33239955
+
+$ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir /infshare/oracle/patches/OCTPSU/33248471/33182768/32585572
+
+--------------------------------------------------------------------------------------------------
+
+For Oracle home, as oracle user:
+
+$ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir /infshare/oracle/patches/OCTPSU/33248471/33182768/33192793
+$ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir /infshare/oracle/patches/OCTPSU/33248471/33182768/33208123
+
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+2.1.1.5 Run OPatch System Space Check
+Check if enough free space is available on the ORACLE_HOME filesystem for the patches to be applied as given below:
+
+For Grid Infrastructure home, as home user:
+
+Create file /tmp/patch_list_gihome.txt with the following content:
+
+% cat /tmp/patch_list_gihome.txt
+
+/infshare/oracle/patches/OCTPSU/33248471/33182768/33192793
+/infshare/oracle/patches/OCTPSU/33248471/33182768/33208123
+/infshare/oracle/patches/OCTPSU/33248471/33182768/33208107
+/infshare/oracle/patches/OCTPSU/33248471/33182768/33239955
+/infshare/oracle/patches/OCTPSU/33248471/33182768/32585572
+
+
+Run the OPatch command to check if enough free space is available in the Grid Infrastructure home:
+
+% $ORACLE_HOME/OPatch/opatch prereq CheckSystemSpace -phBaseFile /tmp/patch_list_gihome.txt
+For Oracle home, as home user:
+
+
+--------------------------------------------------------------------------------------------
+
+Create file /tmp/patch_list_dbhome.txt with the following content:
+
+% cat /tmp/patch_list_dbhome.txt
+/infshare/oracle/patches/OCTPSU/33248471/33182768/33192793
+/infshare/oracle/patches/OCTPSU/33248471/33182768/33208123
+Run OPatch command to check if enough free space is available in the Oracle home:
+
+% $ORACLE_HOME/OPatch/opatch prereq CheckSystemSpace -phBaseFile /tmp/patch_list_dbhome.txt
+
+-----------------------------------------------------------------------------------------------
+
+
+The following commands check for conflicts in both the 19c Grid home and the 19c DB homes.
+
+#GRID_HOME/OPatch/opatchauto apply /infshare/oracle/patches/OCTPSU/33248471/33182768 -analyze
+
+
+

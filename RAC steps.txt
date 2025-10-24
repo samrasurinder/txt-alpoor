@@ -1,0 +1,40 @@
+
+
+If RAC fails:
+
+Grab /u02/app/oracle/product/19.3.0/db_1/dbs/POST_initASB_2021_12_14.ora
+
+and change Control file info:
+
+set environment for ASB1
+
+start database with above init file:
+create spfile from this init file
+shutdown database
+
+
+
+srvctl remove database -d ASB
+
+srvctl add database -d ASB -o $ORACLE_HOME -p +DATA/ASB/spfileASB.ora
+
+srvctl add instance -i ASB1 -d ASB -n hrvltstdb20
+srvctl add instance -i ASB2 -d ASB -n hrvltstdb21
+srvctl add instance -i ASB3 -d ASB -n hrvltstdb22
+
+srvctl setenv database -d ASB -envs "ORACLE_UNQNAME=ASB"
+
+
+
+
+srvctl add database -d UAT -o $ORACLE_HOME -p +DATA/UAT/spfileUAT.ora
+
+srvctl add instance -i UAT1 -d UAT -n hrvltstdb20
+srvctl add instance -i UAT2 -d UAT -n hrvltstdb21
+srvctl add instance -i UAT3 -d UAT -n hrvltstdb22
+
+srvctl setenv database -d UAT -envs "ORACLE_UNQNAME=UAT"
+
+
+
+srvctl start database -d ASB

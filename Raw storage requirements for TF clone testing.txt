@@ -1,0 +1,86 @@
+
+
+Raw storage requirements for TF clone testing from 19C 3node HF physical cluster to 19C 2node Sandbox physical cluster
+-------------------------------------------------------------------------------------------------------------
+
+
+Source (HF 19C cluster) -  hrewoel45/hrewoel46/hrewoel47
+--------------------------------------------------------
+
+Require 3 500GB raw devices  for  data
+Require 4 500GB raw devices  for  fra
+
+Total = 7 500GB raw devices. All these devices should be visible to all 3 nodes
+
+Note: You must provide full disk paths for all these devices in order for me to format
+them as ASM disks
+
+
+Here is how I will name once I have raw devices given to me
+-----------------------------------------------------------
+ASM_DISK Name:                   Size
+
+CLONE_DISK_01                    500GB
+CLONE_DISK_02                    500GB
+CLONE_DISK_03			 500GB
+CLONE_DISK_04                    500GB
+CLONE_DISK_05                    500GB
+CLONE_DISK_06                    500GB
+CLONE_DISK_07                    500GB
+
+
+
+
+ASK_DISK group names would be HFPRD_DATA ( consists of 3 disks) and HFPRD_FRA ( consists of 4 disks)
+
+
+
+
+
+
+
+
+
+Target (Sandbox 2 node cluster) -  HREWOEL40/HREWOEL41
+--------------------------------------------------------
+
+Require 3 500GB raw devices  for  data
+Require 4 500GB raw devices  for  fra
+
+Total = 7 500GB raw devices. All these devices should be visible to all 2 nodes
+
+Note: You must provide full disk paths for all these devices in order for me to format
+them as ASM disks
+
+
+Here is how I will name once I have raw devices given to me
+-----------------------------------------------------------
+ASM_DISK Name:                   Size
+
+CLONE_DISK_01                    500GB
+CLONE_DISK_02                    500GB
+CLONE_DISK_03			 500GB
+CLONE_DISK_04                    500GB
+CLONE_DISK_05                    500GB
+CLONE_DISK_06                    500GB
+CLONE_DISK_07                    500GB
+
+Here is how I will name once I have raw devices given to me
+-----------------------------------------------------------
+ASM_DISK Name:                   Size
+
+CLONE_DISK_01                    500GB
+CLONE_DISK_02                    500GB
+CLONE_DISK_03			 500GB
+CLONE_DISK_04                    500GB
+CLONE_DISK_05                    500GB
+CLONE_DISK_06                    500GB
+CLONE_DISK_07                    500GB
+
+
+
+
+ASK_DISK group names would be HFPRD_DATA ( consists of 3 disks) and HFPRD_FRA ( consists of 4 disks)
+
+
+

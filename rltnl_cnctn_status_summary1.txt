@@ -1,0 +1,4 @@
+
+SUMMARY
+Oracle,FAILED,3
+Oracle,PASSED,40

@@ -1,0 +1,52 @@
+Step 1 ) /infshare/oracle/scripts/backup/KC_REFRESH_STATUS_UPDATE.bash ARC1 on hrewoel42
+
+STep 2) 
+
+
+
+
+/infshare/oracle/scripts/refresh/pure_clone/KC1-stop-DB.bash
+
+
+
+export ORACLE_HOME=/u02/app/oracle/product/19.3.0/db_1
+export LD_LIBRARY_PATH=/u02/app/oracle/product/19.3.0/db_1/lib
+export PATH=$ORACLE_HOME/bin:$PATH
+export TNS_ADMIN=$ORACLE_HOME/network/admin
+
+export NLS_DATE_FORMAT='yyyy/mm/dd hh24:mi:ss';
+export CURRENT_TIME=`date +%y%m%d%H%M%S`
+export INST=`hostname`
+export TODAY=`date +%d%b`
+export SCRIPTS_DIR=/infshare/oracle/scripts/refresh/pure_clone/
+export LOG_DIR=${SCRIPTS_DIR}/logs
+export LOGFILE=${LOG_DIR}/KC_CLONE_${CURRENT_TIME}.log
+
+
+cd /infshare/oracle/scripts/refresh/pure_clone/
+
+if [ -f /hrinffp1001/Output/Production/KC_Refresh_Flag_1041/KC1_TO_BE_REFRESHED ]; then
+   echo "KC1 is being refreshed"
+   /infshare/oracle/scripts/refresh/pure_clone/KC1-stop-DB.bash 2>&1 | tee -a ${LOGFILE}
+   /infshare/oracle/scripts/refresh/pure_clone/KC1-start-DB.bash 2>&1 | tee -a ${LOGFILE}
+else
+   echo "skipping KC1"
+fi
+
+if [ -f /hrinffp1001/Output/Production/KC_Refresh_Flag_1041/KC2_TO_BE_REFRESHED ]; then
+   echo "KC2 is being refreshed"
+else
+   echo "skipping KC2"
+
+date +%m-%d-%Y
+SQL> ALTER SESSION SET NLS_DATE_FORMAT = 'MM-DD-YYYY';
+
+Session altered.
+
+SQL> select clone_snap_date from PURE_CLONE_USER.clone_check;
+
+CLONE_SNAP
+----------
+09-19-2021
+
+SQL>

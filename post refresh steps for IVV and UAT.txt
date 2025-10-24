@@ -1,0 +1,180 @@
+ /infshare/oracle/scripts/refresh/bin/db_refresh_BACKUP.bash IVV1  on 	hrewoel02.hr.state.sbu
+
+
+
+
+function CR_USRS () {
+echo "###########################################################################"
+echo "###################### BEGIN CREATE DB USERS ##############################"
+echo "###########################################################################"
+# Drop existing export & import directories created by refresh scripts
+/bin/bash REFRESH_drop_directories.bash ${to_db}
+# Drop of procedures created by refresh script
+/bin/bash REFRESH_drop_procedure.bash ${to_db}
+sqlplus  / as sysdba <<EOF
+ALTER TABLESPACE temp ADD TEMPFILE '${to_data_grp}' SIZE 500M REUSE AUTOEXTEND ON NEXT 100M MAXSIZE UNLIMITED;
+ALTER TABLESPACE pstemp ADD TEMPFILE '${to_data_grp}' SIZE 500M REUSE AUTOEXTEND ON NEXT 100M MAXSIZE UNLIMITED;
+alter system set db_recovery_file_dest_size=600G scope=spfile sid='*';
+create directory dp_rfrsh_dmp as '${builds_dir}';
+create directory dp_rfrsh_lg as '$log';
+@${builds_dir}/POST_${postRefresh_as}_cr_user_spool.sql;
+@${builds_dir}/POST_${postRefresh_as}_grant_connect_spool.sql;
+@${builds_dir}/POST_${postRefresh_as}_grant_sysadm_spool.sql;
+@${builds_dir}/POST_${postRefresh_as}_alter_pwd_spool.sql;
+exit
+EOF
+}
+
+
+
+
+function IMP_SYSUTIL () {
+echo "###########################################################################"
+echo "###################### BEGIN impdp SYSUTIL  ###############################"
+echo "###########################################################################"
+impdp \"/ as sysdba\" Tables=sysutil.dba_tab_privs_,sysutil.dba_role_privs_,sysutil.dba_sys_privs_  dumpfile=dp_rfrsh_dmp:expdp_PRE_${postRefresh_as}_preserve_grants.dmp logfile=dp_rfrsh_lg:impdp_POST_${postRefresh_as}_preserve_grants.log table_exists_action=Truncate
+}
+###
+function APPLY_POST_ESRT () {
+echo "###########################################################################"
+echo "###################### BEGIN APPLY POST ESRT ##############################"
+echo "###########################################################################"
+/bin/bash ${build_dir}/POST_IVV_ESRT_directories.bash ${to_db}
+impdp \"/ as sysdba\" REMAP_SCHEMA=OAB_REFRESH:ESRT dumpfile=dp_rfrsh_dmp:expdp_PRE_${ENV}_dblnk.dmp logfile=dp_rfrsh_lg:impdp_POST_${ENV}_dblnk.log table_exists_action=Truncate
+sqlplus / as sysdba <<EOF
+set echo on
+exec ESRT.cre_db_lnk;
+EOF
+}
+
+function APPLY_POST_ESRT () {
+echo "###########################################################################"
+echo "###################### BEGIN APPLY POST ESRT ##############################"
+echo "###########################################################################"
+/bin/bash ${build_dir}/POST_IVV_ESRT_directories.bash ${to_db}
+impdp \"/ as sysdba\" REMAP_SCHEMA=OAB_REFRESH:ESRT dumpfile=dp_rfrsh_dmp:expdp_PRE_${ENV}_dblnk.dmp logfile=dp_rfrsh_lg:impdp_POST_${ENV}_dblnk.log table_exists_action=Truncate
+sqlplus / as sysdba <<EOF
+set echo on
+exec ESRT.cre_db_lnk;
+EOF
+}
+
+
+function APPLY_POST_PS () {
+echo "###########################################################################"
+echo "###################### BEGIN APPLY POST PS  ###############################"
+echo "###########################################################################"
+sqlplus  / as sysdba <<EOF
+set echo on
+@${builds_dir}/POST_truncate_PS_SYSADM_Tables.sql;
+@$builds_dir/POST_cleanup.sql;
+EOF
+impdp \"/ as sysdba\" full=Y dumpfile=dp_rfrsh_dmp:expdp_PRE_${postRefresh_as}_SYSADM_PS_Tables.dmp logfile=dp_rfrsh_lg:impdp_POST_${postRefresh_as}_SYSADM_PS_Tables.log table_exists_action=Truncate
+sqlplus  / as sysdba <<EOF
+set echo on
+@${builds_dir}/POST_WFR_Mailing_List.sql;
+@${builds_dir}/POST_${postRefresh_as}_PS_SchemaPwd_spool.sql;
+exit
+EOF
+}
+
+
+
+function APPLY_ALL_DBLINKS () {
+echo "##########################################################################"
+echo "######################* BEGIN APPLY ALL DBLINKS *#########################"
+echo "##########################################################################"
+/bin/bash ${builds_dir}/POST_dr_dblinks.bash ${to_db}
+impdp \"/ as sysdba\" REMAP_SCHEMA=OAB_REFRESH:ACRS dumpfile=dp_rfrsh_dmp:expdp_PRE_ACRS_${ENV}_dblnk.dmp logfile=dp_rfrsh_lg:impdp_POST_ACRS_${ENV}_dblnk.log table_exists_action=Truncate
+impdp \"/ as sysdba\" REMAP_SCHEMA=OAB_REFRESH:BMA dumpfile=dp_rfrsh_dmp:expdp_PRE_BMA_${ENV}_dblnk.dmp logfile=dp_rfrsh_lg:impdp_POST_BMA_${ENV}_dblnk.log table_exists_action=Truncate
+impdp \"/ as sysdba\" REMAP_SCHEMA=OAB_REFRESH:EOPF_DOS dumpfile=dp_rfrsh_dmp:expdp_PRE_EOPF_DOS_${ENV}_dblnk.dmp logfile=dp_rfrsh_lg:impdp_POST_EOPF_DOS_${ENV}_dblnk.log table_exists_action=Truncate
+impdp \"/ as sysdba\" REMAP_SCHEMA=OAB_REFRESH:ESRT dumpfile=dp_rfrsh_dmp:expdp_PRE_ESRT_${ENV}_dblnk.dmp logfile=dp_rfrsh_lg:impdp_POST_ESRT_${ENV}_dblnk.log table_exists_action=Truncate
+impdp \"/ as sysdba\" REMAP_SCHEMA=OAB_REFRESH:REETA dumpfile=dp_rfrsh_dmp:expdp_PRE_REETA_${ENV}_dblnk.dmp logfile=dp_rfrsh_lg:impdp_POST_REETA_${ENV}_dblnk.log table_exists_action=Truncate
+impdp \"/ as sysdba\" REMAP_SCHEMA=OAB_REFRESH:SECREF dumpfile=dp_rfrsh_dmp:expdp_PRE_SECREF_${ENV}_dblnk.dmp logfile=dp_rfrsh_lg:impdp_POST_SECREF_${ENV}_dblnk.log table_exists_action=Truncate
+impdp \"/ as sysdba\" REMAP_SCHEMA=OAB_REFRESH:ESRT_INTERFACE dumpfile=dp_rfrsh_dmp:expdp_PRE_ESRT_INTERFACE_${ENV}_dblnk.dmp logfile=dp_rfrsh_lg:impdp_POST_ESRT_INTERFACE_${ENV}_dblnk.log table_exists_action=Truncate
+}
+
+
+
+function APPLY_POST_IDB () {
+echo "#############################################################################"
+echo "####################### BEGIN APPLY POST IDB ################################"
+echo "#############################################################################"
+sqlplus  / as sysdba <<EOF
+set echo on
+@${builds_dir}/POST_IDB_refresh.sql;
+EOF
+}
+###
+function APPLY_POST_PCSTRAVEL () {
+echo "#############################################################################"
+echo "####################### BEGIN APPLY POST PCSTRAVEL ##########################"
+echo "#############################################################################"
+/bin/bash ${build_dir}/POST_IVV_PCSTRAVEL_directories.bash ${to_db}
+sqlplus  / as sysdba <<EOF
+set echo on
+@${builds_dir}/POST_PCSTRAVEL_refresh.sql;
+EOF
+}
+
+function APPLY_POST_PCSTRAVEL () {
+echo "#############################################################################"
+echo "####################### BEGIN APPLY POST PCSTRAVEL ##########################"
+echo "#############################################################################"
+/bin/bash ${build_dir}/POST_IVV_PCSTRAVEL_directories.bash ${to_db}
+sqlplus  / as sysdba <<EOF
+set echo on
+@${builds_dir}/POST_PCSTRAVEL_refresh.sql;
+EOF
+}
+
+
+function APPLY_POST_EOPF () {
+echo "#############################################################################"
+echo "### BEGIN APPLY POST EOPF,EOPF_DOS,EOPF_CORE,TELEWORK,ELECTRONIC_DOCUMENT ###"
+echo "#############################################################################"
+/bin/bash ${builds_dir}/POST_IVV_EOPF_directories.bash ${to_db}
+/bin/bash ${builds_dir}/POST_IVV_EOPF_EOPF_CORE.bash ${to_db}
+/bin/bash ${builds_dir}/POST_eopf_post_refresh.bash ${to_db}
+}
+
+function APPLY_POST_SECREF () {
+echo "#############################################################################"
+echo "###################### BEGIN APPLY POST SECREF ##############################"
+echo "#############################################################################"
+### impdp \"/ as sysdba\" tables=SECREF.USER_ROLE_REFRESH dumpfile=dp_rfrsh_dmp:expdp_PRE_${postRefresh_as}_SYSADM_PS_Tables.dmp logfile=dp_rfrsh_lg:impdp_POST_${postRefresh_as}_SECREF.log table_exists_action=Truncate
+/bin/bash ${builds_dir}/POST_IVV_SECREF.bash ${to_db}
+}
+
+function APPLY_POST_FSBID () {
+echo "#############################################################################"
+echo "##################### BEGIN APPLY POST FSBID ################################"
+echo "#############################################################################"
+sqlplus  / as sysdba <<EOF
+set echo on
+@${builds_dir}/POST_OTHER_general.sql;
+EOF
+}
+
+
+function APPLY_DB_GRANTS () {
+echo "#############################################################################"
+echo "##################### BEGIN APPLY DB GRANTS #################################"
+echo "#############################################################################"
+sqlplus  / as sysdba <<EOF
+set echo on
+@${builds_dir}/POST_restore_grants.sql;
+grant select_catalog_all_views to repoleved;
+grant select_catalog_role to repoleved;
+-- CREATE CURRENT DATABASE DUMP DIR
+create directory ${to_db} as '/infshare/oracle/export/${to_db}';
+EOF
+}
+
+
+
+
+
+
+
+

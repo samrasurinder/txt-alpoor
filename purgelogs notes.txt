@@ -1,0 +1,57 @@
+################ Documentation ################
+=head1 NAME
+
+ purgeLogs - purgeLogs RDBMS/GI traces & logs
+
+=head1 SYNOPSIS
+
+ purgeLogs [ -days <days> [ -aud ] [ -lsnr ] ] |
+           [ -orcl <days> [ -aud ] [ -lsnr ] ] |
+           [ -tfa <days> ] |
+           [ -osw <days> ] |
+           [ -oda <days> ] |
+           [ -extra '<folder>':<days> | [, '<folder>':<days>] ]
+           [ -automigrate ]
+           [ -dryrun ]
+
+ purgeLogs OPTIONS
+  -days  <days>             Purge orcl,tfa,osw,oda components logs & traces older then # days
+  -orcl  <days>             Purge only GI/RDBMS logs & traces (Default 30 days)
+  -tfa   <days>             Purge only TFA repository older then # days (Default 30 days)
+  -osw   <days>             Purge only OSW archives older then # days (Default 30 days)
+  -oda   <days>             Purge only ODA logs and trace older then # days (Default 30 days)
+  -extra '<folder>':<days>  Purge only files in user specified folders (Default 30 days)
+  -aud                      Purge Audit logs based on '-orcl <days>' option
+  -lsnr                     It will force the cleanup of listeners log independently by the age
+  -dryrun                   It will show the purge commands w/o execute them
+  -automigrate              It will run the adrci schema migrate commands in case of DIA-49803
+  -h                        Display this help and exit
+
+  Example:
+   purgeLogs
+   purgeLogs -days 20
+   purgeLogs -orcl 50
+   purgeLogs -orcl 50 -aud -lsnr
+   purgeLogs -tfa  50
+   purgeLogs -osw  20 -oda 10
+   purgeLogs -orcl 20 -osw 20 -oda 10
+   purgeLogs -orcl 20 -osw 20 -oda 10 -extra /tmp:10,/var/log:20
+
+=head1 LIMITATIONS
+
+  purgeLogs needs to be executed as root user
+
+=head1 BUGS
+
+ No known bugs.
+
+
+
+ /infshare/oracle/scripts/dba/logs/daily_object_tracker_$(date +\%m\%d\%y).log 2>&1
+
+
+[root@hrewoel42 ~]# crontab -l
+00 05 * * * /infshare/oracle/scripts/dba/purgeLogs -days  30 > /infshare/oracle/scripts/dba/logs/$(hostname)_purgeLogs_$(date +\%m\%d\%y).log 2>&1
+00 05 * * * /infshare/oracle/scripts/dba/purgeLogs -extra  /infshare/oracle/scripts/dba/logs:30 >> /infshare/oracle/scripts/dba/logs/$(hostname)_purgeLogs_$(date +\%m\%d\%y).log 2>&1
+00 05 * * * /infshare/oracle/scripts/dba/purgeLogs -extra  /infshare/oracle/scripts/refresh/pure_clone/logs:30 >> /infshare/oracle/scripts/dba/logs/$(hostname)_purgeLogs_$(date +\%m\%d\%y).log 2>&1
+[root@hrewoel42 ~]#

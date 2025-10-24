@@ -1,0 +1,51 @@
+
+KC Time Finder clones ( clones from HFKC from PRD cluster 06/07/08): Everyday Morning between 4AM 8AM
+------------------------------------------------------------------------------------------------------
+/bin/bash /infshare/oracle/scripts/tfclone/bin/run_tfclone_KC.bash on --->    hrewoel16  KC2 refresh (HFKC)
+/bin/bash /infshare/oracle/scripts/tfclone/bin/tfclone_KC.bash on ------->    hrewoel13  KC1 refresh (HFKC)
+
+
+KCPRD Time Finder clone : ( clones PRD from standby 13/14/15 standby prd clutser ) Everyday evening at 6PM
+----------------------------------------------------------------------------------------------------------
+/bin/bash /infshare/oracle/scripts/tfclone/bin/KCPRD_tfclone.bash on 16
+
+
+
+TST2 Time Finder clone (source PRD 06/07/08) on Demand:
+-------------------------------------------------------
+/infshare/oracle/scripts/tfclone/bin/TST2_tfclone.bash  on hrewoel03
+
+
+
+Daily CPY Refresh:
+------------------
+This is stright RMAN refresh
+
+1) backups are taken to DRSHARE ASM disk from standby PRD database on 13
+2) move mount DRSHARE disk to hrewoel29
+3) use RMAN to duplicate DB
+
+
+Daily DEVCPY Refresh:
+--------------------
+
+This is stright RMAN refresh
+
+1) backups are taken to DRSHARE ASM disk from standby PRD database on 13
+2) move mount DRSHARE disk to hrewoel29
+3) use RMAN to duplicate DB
+
+
+Daily OPSCPY1 (on VM servers) Refresh:
+-------------------------------------
+This is stright RMAN refresh
+
+1) backups are taken to DRSHARE ASM disk from standby OPSSTBY database on hrvlprddb7602
+2) move/mount DRSHARE disk to hrvlcpydb7601
+3) use RMAN to duplicate DB
+
+
+Refreshes using Dblinks(network) and impdp utility
+--------------------------------------------------
+
+GRBCPY (source :GRBPRD) and EODCPY refreshes( soure DMZ EODPRD)

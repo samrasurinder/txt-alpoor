@@ -1,0 +1,222 @@
+
+List of Backups
+===============
+Key     TY LV S Device Type Completion Time     #Pieces #Copies Compressed Tag
+------- -- -- - ----------- ------------------- ------- ------- ---------- ---
+11896   B  F  A SBT_TAPE    2020/07/08 12:30:17 1       1       NO         WKLYBKP_OPSSTG2_200708122515
+11898   B  F  A SBT_TAPE    2020/07/08 12:30:33 1       1       NO         WKLYBKP_OPSSTG2_200708122515
+11897   B  F  A SBT_TAPE    2020/07/08 12:30:28 1       1       NO         WKLYBKP_OPSSTG2_200708122515
+11894   B  F  A SBT_TAPE    2020/07/08 12:27:05 1       1       NO         WKLYBKP_OPSSTG2_200708122515
+11899   B  F  A SBT_TAPE    2020/07/08 12:26:05 1       1       NO         WKLYBKP_OPSSTG2_200708122515
+11895   B  F  A SBT_TAPE    2020/07/08 12:26:18 1       1       NO         WKLYBKP_OPSSTG2_200708122515
+11900   B  F  A SBT_TAPE    2020/07/08 12:26:03 1       1       NO         WKLYBKP_OPSSTG2_200708122515
+11901   B  F  A SBT_TAPE    2020/07/08 12:26:03 1       1       NO         WKLYBKP_OPSSTG2_200708122515
+
+Starting Control File Autobackup at 2020/07/08 18:40:35
+piece handle=CONTROLFILE.c-273363364-20200708-03 comment=API Version 2.0,MMS Version 18.2.100.134
+Finished Control File Autobackup at 2020/07/08 18:40:46
+released channel: c1
+released channel: c2
+released channel: c3
+released channel: c4
+released channel: c5
+released channel: c6
+released channel: c7
+released channel: c8
+sequence=18431 RECID=18431 STAMP=1045248015
+set until time "to_date('08-JUL-2020 19:00:00','DD-MON-YYYY HH24:MI:SS')";
+
+
+CONTROLFILE.c-2575079582-20200708-03
+
+restore database until time "TO_DATE('20.02.2020 13:50:00','DD.MM.YYYY HH24:MI:SS')";
+recover database until time "TO_DATE('20.02.2020 13:50:00','DD.MM.YYYY HH24:MI:SS')";
+
+
+restore controlfile from autobackup MAXSEQ=02 until time "TO_DATE('08.07.2020 19:00:00','DD.MM.YYYY HH24:MI:SS')";
+";
+
+output file name=+OPS_DATA/OPSSTG2/CONTROLFILE/current.537.1045557201
+output file name=+OPS_FRA/OPSSTG2/CONTROLFILE/current.444.1045557203
+ set newname for datafile 4 to '/tmp/4.dbf';
+
+#!/bin/sh
+
+export ORACLE_SID=RMANCTLG
+export ORACLE_HOME=/u02/app/oracle/product/12.0.2/db_1
+export LD_LIBRARY_PATH=/u02/app/oracle/product/12.0.2/db_1/lib
+export PATH=$ORACLE_HOME/bin:$PATH
+export TNS_ADMIN=$ORACLE_HOME/network/admin
+export NLS_DATE_FORMAT='yyyy/mm/dd hh24:mi:ss';
+export CURRENT_TIME=`date +%y%m%d%H%M%S`
+export MAIL_ID=`cat /u02/app/oracle/scripts/backups/dba_email.lst`
+export RMAN_TAG_NAME="${ORACLE_SID}_${CURRENT_TIME}"
+export INST=`hostname`
+export TODAY=`date +%d%b`
+export SCRIPTS_DIR=/u02/app/oracle/scripts/backups
+export LOG_DIR=${SCRIPTS_DIR}/logs
+export LOGFILE=${LOG_DIR}/rman_restore_${ORACLE_SID}_${CURRENT_TIME}.log
+
+$ORACLE_HOME/bin/rman target /  <<EOF >> ${LOGFILE}
+set dbid=2575079582;
+run {
+set controlfile autobackup format for device type sbt to "CONTROLFILE.%F";
+allocate channel c1 type 'SBT' PARMS="SBT_LIBRARY=/usr/local/avamar/lib/libobk_avamar64.so" format '%d_%U_%T';
+allocate channel c2 type 'SBT' PARMS="SBT_LIBRARY=/usr/local/avamar/lib/libobk_avamar64.so" format '%d_%U_%T';
+allocate channel c3 type 'SBT' PARMS="SBT_LIBRARY=/usr/local/avamar/lib/libobk_avamar64.so" format '%d_%U_%T';
+allocate channel c4 type 'SBT' PARMS="SBT_LIBRARY=/usr/local/avamar/lib/libobk_avamar64.so" format '%d_%U_%T';
+allocate channel c5 type 'SBT' PARMS="SBT_LIBRARY=/usr/local/avamar/lib/libobk_avamar64.so" format '%d_%U_%T';
+allocate channel c6 type 'SBT' PARMS="SBT_LIBRARY=/usr/local/avamar/lib/libobk_avamar64.so" format '%d_%U_%T';
+allocate channel c7 type 'SBT' PARMS="SBT_LIBRARY=/usr/local/avamar/lib/libobk_avamar64.so" format '%d_%U_%T';
+allocate channel c8 type 'SBT' PARMS="SBT_LIBRARY=/usr/local/avamar/lib/libobk_avamar64.so" format '%d_%U_%T';
+send channel='c1' '"--nohist" "--flagfile=${SCRIPTS_DIR}/avtar-flags.txt" "--bindir=/usr/local/avamar/bin" "--cacheprefix=orcl-c1"';
+send channel='c2' '"--nohist" "--flagfile=${SCRIPTS_DIR}/avtar-flags.txt" "--bindir=/usr/local/avamar/bin" "--cacheprefix=orcl-c2"';
+send channel='c3' '"--nohist" "--flagfile=${SCRIPTS_DIR}/avtar-flags.txt" "--bindir=/usr/local/avamar/bin" "--cacheprefix=orcl-c3"';
+send channel='c4' '"--nohist" "--flagfile=${SCRIPTS_DIR}/avtar-flags.txt" "--bindir=/usr/local/avamar/bin" "--cacheprefix=orcl-c4"';
+send channel='c5' '"--nohist" "--flagfile=${SCRIPTS_DIR}/avtar-flags.txt" "--bindir=/usr/local/avamar/bin" "--cacheprefix=orcl-c5"';
+send channel='c6' '"--nohist" "--flagfile=${SCRIPTS_DIR}/avtar-flags.txt" "--bindir=/usr/local/avamar/bin" "--cacheprefix=orcl-c6"';
+send channel='c7' '"--nohist" "--flagfile=${SCRIPTS_DIR}/avtar-flags.txt" "--bindir=/usr/local/avamar/bin" "--cacheprefix=orcl-c7"';
+send channel='c8' '"--nohist" "--flagfile=${SCRIPTS_DIR}/avtar-flags.txt" "--bindir=/usr/local/avamar/bin" "--cacheprefix=orcl-c8"';
+restore controlfile from autobackup MAXSEQ=02 until time "TO_DATE('08.07.2020 19:00:00','DD.MM.YYYY HH24:MI:SS')";
+}
+EOF
+
+
+
+[root@hrvltstdb7601 ~]# lsblk
+NAME                     MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sdf                        8:80   0  200G  0 disk
+‚‚sdf1                     8:81   0  200G  0 part
+sdd                        8:48   0  200G  0 disk
+‚‚sdd1                     8:49   0  200G  0 part
+sdm                        8:192  0  100G  0 disk
+‚‚sdm1                     8:193  0  100G  0 part
+sdb                        8:16   0  100G  0 disk
+‚‚sdb2                     8:18   0 37.4G  0 part
+‚‚sdb1                     8:17   0 62.6G  0 part
+  ‚‚basevg-swap          252:1    0  3.7G  0 lvm  [SWAP]
+  ‚‚basevg-var           252:4    0 23.3G  0 lvm  /var
+  ‚‚basevg-usr           252:2    0 18.6G  0 lvm  /usr
+  ‚‚basevg-home          252:3    0 18.6G  0 lvm  /home
+sdk                        8:160  0  200G  0 disk
+‚‚sdk1                     8:161  0  200G  0 part
+sdi                        8:128  0  200G  0 disk
+‚‚sdi1                     8:129  0  200G  0 part
+sr0                       11:0    1 1024M  0 rom
+sdg                        8:96   0  200G  0 disk
+‚‚sdg1                     8:97   0  200G  0 part
+sde                        8:64   0  200G  0 disk
+‚‚sde1                     8:65   0  200G  0 part
+sdn                        8:208  0  100G  0 disk
+‚‚sdn1                     8:209  0  100G  0 part /u02
+sdc                        8:32   0  200G  0 disk
+‚‚sdc1                     8:33   0  200G  0 part
+sdl                        8:176  0   50G  0 disk
+‚‚sdl1                     8:177  0   50G  0 part
+sda                        8:0    0  100G  0 disk
+‚‚sda2                     8:2    0 62.1G  0 part
+‚ ‚‚basevg-swap          252:1    0  3.7G  0 lvm  [SWAP]
+‚ ‚‚basevg-var_log       252:6    0  4.7G  0 lvm  /var/log
+‚ ‚‚basevg-root          252:0    0 46.5G  0 lvm  /
+‚ ‚‚basevg-tmp           252:5    0  9.3G  0 lvm  /tmp
+‚‚sda3                     8:3    0 37.4G  0 part
+‚ ‚‚basevg-var_log_audit 252:7    0    5G  0 lvm  /var/log/audit
+‚‚sda1                     8:1    0  512M  0 part /boot
+sdj                        8:144  0  200G  0 disk
+‚‚sdj1                     8:145  0  200G  0 part
+sdh                        8:112  0  200G  0 disk
+‚‚sdh1                     8:113  0  200G  0 part
+[root@hrvltstdb7601 ~]#
+
+
+[root@hrvltstdb7601 ~]# blkid
+/dev/sda1: UUID="492875b4-68cb-4a3e-a56d-b12097944fca" TYPE="xfs"
+/dev/sda2: UUID="bXU5wD-ySG0-iU7U-s4pv-Icx1-7WBo-ujlsfp" TYPE="LVM2_member"
+/dev/sda3: UUID="0SOwbk-cT7b-lEI4-X46J-6l2P-vR0t-PuoVPH" TYPE="LVM2_member"
+/dev/sdb1: UUID="0NWKdk-rvWr-5rdg-Arpm-BPfE-H0YE-Gni0UT" TYPE="LVM2_member"
+/dev/sdb2: UUID="sndvui-AkJ4-n8Gn-uwRW-w2AE-6Tq8-JHKape" TYPE="LVM2_member"
+/dev/mapper/basevg-root: UUID="ea475411-b99b-4f0b-91b7-501603c4877e" TYPE="xfs"
+/dev/mapper/basevg-swap: UUID="19f93685-64b3-41e7-8ced-35e54fe8c86d" TYPE="swap"
+/dev/mapper/basevg-usr: UUID="cbe42892-cb69-426a-9870-4a21fc6d4e7d" TYPE="xfs"
+/dev/mapper/basevg-home: UUID="799339aa-8ac3-44a9-9cfb-098c92420083" TYPE="xfs"
+/dev/mapper/basevg-var: UUID="915a0d40-c143-4cf9-a55e-a93c67be6d2f" TYPE="xfs"
+/dev/mapper/basevg-tmp: UUID="7bc1345c-36f6-4289-ac9e-e1242deabfa5" TYPE="xfs"
+/dev/mapper/basevg-var_log: UUID="72c738b1-59f1-4a9a-9b73-14c7e1adaf7b" TYPE="xfs"
+/dev/mapper/basevg-var_log_audit: UUID="ab52a7d1-c222-487e-b92b-7dd86fa38164" TYPE="xfs"
+/dev/sdc1: LABEL="FRA01" TYPE="oracleasm"
+/dev/sdd1: LABEL="FRA02" TYPE="oracleasm"
+/dev/sde1: LABEL="DATA00" TYPE="oracleasm"
+/dev/sdf1: LABEL="DATA05" TYPE="oracleasm"
+/dev/sdg1: LABEL="DATA06" TYPE="oracleasm"
+/dev/sdh1: LABEL="DATA07" TYPE="oracleasm"
+/dev/sdi1: LABEL="DATA01" TYPE="oracleasm"
+/dev/sdj1: LABEL="DATA02" TYPE="oracleasm"
+/dev/sdk1: LABEL="DATA03" TYPE="oracleasm"
+/dev/sdl1: LABEL="OCR_VOTE1" TYPE="oracleasm"
+/dev/sdm1: LABEL="DATA04" TYPE="oracleasm"
+/dev/sdn1: UUID="3390e885-67d3-4f76-a06c-7951845ee619" TYPE="xfs"
+
+
+
+
+
+
+
+
+[root@hrvltstdb7601 ~]# blkid | grep asm
+/dev/sdc1: LABEL="FRA01" TYPE="oracleasm"
+/dev/sdd1: LABEL="FRA02" TYPE="oracleasm"
+/dev/sde1: LABEL="DATA00" TYPE="oracleasm"
+/dev/sdf1: LABEL="DATA05" TYPE="oracleasm"
+/dev/sdg1: LABEL="DATA06" TYPE="oracleasm"
+/dev/sdh1: LABEL="DATA07" TYPE="oracleasm"
+/dev/sdi1: LABEL="DATA01" TYPE="oracleasm"
+/dev/sdj1: LABEL="DATA02" TYPE="oracleasm"
+/dev/sdk1: LABEL="DATA03" TYPE="oracleasm"
+/dev/sdl1: LABEL="OCR_VOTE1" TYPE="oracleasm"
+/dev/sdm1: LABEL="DATA04" TYPE="oracleasm"
+/dev/sdo1: LABEL="OPS_DATA01" TYPE="oracleasm"
+[root@hrvltstdb7601 ~]#
+
+
+
+dd if=/dev/zero of=/dev/sdc1 bs=4096 count=1
+dd if=/dev/zero of=/dev/sdd1 bs=4096 count=1
+dd if=/dev/zero of=/dev/sde1 bs=4096 count=1
+dd if=/dev/zero of=/dev/sdf1 bs=4096 count=1
+dd if=/dev/zero of=/dev/sdg1 bs=4096 count=1
+dd if=/dev/zero of=/dev/sdh1 bs=4096 count=1
+dd if=/dev/zero of=/dev/sdi1 bs=4096 count=1
+dd if=/dev/zero of=/dev/sdj1 bs=4096 count=1
+dd if=/dev/zero of=/dev/sdk1 bs=4096 count=1
+dd if=/dev/zero of=/dev/sdl1 bs=4096 count=1
+dd if=/dev/zero of=/dev/sdm1 bs=4096 count=1
+
+
+
+[root@hrvltstdb7601 ~]# ls -altrh /dev/oracleasm/disks/DAT*
+brw-rw----. 1 grid oinstall 8,  65 Jul 11 21:29 /dev/oracleasm/disks/DATA00
+brw-rw----. 1 grid oinstall 8, 129 Jul 11 21:29 /dev/oracleasm/disks/DATA01
+brw-rw----. 1 grid oinstall 8, 145 Jul 11 21:29 /dev/oracleasm/disks/DATA02
+brw-rw----. 1 grid oinstall 8, 161 Jul 11 21:29 /dev/oracleasm/disks/DATA03
+brw-rw----. 1 grid oinstall 8, 193 Jul 11 21:30 /dev/oracleasm/disks/DATA04
+brw-rw----. 1 grid oinstall 8,  81 Jul 11 21:30 /dev/oracleasm/disks/DATA05
+brw-rw----. 1 grid oinstall 8,  97 Jul 11 21:30 /dev/oracleasm/disks/DATA06
+brw-rw----. 1 grid oinstall 8, 113 Jul 11 21:30 /dev/oracleasm/disks/DATA07
+[root@hrvltstdb7601 ~]# ls -altrh /dev/oracleasm/disks/FRA*
+brw-rw----. 1 grid oinstall 8, 33 Jul 11 21:31 /dev/oracleasm/disks/FRA01
+brw-rw----. 1 grid oinstall 8, 49 Jul 11 21:31 /dev/oracleasm/disks/FRA02
+[root@hrvltstdb7601 ~]#
+
+
+create diskgroup OPS_DATA external redundancy disk '/dev/oracleasm/disks/DATA00';
+
+create diskgroup OPS_FRA external redundancy disk '/dev/oracleasm/disks/FRA01';
+
+
+export TNS_ADMIN=/ops/oracle/psft/pt/db
+export ORACLE_HOME=/ops/oracle/psft/pt/pt/oracle-client/19.3.0
+export LD_LIBRARY_PATH=$ORACLE_HOME/lib:$LD_LIBRARY_PATH
+export PATH=.:$ORACLE_HOME/bin:$ORACLE_HOME/OPatch:$ORACLE_HOME/perl/bin:$PATH
+
+

@@ -1,0 +1,28 @@
+
+Step 1)
+
+RMAN> SQL 'ALTER TABLESPACE PSIMAGE2 OFFLINE';
+RMAN> RESTORE TABLESPACE PSIMAGE2;
+RMAN> RECOVER TABLESPACE PSIMAGE2;
+
+
+Step 2)
+
+RMAN> run {
+2> set controlfile autobackup format for device type sbt to "CONTROLFILE.%F";
+3> allocate channel c1 type 'SBT' PARMS="SBT_LIBRARY=/usr/local/avamar/ora_rac/lib/libobk_avamar64.so" format '%d_%U_%T';
+4> send '"--nohist" "--flagfile=/infshare/ew/prd-avamar/avtar-flags.txt" "--bindir=/usr/local/avamar/ora_rac/bin"';
+5> RESTORE TABLESPACE PSIMAGE2;
+6> RECOVER TABLESPACE PSIMAGE2;
+7> }
+
+
+
+Step 3)
+
+RMAN> SQL 'ALTER TABLESPACE PSIMAGE2 ONLINE';
+
+
+STep 4)
+
+Take Backup

@@ -1,0 +1,111 @@
+RMAN> change backuppiece "PRD_jpvb8srf_1_2_20200925" uncatalog;
+
+uncataloged backup piece
+backup piece handle=PRD_jpvb8srf_1_2_20200925 RECID=171881 STAMP=1052021185
+Uncataloged 1 objects
+
+
+RMAN>
+
+[oracle@hrewoel06 ~]$ . oraenv
+ORACLE_SID = [PRDREP1] ? PRD1
+The Oracle base has been set to /u02/app/oracle
+[oracle@hrewoel06 ~]$ rman target /
+
+Recovery Manager: Release 11.2.0.4.0 - Production on Tue Nov 3 18:03:04 2020
+
+Copyright (c) 1982, 2011, Oracle and/or its affiliates.  All rights reserved.
+
+connected to target database: PRD (DBID=1836890876)
+
+RMAN> show all;
+
+using target database control file instead of recovery catalog
+RMAN configuration parameters for database with db_unique_name PRD are:
+CONFIGURE RETENTION POLICY TO RECOVERY WINDOW OF 10 DAYS;
+CONFIGURE BACKUP OPTIMIZATION OFF; # default
+CONFIGURE DEFAULT DEVICE TYPE TO DISK; # default
+CONFIGURE CONTROLFILE AUTOBACKUP ON;
+CONFIGURE CONTROLFILE AUTOBACKUP FORMAT FOR DEVICE TYPE DISK TO '%F'; # default
+CONFIGURE CONTROLFILE AUTOBACKUP FORMAT FOR DEVICE TYPE SBT_TAPE TO '%F'; # default
+CONFIGURE DEVICE TYPE DISK PARALLELISM 4 BACKUP TYPE TO BACKUPSET;
+CONFIGURE DEVICE TYPE 'SBT_TAPE' PARALLELISM 4 BACKUP TYPE TO BACKUPSET;
+CONFIGURE DATAFILE BACKUP COPIES FOR DEVICE TYPE DISK TO 1; # default
+CONFIGURE DATAFILE BACKUP COPIES FOR DEVICE TYPE SBT_TAPE TO 1; # default
+CONFIGURE ARCHIVELOG BACKUP COPIES FOR DEVICE TYPE DISK TO 1; # default
+CONFIGURE ARCHIVELOG BACKUP COPIES FOR DEVICE TYPE SBT_TAPE TO 1; # default
+CONFIGURE CHANNEL DEVICE TYPE 'SBT_TAPE' PARMS  "SBT_LIBRARY=/usr/local/avamar/ora_rac/lib/libobk_avamar64.so" FORMAT   '%d_%U_%T';
+CONFIGURE MAXSETSIZE TO UNLIMITED; # default
+CONFIGURE ENCRYPTION FOR DATABASE OFF; # default
+CONFIGURE ENCRYPTION ALGORITHM 'AES128'; # default
+CONFIGURE COMPRESSION ALGORITHM 'BASIC' AS OF RELEASE 'DEFAULT' OPTIMIZE FOR LOAD TRUE ; # default
+CONFIGURE DB_UNIQUE_NAME 'HFPRD' CONNECT IDENTIFIER  'HFPRD';
+CONFIGURE ARCHIVELOG DELETION POLICY TO BACKED UP 1 TIMES TO DISK SHIPPED TO ALL STANDBY;
+CONFIGURE SNAPSHOT CONTROLFILE NAME TO '/infshare/oracle/backup/PRD/PRDMASK/snapcf_PRD3.f';
+
+RMAN> change backuppiece PRD_jpvb8srf_1_2_20200925 uncatalog;
+
+RMAN-00571: ===========================================================
+RMAN-00569: =============== ERROR MESSAGE STACK FOLLOWS ===============
+RMAN-00571: ===========================================================
+RMAN-00558: error encountered while parsing input commands
+RMAN-01009: syntax error: found "identifier": expecting one of: "tag, double-quoted-string, integer, single-quoted-string"
+RMAN-01008: the bad identifier was: PRD_jpvb8srf_1_2_20200925
+RMAN-01007: at line 1 column 20 file: standard input
+
+RMAN> change backuppiece "PRD_jpvb8srf_1_2_20200925" uncatalog;
+
+uncataloged backup piece
+backup piece handle=PRD_jpvb8srf_1_2_20200925 RECID=171881 STAMP=1052021185
+Uncataloged 1 objects
+
+
+RMAN>
+
+
+
+[oracle@hrewoel06 alpoor_scripts]$ rman target / catalog rman@prdrep
+
+Recovery Manager: Release 11.2.0.4.0 - Production on Tue Nov 3 18:08:55 2020
+
+Copyright (c) 1982, 2011, Oracle and/or its affiliates.  All rights reserved.
+
+connected to target database: PRD (DBID=1836890876)
+recovery catalog database Password:
+connected to recovery catalog database
+
+RMAN> show all;
+
+starting full resync of recovery catalog
+
+
+
+
+full resync complete
+RMAN configuration parameters for database with db_unique_name PRD are:
+CONFIGURE RETENTION POLICY TO RECOVERY WINDOW OF 10 DAYS;
+CONFIGURE BACKUP OPTIMIZATION OFF; # default
+CONFIGURE DEFAULT DEVICE TYPE TO DISK; # default
+CONFIGURE CONTROLFILE AUTOBACKUP ON;
+CONFIGURE CONTROLFILE AUTOBACKUP FORMAT FOR DEVICE TYPE DISK TO '%F'; # default
+CONFIGURE CONTROLFILE AUTOBACKUP FORMAT FOR DEVICE TYPE SBT_TAPE TO '%F'; # default
+CONFIGURE DEVICE TYPE DISK PARALLELISM 4 BACKUP TYPE TO BACKUPSET;
+CONFIGURE DEVICE TYPE 'SBT_TAPE' PARALLELISM 4 BACKUP TYPE TO BACKUPSET;
+CONFIGURE DATAFILE BACKUP COPIES FOR DEVICE TYPE DISK TO 1; # default
+CONFIGURE DATAFILE BACKUP COPIES FOR DEVICE TYPE SBT_TAPE TO 1; # default
+CONFIGURE ARCHIVELOG BACKUP COPIES FOR DEVICE TYPE DISK TO 1; # default
+CONFIGURE ARCHIVELOG BACKUP COPIES FOR DEVICE TYPE SBT_TAPE TO 1; # default
+CONFIGURE CHANNEL DEVICE TYPE 'SBT_TAPE' PARMS  "SBT_LIBRARY=/usr/local/avamar/ora_rac/lib/libobk_avamar64.so" FORMAT   '%d_%U_%T';
+CONFIGURE MAXSETSIZE TO UNLIMITED; # default
+CONFIGURE ENCRYPTION FOR DATABASE OFF; # default
+CONFIGURE ENCRYPTION ALGORITHM 'AES128'; # default
+CONFIGURE COMPRESSION ALGORITHM 'BASIC' AS OF RELEASE 'DEFAULT' OPTIMIZE FOR LOAD TRUE ; # default
+CONFIGURE DB_UNIQUE_NAME 'HFPRD' CONNECT IDENTIFIER  'HFPRD';
+CONFIGURE ARCHIVELOG DELETION POLICY TO BACKED UP 1 TIMES TO DISK SHIPPED TO ALL STANDBY;
+CONFIGURE SNAPSHOT CONTROLFILE NAME TO '/infshare/oracle/backup/PRD/PRDMASK/snapcf_PRD3.f';
+
+RMAN>
+RMAN>
+RMAN>
+RMAN>
+RMAN>

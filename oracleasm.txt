@@ -1,0 +1,307 @@
+[root@hrvldevdb7601 home]# cd /dev/
+[root@hrvldevdb7601 dev]# ls sdn
+sdn
+[root@hrvldevdb7601 dev]# fdisk /dev/sdl
+Welcome to fdisk (util-linux 2.23.2).
+
+Changes will remain in memory only, until you decide to write them.
+Be careful before using the write command.
+
+Device does not contain a recognized partition table
+Building a new DOS disklabel with disk identifier 0x27b797cf.
+
+Command (m for help): n
+Partition type:
+   p   primary (0 primary, 0 extended, 4 free)
+   e   extended
+Select (default p): p
+Partition number (1-4, default 1): 1
+First sector (2048-104857599, default 2048):
+Using default value 2048
+Last sector, +sectors or +size{K,M,G} (2048-104857599, default 104857599):
+Using default value 104857599
+Partition 1 of type Linux and of size 50 GiB is set
+
+Command (m for help): w
+The partition table has been altered!
+
+Calling ioctl() to re-read partition table.
+Syncing disks.
+[root@hrvldevdb7601 dev]# ls sdn*
+sdn  sdn1
+[root@hrvldevdb7601 dev]# ls sdl*
+sdl  sdl1
+[root@hrvldevdb7601 dev]# oracleasm configure
+ORACLEASM_ENABLED=false
+ORACLEASM_UID=
+ORACLEASM_GID=
+ORACLEASM_SCANBOOT=true
+ORACLEASM_SCANORDER=""
+ORACLEASM_SCANEXCLUDE=""
+ORACLEASM_SCAN_DIRECTORIES=""
+ORACLEASM_USE_LOGICAL_BLOCK_SIZE="false"
+[root@hrvldevdb7601 dev]# /etc/init.d/oracleasm configure
+/etc/init.d/oracleasm is deprecated. Use 'oracleasm configure -i'
+[root@hrvldevdb7601 dev]# /etc/init.d/oracleasm configure -i
+/etc/init.d/oracleasm is deprecated. Use 'oracleasm configure -i'
+[root@hrvldevdb7601 dev]# /etc/init.d/oracleasm configure
+/etc/init.d/oracleasm is deprecated. Use 'oracleasm configure -i'
+[root@hrvldevdb7601 dev]# oracleasm
+oracleasm       oracleasm.init
+[root@hrvldevdb7601 dev]# oracleasm
+oracleasm       oracleasm.init
+[root@hrvldevdb7601 dev]# oracleasm configure
+ORACLEASM_ENABLED=false
+ORACLEASM_UID=
+ORACLEASM_GID=
+ORACLEASM_SCANBOOT=true
+ORACLEASM_SCANORDER=""
+ORACLEASM_SCANEXCLUDE=""
+ORACLEASM_SCAN_DIRECTORIES=""
+ORACLEASM_USE_LOGICAL_BLOCK_SIZE="false"
+[root@hrvldevdb7601 dev]# oracleasm configure -i
+Configuring the Oracle ASM library driver.
+
+This will configure the on-boot properties of the Oracle ASM library
+driver.  The following questions will determine whether the driver is
+loaded on boot and what permissions it will have.  The current values
+will be shown in brackets ('[]').  Hitting <ENTER> without typing an
+answer will keep that current value.  Ctrl-C will abort.
+
+Default user to own the driver interface []: grid
+Default group to own the driver interface []: oinstall
+Start Oracle ASM library driver on boot (y/n) [n]: y
+Scan for Oracle ASM disks on boot (y/n) [y]: y
+Writing Oracle ASM library driver configuration: done
+[root@hrvldevdb7601 dev]#
+[root@hrvldevdb7601 dev]#
+
+[root@hrvldevdb7601 dev]# oracleasm createdisk OCR_VOTE1 /dev/sdl1
+oracleasm module not loaded or /dev/oracleasm not mounted.
+[root@hrvldevdb7601 dev]# /etc/init.d/oracleasm enable
+/etc/init.d/oracleasm is deprecated. Use 'oracleasm configure -e'
+[root@hrvldevdb7601 dev]# /etc/init.d/oracleasm -e
+/etc/init.d/oracleasm is deprecated in favor of userspace tool: /usr/sbin/oracleasm
+[root@hrvldevdb7601 dev]# /etc/init.d/oracleasm configure -e
+/etc/init.d/oracleasm is deprecated. Use 'oracleasm configure -i'
+[root@hrvldevdb7601 dev]# oracleasm -e
+oracleasm: '-e' is not an oracleasm command
+Usage: oracleasm [--exec-path=<exec_path>] <command> [ <args> ]
+       oracleasm --exec-path
+       oracleasm -h
+       oracleasm -V
+
+The basic oracleasm commands are:
+    configure        Configure the Oracle Linux ASMLib driver
+    init             Load and initialize the ASMLib driver
+    exit             Stop the ASMLib driver
+    scandisks        Scan the system for Oracle ASMLib disks
+    status           Display the status of the Oracle ASMLib driver
+    listdisks        List known Oracle ASMLib disks
+    listiids         List the iid files
+    deleteiids       Delete the unused iid files
+    querydisk        Determine if a disk belongs to Oracle ASMlib
+    createdisk       Allocate a device for Oracle ASMLib use
+    deletedisk       Return a device to the operating system
+    renamedisk       Change the label of an Oracle ASMlib disk
+    update-driver    Download the latest ASMLib driver
+[root@hrvldevdb7601 dev]# oracleasm init
+Creating /dev/oracleasm mount point: /dev/oracleasm
+Loading module "oracleasm": oracleasm
+Configuring "oracleasm" to use device physical block size
+Mounting ASMlib driver filesystem: /dev/oracleasm
+[root@hrvldevdb7601 dev]#
+
+
+
+[root@hrvldevdb7601 dev]# oracleasm createdisk OCR_VOTE1 /dev/sdl1
+Writing disk header: done
+Instantiating disk: done
+
+[grid@hrvldevdb7601 grid]$ ./gridSetup.sh -silent -responseFile -ignorePrereqFailure /u02/app/12.2.0/grid/install/response/gridsetup.rspgridSetup.sh -silent^C
+[grid@hrvldevdb7601 grid]$ ./gridSetup.sh -silent -ignorePrereqFailure -responseFile  /u02/app/12.2.0/grid/install/response/gridsetup.rsp
+Launching Oracle Grid Infrastructure Setup Wizard...
+
+[WARNING] [INS-41812] OSDBA and OSASM are the same OS group.
+   CAUSE: The chosen values for OSDBA group and the chosen value for OSASM group are the same.
+   ACTION: Select an OS group that is unique for ASM administrators. The OSASM group should not be the same as the OS groups that grant privileges for Oracle ASM access, or for database administration.
+[WARNING] [INS-41875] Oracle ASM Administrator (OSASM) Group specified is same as the users primary group.
+   CAUSE: Operating system group oinstall specified for OSASM Group is same as the users primary group.
+   ACTION: It is not recommended to have OSASM group same as primary group of user as it becomes the inventory group. Select any of the group other than the primary group to avoid misconfiguration.
+[WARNING] [INS-32018] The selected Oracle home is outside of Oracle base.
+   ACTION: Oracle recommends installing Oracle software within the Oracle base directory. Adjust the Oracle home or Oracle base accordingly.
+[WARNING] [INS-13013] Target environment does not meet some mandatory requirements.
+   CAUSE: Some of the mandatory prerequisites are not met. See logs for details. /tmp/GridSetupActions2019-04-05_06-19-26PM/gridSetupActions2019-04-05_06-19-26PM.log
+   ACTION: Identify the list of failed prerequisite checks from the log: /tmp/GridSetupActions2019-04-05_06-19-26PM/gridSetupActions2019-04-05_06-19-26PM.log. Then either from the log file or from installation manual find the appropriate configuration to meet the prerequisites and fix it manually.
+You can find the log of this install session at:
+ /tmp/GridSetupActions2019-04-05_06-19-26PM/gridSetupActions2019-04-05_06-19-26PM.log
+
+
+As a root user, execute the following script(s):
+        1. /u02/app/oraInventory/orainstRoot.sh
+        2. /u02/app/12.2.0/grid/root.sh
+
+Execute /u02/app/12.2.0/grid/root.sh on the following nodes:
+[hrvldevdb7601]
+
+
+
+Successfully Setup Software.
+As install user, execute the following command to complete the configuration.
+        /u02/app/12.2.0/grid/gridSetup.sh -executeConfigTools -responseFile /u02/app/12.2.0/grid/install/response/gridsetup.rsp [-silent]
+
+
+Moved the install session logs to:
+ /u02/app/oraInventory/logs/GridSetupActions2019-04-05_06-19-26PM
+[grid@hrvldevdb7601 grid]$
+[grid@hrvldevdb7601 grid]$
+
+
+
+[grid@hrvldevdb7601 bin]$ ./asmca -silent -configureASM -sysASMPassword Testing123 -asmsnmpPassword Testing123 -diskString '/dev/oracleasm/disks/*' -disKGroupName OCR_VOTE1 -disk '/dev/oracleasm/disks/OCR_VOTE1' -redundancy EXTERNAL
+
+Disk groups created successfully. Check /u02/app/oracle/cfgtoollogs/asmca/asmca-190405PM063821.log for details.
+
+
+[grid@hrvldevdb7601 bin]$ ./asmca -silent -configureASM -sysASMPassword Testing123 -asmsnmpPassword Testing123 -diskString '/dev/oracleasm/disks/*' -disKGroupName OCR_VOTE1 -disk '/dev/oracleasm/disks/OCR_VOTE1' -redundancy EXTERNAL  qosctl
+
+
+
+
+SQL> create diskgroup OPS_DATA
+  2  external redundancy
+  3  disk '/dev/oracleasm/disks/DATA01';
+
+Diskgroup created.
+
+SQL> create diskgroup OPS_FRA
+  2  external redundancy
+  3  disk '/dev/oracleasm/disks/FRA01';
+
+Diskgroup created.
+
+SQL>
+
+SQL> /
+
+NAME                           COMPATIBILITY                            DATABASE_COMPATIBILITY
+------------------------------ ---------------------------------------- ----------------------------------------
+OCR_VOTE1                      12.2.0.1.0                               10.1.0.0.0
+OPS_DATA                       11.2.0.2.0                               10.1.0.0.0
+OPS_FRA                        11.2.0.2.0                               10.1.0.0.0
+
+SQL> alter diskgroup OPS_DATA set attribute 'compatible.asm' = '12.2.';
+
+Diskgroup altered.
+
+SQL> alter diskgroup OPS_FRA set attribute 'compatible.asm' = '12.2.';
+
+Diskgroup altered.
+
+SQL> alter diskgroup OPS_DATA set attribute 'compatible.rdbms' = '12.2.';
+
+Diskgroup altered.
+
+SQL>  alter diskgroup OPS_FRA set attribute 'compatible.rdbms' = '12.2.';
+
+Diskgroup altered.
+
+col name format a30
+col COMPATIBILITY format a30
+col DATABASE_COMPATIBILITY format a30
+set linesize 150
+select name,COMPATIBILITY,DATABASE_COMPATIBILITY from  v$asm_diskgroup;
+
+NAME                           COMPATIBILITY                            DATABASE_COMPATIBILITY
+------------------------------ ---------------------------------------- ----------------------------------------
+OCR_VOTE1                      12.2.0.1.0                               10.1.0.0.0
+OPS_DATA                       12.2.0.0.0                               12.2.0.0.0
+OPS_FRA                        12.2.0.0.0                               12.2.0.0.0
+
+SQL>  alter diskgroup OCR_VOTE1  set attribute 'compatible.rdbms' = '12.2.';
+
+Diskgroup altered.
+
+SQL> select name,COMPATIBILITY,DATABASE_COMPATIBILITY from  v$asm_diskgroup;
+
+NAME                           COMPATIBILITY                            DATABASE_COMPATIBILITY
+------------------------------ ---------------------------------------- ----------------------------------------
+OCR_VOTE1                      12.2.0.1.0                               12.2.0.0.0
+OPS_DATA                       12.2.0.0.0                               12.2.0.0.0
+OPS_FRA                        12.2.0.0.0                               12.2.0.0.0
+
+SQL>
+
+
+
+
+
+
+[oracle@hrvldevdb7601 database]$ ./runInstaller -silent -ignoreSysPrereqs -ignorePrereq  -showProgress  -responseFile /home/oracle/software/database/response/db_install.rsp
+Starting Oracle Universal Installer...
+
+Checking Temp space: must be greater than 500 MB.   Actual 7926 MB    Passed
+Checking swap space: must be greater than 150 MB.   Actual 3815 MB    Passed
+Preparing to launch Oracle Universal Installer from /tmp/OraInstall2019-04-05_07-31-31PM. Please wait ...[oracle@hrvldevdb7601 database]$ You can find the log of this install session at:
+ /u02/app/oraInventory/logs/installActions2019-04-05_07-31-31PM.log
+
+Prepare in progress.
+..................................................   8% Done.
+
+Prepare successful.
+
+Copy files in progress.
+....................
+
+
+
+[oracle@hrvldevdb7601 admin]$ cd /u02/app/oracle/product/12.0.2/db_1/bin/
+[oracle@hrvldevdb7601 bin]$ ./dbca -silent -createDatabase  -templateName General_Purpose.dbc -responseFile /home/oracle/software/database/response/dbca.rsp
+Registering database with Oracle Restart
+5% complete
+Copying database files
+6% complete
+7% complete
+22% complete
+36% complete
+Creating and starting Oracle instance
+37% complete
+39% complete
+43% complete
+47% complete
+51% complete
+52% complete
+53% complete
+56% complete
+57% complete
+Completing Database Creation
+58% complete
+60% complete
+61% complete
+64% complete
+67% complete
+68% complete
+Executing Post Configuration Actions
+100% complete
+Look at the log file "/u02/app/oracle/cfgtoollogs/dbca/OPSDEV2/OPSDEV2.log" for further details.
+[oracle@hrvldevdb7601 bin]$
+
+
+
+ create diskgroup PRAS_DATA
+    external redundancy
+    disk '/dev/oracleasm/disks/PRAS_DATA01';
+
+
+
+
+[grid@hrmdc1oel04 disks]$ ls -altrh /dev/oracleasm/disks/PRDDAT*
+brw-rw----. 1 grid asmdba 120, 1025 Jul 17 06:35 /dev/oracleasm/disks/PRDDAT01
+brw-rw----. 1 grid asmdba 120, 1041 Jul 17 06:36 /dev/oracleasm/disks/PRDDAT02
+brw-rw----. 1 grid asmdba 120, 1057 Jul 17 06:36 /dev/oracleasm/disks/PRDDAT03
+brw-rw----. 1 grid asmdba 120, 1073 Jul 17 06:36 /dev/oracleasm/disks/PRDDAT04
+brw-rw----. 1 grid asmdba 120, 1089 Jul 17 06:36 /dev/oracleasm/disks/PRDDAT05
+brw-rw----. 1 grid asmdba 120, 1105 Jul 17 06:36 /dev/oracleasm/disks/PRDDAT06
+brw-rw----. 1 grid asmdba 120, 1121 Jul 17 06:36 /dev/oracleasm/disks/PRDDAT07
+brw-rw----. 1 grid asmdba 120, 1137 Jul 17 06:37 /dev/oracleasm/disks/PRDDAT08
+brw-rw----. 1 grid asmdba 120, 1153 Jul 17 06:37 /dev/oracleasm/disks/PRDDAT09

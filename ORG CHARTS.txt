@@ -1,0 +1,7 @@
+
+org CHARTS
+
+https://intranet.hr.state.sbu/OrgCharts/ESD.pdf
+https://intranet.hr.state.sbu/OrgCharts/RIM.pdf
+https://intranet.hr.state.sbu/OrgCharts/SDD.pdf
+https://intranet.hr.state.sbu/OrgCharts/SOD.pdf

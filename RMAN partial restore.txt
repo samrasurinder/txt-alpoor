@@ -1,0 +1,559 @@
+Today’s blog post will discuss how to recover a subset of an Oracle database. Many of you would have come across different recovery scenarios, but I’ll be talking about a very different one that happened to me. The following are the details after receiving a call from a client, and checking the environment myself.
+
+i) This is a data warehouse production database, which is sized around 5TB, running on 10gR2 version on AIX platform.
+
+ii) Weekly level 0 and frequent archive log compressed RMAN tape backup(Netbackup) is configured for this database.
+
+iii) Client DBA confirmed that the level 0 backup was executed successfully. and started his scheduled purge activity for older partitions. He accidentally deleted the partitions that belong to year 2011 instead of requested deletion for year 2010 partitions for a table (due to typo on notepad using copy/paste of earlier commands.)
+
+v) He found the issue after executing the required sql script by verifying the log file. He decided not to delete the  associated datafiles that belonged to year 2011 tablespace from DB and OS level.
+
+vi) The range partitions are used, based on monthly data, and dedicated tablespaces are used for a year partition data. There are more than 200 tablespaces, spread across multiple partitioned tables.
+
+vii) There was no recycle bin (flashback drop) feature enabled and no flashback feature is configured. This database also doesn’t have any standby databases configured.
+
+viii) The logical backup for this database has never happened, but block change tracking was enabled for this database.
+
+So, I recently got completed level 0 tape backup only.These older partitions are useful only during month end reporting. The traditional method of restoring the entire database would be time prone and also with the need of 5TB additional storage.
+
+Thanks to RMAN feature (Ref MOS Note:223543.1), we can restore only subset of database. Hence suggested client that I would  create a test database with only required tablespaces. From the existing datafiles (tablespace) at OS level, I found the approximate size of deleted partition tablespace was around 300G. Along with required SYSTEM/SYSSAUX/UNDO tablespaces, the required disk space for this test database was around 420G.
+
+Client SA team created a new test server identifical with the existing server.Most of the required additional mount points were created as soft links on the existing disk space of 600G(we need space for archivelogs too). After cloning the existing oracle home to new server, I used the following steps to complete this recovery activity.
+
+1. Logged into DW production database(db name: test – as usual) and identified the required tablespaces are ‘SYSTEM’,’SYSAUX’,’UNDOTBS’ and ‘TEST_DETAIL_2011_TS’. Also identified the associated datafiles numbers. For eg. file_id’s 1,2,3,149,163,164,149,106,107,108,109,110,181,189 and 192.
+
+2. Connected to rman recovery catalog schema(rman_cat) from this database and Identified the same TAG value used for all level 0 backup files,I consider the TAG value as “TEST_FULLDB_THU151013”. Also identified the require Media for these datafiles and controlfiles as HT0008,HT0014 and HT0015.Updated storage team to keep these Media into tape drive till this activity completion.
+
+3. Logged into test database server and started the instance using nomount state with parameter values large_pool_size=500M and job_queue_processes=0.
+
+4. Connected to RMAN utility with recovery catalog schema to restore the control files first.
+
+RMAN> run
+{
+allocate channel t1 type ‘sbt_tape’;
+send ‘NB_ORA_client=test’;
+restore controlfile from tag ‘TEST_FULLDB_THU151013’;
+release channel t1;
+}
+
+5. Mounted the database using sqlplus utility and disabled the block change tracking feature.
+
+SQL> alter database mount;
+SQL> ALTER DATABASE DISABLE BLOCK CHANGE TRACKING;
+
+6. Connected to RMAN utility again with recovery caatlog schema to restore the required tablespaces.
+
+RMAN> run
+{
+allocate channel t1 type ‘sbt_tape’;
+allocate channel t2 type ‘sbt_tape’;
+allocate channel t3 type ‘sbt_tape’;
+send ‘NB_ORA_client=test’;
+restore tablespace system,undotbs1,sysaux,TEST_DETAIL_2011_TS from tag ‘TEST_FULLDB_THU151013’;
+sql “alter database datafile 1,2,3,149,163,164,149,106,107,108,109,110,181,189,192 online”;
+release channel t1;
+release channel t2;
+release channel t3;
+}
+
+7. Gathered the last archivelog sequence backed up on this level 0 backup from RMAN utility.For eg 272150.
+
+8. Created rman command file named recover_db.rman as the list of tablespaces to be skipped was huge. Used  ‘set until sequence’ clause to restore the required archive logs and recover the database. Here is the syntax used.
+
+restore_db.rman
+run
+{
+allocate channel t1 type ‘sbt_tape’;
+allocate channel t2 type ‘sbt_tape’;
+allocate channel t3 type ‘sbt_tape’;
+send ‘NB_ORA_client=test’;
+set until sequence 272151; ==> (Max sequence + 1)
+recover database skip forever tablespace
+ABC_IND_TS,ABC_DATA_TS,DEF_INDX_TS,DEF_REF_TS_01,DEF_REF_TS_01,ACCT_TAB_TS_01,ACCT_TAB_TS_02,
+………………………………………………………………………………… ==> List of tablespaces other than 4 required
+TPG_DATA_TS_01,TPG_IND_TS_01,USERS,XDB;
+release channel t1;
+release channel t2;
+release channel t3;
+}
+
+9. Executed this command file using RMAN utility with recovery catalog schema.
+RMAN> @restore_db.rman
+
+10. Used sqlplus utility and opened the database using resetlogs option. Then converted this test database to run on noarchivelog mode.
+SQL> recover database using backup controlfile until cancel;
+cancel
+SQL> alter database open resetlogs;
+SQL> shutdown immediate
+SQL> startup mount
+SQL> alter database noarchivelog;
+SQL> alter database open;
+
+11. Confirmed the deleted partitions now exists with data on test database.
+SQL> select count(1) from <table> partition(<part name>);
+
+12. Handed over this test database and client DBA exported the partitions for year 2011 and imported into the production DW database.
+
+So here we created a test database with the size of 420G instead of a whole database sized 5TB, which definitely saved time and space. Though there are much easier options available in any common production database environment (such as using restore from recyclebin or flashback standby database to point in time,) this method was really helpful when I couldn’t use those options.
+
+
+
+restore tablespace SYSAUX,SYSTEM,UNDOTBS1,UNDOTBS2,UNDOTBS3,UNDOTBS4,UNDOTBS5,UNDOTBS6,WEB_BMTS_DATA,WEB_BMTS_DATA_TDE,WEB_BMTS_INDEX_TDE
+
+
+sql "alter database datafile 1,2,3,5,6,182,183,184,191,286,338,347,377 online";
+
+
+
+recover database skip forever tablespace  AAAPP;
+recover database skip forever tablespace  AALARGE;
+recover database skip forever tablespace  ADAPP;
+recover database skip forever tablespace  AMAPP;
+recover database skip forever tablespace  AUDIT_TABLESPACE;
+recover database skip forever tablespace  AUDIT_TABLESPACE;
+recover database skip forever tablespace  AUDIT_TABLESPACE;
+recover database skip forever tablespace  AUDIT_TABLESPACE;
+recover database skip forever tablespace  AVAPP;
+recover database skip forever tablespace  BDAPP;
+recover database skip forever tablespace  BNAPP;
+recover database skip forever tablespace  BNLARGE;
+recover database skip forever tablespace  CCAPP;
+recover database skip forever tablespace  COAPP;
+recover database skip forever tablespace  CONVERT;
+recover database skip forever tablespace  CUAUDIT;
+recover database skip forever tablespace  CULARG1;
+recover database skip forever tablespace  CULARG2;
+recover database skip forever tablespace  CULARG3;
+recover database skip forever tablespace  CULARGE;
+recover database skip forever tablespace  DB_ACRS_DATA;
+recover database skip forever tablespace  DB_ACRS_INDEX;
+recover database skip forever tablespace  DB_CSEDO_DATA;
+recover database skip forever tablespace  DB_CSEDO_INDEX;
+recover database skip forever tablespace  DB_ESRT_DATA;
+recover database skip forever tablespace  DB_ESRT_DATA;
+recover database skip forever tablespace  DB_ESRT_INDEX;
+recover database skip forever tablespace  DB_ESRT_INDEX;
+recover database skip forever tablespace  DB_ESRT_INTERFACE_DATA;
+recover database skip forever tablespace  DB_ESRT_INTERFACE_INDEX;
+recover database skip forever tablespace  DB_ESRT_LOB;
+recover database skip forever tablespace  DB_ESRT_LOBIND;
+recover database skip forever tablespace  DB_ESRT_LOBTAB;
+recover database skip forever tablespace  DB_HRSAR_DATA;
+recover database skip forever tablespace  DB_HRSAR_INDEX;
+recover database skip forever tablespace  DB_IDB_DATA;
+recover database skip forever tablespace  DB_IDB_DATA;
+recover database skip forever tablespace  DB_IDB_INDEX;
+recover database skip forever tablespace  DB_TM1_DATA;
+recover database skip forever tablespace  DB_TM1_INDEX;
+recover database skip forever tablespace  DB_TSP_DATA;
+recover database skip forever tablespace  DB_TSP_INDEX;
+recover database skip forever tablespace  DIAPP;
+recover database skip forever tablespace  DTAPP;
+recover database skip forever tablespace  EOAPP;
+recover database skip forever tablespace  EOBFAPP;
+recover database skip forever tablespace  EOCFAPP;
+recover database skip forever tablespace  EOCMAPP;
+recover database skip forever tablespace  EOCMLRG;
+recover database skip forever tablespace  EOCMWRK;
+recover database skip forever tablespace  EOCUAPP;
+recover database skip forever tablespace  EOCULRG;
+recover database skip forever tablespace  EODITBL;
+recover database skip forever tablespace  EODITBL;
+recover database skip forever tablespace  EODSAPP;
+recover database skip forever tablespace  EODSLRG;
+recover database skip forever tablespace  EOECAPP;
+recover database skip forever tablespace  EOECLRG;
+recover database skip forever tablespace  EOECWRK;
+recover database skip forever tablespace  EOEIAPP;
+recover database skip forever tablespace  EOEILRG;
+recover database skip forever tablespace  EOEWAPP;
+recover database skip forever tablespace  EOEWLRG;
+recover database skip forever tablespace  EOEWWRK;
+recover database skip forever tablespace  EOIUAPP;
+recover database skip forever tablespace  EOIULRG;
+recover database skip forever tablespace  EOIUWRK;
+recover database skip forever tablespace  EOLARGE;
+recover database skip forever tablespace  EOLTAPP;
+recover database skip forever tablespace  EOPF_CORE_DATA;
+recover database skip forever tablespace  EOPF_CORE_INDEX;
+recover database skip forever tablespace  EOPF_DOS_DATA;
+recover database skip forever tablespace  EOPF_DOS_INDEX;
+recover database skip forever tablespace  EOPPAPP;
+recover database skip forever tablespace  EOPPLRG;
+recover database skip forever tablespace  EOTPAPP;
+recover database skip forever tablespace  EOTPLRG;
+recover database skip forever tablespace  EPAPP;
+recover database skip forever tablespace  EPLARGE;
+recover database skip forever tablespace  ERAPP;
+recover database skip forever tablespace  ERLARGE;
+recover database skip forever tablespace  ERWORK;
+recover database skip forever tablespace  FAAPP;
+recover database skip forever tablespace  FALARGE;
+recover database skip forever tablespace  FGAPP;
+recover database skip forever tablespace  FGLARGE;
+recover database skip forever tablespace  FSAPP;
+recover database skip forever tablespace  GEMS_SYSADM_DATA_TDE;
+recover database skip forever tablespace  GEMS_SYSADM_DATA_TDE;
+recover database skip forever tablespace  GEMS_SYSADM_INDEX_TDE;
+recover database skip forever tablespace  GIAPP;
+recover database skip forever tablespace  GPAPP;
+recover database skip forever tablespace  GPDEAPP;
+recover database skip forever tablespace  GRB_ASSIST_2;
+recover database skip forever tablespace  GRB_ASSIST_2;
+recover database skip forever tablespace  GRB_EBISII;
+recover database skip forever tablespace  GRB_EBISII;
+recover database skip forever tablespace  GRB_FRAMEWORK_2;
+recover database skip forever tablespace  HPAPP;
+recover database skip forever tablespace  HRAPP1;
+recover database skip forever tablespace  HRAPP2;
+recover database skip forever tablespace  HRAPP3;
+recover database skip forever tablespace  HRAPP4;
+recover database skip forever tablespace  HRAPP5;
+recover database skip forever tablespace  HRAPP6;
+recover database skip forever tablespace  HRAPP7;
+recover database skip forever tablespace  HRAPP;
+recover database skip forever tablespace  HRIMAGE;
+recover database skip forever tablespace  HRLARG1;
+recover database skip forever tablespace  HRLARGE;
+recover database skip forever tablespace  HRLARGE_INDEX;
+recover database skip forever tablespace  HRLARGE_INDEX;
+recover database skip forever tablespace  HRSAPP;
+recover database skip forever tablespace  HRSARCH;
+recover database skip forever tablespace  HRSLARGE;
+recover database skip forever tablespace  HRSWORK;
+recover database skip forever tablespace  HRWORK;
+recover database skip forever tablespace  HTAPP;
+recover database skip forever tablespace  INAPP;
+recover database skip forever tablespace  KC_BUSOBJ3_DATA;
+recover database skip forever tablespace  KC_BUSOBJ3_DATA;
+recover database skip forever tablespace  KC_BUSOBJ3_INDEX;
+recover database skip forever tablespace  KC_BUSOBJ_DATA;
+recover database skip forever tablespace  KC_BUSOBJ_DATA;
+recover database skip forever tablespace  KC_BUSOBJ_DATA;
+recover database skip forever tablespace  KC_BUSOBJ_DATA;
+recover database skip forever tablespace  KC_BUSOBJ_INDEX;
+recover database skip forever tablespace  KC_BUSOBJ_INDEX;
+recover database skip forever tablespace  KC_BUSOBJ_INDEX;
+recover database skip forever tablespace  KC_BUSOBJ_INDEX;
+recover database skip forever tablespace  PAAPP;
+recover database skip forever tablespace  PALARGE;
+recover database skip forever tablespace  PCAPP;
+recover database skip forever tablespace  PCLARGE;
+recover database skip forever tablespace  PIAPP;
+recover database skip forever tablespace  PILARGE;
+recover database skip forever tablespace  PIWORK;
+recover database skip forever tablespace  POAPP;
+recover database skip forever tablespace  PSIMAGE2;
+recover database skip forever tablespace  PSIMAGE2;
+recover database skip forever tablespace  PSIMAGE2;
+recover database skip forever tablespace  PSIMAGE;
+recover database skip forever tablespace  PSIMAGE;
+recover database skip forever tablespace  PSIMAGE;
+recover database skip forever tablespace  PSIMAGE;
+recover database skip forever tablespace  PSIMAGE;
+recover database skip forever tablespace  PSIMAGE;
+recover database skip forever tablespace  PSIMGR;
+recover database skip forever tablespace  PSINDEX;
+recover database skip forever tablespace  PSINDEX;
+recover database skip forever tablespace  PSINDEX;
+recover database skip forever tablespace  PS_PEOPLE_DATA;
+recover database skip forever tablespace  PS_PEOPLE_DATA;
+recover database skip forever tablespace  PS_PEOPLE_INDEX;
+recover database skip forever tablespace  PS_PEOPLE_INDEX;
+recover database skip forever tablespace  PS_PS_DATA;
+recover database skip forever tablespace  PS_PS_DATA;
+recover database skip forever tablespace  PS_PS_INDEX;
+recover database skip forever tablespace  PS_PS_INDEX;
+recover database skip forever tablespace  PS_SYSADM_DATA;
+recover database skip forever tablespace  PS_SYSADM_DATA;
+recover database skip forever tablespace  PS_SYSADM_INDEX;
+recover database skip forever tablespace  PS_SYSADM_INDEX;
+recover database skip forever tablespace  PTAMSG;
+recover database skip forever tablespace  PTAPP;
+recover database skip forever tablespace  PTAPPE;
+recover database skip forever tablespace  PTAUDIT;
+recover database skip forever tablespace  PTCMSTAR;
+recover database skip forever tablespace  PTLOCK;
+recover database skip forever tablespace  PTPRC;
+recover database skip forever tablespace  PTPRJWK;
+recover database skip forever tablespace  PTRPTS;
+recover database skip forever tablespace  PTTBL;
+recover database skip forever tablespace  PTTBL;
+recover database skip forever tablespace  PTTBL;
+recover database skip forever tablespace  PTTLRG;
+recover database skip forever tablespace  PTTREE;
+recover database skip forever tablespace  PTWORK;
+recover database skip forever tablespace  PVAPP;
+recover database skip forever tablespace  PY0LRG;
+recover database skip forever tablespace  PYAPP;
+recover database skip forever tablespace  PYLARGE;
+recover database skip forever tablespace  PYWORK;
+recover database skip forever tablespace  REP_INFORMATICA_ETLUP;
+recover database skip forever tablespace  REP_INFORMATICA_ETLUP;
+recover database skip forever tablespace  REP_INFORMATICA_PRD;
+recover database skip forever tablespace  SAAPP;
+recover database skip forever tablespace  SACAPP;
+recover database skip forever tablespace  SALARGE;
+recover database skip forever tablespace  SRAPP;
+recover database skip forever tablespace  STAPP;
+recover database skip forever tablespace  STLARGE;
+recover database skip forever tablespace  STWORK;
+recover database skip forever tablespace  TLAPP;
+recover database skip forever tablespace  TLLARGE;
+recover database skip forever tablespace  TLWORK;
+recover database skip forever tablespace  TOOLS;
+recover database skip forever tablespace  TOOLS_INDEX;
+recover database skip forever tablespace  USERS;
+recover database skip forever tablespace  WAAPP;
+recover database skip forever tablespace  WEB_ACRS_DATA_TDE;
+recover database skip forever tablespace  WEB_ACRS_INDEX_TDE;
+recover database skip forever tablespace  WEB_ACRS_LOBIND;
+recover database skip forever tablespace  WEB_ACRS_LOBTAB;
+recover database skip forever tablespace  WEB_ATS_DATA;
+recover database skip forever tablespace  WEB_ATS_INDEX;
+recover database skip forever tablespace  WEB_BATCH_DATA;
+recover database skip forever tablespace  WEB_BATCH_INDEX;
+recover database skip forever tablespace  WEB_BMA_DATA;
+recover database skip forever tablespace  WEB_BMA_DATA_TDE;
+recover database skip forever tablespace  WEB_BMA_INDEX_TDE;
+recover database skip forever tablespace  WEB_BMTS_INDEX;
+recover database skip forever tablespace  WEB_BMTS_LOB;
+recover database skip forever tablespace  WEB_BMTS_LOBIND;
+recover database skip forever tablespace  WEB_BMTS_LOBTAB;
+recover database skip forever tablespace  WEB_BPOC_DATA;
+recover database skip forever tablespace  WEB_BPOC_DATA_TDE;
+recover database skip forever tablespace  WEB_BPOC_INDEX;
+recover database skip forever tablespace  WEB_BPOC_INDEX_TDE;
+recover database skip forever tablespace  WEB_CABLE_DATA;
+recover database skip forever tablespace  WEB_CABLE_INDEX;
+recover database skip forever tablespace  WEB_CAREER_DATA;
+recover database skip forever tablespace  WEB_CAREER_DATA_TDE;
+recover database skip forever tablespace  WEB_CAREER_INDEX;
+recover database skip forever tablespace  WEB_CAREER_INDEX_TDE;
+recover database skip forever tablespace  WEB_CLIENT_DATA;
+recover database skip forever tablespace  WEB_CLIENT_INDEX;
+recover database skip forever tablespace  WEB_CLIENT_LOB;
+recover database skip forever tablespace  WEB_CLIENT_LOBIND;
+recover database skip forever tablespace  WEB_CLIENT_LOBTAB;
+recover database skip forever tablespace  WEB_CTS_DATA;
+recover database skip forever tablespace  WEB_CTS_INDEX;
+recover database skip forever tablespace  WEB_DSMWEB_DATA;
+recover database skip forever tablespace  WEB_DSMWEB_INDEX;
+recover database skip forever tablespace  WEB_DSUSER_DATA;
+recover database skip forever tablespace  WEB_DSUSER_INDEX;
+recover database skip forever tablespace  WEB_EBISII_DATA_TDE;
+recover database skip forever tablespace  WEB_EBISII_INDEX_TDE;
+recover database skip forever tablespace  WEB_EFM_DATA;
+recover database skip forever tablespace  WEB_EFM_INDEX;
+recover database skip forever tablespace  WEB_ELECTRONIC_DOCUMENT_DATA;
+recover database skip forever tablespace  WEB_ELECTRONIC_DOCUMENT_INDEX;
+recover database skip forever tablespace  WEB_ELECTRONIC_DOC_DATA_TDE;
+recover database skip forever tablespace  WEB_ELECTRONIC_DOC_INDEX_TDE;
+recover database skip forever tablespace  WEB_EMPLOYEE_DATA;
+recover database skip forever tablespace  WEB_EMPLOYEE_DATA_TDE;
+recover database skip forever tablespace  WEB_EMPLOYEE_INDEX;
+recover database skip forever tablespace  WEB_EMPLOYEE_INDEX_TDE;
+recover database skip forever tablespace  WEB_EMS_DATA;
+recover database skip forever tablespace  WEB_EMS_INDEX;
+recover database skip forever tablespace  WEB_EOPF_CORE_DATA_TDE;
+recover database skip forever tablespace  WEB_EOPF_CORE_INDEX_TDE;
+recover database skip forever tablespace  WEB_EOPF_DATA;
+recover database skip forever tablespace  WEB_EOPF_DATA;
+recover database skip forever tablespace  WEB_EOPF_DATA_TDE;
+recover database skip forever tablespace  WEB_EOPF_DOS_DATA_TDE;
+recover database skip forever tablespace  WEB_EOPF_DOS_INDEX_TDE;
+recover database skip forever tablespace  WEB_EOPF_INDEX;
+recover database skip forever tablespace  WEB_EOPF_INDEX;
+recover database skip forever tablespace  WEB_EOPF_INDEX_TDE;
+recover database skip forever tablespace  WEB_EOPF_LOB;
+recover database skip forever tablespace  WEB_EOPF_LOBIND;
+recover database skip forever tablespace  WEB_EOPF_LOBTAB;
+recover database skip forever tablespace  WEB_EPPLUS_DATA;
+recover database skip forever tablespace  WEB_EPPLUS_INDEX;
+recover database skip forever tablespace  WEB_EP_DATA;
+recover database skip forever tablespace  WEB_EP_DATA;
+recover database skip forever tablespace  WEB_EP_DATA_TDE;
+recover database skip forever tablespace  WEB_EP_INDEX;
+recover database skip forever tablespace  WEB_EP_INDEX_TDE;
+recover database skip forever tablespace  WEB_ESRT_DATA_TDE;
+recover database skip forever tablespace  WEB_ESRT_INDEX_TDE;
+recover database skip forever tablespace  WEB_ESRT_INTERFACE_DATA_TDE;
+recover database skip forever tablespace  WEB_ESRT_INTERFACE_INDEX_TDE;
+recover database skip forever tablespace  WEB_ETL_S_DATA;
+recover database skip forever tablespace  WEB_ETL_S_INDEX;
+recover database skip forever tablespace  WEB_EVAC_DATA;
+recover database skip forever tablespace  WEB_EVAC_INDEX;
+recover database skip forever tablespace  WEB_EVT_DATA;
+recover database skip forever tablespace  WEB_EVT_INDEX;
+recover database skip forever tablespace  WEB_EWORK_DATA;
+recover database skip forever tablespace  WEB_EWORK_DATA;
+recover database skip forever tablespace  WEB_EWORK_INDEX;
+recover database skip forever tablespace  WEB_FAMER_DATA;
+recover database skip forever tablespace  WEB_FAMER_DATA_TDE;
+recover database skip forever tablespace  WEB_FAMER_INDEX;
+recover database skip forever tablespace  WEB_FAMER_INDEX_TDE;
+recover database skip forever tablespace  WEB_FAPR_DATA;
+recover database skip forever tablespace  WEB_FAPR_DATA_TDE;
+recover database skip forever tablespace  WEB_FAPR_INDEX;
+recover database skip forever tablespace  WEB_FAPR_INDEX_TDE;
+recover database skip forever tablespace  WEB_FAPR_LOB;
+recover database skip forever tablespace  WEB_FAPR_LOBIND;
+recover database skip forever tablespace  WEB_FAPR_LOBTAB;
+recover database skip forever tablespace  WEB_FLOSUB_DATA;
+recover database skip forever tablespace  WEB_FLOSUB_INDEX;
+recover database skip forever tablespace  WEB_FOLDERAPP_DATA;
+recover database skip forever tablespace  WEB_FOLDERAPP_INDEX;
+recover database skip forever tablespace  WEB_FOLDER_DATA;
+recover database skip forever tablespace  WEB_FOLDER_DATA_TDE;
+recover database skip forever tablespace  WEB_FOLDER_INDEX;
+recover database skip forever tablespace  WEB_FOLDER_INDEX_TDE;
+recover database skip forever tablespace  WEB_FSBID_DATA;
+recover database skip forever tablespace  WEB_FSBID_DATA_TDE;
+recover database skip forever tablespace  WEB_FSBID_INDEX;
+recover database skip forever tablespace  WEB_FSBID_INDEX_TDE;
+recover database skip forever tablespace  WEB_FSBID_LOB;
+recover database skip forever tablespace  WEB_FSBID_LOB;
+recover database skip forever tablespace  WEB_FSBID_LOBIND;
+recover database skip forever tablespace  WEB_FSBID_LOBTAB;
+recover database skip forever tablespace  WEB_GADTRK_DATA;
+recover database skip forever tablespace  WEB_GADTRK_DATA_TDE;
+recover database skip forever tablespace  WEB_GADTRK_INDEX;
+recover database skip forever tablespace  WEB_GADTRK_INDEX_TDE;
+recover database skip forever tablespace  WEB_GIR_USR_S_DATA;
+recover database skip forever tablespace  WEB_GIR_USR_S_INDEX;
+recover database skip forever tablespace  WEB_GRB_ASSIST_2_DATA_TDE;
+recover database skip forever tablespace  WEB_GRB_ASSIST_2_INDEX_TDE;
+recover database skip forever tablespace  WEB_GRB_FRAMEWORK_2_DATA_TDE;
+recover database skip forever tablespace  WEB_GRB_FRAMEWORK_2_INDEX_TDE;
+recover database skip forever tablespace  WEB_HREMPPROF_DATA;
+recover database skip forever tablespace  WEB_HREMPPROF_INDEX;
+recover database skip forever tablespace  WEB_HRONLINE_DATA;
+recover database skip forever tablespace  WEB_HRONLINE_INDEX;
+recover database skip forever tablespace  WEB_IDB_DATA_TDE;
+recover database skip forever tablespace  WEB_IDB_INDEX_TDE;
+recover database skip forever tablespace  WEB_IFSDBAP_DATA;
+recover database skip forever tablespace  WEB_IFSDBAP_INDEX;
+recover database skip forever tablespace  WEB_IPMS_INTERFACE_DATA;
+recover database skip forever tablespace  WEB_IPMS_INTERFACE_DATA_TDE;
+recover database skip forever tablespace  WEB_IPMS_INTERFACE_INDEX;
+recover database skip forever tablespace  WEB_IPMS_INTERFACE_INDEX_TDE;
+recover database skip forever tablespace  WEB_LM_USER_DATA;
+recover database skip forever tablespace  WEB_LM_USER_INDEX;
+recover database skip forever tablespace  WEB_MEDICAL_DATA;
+recover database skip forever tablespace  WEB_MEDICAL_INDEX;
+recover database skip forever tablespace  WEB_MEDIFSAMA_DATA;
+recover database skip forever tablespace  WEB_MEDIFSAMA_INDEX;
+recover database skip forever tablespace  WEB_NEWEMP_DATA;
+recover database skip forever tablespace  WEB_NEWEMP_INDEX;
+recover database skip forever tablespace  WEB_OCATS_DATA;
+recover database skip forever tablespace  WEB_OCATS_DATA_TDE;
+recover database skip forever tablespace  WEB_OCATS_INDEX;
+recover database skip forever tablespace  WEB_OCATS_INDEX_TDE;
+recover database skip forever tablespace  WEB_PACC_DATA;
+recover database skip forever tablespace  WEB_PACC_INDEX;
+recover database skip forever tablespace  WEB_PATS_DATA;
+recover database skip forever tablespace  WEB_PATS_DATA_TDE;
+recover database skip forever tablespace  WEB_PATS_INDEX;
+recover database skip forever tablespace  WEB_PATS_INDEX_TDE;
+recover database skip forever tablespace  WEB_PATS_LOB;
+recover database skip forever tablespace  WEB_PATS_LOBIND;
+recover database skip forever tablespace  WEB_PATS_LOBTAB;
+recover database skip forever tablespace  WEB_PAYLINE_INDEX;
+recover database skip forever tablespace  WEB_PAYLINE_LOB;
+recover database skip forever tablespace  WEB_PAYLINE_LOBIND;
+recover database skip forever tablespace  WEB_PAYLINE_LOBTAB;
+recover database skip forever tablespace  WEB_PCSTRAVEL_DATA;
+recover database skip forever tablespace  WEB_PCSTRAVEL_DATA_TDE;
+recover database skip forever tablespace  WEB_PCSTRAVEL_INDEX;
+recover database skip forever tablespace  WEB_PCSTRAVEL_INDEX_TDE;
+recover database skip forever tablespace  WEB_PCSTRAVEL_LOB;
+recover database skip forever tablespace  WEB_PCSTRAVEL_LOBIND;
+recover database skip forever tablespace  WEB_PCSTRAVEL_LOBTAB;
+recover database skip forever tablespace  WEB_RDT_DATA;
+recover database skip forever tablespace  WEB_RDT_INDEX;
+recover database skip forever tablespace  WEB_REETA_DATA;
+recover database skip forever tablespace  WEB_REETA_DATA;
+recover database skip forever tablespace  WEB_REETA_DATA_TDE;
+recover database skip forever tablespace  WEB_REETA_INDEX;
+recover database skip forever tablespace  WEB_REETA_INDEX_TDE;
+recover database skip forever tablespace  WEB_RESUMEBUILDER_DATA;
+recover database skip forever tablespace  WEB_RESUMEBUILDER_DATA_TDE;
+recover database skip forever tablespace  WEB_RESUMEBUILDER_INDEX;
+recover database skip forever tablespace  WEB_RESUMEBUILDER_INDEX_TDE;
+recover database skip forever tablespace  WEB_RNET_DATA;
+recover database skip forever tablespace  WEB_RNET_INDEX;
+recover database skip forever tablespace  WEB_SCD_DATA;
+recover database skip forever tablespace  WEB_SCD_DATA_TDE;
+recover database skip forever tablespace  WEB_SCD_INDEX;
+recover database skip forever tablespace  WEB_SCD_INDEX_TDE;
+recover database skip forever tablespace  WEB_SCORECARD_DATA;
+recover database skip forever tablespace  WEB_SCORECARD_INDEX;
+recover database skip forever tablespace  WEB_SECREF_DATA;
+recover database skip forever tablespace  WEB_SECREF_DATA_TDE;
+recover database skip forever tablespace  WEB_SECREF_INDEX;
+recover database skip forever tablespace  WEB_SECREF_INDEX_TDE;
+recover database skip forever tablespace  WEB_SLRP_DATA;
+recover database skip forever tablespace  WEB_SLRP_DATA_TDE;
+recover database skip forever tablespace  WEB_SLRP_INDEX;
+recover database skip forever tablespace  WEB_SLRP_INDEX_TDE;
+recover database skip forever tablespace  WEB_STAFFING_PATTERN_DATA;
+recover database skip forever tablespace  WEB_STAFFING_PATTERN_INDEX;
+recover database skip forever tablespace  WEB_STAGING_DATA;
+recover database skip forever tablespace  WEB_STAGING_INDEX;
+recover database skip forever tablespace  WEB_TELEWORK_DATA;
+recover database skip forever tablespace  WEB_TELEWORK_DATA_TDE;
+recover database skip forever tablespace  WEB_TELEWORK_INDEX;
+recover database skip forever tablespace  WEB_TELEWORK_INDEX_TDE;
+recover database skip forever tablespace  WEB_TEMS_DATA;
+recover database skip forever tablespace  WEB_TEMS_INDEX;
+recover database skip forever tablespace  WEB_TICTIS_DATA;
+recover database skip forever tablespace  WEB_TICTIS_DATA_TDE;
+recover database skip forever tablespace  WEB_TICTIS_INDEX;
+recover database skip forever tablespace  WEB_TICTIS_INDEX_TDE;
+recover database skip forever tablespace  WEB_TM2_DATA;
+recover database skip forever tablespace  WEB_TM2_INDEX;
+recover database skip forever tablespace  WEB_WFR_DATA;
+recover database skip forever tablespace  WEB_WFR_INDEX;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

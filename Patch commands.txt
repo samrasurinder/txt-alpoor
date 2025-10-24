@@ -1,0 +1,150 @@
+
+
+
+Pre Patch Steps:
+---------------
+
+
+Get Cluster status:
+
+on any node:
+As grid:  crsctl stat res -t  >  /infshare/software/PSU/APR2019/crsctl_status_before_patch.log
+
+
+As Oracle: 
+
+on each node:
+/u02/app/oracle/product/11.2.0.4/db_1/bin/srvctl stop home -o /u02/app/oracle/product/11.2.0.4/db_1 -s /infshare/software/PSU/APR2019/<filename.txt> -n <nodename>
+
+
+
+
+
+For each database:
+-----------------
+
+Run following scripts and spool output:
+
+select owner,OBJECT_NAME,OBJECT_TYPE from dba_invalid_objects order by owner;
+
+select owner,count(*) from dba_invalid_objects group by owner order by owner;
+
+
+col comp_id format a20
+col comp_name format a40
+col version format a15
+col status format a10
+set linesize 100
+select comp_id,comp_name,version,status from dba_registry;
+
+
+
+
+
+
+select * from DBA_REGISTRY_SQLPATCH
+
+
+
+
+
+
+Patch 29252208 - Combo of OJVM Component 11.2.0.4.190416 DB PSU + GI PSU 11.2.0.4.190416
+----------------------------------------------------------------------------------------
+
+Patch Number	  Description	                                                                  Applicable Homes
+
+29141056          DB PSU 11.2.0.4.190416 (INCLUDES CPUApr2019)                                    Both DB Homes and Grid Home
+29141201          OCW PATCH SET UPDATE 11.2.0.4.190416                                            Both DB Homes and Grid Home
+28729245          ACFS PATCH SET UPDATE 11.2.0.4.190115                                           Only Grid Home
+
+
+
+
+
+Step 1) As ROOT user:
+
+/u02/app/11.2.0.4/grid/crs/install/rootcrs.pl -unlock
+
+Step 2) As GRID user
+
+/u02/app/11.2.0.4/grid/OPatch/opatch napply -oh  u02/app/11.2.0.4/grid -local /infshare/software/PSU/APR2019/29252208/29255947/29141201/
+/u02/app/11.2.0.4/grid/OPatch/opatch napply -oh  u02/app/11.2.0.4/grid -local /infshare/software/PSU/APR2019/29252208/29255947/28729245/
+/u02/app/11.2.0.4/grid/OPatch/opatch apply -oh   u02/app/11.2.0.4/grid -local /infshare/software/PSU/APR2019/29252208/29255947/29141056/
+
+
+Step 3) As ORACLE user
+
+/infshare/software/PSU/APR2019/29252208/29255947/29141201/custom/server/29141201/custom/scripts/prepatch.sh -dbhome /u02/app/oracle/product/11.2.0.4/db_1
+
+
+Step 4) As ORACLE user
+
+/u02/app/oracle/product/11.2.0.4/db_1/OPatch/opatch napply -oh /u02/app/oracle/product/11.2.0.4/db_1 -local /infshare/software/PSU/APR2019/29252208/29255947/29141201/custom/server/29141201
+/u02/app/oracle/product/11.2.0.4/db_1/OPatch/opatch apply -oh /u02/app/oracle/product/11.2.0.4/db_1 -local /infshare/software/PSU/APR2019/29252208/29255947/29141056
+
+Step 5) As ORACLE user
+
+/infshare/software/PSU/APR2019/29252208/29255947/29141201/custom/server/29141201/custom/scripts/postpatch.sh -dbhome /u02/app/oracle/product/11.2.0.4/db_1
+
+
+
+Step 6) As ROOT user
+
+/u02/app/11.2.0.4/grid/rdbms/install/rootadd_rdbms.sh 
+/u02/app/11.2.0.4/grid/crs/install/rootcrs.pl -patch
+
+
+Post Patch
+----------
+For each database, login as sys as sysdba
+@?/rdbms/admin/catbundle.sql
+
+
+
+
+
+Patch 29251270 - Oracle JavaVM Component 11.2.0.4.190416 Database PSU
+---------------------------------------------------------------------
+
+cd /infshare/software/PSU/APR2019/29252208/29251270
+/u02/app/oracle/product/11.2.0.4/db_1/OPatch/opatch apply
+
+Post Patch
+----------
+cd /u02/app/oracle/product/11.2.0.4/db_1/sqlpatch/29251270
+
+Login to each database
+
+For RAC,
+
+alter system set cluster_database=false scope=spfile sid='*';
+shtudown database on all nodes
+startup just first node, using sqlplus ( startup)
+@/u02/app/oracle/product/11.2.0.4/db_1/sqlpatch/29251270/postinstall.sql
+alter system set cluster_database=true scope=spfile sid='*';
+shutdown database;
+startup database using srvctl
+
+Once database starts up on all nodes:
+
+@?/rbdms/admin/utlrp
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

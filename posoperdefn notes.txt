@@ -1,0 +1,17 @@
+
+
+CREATE TABLE sysadm.psoprdefn_BKP AS SELECT * FROM sysadm.psoprdefn;
+
+--- UPDATE TO sysadm.psoprdefn
+
+
+
+MERGE INTO sysadm.psoprdefn e
+    USING sysadm.psoprdefn_BKP h
+    ON (e.oprid = h.oprid)
+  WHEN MATCHED THEN
+    UPDATE SET e.acctlock = h.acctlock;
+
+commit;
+
+

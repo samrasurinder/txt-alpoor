@@ -1,0 +1,200 @@
+rman TARGET / CATALOG rman/PRDBp4fX4L$as4T@prdrep
+
+
+ RUN
+ {
+ set until time "to_date('01-JUL-201906:00:00','dd-mm-yyyyhh24:mi:ss')";
+allocate channel c1 type 'SBT' PARMS="SBT_LIBRARY=/usr/local/avamar/ora_rac/lib/libobk_avamar64.so" format '%d_%U_%T';
+  RESTORE DATABASE PREVIEW ;
+ }   
+
+
+set echo on;
+spool trace  to '/infshare/oracle/scripts/backup/avamar/log/PRD/PRD_AVMR_DAILY_BACKUP.log' append;
+configure retention policy to recovery window of 10 days;
+configure controlfile autobackup on;
+show all;
+list incarnation of database;
+list copy of database;
+list archivelog all;
+report schema;
+run {
+set controlfile autobackup format for device type sbt to "CONTROLFILE.%F";
+allocate channel c1 type 'SBT' PARMS="SBT_LIBRARY=/usr/local/avamar/ora_rac/lib/libobk_avamar64.so" format '%d_%U_%T';
+send '"--nohist" "--flagfile=/infshare/ew/prd-avamar/avtar-flags.txt" "--bindir=/usr/local/avamar/ora_rac/bin"';
+# Back up archived logs, incremental backup and full database copy to tape every day.
+report need backup recovery window of 10 days device type sbt;
+backup skip inaccessible backupset from tag 'PRD$OEM_LEVEL_0' not backed up;
+}-name *fl
+list backup of database summary;
+list backup of controlfile summary;
+list backup of archivelog all summary;
+list backup of database;
+list backup of controlfile;
+list backup of archivelog all;
+spool trace off;
+
+
+--pidname=oracle
+--pidnum=1002
+--logfile=/usr/local/avamar/ora_rac/var/RMAN_avtar.log
+--vardir=/usr/local/avamar/ora_rac/var
+--id=avamar
+--ap=avamar
+--path=/EW_ORACLE/EW_PRD/prd-scan
+--ddr=true
+--ddr-index=1
+--ddr-auth-enabled=false
+--ddr-encrypt-strength=none
+--server=hrewemcavamar02.hr.state.sbu
+
+
+
+
+
+
+
+[oracle@hrmdc1oel04 ~]$ rman target /
+
+Recovery Manager: Release 11.2.0.4.0 - Production on Tue Jul 16 14:28:52 2019
+
+Copyright (c) 1982, 2011, Oracle and/or its affiliates.  All rights reserved.
+
+connected to target database: PRD (not mounted)
+
+RMAN> set DBID=1836890876;
+
+executing command: SET DBID
+
+RMAN>
+
+RMAN>
+
+RMAN>
+
+RMAN> run
+2> {
+3> set until time "to_date('10-JUL-201906:00:00','dd-mm-yyyyhh24:mi:ss')";
+4> allocate channel c1 type 'SBT' PARMS="SBT_LIBRARY=/usr/local/avamar/ora_rac/lib/libobk_avamar64.so";
+5> send '"--nohist" "--flagfile=/tmp/avtar-flags.txt" "--bindir=/usr/local/avamar/ora_rac/bin"';
+6> restore controlfile to '/tmp/cntl.ctl';
+7> }
+
+executing command: SET until clause
+
+using target database control file instead of recovery catalog
+RMAN-00571: ===========================================================
+RMAN-00569: =============== ERROR MESSAGE STACK FOLLOWS ===============
+RMAN-00571: ===========================================================
+RMAN-03002: failure of allocate command at 07/16/2019 14:30:34
+ORA-01507: database not mounted
+
+RMAN>
+
+
+For Backup run this script
+
+run{
+#configure controlfile autobackup on;
+allocate channel c1 type sbt
+PARMS=”SBT_LIBRARY=C:\PROGRA~1\avs\bin\Libobk_avamar64.dll” format ‘%d_%U’;
+#set controlfile autobackup format for device type sbt to “cfgisdb.%F”;
+send ‘”–flagfile=C:\TEMP\FlagFileBkp.txt” “–bindir=C:\PROGRA~1\avs\bin”‘;
+backup database plus archivelog;
+# restore database preview;
+#restore controlfile from autobackup preview;
+#restore database validate;
+release channel c1;
+}
+
+For restore
+
+Use this script (You can use validate and preview switches to just check backup pieces integrety.
+
+run{
+allocate channel c1 type sbt
+PARMS=”SBT_LIBRARY=C:\PROGRA~1\avs\bin\Libobk_avamar64.dll” format ‘%d_%U’;
+send ‘”–flagfile=C:\TEMP\FlagFileBkp.txt” “–bindir=C:\PROGRA~1\avs\bin”‘;
+restore database;
+#restore controlfile from autobackup preview;
+#restore database validate;
+release channel c1;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+--pidname=oracle
+--pidnum=1002
+--logfile=/usr/local/avamar/ora_rac/var/RMAN_avtar.log
+--vardir=/usr/local/avamar/ora_rac/var
+--id=avamar
+--ap=avamar
+--path=/EW_VMWARE/EW_Linux/hrvlprddb7601.hr.state.sbu
+--ddr=true
+--ddr-index=1
+--ddr-auth-enabled=false
+--ddr-encrypt-strength=none
+--server=hrewemcavamar02.hr.state.sbu
+
+/u02/app/oracle/product/12.0.2/db_1/perl/bin/perl  /u02/app/oracle/product/12.0.2/db_1/rdbms/admin/catctl.pl –n 4 –l /home/oracle/alpoor_scripts/logs catupgrd.sql
+
+
+
+
+
+
+SQL> select scn_to_timestamp(2011955) from dual;
+
+SCN_TO_TIMESTAMP(2011955)
+-----------------------------------------------------
+05-SEP-18 12.46.20.000000000 PM
+
+2. Convert the Timestamp to SCN
+
+SQL> select timestamp_to_scn(to_timestamp('01-07-2019 06:00:00','dd-mm-yyyy hh24:mi:ss')) scn from dual;
+
+SCN
+----------
+2011955
+
+
+
+select scn_to_timestamp(3774995591709) from dual;
+
+
+RMAN-06053: unable to perform media recovery because of missing log
+RMAN-06025: no backup of archived log for thread 3 with sequence 212135 and starting SCN of 3774995517912 found to restore
+RMAN-06025: no backup of archived log for thread 3 with sequence 212134 and starting SCN of 3774995065754 found to restore
+RMAN-06025: no backup of archived log for thread 3 with sequence 212133 and starting SCN of 3774994902276 found to restore
+RMAN-06025: no backup of archived log for thread 3 with sequence 212132 and starting SCN of 3774994804310 found to restore
+RMAN-06025: no backup of archived log for thread 3 with sequence 212131 and starting SCN of 3774994673754 found to restore
+RMAN-06025: no backup of archived log for thread 2 with sequence 202415 and starting SCN of 377499ZZ found to restore
+RMAN-06025: no backup of archived log for thread 2 with sequence 202414 and starting SCN of 3774995536611 found to restore
+RMAN-06025: no backup of archived log for thread 2 with sequence 202413 and starting SCN of 3774995517837 found to restore
+RMAN-06025: no backup of archived log for thread 2 with sequence 202412 and starting SCN of 3774995066074 found to restore
+RMAN-06025: no backup of archived log for thread 2 with sequence 202411 and starting SCN of 3774994902168 found to restore
+RMAN-06025: no backup of archived log for thread 2 with sequence 202410 and starting SCN of 3774994673490 found to restore
+RMAN-06025: no backup of archived log for thread 1 with sequence 208509 and starting SCN of 3774995592343 found to restore
+RMAN-06025: no backup of archived log for thread 1 with sequence 208508 and starting SCN of 3774995517468 found to restore
+RMAN-06025: no backup of archived log for thread 1 with sequence 208507 and starting SCN of 3774995346059 found to restore
+RMAN-06025: no backup of archived log for thread 1 with sequence 208506 and starting SCN of 3774995240871 found to restore
+RMAN-06025: no backup of archived log for thread 1 with sequence 208505 and starting SCN of 3774995065200 found to restore
+RMAN-06025: no backup of archived log for thread 1 with sequence 208504 and starting SCN of 3774994944677 found to restore
+RMAN-06025: no backup of archived log for thread 1 with sequence 208503 and starting SCN of 3774994921929 found to restore
+RMAN-06025: no backup of archived log for thread 1 with sequence 208502 and starting SCN of 3774994901301 found to restore
+RMAN-06025: no backup of archived log for thread 1 with sequence 208501 and starting SCN of 3774994881209 found to restore
+RMAN-06025: no backup of archived log for thread 1 with sequence 208500 and starting SCN of 3774994862205 found to restore
+RMAN-06025: no backup of archived log for thread 1 with sequence 208499 and starting SCN of 3774994673165 found to restore
+
+RMAN>
+
+

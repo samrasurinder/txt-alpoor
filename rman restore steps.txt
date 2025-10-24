@@ -1,0 +1,64 @@
+
+show parameters cluster
+
+alter system set cluster_database = False scope = SPFILE sid='*';
+
+
+run
+{
+allocate channel dev1 type disk;
+allocate channel dev2 type disk;
+allocate channel dev3 type disk;
+allocate channel dev4 type disk;
+allocate channel dev5 type disk;
+allocate channel dev6 type disk;
+allocate channel dev7 type disk;
+allocate channel dev8 type disk;
+allocate channel dev9 type disk;
+allocate channel dev10 type disk;
+set until time "to_date('2019-03-11:06:00:00', 'yyyy-mm-dd:hh24:mi:ss')";
+restore database;
+}
+
+
+
+run
+{
+allocate channel dev1 type disk;
+allocate channel dev2 type disk;
+allocate channel dev3 type disk;
+allocate channel dev4 type disk;
+allocate channel dev5 type disk;
+allocate channel dev6 type disk;
+allocate channel dev7 type disk;
+allocate channel dev8 type disk;
+allocate channel dev9 type disk;
+allocate channel dev10 type disk;
+set until time "to_date('2019-03-11:06:00:00', 'yyyy-mm-dd:hh24:mi:ss')";
+recover database;
+}
+
+
+
+
+
+
+alter system set cluster_database = False scope = SPFILE sid='*';
+
+
+
+
+
+run
+{
+allocate channel dev1 type disk;
+set until time "to_date('2019-03-11:06:00:00', 'yyyy-mm-dd:hh24:mi:ss')";
+restore database preview;
+}
+
+run
+{
+allocate channel dev1 type disk;
+set until time "to_date('2019-03-11:06:00:00', 'yyyy-mm-dd:hh24:mi:ss')";
+restore database;
+}r

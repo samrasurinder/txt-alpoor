@@ -1,0 +1,485 @@
+SQL> col owner format a20
+SQL> col object_name format a40
+SQL> col object_type format a30
+SQL> desc dba_objects;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ OWNER                                              VARCHAR2(30)
+ OBJECT_NAME                                        VARCHAR2(128)
+ SUBOBJECT_NAME                                     VARCHAR2(30)
+ OBJECT_ID                                          NUMBER
+ DATA_OBJECT_ID                                     NUMBER
+ OBJECT_TYPE                                        VARCHAR2(19)
+ CREATED                                            DATE
+ LAST_DDL_TIME                                      DATE
+ TIMESTAMP                                          VARCHAR2(19)
+ STATUS                                             VARCHAR2(7)
+ TEMPORARY                                          VARCHAR2(1)
+ GENERATED                                          VARCHAR2(1)
+ SECONDARY                                          VARCHAR2(1)
+ NAMESPACE                                          NUMBER
+ EDITION_NAME                                       VARCHAR2(30)
+
+SQL> col created format a30
+SQL> col status format a20
+SQL> set linesize 200
+SQL>
+
+
+
+
+  1* select owner,object_name,object_type,created,status from dba_objects where object_name like '%MASK%' order by owner,object_name
+SQL> /
+
+OWNER                OBJECT_NAME                              OBJECT_TYPE                    CREATED                        STATUS
+-------------------- ---------------------------------------- ------------------------------ ------------------------------ --------------------
+APEX_030200          WWV_FLOW_FORMAT_MASKS                    VIEW                           17-SEP-11                      VALID
+BMTS                 PKG_MASK_TEMP                            PACKAGE                        31-JAN-19                      VALID
+BMTS                 PKG_MASK_TEMP                            PACKAGE BODY                   31-JAN-19                      VALID
+EOPF_CORE            MASK_INFO                                SYNONYM                        15-AUG-15                      VALID
+MASK                 ALL_MASKED_COLUMNS                       TABLE                          20-MAR-19                      VALID
+MASK                 CONSTRAINT_PRDMASK_ORIG_TMP              TABLE                          24-OCT-18                      VALID
+MASK                 FINAL_MASKING_REQUESTS                   TABLE                          03-JUN-19                      VALID
+MASK                 GRANT_PRDMASK_ORIG_TMP                   TABLE                          24-OCT-18                      VALID
+MASK                 INDEX_PRDMASK_ORIG_TMP                   TABLE                          24-OCT-18                      VALID
+MASK                 MASKING_TYPES                            TABLE                          21-MAR-19                      VALID
+MASK                 OEM_MASKING_INVENTORY                    TABLE                          04-JUN-19                      VALID
+MASK                 OEM_RAW_MASKING_INVENTORY                TABLE                          04-JUN-19                      VALID
+MASK                 PKG_MASK                                 PACKAGE                        23-OCT-18                      VALID
+MASK                 PKG_MASK                                 PACKAGE BODY                   23-OCT-18                      VALID
+MASK                 PKG_MASK_CRM                             PACKAGE                        23-OCT-18                      VALID
+MASK                 PKG_MASK_CRM                             PACKAGE BODY                   23-OCT-18                      INVALID
+MASK                 PKG_MASK_EOD                             PACKAGE BODY                   23-OCT-18                      VALID
+MASK                 PKG_MASK_EOD                             PACKAGE                        23-OCT-18                      VALID
+MASK                 PKG_MASK_GEMS                            PACKAGE BODY                   23-OCT-18                      VALID
+MASK                 PKG_MASK_GEMS                            PACKAGE                        23-OCT-18                      VALID
+MASK                 PKG_MASK_LITE_1                          PACKAGE BODY                   27-FEB-19                      VALID
+MASK                 PKG_MASK_LITE_1                          PACKAGE                        27-FEB-19                      VALID
+MASK                 PKG_MASK_SQL                             PACKAGE                        23-OCT-18                      VALID
+MASK                 PKG_MASK_SQL                             PACKAGE BODY                   23-OCT-18                      INVALID
+MASK                 PKG_MASK_TEMP                            PACKAGE BODY                   31-JAN-19                      INVALID
+MASK                 PKG_MASK_TEMP                            PACKAGE                        31-JAN-19                      VALID
+MASK                 SEQ_MASK_COLUMNS                         SEQUENCE                       20-MAR-19                      VALID
+MASK                 TRIGGER_PRDMASK_ORIG_TMP                 TABLE                          24-OCT-18                      VALID
+MDSYS                PK_SDO_MASK                              INDEX                          28-MAR-15                      VALID
+MDSYS                SDO_RELATEMASK_TABLE                     VIEW                           17-SEP-11                      VALID
+MDSYS                SDO_RELATE_MASK                          PACKAGE                        17-SEP-11                      VALID
+MDSYS                SDO_RELATE_MASK                          PACKAGE BODY                   17-SEP-11                      VALID
+PUBLIC               DBMS_RAT_MASK                            SYNONYM                        28-MAR-15                      VALID
+PUBLIC               SDO_RELATEMASK_TABLE                     SYNONYM                        17-SEP-11                      VALID
+PUBLIC               SDO_RELATE_MASK                          SYNONYM                        17-SEP-11                      VALID
+SYS                  DBMS_RAT_MASK                            PACKAGE BODY                   28-MAR-15                      VALID
+SYS                  DBMS_RAT_MASK                            PACKAGE                        28-MAR-15                      VALID
+SYS                  DPUMP_PRDMASK                            DIRECTORY                      03-JAN-19                      VALID
+SYS                  MASK_EXT_DIR                             DIRECTORY                      18-DEC-18                      VALID
+SYS                  MGMT$MASK_ARRAY_LIST                     TYPE                           24-OCT-18                      VALID
+SYS                  MGMT$MASK_CHECKDBAPRIVS                  PROCEDURE                      25-OCT-18                      VALID
+SYS                  MGMT$MASK_CHECKPOINT                     TABLE                          25-OCT-18                      VALID
+SYS                  MGMT$MASK_DELETEJOBTABLEENTRY            PROCEDURE                      25-OCT-18                      VALID
+SYS                  MGMT$MASK_ERROREXIT                      PROCEDURE                      25-OCT-18                      VALID
+SYS                  MGMT$MASK_ERROREXITORAERROR              PROCEDURE                      25-OCT-18                      VALID
+SYS                  MGMT$MASK_SENDMSG                        PROCEDURE                      25-OCT-18                      VALID
+SYS                  MGMT$MASK_SETSTEP                        PROCEDURE                      25-OCT-18                      VALID
+SYS                  MGMT$MASK_SETUPJOBTABLE                  PROCEDURE                      25-OCT-18                      VALID
+SYS                  MGMT$MASK_SETUPMAPPINGTABLE              PROCEDURE                      25-OCT-18                      VALID
+SYS                  MGMT$MASK_UTIL                           PACKAGE                        24-OCT-18                      VALID
+SYS                  MGMT$MASK_UTIL                           PACKAGE BODY                   24-OCT-18                      VALID
+SYS                  PRDMASK                                  DIRECTORY                      22-OCT-18                      VALID
+SYS                  TEMP_OPSMASK                             DIRECTORY                      06-MAY-19                      VALID
+SYS                  WRI$_MASKING_SCRIPT_PROGRESS             TABLE                          28-MAR-15                      VALID
+SYS                  WRI$_SQLSET_MASK                         TABLE                          17-SEP-11                      VALID
+SYS                  WRI$_SQLSET_MASK_PK                      INDEX                          17-SEP-11                      VALID
+SYS                  WRI$_SQLSET_RATMASK_SEQ                  SEQUENCE                       28-MAR-15                      VALID
+SYS                  WRI$_STS_MASKING_ERRORS                  TABLE                          28-MAR-15                      VALID
+SYS                  WRI$_STS_MASKING_EXCEPTIONS              TABLE                          28-MAR-15                      VALID
+SYS                  WRI$_STS_MASKING_STEP_PROGRESS           TABLE                          28-MAR-15                      VALID
+SYS                  WRR$_MASKING_BIND_CACHE                  TABLE                          28-MAR-15                      VALID
+SYS                  WRR$_MASKING_DEFINITION                  TABLE                          28-MAR-15                      VALID
+SYS                  WRR$_MASKING_FILE_PROGRESS               TABLE                          28-MAR-15                      VALID
+SYS                  WRR$_MASKING_PARAMETERS                  TABLE                          28-MAR-15                      VALID
+SYS                  WRR$_MASKING_PARAMETERS_PK               INDEX                          28-MAR-15                      VALID
+SYSADM               MGMT$MASK_GRANT_50210                    PROCEDURE                      10-OCT-19                      VALID
+
+66 rows selected.
+
+SQL>
+
+
+
+expdp \"/as sysdba\" full=y content=metadata_only directory=PRDMASK dumpfile=PRDMASK_full_metadata_only_20191011.dmp  logfile=PRDMASK_full_metadata_only_20191011.log
+
+
+expdp \"/as sysdba\" schemas=MASK  directory=PRDMASK dumpfile=PRDMASK_MASK_SCHEMA_20191011.dmp  logfile=PRDMASK_MASK_SCHEMA_20191011.log
+
+
+
+
+[oracle@hrewoel29 PRDMASK]$ expdp \"/as sysdba\" schemas=MASK  directory=PRDMASK dumpfile=PRDMASK_MASK_SCHEMA_20191011.dmp  logfile=PRDMASK_MASK_SCHEMA_20191011.log
+
+Export: Release 11.2.0.4.0 - Production on Fri Oct 11 09:38:14 2019
+
+Copyright (c) 1982, 2011, Oracle and/or its affiliates.  All rights reserved.
+
+Connected to: Oracle Database 11g Enterprise Edition Release 11.2.0.4.0 - 64bit Production
+With the Partitioning, Real Application Clusters, Automatic Storage Management, OLAP,
+Data Mining and Real Application Testing options
+Starting "SYS"."SYS_EXPORT_SCHEMA_05":  "/******** AS SYSDBA" schemas=MASK directory=PRDMASK dumpfile=PRDMASK_MASK_SCHEMA_20191011.dmp logfile=PRDMASK_MASK_SCHEMA_20191011.log
+Estimate in progress using BLOCKS method...
+Processing object type SCHEMA_EXPORT/TABLE/TABLE_DATA
+Total estimation using BLOCKS method: 810.7 MB
+Processing object type SCHEMA_EXPORT/USER
+Processing object type SCHEMA_EXPORT/SYSTEM_GRANT
+Processing object type SCHEMA_EXPORT/ROLE_GRANT
+Processing object type SCHEMA_EXPORT/DEFAULT_ROLE
+Processing object type SCHEMA_EXPORT/PASSWORD_HISTORY
+Processing object type SCHEMA_EXPORT/PRE_SCHEMA/PROCACT_SCHEMA
+Processing object type SCHEMA_EXPORT/SYNONYM/SYNONYM
+Processing object type SCHEMA_EXPORT/SEQUENCE/SEQUENCE
+Processing object type SCHEMA_EXPORT/TABLE/TABLE
+Processing object type SCHEMA_EXPORT/TABLE/COMMENT
+Processing object type SCHEMA_EXPORT/PACKAGE/PACKAGE_SPEC
+Processing object type SCHEMA_EXPORT/PACKAGE/GRANT/OWNER_GRANT/OBJECT_GRANT
+Processing object type SCHEMA_EXPORT/PACKAGE/COMPILE_PACKAGE/PACKAGE_SPEC/ALTER_PACKAGE_SPEC
+Processing object type SCHEMA_EXPORT/TABLE/INDEX/INDEX
+Processing object type SCHEMA_EXPORT/TABLE/CONSTRAINT/CONSTRAINT
+Processing object type SCHEMA_EXPORT/TABLE/INDEX/STATISTICS/INDEX_STATISTICS
+Processing object type SCHEMA_EXPORT/PACKAGE/PACKAGE_BODY
+Processing object type SCHEMA_EXPORT/TABLE/TRIGGER
+Processing object type SCHEMA_EXPORT/TABLE/STATISTICS/TABLE_STATISTICS
+. . exported "MASK"."QEP_NON_PASSERS_DEMO_BAK"           68.93 MB  103201 rows
+. . exported "MASK"."PS_ADDRESSES_BACKUP_20190301"       43.62 MB  416998 rows
+. . exported "MASK"."PS_ADDRESSES_ORIG"                  43.18 MB  416998 rows
+. . exported "MASK"."PS_ADDRESSES_TEST"                  43.63 MB  416998 rows
+. . exported "MASK"."CONSTRAINT_PRDMASK_ORIG_TMP"        40.94 MB  480554 rows
+. . exported "MASK"."QEP_STAGING_BAK"                    31.59 MB    3134 rows
+. . exported "MASK"."GLOBAL_ADDRESS_LIST_20190419"       35.44 MB  126403 rows
+. . exported "MASK"."GLOBAL_ADDRESS_LIST_BAK_1"          35.43 MB  126403 rows
+. . exported "MASK"."GLOBAL_ADDRESS_LIST_BAK_2"          35.43 MB  126403 rows
+. . exported "MASK"."GLOBAL_ADDRESS_LIST_WORKING"        35.70 MB  126403 rows
+. . exported "MASK"."XREF_SSN"                           34.55 MB  808635 rows
+. . exported "MASK"."COV_EARN_ONE_OFF_M"                 11.46 MB  448941 rows
+. . exported "MASK"."COV_EARN_ONE_OFF_M_BAK"             11.46 MB  448941 rows
+. . exported "MASK"."GRANT_PRDMASK_ORIG_TMP"             15.65 MB  273609 rows
+. . exported "MASK"."SAL_HIST_ONE_OFF_M"                 7.040 MB  210962 rows
+. . exported "MASK"."SAL_HIST_ONE_OFF_M_BAK"             7.040 MB  210962 rows
+. . exported "MASK"."EMPLOYEE_ONE_OFF_M"                 6.609 MB   26973 rows
+. . exported "MASK"."EMPLOYEE_ONE_OFF_M_BAK"             6.619 MB   26973 rows
+. . exported "MASK"."HR_USER_20190419"                   12.60 MB   72155 rows
+. . exported "MASK"."HR_USER_20190326_BAK_1"             11.52 MB   72155 rows
+. . exported "MASK"."HR_USER_20190326_BAK_2"             11.52 MB   72155 rows
+. . exported "MASK"."HR_USER_20190326_WORKING"           12.60 MB   72155 rows
+. . exported "MASK"."HR_USER_BACKUP_20190301"            11.31 MB   70732 rows
+. . exported "MASK"."HR_USER_ORIG"                       11.32 MB   70732 rows
+. . exported "MASK"."WORKFLOW_ORIG"                      9.535 MB  105372 rows
+. . exported "MASK"."EFF_DATE_CORR_AUDIT_20190524"       7.957 MB   68178 rows
+. . exported "MASK"."HASH_LAST_NAME"                     6.529 MB  424680 rows
+. . exported "MASK"."EXTERNAL_FULL_NAME"                 4.527 MB  218516 rows
+. . exported "MASK"."XREF_EMPLID_FULL_NAME"              2.689 MB   76852 rows
+. . exported "MASK"."HASH_FIRST_NAME"                    1.804 MB  140368 rows
+. . exported "MASK"."INDEX_PRDMASK_ORIG_TMP"             2.406 MB   47635 rows
+. . exported "MASK"."XXX"                                791.0 KB   34296 rows
+. . exported "MASK"."PS_GM_GVT_EMP_AR_BAK"               673.8 KB    2129 rows
+. . exported "MASK"."PS_GM_CPDF_DYN_ERR_BAK"             574.7 KB    5928 rows
+. . exported "MASK"."CERTIFICATION_INVENTORY_NEW"        423.4 KB    7330 rows
+. . exported "MASK"."FINAL_CERTIFICATION_INV_BAK"        215.4 KB    3562 rows
+. . exported "MASK"."FINAL_MASKING_REQUESTS"             237.0 KB    3562 rows
+. . exported "MASK"."ALL_MASKED_COLUMNS"                 188.8 KB    3644 rows
+. . exported "MASK"."EOPF_EP_USER_INFO_PRE_20190528"     177.0 KB    1129 rows
+. . exported "MASK"."OEM_MASKING_INVENTORY"              141.5 KB    3382 rows
+. . exported "MASK"."PHOTO"                              14.31 KB       4 rows
+. . exported "MASK"."TRIGGER_PRDMASK_ORIG_TMP"           81.40 KB     976 rows
+. . exported "MASK"."COV_EARN_SMALL_ONE_OFF_M"           7.742 KB      56 rows
+. . exported "MASK"."DUMMY"                              5.820 KB     103 rows
+. . exported "MASK"."EMPLOYEE_SMALL_ONE_OFF_M"           31.32 KB      10 rows
+. . exported "MASK"."GRB_TESTING"                        5.929 KB       5 rows
+. . exported "MASK"."GRB_TESTING_M"                      5.960 KB       5 rows
+. . exported "MASK"."HR_EX_EMAILS"                       10.67 KB     249 rows
+. . exported "MASK"."HR_EX_EMAILS_PRE"                   11.31 KB     277 rows
+. . exported "MASK"."HR_EX_EMAIL_ADDRESSES"              10.79 KB     254 rows
+. . exported "MASK"."HR_USER_TEST"                       16.71 KB       9 rows
+. . exported "MASK"."MASKING_TYPES"                      5.640 KB      10 rows
+. . exported "MASK"."SAL_HIST_SMALL_ONE_OFF_M"           7.093 KB      24 rows
+. . exported "MASK"."STAR_EMAIL_MAILBOX_BAK"             9.156 KB      17 rows
+. . exported "MASK"."TEST"                               5.421 KB       1 rows
+. . exported "MASK"."WORKFLOW_BACKUP_20190301"           9.406 KB       8 rows
+. . exported "MASK"."WORKFLOW_TEST"                      9.414 KB       8 rows
+. . exported "MASK"."DUMMY1"                                 0 KB       0 rows
+Master table "SYS"."SYS_EXPORT_SCHEMA_05" successfully loaded/unloaded
+******************************************************************************
+Dump file set for SYS.SYS_EXPORT_SCHEMA_05 is:
+  /infshare/oracle/export/PRDMASK/PRDMASK_MASK_SCHEMA_20191011.dmp
+Job "SYS"."SYS_EXPORT_SCHEMA_05" successfully completed at Fri Oct 11 09:39:43 2019 elapsed 0 00:01:26
+
+
+
+SQL> select distinct object_type from  dba_objects where object_name like '%MASK%';
+
+OBJECT_TYPE
+-------------------
+DIRECTORY
+INDEX
+PACKAGE
+PACKAGE BODY
+PROCEDURE
+SEQUENCE
+SYNONYM
+TABLE
+TYPE
+VIEW
+
+10 rows selected.
+
+SQL>
+
+
+INCLUDE=DIRECTORY:"LIKE '%MASK%'"
+INCLUDE=INDEX:"LIKE '%MASK%'"
+INCLUDE=PACKAGE_SPEC:"LIKE '%MASK%'"
+INCLUDE=PACKAGE_BODY:"LIKE '%MASK%'"
+INCLUDE=PROCEDURE:"LIKE '%MASK%'"
+INCLUDE=SEQUENCE:"LIKE '%MASK%'"
+INCLUDE=SYNONYM:"LIKE '%MASK%'"
+INCLUDE=TABLE:"LIKE '%MASK%'"
+INCLUDE=TYPE:"LIKE '%MASK%'"
+INCLUDE=VIEW:"LIKE '%MASK%'"
+
+DUMPFILE=expinclude.dmp
+DIRECTORY=PRDMASK
+LOGFILE=expinclude.log
+INCLUDE=PROCEDURE:"LIKE '%MASK%'"
+INCLUDE=PROCEDURE:"LIKE '%MASK%'"
+INCLUDE=PROCEDURE:"LIKE '%MASK%'"
+INCLUDE=PROCEDURE:"LIKE '%MASK%'"
+
+
+
+
+spool
+declare 
+  myPackageSpec clob;
+  myPackageBody clob;
+BEGIN
+    select dbms_metadata.get_ddl('PACKAGE_BODY', 'MGMT$MASK_UTIL', 'SYS') 
+       into myPackageBody
+      FROM DUAL;
+    select dbms_metadata.get_ddl('PACKAGE_SPEC', 'MGMT$MASK_UTIL', 'SYS') 
+      into myPackageSpec 
+    FROM DUAL;
+
+  dbms_output.put_line(myPackageSpec);
+  dbms_output.put_line(myPackageBody);
+end;
+
+
+col owner format a20
+col object_name format a40
+col object_type format a30
+col created format a30
+col status format a20
+set linesize 200
+
+
+select owner,object_name,object_type,created,status from dba_objects where object_name like '%MASK%' and owner =  'SYS' order by owner,object_name
+
+
+
+SQL> /
+
+OWNER                OBJECT_NAME                              OBJECT_TYPE                    CREATED                        STATUS
+-------------------- ---------------------------------------- ------------------------------ ------------------------------ --------------------
+SYS                  DBMS_RAT_MASK                            PACKAGE BODY                   28-MAR-15                      VALID
+SYS                  DBMS_RAT_MASK                            PACKAGE                        28-MAR-15                      VALID
+SYS                  DPUMP_PRDMASK                            DIRECTORY                      03-JAN-19                      VALID
+SYS                  MASK_EXT_DIR                             DIRECTORY                      18-DEC-18                      VALID
+SYS                  MGMT$MASK_ARRAY_LIST                     TYPE                           24-OCT-18                      VALID
+SYS                  MGMT$MASK_CHECKDBAPRIVS                  PROCEDURE                      25-OCT-18                      VALID
+SYS                  MGMT$MASK_CHECKPOINT                     TABLE                          25-OCT-18                      VALID
+SYS                  MGMT$MASK_DELETEJOBTABLEENTRY            PROCEDURE                      25-OCT-18                      VALID
+SYS                  MGMT$MASK_ERROREXIT                      PROCEDURE                      25-OCT-18                      VALID
+SYS                  MGMT$MASK_ERROREXITORAERROR              PROCEDURE                      25-OCT-18                      VALID
+SYS                  MGMT$MASK_SENDMSG                        PROCEDURE                      25-OCT-18                      VALID
+
+OWNER                OBJECT_NAME                              OBJECT_TYPE                    CREATED                        STATUS
+-------------------- ---------------------------------------- ------------------------------ ------------------------------ --------------------
+SYS                  MGMT$MASK_SETSTEP                        PROCEDURE                      25-OCT-18                      VALID
+SYS                  MGMT$MASK_SETUPJOBTABLE                  PROCEDURE                      25-OCT-18                      VALID
+SYS                  MGMT$MASK_SETUPMAPPINGTABLE              PROCEDURE                      25-OCT-18                      VALID
+SYS                  MGMT$MASK_UTIL                           PACKAGE BODY                   24-OCT-18                      VALID
+SYS                  MGMT$MASK_UTIL                           PACKAGE                        24-OCT-18                      VALID
+SYS                  PRDMASK                                  DIRECTORY                      22-OCT-18                      VALID
+SYS                  TEMP_OPSMASK                             DIRECTORY                      06-MAY-19                      VALID
+SYS                  WRI$_MASKING_SCRIPT_PROGRESS             TABLE                          28-MAR-15                      VALID
+SYS                  WRI$_SQLSET_MASK                         TABLE                          17-SEP-11                      VALID
+SYS                  WRI$_SQLSET_MASK_PK                      INDEX                          17-SEP-11                      VALID
+SYS                  WRI$_SQLSET_RATMASK_SEQ                  SEQUENCE                       28-MAR-15                      VALID
+
+OWNER                OBJECT_NAME                              OBJECT_TYPE                    CREATED                        STATUS
+-------------------- ---------------------------------------- ------------------------------ ------------------------------ --------------------
+SYS                  WRI$_STS_MASKING_ERRORS                  TABLE                          28-MAR-15                      VALID
+SYS                  WRI$_STS_MASKING_EXCEPTIONS              TABLE                          28-MAR-15                      VALID
+SYS                  WRI$_STS_MASKING_STEP_PROGRESS           TABLE                          28-MAR-15                      VALID
+SYS                  WRR$_MASKING_BIND_CACHE                  TABLE                          28-MAR-15                      VALID
+SYS                  WRR$_MASKING_DEFINITION                  TABLE                          28-MAR-15                      VALID
+SYS                  WRR$_MASKING_FILE_PROGRESS               TABLE                          28-MAR-15                      VALID
+SYS                  WRR$_MASKING_PARAMETERS                  TABLE                          28-MAR-15                      VALID
+SYS                  WRR$_MASKING_PARAMETERS_PK               INDEX                          28-MAR-15                      VALID
+
+30 rows selected.
+
+SQL> select * from dba_directories;
+
+OWNER                          DIRECTORY_NAME
+------------------------------ ------------------------------
+DIRECTORY_PATH
+--------------------------------------------------------------------------------
+SYS                            CPY1
+/infshare/oracle/export/CPY1
+
+SYS                            TST
+/infshare/oracle/export/PRDMASK
+
+SYS                            TEMP_OPSMASK
+/infshare/oracle/export/OPSMASK
+
+
+OWNER                          DIRECTORY_NAME
+------------------------------ ------------------------------
+DIRECTORY_PATH
+--------------------------------------------------------------------------------
+SYS                            DPUMP_PRDMASK
+/u01/oracle/export/PRDMASK
+
+SYS                            DPUMP_TEMP
+/u01/oracle/export/PRDMASK
+
+SYS                            MASK_EXT_DIR
+/hrewwnonprdfs01/DataExchange/Masking/
+
+
+OWNER                          DIRECTORY_NAME
+------------------------------ ------------------------------
+DIRECTORY_PATH
+--------------------------------------------------------------------------------
+SYS                            TEMP_DIR
+/infshare/oracle/export/PRDMASK
+
+SYS                            DP_RFRSH_LG
+/infshare/oracle/scripts/refresh/log/PRDMASK
+
+SYS                            ESRT_EXT_DIR
+/hrewwnonprdfs01/DataExchange/Test/CPY/esrt/
+
+
+OWNER                          DIRECTORY_NAME
+------------------------------ ------------------------------
+DIRECTORY_PATH
+--------------------------------------------------------------------------------
+SYS                            EXTERNAL_BMTS_DIRECTORY
+/hrinffp1001/DataExchange/Production/PRD/gfms/
+
+SYS                            EOPF
+/infshare/oracle/export/PRD
+
+SYS                            DP_RFRSH_DMP
+/infshare/oracle/scripts/refresh/bin/build/CPY
+
+
+OWNER                          DIRECTORY_NAME
+------------------------------ ------------------------------
+DIRECTORY_PATH
+--------------------------------------------------------------------------------
+SYS                            GADTRK
+/infshare/oracle/export/PRD
+
+SYS                            REETA
+/infshare/oracle/export/PRD
+
+SYS                            PMR1408
+/infshare/oracle/export/PRD/
+
+
+OWNER                          DIRECTORY_NAME
+------------------------------ ------------------------------
+DIRECTORY_PATH
+--------------------------------------------------------------------------------
+SYS                            ORACLE_OCM_CONFIG_DIR2
+/u02/app/oracle/product/11.2.0.4/db_1/ccr/state
+
+SYS                            REETAEXP
+/infshare/oracle/export/PRD
+
+SYS                            TMPDUMPDIR
+/infsharenonprod/oracle/export/PRD
+
+
+OWNER                          DIRECTORY_NAME
+------------------------------ ------------------------------
+DIRECTORY_PATH
+--------------------------------------------------------------------------------
+SYS                            ORACLE_OCM_CONFIG_DIR
+/u02/app/oracle/product/11.2.0.4/db_1/ccr/hosts/hrinfdb1001.ee.bn.hr.state.gov/s
+tate
+
+SYS                            PRD
+/infshare/oracle/export/PRD
+
+SYS                            BOXIPRD4
+/infshare/oracle/export/PRD
+
+OWNER                          DIRECTORY_NAME
+------------------------------ ------------------------------
+DIRECTORY_PATH
+--------------------------------------------------------------------------------
+
+SYS                            EHRI
+/oracleShare/PRDEHRI
+
+SYS                            EXT_DIR_EOPF_SF50
+/hrewwnonprdfs01/Output/Test/CPY/eopf/output/sf50/
+
+SYS                            EXT_DIR_PCSTRAVEL_STATS
+/hrewwnonprdfs01/DataExchange/Test/CPY/pcstravel/cfms/
+
+OWNER                          DIRECTORY_NAME
+------------------------------ ------------------------------
+DIRECTORY_PATH
+--------------------------------------------------------------------------------
+
+SYS                            PRDMASK
+/infshare/oracle/export/PRDMASK
+
+SYS                            PCSTRAVEL_EXT_DIR
+/hrewwnonprdfs01/DataExchange/Test/CPY/pcstravel/
+
+SYS                            EXT_DIR_PCSTRAVEL_GFMS
+/hrewwnonprdfs01/Output/Test/CPY/PCSTravel/cfms/
+
+OWNER                          DIRECTORY_NAME
+------------------------------ ------------------------------
+DIRECTORY_PATH
+--------------------------------------------------------------------------------
+
+SYS                            STAFFING_PATTERN_PUBLISHED
+/hrewwnonprdfs01/ElectronicDocuments/Test/CPY/Staffing_Pattern/PUBLISHED/
+
+SYS                            XMLDIR
+/u02/app/oracle/product/11.2.0.3/db_1/rdbms/xml
+
+SYS                            SYSADM
+/infshare/oracle/export/UPGINFB
+
+OWNER                          DIRECTORY_NAME
+------------------------------ ------------------------------
+DIRECTORY_PATH
+--------------------------------------------------------------------------------
+
+SYS                            DATA_PUMP_DIR
+/u02/app/oracle/product/11.2.0.4/db_1/rdbms/log/
+
+SYS                            STAFFING_PATTERN_SOD
+/hrewwnonprdfs01/ElectronicDocuments/Test/CPY/Staffing_Pattern/SOD/
+
+
+32 rows selected.
+
+SQL>

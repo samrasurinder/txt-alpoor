@@ -1,0 +1,92 @@
+
+PRDRAC - 3 node
+---------------
+
+SCAN name: PRD2-EW-SCAN.hr.state.sbu, Network: 1
+SCAN 1 IPv4 VIP: 10.68.105.59
+SCAN VIP is enabled.
+SCAN 2 IPv4 VIP: 10.68.105.58
+SCAN VIP is enabled.
+SCAN 3 IPv4 VIP: 10.68.105.60
+
+
+10.68.105.42    hrewoel42.washdc.state.sbu      hrewoel42
+10.68.105.43    hrewoel43.washdc.state.sbu      hrewoel43
+10.68.105.44    hrewoel44.washdc.state.sbu      hrewoel44
+
+192.168.187.23  hrewoel42-sl.hr.state.sbu       hrewoel42-sl
+192.168.187.24  hrewoel43-sl.hr.state.sbu       hrewoel43-sl
+192.168.187.25  hrewoel44-sl.hr.state.sbu       hrewoel44-sl
+
+192.168.10.73   hrewoel42-priv1.hr.state.sbu    hrewoel42-priv1
+192.168.10.74   hrewoel43-priv1.hr.state.sbu    hrewoel43-priv1
+192.168.10.75   hrewoel44-priv1.hr.state.sbu    hrewoel44-priv1
+
+192.168.20.73   hrewoel42-priv2.hr.state.sbu    hrewoel42-priv2
+192.168.20.74   hrewoel43-priv2.hr.state.sbu    hrewoel43-priv2
+192.168.20.75   hrewoel44-priv2.hr.state.sbu    hrewoel44-priv2
+
+10.68.105.50    hrewoel42-vip.hr.state.sbu      hrewoel42-vip
+10.68.105.51    hrewoel43-vip.hr.state.sbu      hrewoel43-vip
+10.68.105.52    hrewoel44-vip.hr.state.sbu      hrewoel44-vip
+
+
+
+
+HFRAC - 3 nodes
+---------------
+
+SCAN name: HF2-EW-SCAN.hr.state.sbu, Network: 1
+SCAN 1 IPv4 VIP: 10.68.105.63
+SCAN VIP is enabled.
+SCAN 2 IPv4 VIP: 10.68.105.62
+SCAN VIP is enabled.
+SCAN 3 IPv4 VIP: 10.68.105.61
+
+10.68.105.45    hrewoel45.washdc.state.sbu  hrewoel45
+10.68.105.46    hrewoel46.washdc.state.sbu  hrewoel46
+10.68.105.47    hrewoel47.washdc.state.sbu  hrewoel47
+
+192.168.187.26  hrewoel45-sl.hr.state.sbu       hrewoel45-sl
+192.168.187.27  hrewoel46-sl.hr.state.sbu       hrewoel46-sl
+192.168.187.31  hrewoel47-sl.hr.state.sbu       hrewoel47-sl
+
+192.168.10.76   hrewoel45-priv1.hr.state.sbu    hrewoel45-priv1
+192.168.10.77   hrewoel46-priv1.hr.state.sbu    hrewoel46-priv1
+192.168.10.78   hrewoel47-priv1.hr.state.sbu    hrewoel47-priv1
+
+192.168.20.76   hrewoel45-priv2.hr.state.sbu    hrewoel45-priv2
+192.168.20.77   hrewoel46-priv2.hr.state.sbu    hrewoel46-priv2
+192.168.20.78   hrewoel47-priv2.hr.state.sbu    hrewoel47-priv2
+
+10.68.105.53    hrewoel45-vip.hr.state.sbu      hrewoel45-vip
+10.68.105.54    hrewoel46-vip.hr.state.sbu      hrewoel46-vip
+10.68.105.55    hrewoel47-vip.hr.state.sbu      hrewoel47-vip
+
+
+KC rac - 2 nodes
+----------------
+
+SCAN name: KC2-EW-SCAN.hr.state.sbu, Network: 1
+SCAN 1 IPv4 VIP: 10.68.105.64
+SCAN VIP is enabled.
+SCAN 2 IPv4 VIP: 10.68.105.65
+
+10.68.105.48    hrewoel48.washdc.state.sbu      hrewoel48
+10.68.105.49    hrewoel49.washdc.state.sbu      hrewoel49
+
+192.168.187.29  hrewoel48-sl.hr.state.sbu       hrewoel48-sl
+192.168.187.30  hrewoel49-sl.hr.state.sbu       hrewoel49-sl
+
+192.168.10.79   hrewoel48-priv1.hr.state.sbu    hrewoel48-priv1
+192.168.10.80   hrewoel49-priv1.hr.state.sbu    hrewoel49-priv1
+
+192.168.20.79   hrewoel48-priv2.hr.state.sbu    hrewoel48-priv2
+192.168.20.80   hrewoel49-priv2.hr.state.sbu    hrewoel49-priv2
+
+10.68.105.56    hrewoel48-vip.hr.state.sbu      hrewoel48-vip
+10.68.105.57    hrewoel49-vip.hr.state.sbu      hrewoel49-vip
+
+
+
+

@@ -1,0 +1,185 @@
+Edit 'Multi-Task' Job: PRODUCTION_DAILY_BACKUP.1  ( runs daily at from mon thru friday @12AM ) (Backup Daily to FRA and then to AVMR INCREMENTALLY)
+===================================================================================================================================================
+
+
+
+TASK 1) 'RMAN Script' Task: PRD_FRA_DAILY_BACKUP
+ 
+-------------------------------------------------
+
+set echo on;
+spool trace  to '/infshare/oracle/scripts/backup/avamar/log/PRD/PRD_FRA_DAILY_BACKUP.log' append;
+configure retention policy clear;
+CONFIGURE CONTROLFILE AUTOBACKUP ON;
+CONFIGURE CONTROLFILE AUTOBACKUP FORMAT FOR DEVICE TYPE DISK clear;
+CONFIGURE CONTROLFILE AUTOBACKUP FORMAT FOR DEVICE TYPE SBT_TAPE clear;
+show all;
+list incarnation of database;
+list copy of database;
+list archivelog all;
+report schema;
+run {
+allocate channel oem_disk_backup1 device type disk;
+allocate channel oem_disk_backup2 device type disk;
+allocate channel oem_disk_backup3 device type disk;
+allocate channel oem_disk_backup4 device type disk;
+allocate channel oem_disk_backup5 device type disk;
+allocate channel oem_disk_backup6 device type disk;
+allocate channel oem_disk_backup7 device type disk;
+allocate channel oem_disk_backup8 device type disk;
+allocate channel oem_disk_backup9 device type disk;
+allocate channel oem_disk_backup10 device type disk;
+report need backup redundancy 1 device type disk;
+# Roll forward the whole copy of the database to last incremental backup SCN.
+# Keep 7 days of archived logs and incremental backups.
+# The backups on disk will be retained so that you can always perform a full database recovery
+delete archivelog all backed up 1 times to sbt completed before 'sysdate-3';
+recover copy of database with tag 'PRD$OEM_LEVEL_0' until time 'sysdate-3';
+# Make an incremental backup of the database to the flash recovery area.
+sql "alter system switch logfile";
+sql "alter system archive log current";
+backup incremental level 1 cumulative copies=1 for recover of copy with tag 'PRD$OEM_LEVEL_0' database plus archivelog not backed up;
+delete noprompt obsolete redundancy 1 until time 'sysdate-3' device type disk;
+allocate channel c1 type 'SBT' PARMS="SBT_LIBRARY=/usr/local/avamar/ora_rac/lib/libobk_avamar64.so" format '%d_%U';
+send '"--flagfile=/infshare/ew/prd-avamar/avtar-flags.txt" "--bindir=/usr/local/avamar/ora_rac/bin"';
+restore database preview;
+release channel c1;
+release channel oem_disk_backup1;
+release channel oem_disk_backup2;
+release channel oem_disk_backup3;
+release channel oem_disk_backup4;
+release channel oem_disk_backup5;
+release channel oem_disk_backup6;
+release channel oem_disk_backup7;
+release channel oem_disk_backup8;
+release channel oem_disk_backup9;
+release channel oem_disk_backup10;
+}
+list backup of database summary;
+list backup of controlfile summary;
+list backup of archivelog all summary;
+list backup of database;
+list backup of controlfile;
+list backup of archivelog all;
+spool trace off;
+
+
+TASK 2, if TASK 1 success) 'RMAN Script' Task:PRD_AVMR_DAILY_BACKUP
+===================================================================
+
+set echo on;
+spool trace  to '/infshare/oracle/scripts/backup/avamar/log/PRD/PRD_AVMR_DAILY_BACKUP.log' append;
+configure retention policy to recovery window of 10 days;
+configure controlfile autobackup on;
+show all;
+list incarnation of database;
+list copy of database;
+list archivelog all;
+report schema;
+run {
+set controlfile autobackup format for device type sbt to "CONTROLFILE.%F";
+allocate channel c1 type 'SBT' PARMS="SBT_LIBRARY=/usr/local/avamar/ora_rac/lib/libobk_avamar64.so" format '%d_%U_%T';
+send '"--flagfile=/infshare/ew/prd-avamar/avtar-flags.txt" "--bindir=/usr/local/avamar/ora_rac/bin"';
+# Back up archived logs, incremental backup and full database copy to tape every day.
+report need backup recovery window of 10 days device type sbt;
+backup skip inaccessible backupset from tag 'PRD$OEM_LEVEL_0' not backed up;
+}
+list backup of database summary;
+list backup of controlfile summary;
+list backup of archivelog all summary;
+list backup of database;
+list backup of controlfile;
+list backup of archivelog all;
+spool trace off;
+
+
+
+
+
+Edit 'Multi-Task' Job: PRODUCTION_WEEKLY_BACKUP.2 ( Evert Saturday 12AM)
+========================================================================
+
+Task 1) PRD_FRA_DAILY_BACKUP
+----------------------------
+
+set echo on;
+spool trace  to '/infshare/oracle/scripts/backup/avamar/log/PRD/PRD_FRA_DAILY_BACKUP.log' append;
+configure retention policy clear;
+CONFIGURE CONTROLFILE AUTOBACKUP ON;
+CONFIGURE CONTROLFILE AUTOBACKUP FORMAT FOR DEVICE TYPE DISK clear;
+CONFIGURE CONTROLFILE AUTOBACKUP FORMAT FOR DEVICE TYPE SBT_TAPE clear;
+show all;
+list incarnation of database;
+list copy of database;
+list archivelog all;
+report schema;
+run {
+allocate channel oem_disk_backup1 device type disk;
+allocate channel oem_disk_backup2 device type disk;
+allocate channel oem_disk_backup3 device type disk;
+allocate channel oem_disk_backup4 device type disk;
+allocate channel oem_disk_backup5 device type disk;
+allocate channel oem_disk_backup6 device type disk;
+allocate channel oem_disk_backup7 device type disk;
+allocate channel oem_disk_backup8 device type disk;
+allocate channel oem_disk_backup9 device type disk;
+allocate channel oem_disk_backup10 device type disk;
+report need backup redundancy 1 device type disk;
+# Roll forward the whole copy of the database to last incremental backup SCN.
+# Keep 7 days of archived logs and incremental backups.
+# The backups on disk will be retained so that you can always perform a full database recovery
+recover copy of database with tag 'PRD$OEM_LEVEL_0' until time 'sysdate-3';
+# Make an incremental backup of the database to the flash recovery area.
+sql "alter system switch logfile";
+sql "alter system archive log current";
+backup incremental level 1 cumulative copies=1 for recover of copy with tag 'PRD$OEM_LEVEL_0' database plus archivelog not backed up;
+delete noprompt obsolete redundancy 1 until time 'sysdate-3' device type disk;
+release channel oem_disk_backup1;
+release channel oem_disk_backup2;
+release channel oem_disk_backup3;
+release channel oem_disk_backup4;
+release channel oem_disk_backup5;
+release channel oem_disk_backup6;
+release channel oem_disk_backup7;
+release channel oem_disk_backup8;
+release channel oem_disk_backup9;
+release channel oem_disk_backup10;
+}
+list backup of database summary;
+list backup of controlfile summary;
+list backup of archivelog all summary;
+list backup of database;
+list backup of controlfile;
+list backup of archivelog all;
+spool trace off;
+
+
+Task 2, If Task 1 succeeds : PRD_AVMR_WEEKLY_BACKUP
+---------------------------------------------------
+
+
+set echo on;
+spool trace to '/infshare/oracle/scripts/backup/avamar/log/PRD/PRD_AVMR_WEEKLY_BACKUP.log' append;
+configure retention policy to recovery window of 10 days;
+configure controlfile autobackup on;
+show all;
+list incarnation of database;
+list copy of database;
+list archivelog all;
+report schema;
+run {
+set controlfile autobackup format for device type sbt to "CONTROLFILE.%F";
+allocate channel c1 type 'SBT' PARMS="SBT_LIBRARY=/usr/local/avamar/ora_rac/lib/libobk_avamar64.so" format '%d_%U_%T';
+send '"--flagfile=/infshare/ew/prd-avamar/avtar-flags.txt" "--bindir=/usr/local/avamar/ora_rac/bin"';
+# All recovery related files on disk Not backed up already will be backed up to tape once every day.
+report need backup recovery window of 10 days device type sbt;
+backup recovery area tag 'PRD$RECOVERYAREA' not backed up;
+}
+list backup of database summary;
+list backup of controlfile summary;
+list backup of archivelog all summary;
+list backup of database;
+list backup of controlfile;
+list backup of archivelog all;
+spool trace off;
+

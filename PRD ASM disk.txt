@@ -1,0 +1,129 @@
+
+(The ASM disk: 'PRDDATA01' mapped to '/dev/emcpoweru1'  Totalsize=144.8 GB,
+PRDDATA01                          138104     138104)
+
+Allocate 3 raw disks of each size as shown above in both source and Targets
+
+
+Source : hrewoel06/07/08 
+------
+
+Targets:
+--------
+Standby: hrewoel13/14/15
+TST2 clone: hrewoel03/02 ( known as TST2)  (TFclone from 06/07/08)
+KCPRD_TFCLONE:  hrewoel16/19  -  ( Tfclone from Standby from 13/14/15)
+
+
+
+
+There are 24 disks allocated for PRD database
+
+[root@hrewoel06 ~]# /home/grid/asm_disk_map_to_device.sh | grep PRD | wc -l
+24
+
+The ASM disk: 'PRDDATA01' mapped to '/dev/emcpoweru1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDDATA02' mapped to '/dev/emcpowerm1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDDATA03' mapped to '/dev/emcpowerf1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDDATA04' mapped to '/dev/emcpowerbm1'  Totalsize=4295.0 GB,
+The ASM disk: 'PRDDATA05' mapped to '/dev/emcpowery1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDDATA06' mapped to '/dev/emcpowern1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDDATA07' mapped to '/dev/emcpowerr1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDDATA08' mapped to '/dev/emcpowert1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDDATA09' mapped to '/dev/emcpowero1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDFRA01' mapped to '/dev/emcpowerv1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDFRA02' mapped to '/dev/emcpowerd1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDFRA03' mapped to '/dev/emcpowerg1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDFRA04' mapped to '/dev/emcpowerp1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDFRA05' mapped to '/dev/emcpowers1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDFRA06' mapped to '/dev/emcpowerx1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDFRA07' mapped to '/dev/emcpoweri1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDFRA08' mapped to '/dev/emcpowerk1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDFRA09' mapped to '/dev/emcpowerw1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDFRA10' mapped to '/dev/emcpowerq1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDFRA11' mapped to '/dev/emcpowerj1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDFRA12' mapped to '/dev/emcpowerh1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDFRA13' mapped to '/dev/emcpowere1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDFRA14' mapped to '/dev/emcpowerb1'  Totalsize=144.8 GB,
+The ASM disk: 'PRDFRA15' mapped to '/dev/emcpowerl1'  Totalsize=144.8 GB,
+
+SQL>  select name,os_mb,total_mb from v$asm_disk where group_number =11;
+
+NAME                                OS_MB   TOTAL_MB
+------------------------------ ---------- ----------
+PRDDATA01                          138104     138104
+PRDDATA02                          138104     138104
+PRDDATA03                          138104     138104
+PRDDATA04                          138104     138104
+PRDDATA05                          138104     138104
+PRDDATA06                          138104     138104
+PRDDATA07                          138104     138104
+PRDDATA08                          138104     138104
+PRDDATA09                          138104     138104
+
+9 rows selected.
+
+SQL> select name,os_mb,total_mb from v$asm_disk where group_number =12;
+
+NAME                                OS_MB   TOTAL_MB
+------------------------------ ---------- ----------
+PRDFRA01                           138104     138104
+PRDFRA02                           138104     138104
+PRDFRA03                           138104     138104
+PRDFRA04                           138104     138104
+PRDFRA05                           138104     138104
+PRDFRA06                           138104     138104
+PRDFRA07                           138104     138104
+PRDFRA08                           138104     138104
+PRDFRA09                           138104     138104
+PRDFRA10                           138104     138104
+PRDFRA11                           138104     138104
+
+NAME                                OS_MB   TOTAL_MB
+------------------------------ ---------- ----------
+PRDFRA12                           138104     138104
+PRDFRA13                           138104     138104
+PRDFRA14                           138104     138104
+PRDFRA15                           138104     138104
+
+15 rows selected.
+
+SQL>
+
+
+
+hrewoel03.hr.state.sbu ( TST2_TFCLONE)
+
+        Source Device                    Target Device            State     Cpy
+--------------------------------- ---------------------------- ------------ ---
+         Sym   Protected Modified          Sym   Modified
+Logical  Dev   Tracks    Tracks   Logical  Dev   Tracks   CGDP SRC <=> TGT  (%)
+--------------------------------- ---------------------------- ------------ ---
+N/A      02018         0        0 N/A      01F84        0 X.X. Copied       100
+N/A      02044         0        0 N/A      01FC4        0 X.X. Copied       100
+N/A      02014         0        0 N/A      01FB8        0 X.X. Copied       100
+N/A      02010         0        0 N/A      01FB0        0 X.X. Copied       100
+N/A      02040         0        0 N/A      01FAC        0 X.X. Copied       100
+N/A      0200C         0        0 N/A      01FA4        0 X.X. Copied       100
+N/A      0203C         0        0 N/A      01F98        0 X.X. Copied       100
+N/A      02038         0        0 N/A      01F90        0 X.X. Copied       100
+N/A      02008         0        0 N/A      01F8C        0 X.X. Copied       100
+N/A      02034         0        0 N/A      01F70        0 X.X. Copied       100
+N/A      02004         0        0 N/A      01F78        0 X.X. Copied       100
+N/A      02000         0        0 N/A      01F6C        0 X.X. Copied       100
+N/A      02030         0        0 N/A      01FC8        0 X.X. Copied       100
+N/A      01FFC         0        0 N/A      01FC0        0 X.X. Copied       100
+N/A      0202C         0        0 N/A      01FBC        0 X.X. Copied       100
+N/A      02028         0        0 N/A      01FB4        0 X.X. Copied       100
+N/A      01FF8         0        0 N/A      01FA8        0 X.X. Copied       100
+N/A      02048         0        0 N/A      01FA0        0 X.X. Copied       100
+N/A      01FF4         0        0 N/A      01F9C        0 X.X. Copied       100
+N/A      01FF0         0        0 N/A      01F94        0 X.X. Copied       100
+N/A      02020         0        0 N/A      01F88        0 X.X. Copied       100
+N/A      01FEC         0        0 N/A      01F80        0 X.X. Copied       100
+N/A      02024         0        0 N/A      01F7C        0 X.X. Copied       100
+N/A      0201C         0        0 N/A      01F74        0 X.X. Copied       100
+
+Total          --------- --------                --------
+  Track(s)            0        0                       0
+  MB(s)              0.0      0.0                     0.0

@@ -1,0 +1,213 @@
+[root@hrewoel16 OPatch]# pwd
+/u02/app/11.2.0.4/grid/OPatch
+[root@hrewoel16 OPatch]# cd /infshare/software/PSU/
+[root@hrewoel16 PSU]# cd JUL2020/
+[root@hrewoel16 JUL2020]# ls -altrh
+total 1.4G
+drwxrwxrwx. 4 oracle oinstall 3.9K Jul 13 15:39 31326410
+-rwxrwxrwx. 1 oracle oinstall 174K Jul 24 05:02 PatchSearch.xml
+-rwxrwxrwx. 1 oracle oinstall 1.3G Jul 27 10:44 p31326410_112040_Linux-x86-64.zip
+-rwxrwxrwx. 1 oracle oinstall 115M Jul 27 12:41 p6880880_112000_Linux-x86-64.zip
+drwxrwxrwx. 3 oracle oinstall 3.9K Aug  7 16:07 ..
+-rwxrwxrwx. 1 grid   oinstall  15K Sep 19 08:30 preppatchGRID_hrewoel16.log
+-rwxrwxrwx. 1 oracle oinstall  16K Sep 19 08:36 preppatchRDBMS_hrewoel16.log
+-rwxrwxrwx. 1 grid   oabadmin  15K Sep 19 09:10 preppatchGRID_hrewoel13.log
+-rwxrwxrwx. 1 oracle oabadmin  16K Sep 19 09:12 preppatchRDBMS_hrewoel13.log
+drwxrwxrwx. 3 oracle oabadmin 3.9K Sep 19 09:18 .
+-rwxrwxrwx. 1 root   root     6.7K Sep 19 09:18 CRSCTL_prepatch_Status13.log
+[root@hrewoel16 JUL2020]# pwd
+/infshare/software/PSU/JUL2020
+[root@hrewoel16 JUL2020]# cd $ORACLE_HOME
+[root@hrewoel16 grid]# cd OPatch
+[root@hrewoel16 OPatch]# ./opatch auto /infshare/software/PSU/JUL2020/31326410/31305209/ &
+[1] 23773
+[root@hrewoel16 OPatch]# *** glibc detected *** /bin/sh: malloc(): memory corruption: 0x0000000001b84990 ***
+======= Backtrace: =========
+/lib64/libc.so.6[0x35e9675e5e]
+/lib64/libc.so.6[0x35e967a41a]
+/lib64/libc.so.6(__libc_malloc+0x5c)[0x35e967ab1c]
+/bin/sh(xrealloc+0x72)[0x4666f2]
+/bin/sh[0x43d873]
+/bin/sh(wait_for+0x625)[0x440885]
+/bin/sh(execute_command_internal+0x13f9)[0x430f19]
+/bin/sh[0x43336f]
+/bin/sh[0x43362a]
+/bin/sh(execute_command_internal+0x89d)[0x4303bd]
+/bin/sh(parse_and_execute+0x2cb)[0x46b86b]
+/bin/sh(command_substitute+0x621)[0x444a01]
+/bin/sh[0x449274]
+/bin/sh[0x449bc4]
+/bin/sh[0x44a1b7]
+/bin/sh[0x42ee9f]
+/bin/sh(execute_command_internal+0x943)[0x430463]
+/bin/sh(execute_command+0x4e)[0x43110e]
+/bin/sh[0x431b1c]
+/bin/sh(execute_command_internal+0xa25)[0x430545]
+/bin/sh(execute_command+0x4e)[0x43110e]
+/bin/sh[0x43357e]
+/bin/sh(execute_command_internal+0x89d)[0x4303bd]
+/bin/sh(execute_command+0x4e)[0x43110e]
+/bin/sh[0x431a17]
+/bin/sh(execute_command_internal+0xa45)[0x430565]
+/bin/sh[0x4335b3]
+/bin/sh(execute_command_internal+0x89d)[0x4303bd]
+/bin/sh(execute_command+0x4e)[0x43110e]
+/bin/sh[0x43357e]
+/bin/sh(execute_command_internal+0x89d)[0x4303bd]
+/bin/sh(execute_command+0x4e)[0x43110e]
+/bin/sh[0x43357e]
+/bin/sh(execute_command_internal+0x89d)[0x4303bd]
+/bin/sh(execute_command+0x4e)[0x43110e]
+/bin/sh[0x43357e]
+/bin/sh(execute_command_internal+0x89d)[0x4303bd]
+/bin/sh(execute_command+0x4e)[0x43110e]
+/bin/sh[0x43357e]
+/bin/sh(execute_command_internal+0x89d)[0x4303bd]
+/bin/sh(execute_command+0x4e)[0x43110e]
+/bin/sh[0x43357e]
+/bin/sh(execute_command_internal+0x89d)[0x4303bd]
+/bin/sh(execute_command+0x4e)[0x43110e]
+/bin/sh[0x43357e]
+/bin/sh(execute_command_internal+0x89d)[0x4303bd]
+/bin/sh(execute_command_internal+0x842)[0x430362]
+/bin/sh[0x432169]
+/bin/sh[0x42fa18]
+/bin/sh(execute_command_internal+0x943)[0x430463]
+/bin/sh[0x4335b3]
+/bin/sh(execute_command_internal+0x89d)[0x4303bd]
+/bin/sh(execute_command+0x4e)[0x43110e]
+/bin/sh[0x43357e]
+/bin/sh(execute_command_internal+0x89d)[0x4303bd]
+/bin/sh(execute_command+0x4e)[0x43110e]
+/bin/sh[0x43357e]
+/bin/sh(execute_command_internal+0x89d)[0x4303bd]
+/bin/sh(execute_command+0x4e)[0x43110e]
+/bin/sh[0x43357e]
+/bin/sh(execute_command_internal+0x89d)[0x4303bd]
+/bin/sh(execute_command+0x4e)[0x43110e]
+/bin/sh[0x43357e]
+======= Memory map: ========
+00400000-004d5000 r-xp 00000000 fc:00 917508                             /bin/bash
+006d4000-006dd000 rw-p 000d4000 fc:00 917508                             /bin/bash
+006dd000-006e3000 rw-p 00000000 00:00 0
+008dc000-008e5000 rw-p 000dc000 fc:00 917508                             /bin/bash
+01b7d000-01c01000 rw-p 00000000 00:00 0                                  [heap]
+35e9200000-35e9220000 r-xp 00000000 fc:00 786435                         /lib64/ld-2.12.so
+35e9420000-35e9421000 r--p 00020000 fc:00 786435                         /lib64/ld-2.12.so
+35e9421000-35e9422000 rw-p 00021000 fc:00 786435                         /lib64/ld-2.12.so
+35e9422000-35e9423000 rw-p 00000000 00:00 0
+35e9600000-35e978b000 r-xp 00000000 fc:00 786438                         /lib64/libc-2.12.so
+35e978b000-35e998a000 ---p 0018b000 fc:00 786438                         /lib64/libc-2.12.so
+35e998a000-35e998e000 r--p 0018a000 fc:00 786438                         /lib64/libc-2.12.so
+35e998e000-35e9990000 rw-p 0018e000 fc:00 786438                         /lib64/libc-2.12.so
+35e9990000-35e9994000 rw-p 00000000 00:00 0
+35e9e00000-35e9e02000 r-xp 00000000 fc:00 786529                         /lib64/libdl-2.12.so
+35e9e02000-35ea002000 ---p 00002000 fc:00 786529                         /lib64/libdl-2.12.so
+35ea002000-35ea003000 r--p 00002000 fc:00 786529                         /lib64/libdl-2.12.so
+35ea003000-35ea004000 rw-p 00003000 fc:00 786529                         /lib64/libdl-2.12.so
+35f2e00000-35f2e16000 r-xp 00000000 fc:00 786843                         /lib64/libgcc_s-4.4.7-20120601.so.1
+35f2e16000-35f3015000 ---p 00016000 fc:00 786843                         /lib64/libgcc_s-4.4.7-20120601.so.1
+35f3015000-35f3016000 rw-p 00015000 fc:00 786843                         /lib64/libgcc_s-4.4.7-20120601.so.1
+35fae00000-35fae1d000 r-xp 00000000 fc:00 786960                         /lib64/libtinfo.so.5.7
+35fae1d000-35fb01c000 ---p 0001d000 fc:00 786960                         /lib64/libtinfo.so.5.7
+35fb01c000-35fb020000 rw-p 0001c000 fc:00 786960                         /lib64/libtinfo.so.5.7
+35fb020000-35fb021000 rw-p 00000000 00:00 0
+7fee5c000000-7fee5c021000 rw-p 00000000 00:00 0
+7fee5c021000-7fee60000000 ---p 00000000 00:00 0
+7fee61e9d000-7fee67d32000 r--p 00000000 fc:07 788527                     /usr/lib/locale/locale-archive
+7fee67d32000-7fee67d36000 rw-p 00000000 00:00 0
+7fee67d3e000-7fee67d3f000 rw-p 00000000 00:00 0
+7fee67d3f000-7fee67d46000 r--s 00000000 fc:07 1179907                    /usr/lib64/gconv/gconv-modules.cache
+7fee67d46000-7fee67d47000 rw-p 00000000 00:00 0
+7fff5a0ef000-7fff5a110000 rw-p 00000000 00:00 0                          [stack]
+7fff5a17e000-7fff5a17f000 r-xp 00000000 00:00 0                          [vdso]
+ffffffffff600000-ffffffffff601000 r-xp 00000000 00:00 0                  [vsyscall]
+Executing /u02/app/11.2.0.4/grid/perl/bin/perl /u02/app/11.2.0.4/grid/OPatch/crs/patch11203.pl -patchdir /infshare/software/PSU/JUL2020/31326410 -patchn 31305209 -paramfile /u02/app/11.2.0.4/grid/crs/install/crsconfig_params
+
+This is the main log file: /u02/app/11.2.0.4/grid/cfgtoollogs/opatchauto2020-09-19_09-24-02.log
+
+This file will show your detected configuration and all the steps that opatchauto attempted to do on your system:
+/u02/app/11.2.0.4/grid/cfgtoollogs/opatchauto2020-09-19_09-24-02.report.log
+
+2020-09-19 09:24:02: statusing Clusterware Patch Setup
+Using configuration parameter file: /u02/app/11.2.0.4/grid/crs/install/crsconfig_params
+
+[root@hrewoel16 OPatch]# tail -f /u02/app/11.2.0.4/grid/cfgtoollogs/opatchauto2020-09-19_09-24-02.report.log
+3: /u02/app/11.2.0.4/grid/OPatch/opatch prereq CheckComponents -ph /infshare/software/PSU/JUL2020/31326410/31305209/31103343 -oh /u02/app/11.2.0.4/grid
+
+4: /u02/app/11.2.0.4/grid/OPatch/opatch prereq CheckConflictAgainstOH -ph /infshare/software/PSU/JUL2020/31326410/31305209/31103343 -oh /u02/app/11.2.0.4/grid
+
+5: /u02/app/oracle/product/11.2.0.4/db_1/bin/emctl status dbconsole
+
+6: /u02/app/oracle/product/11.2.0.4/db_1/bin/emctl status agent
+
+7: /u02/app/oracle/product/11.2.0.4/db_1/OPatch/opatch prereq CheckApplicable -ph /infshare/software/PSU/JUL2020/31326410/31305209/31103343 -oh /u02/app/oracle/product/11.2.0.4/db_1
+
+srvctl start database -d ARC &
+srvctl start database -d HFKC &
+srvctl start database -d HFPRD &
+srvctl start database -d PRDSES &
+srvctl start database -d PRD88R &
+srvctl start database -d HROEMREP &
+srvctl start database -d HRPRDREP &
+srvctl start database -d PRDREP &
+
+
+
+srvctl status database -d ARC &
+srvctl status database -d HFKC &
+srvctl status database -d HFPRD &
+srvctl status database -d PRDSES &
+srvctl status database -d PRD88R &
+srvctl status database -d HROEMREP &
+srvctl status database -d HRPRDREP &
+srvctl status database -d PRDREP &
+
+srvctl stop database -d ARC &
+srvctl stop database -d HFKC &
+srvctl stop database -d HFPRD &
+srvctl stop database -d PRDSES &
+srvctl stop database -d PRD88R &
+srvctl stop database -d HROEMREP &
+srvctl stop database -d HRPRDREP &
+srvctl stop database -d PRDREP &
+
+
+
+
+
+
+
+[root@hrvlprddb7601 OPatch]# ./opatchauto apply /u02/software/PSU/JUL2020/31326369/31305339 &
+[1] 27794
+[root@hrvlprddb7601 OPatch]#
+OPatchauto session is initiated at Sat Sep 19 10:59:11 2020
+
+System initialization log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchautodb/systemconfig2020-09-19_10-59-14AM.log.
+
+Session log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchauto/opatchauto2020-09-19_10-59-20AM.log
+The id for this session is 9SM6
+
+Executing OPatch prereq operations to verify patch applicability on home /u02/app/oracle/product/19.3.0/db_1
+Patch applicability verified successfully on home /u02/app/oracle/product/19.3.0/db_1
+
+
+Verifying SQL patch applicability on home /u02/app/oracle/product/19.3.0/db_1
+SQL patch applicability verified successfully on home /u02/app/oracle/product/19.3.0/db_1
+
+
+Executing OPatch prereq operations to verify patch applicability on home /u02/app/19.3.0/grid
+
+
+
+
+[root@hrvlprddb7602 OPatch]# ./opatchauto apply /u02/software/PSU/JUL2020/31326369/31305339 &
+[1] 9973
+[root@hrvlprddb7602 OPatch]#
+OPatchauto session is initiated at Sat Sep 19 11:05:04 2020
+
+System initialization log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchautodb/systemconfig2020-09-19_11-05-07AM.log.
+
+Session log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchauto/opatchauto2020-09-19_11-05-14AM.log
+The id for this session is G5ML
+

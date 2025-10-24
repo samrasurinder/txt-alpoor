@@ -1,0 +1,236 @@
+The Oracle base has been set to /u02/app/oracle
+[oracle@hrewoel48 ~]$ cd $ORACLE_HOME
+[oracle@hrewoel48 db_1]$ cd OPatch
+[oracle@hrewoel48 OPatch]$ ./opatch lspatches
+32399816;OJVM RELEASE UPDATE: 19.11.0.0.210420 (32399816)
+32847378;OCW Interim patch for 32847378
+31602782;SAME INSTANCE SLAVE PARSE FAILURE FLOOD CONTROL
+31143146;ORA-00600  [QOSDEXPSTATREAD  EXPCNT MISMATCH]  EVEN AFTER APPLYING 28681153
+32545013;Database Release Update : 19.11.0.0.210420 (32545013)
+
+OPatch succeeded.
+[oracle@hrewoel48 OPatch]$
+
+$ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir /infshare/oracle/patches/OCTPSU/33248471/33182768/33192793
+$ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir /infshare/oracle/patches/OCTPSU/33248471/33182768/33208123
+
+
+srvctl stop home -oraclehome $ORACLE_HOME -statefile ~/state.txt -node hrewoel48
+
+./opatch rollback -id 31602782
+./opatch rollback -id 31143146
+./opatch rollback -id 32847378
+
+
+
+OPatch succeeded.
+[oracle@hrewoel48 OPatch]$ ./opatch rollback -id 32847378
+Oracle Interim Patch Installer version 12.2.0.1.28
+Copyright (c) 2022, Oracle Corporation.  All rights reserved.
+
+
+Oracle Home       : /u02/app/oracle/product/19.3.0/db_1
+Central Inventory : /u02/app/oraInventory
+   from           : /u02/app/oracle/product/19.3.0/db_1/oraInst.loc
+OPatch version    : 12.2.0.1.28
+OUI version       : 12.2.0.7.0
+Log file location : /u02/app/oracle/product/19.3.0/db_1/cfgtoollogs/opatch/opatch2022-01-09_09-38-52AM_1.log
+
+
+Patches will be rolled back in the following order:
+   32847378
+
+--------------------------------------------------------------------------------
+Start OOP by Prereq process.
+Launch OOP...
+
+Oracle Interim Patch Installer version 12.2.0.1.28
+Copyright (c) 2022, Oracle Corporation.  All rights reserved.
+
+
+Oracle Home       : /u02/app/oracle/product/19.3.0/db_1
+Central Inventory : /u02/app/oraInventory
+   from           : /u02/app/oracle/product/19.3.0/db_1/oraInst.loc
+OPatch version    : 12.2.0.1.28
+OUI version       : 12.2.0.7.0
+Log file location : /u02/app/oracle/product/19.3.0/db_1/cfgtoollogs/opatch/opatch2022-01-09_09-39-20AM_1.log
+
+
+Patches will be rolled back in the following order:
+   32847378
+The following patch(es) will be rolled back: 32847378
+
+Please shutdown Oracle instances running out of this ORACLE_HOME on the local system.
+(Oracle Home = '/u02/app/oracle/product/19.3.0/db_1')
+
+
+Is the local system ready for patching? [y|n]
+y
+User Responded with: Y
+
+Rolling back patch 32847378...
+
+RollbackSession rolling back interim patch '32847378' from OH '/u02/app/oracle/product/19.3.0/db_1'
+
+Patching component oracle.rdbms, 19.0.0.0.0...
+
+Patching component oracle.has.common, 19.0.0.0.0...
+
+Patching component oracle.rhp.common, 19.0.0.0.0...
+
+Patching component oracle.has.common.cvu, 19.0.0.0.0...
+
+Patching component oracle.has.db.cvu, 19.0.0.0.0...
+
+Patching component oracle.has.rsf, 19.0.0.0.0...
+
+Patching component oracle.has.db, 19.0.0.0.0...
+
+Patching component oracle.rhp.db, 19.0.0.0.0...
+RollbackSession removing interim patch '32847378' from inventory
+Inactive sub-set patch [32579761] has become active due to the rolling back of a super-set patch [32847378].
+Please refer to Doc ID 2161861.1 for any possible further required actions.
+Log file location: /u02/app/oracle/product/19.3.0/db_1/cfgtoollogs/opatch/opatch2022-01-09_09-39-20AM_1.log
+
+
+
+
+[grid@hrewoel48 OPatch]$ ./opatchauto rollback /infshare/oracle/patches/32847378
+
+OPatchauto session is initiated at Sun Jan  9 09:50:02 2022
+OPATCHAUTO-72046: Wallet option is not provided.
+OPATCHAUTO-72046: Wallet option is required during patching as non-root user.
+OPATCHAUTO-72046: Please provide a wallet option or execute as root user.
+
+OPatchauto session completed at Sun Jan  9 09:50:03 2022
+Time taken to complete the session 0 minute, 1 second
+
+opatchauto bootstrapping failed with error code 255.
+[grid@hrewoel48 OPatch]$ exit
+logout
+[root@hrewoel48 OPatch]# ./opatchauto rollback /infshare/oracle/software/32847378/
+
+OPatchauto session is initiated at Sun Jan  9 09:51:28 2022
+
+System initialization log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchautodb/systemconfig2022-01-09_09-51-29AM.log.
+
+Session log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchauto/opatchauto2022-01-09_09-51-51AM.log
+The id for this session is A81L
+
+Executing OPatch prereq operations to verify patch applicability on home /u02/app/19.3.0/grid
+
+Executing OPatch prereq operations to verify patch applicability on home /u02/app/oracle/product/19.3.0/db_1
+Patch applicability verified successfully on home /u02/app/oracle/product/19.3.0/db_1
+
+Patch applicability verified successfully on home /u02/app/19.3.0/grid
+
+
+Executing patch validation checks on home /u02/app/19.3.0/grid
+Patch validation checks successfully completed on home /u02/app/19.3.0/grid
+
+
+Verifying SQL patch applicability on home /u02/app/oracle/product/19.3.0/db_1
+No step execution required.........
+
+
+Preparing to bring down database service on home /u02/app/oracle/product/19.3.0/db_1
+Successfully prepared home /u02/app/oracle/product/19.3.0/db_1 to bring down database service
+
+
+Performing prepatch operations on CRS - bringing down CRS service on home /u02/app/19.3.0/grid
+Prepatch operation log file location: /u02/app/grid/crsdata/hrewoel48/crsconfig/crs_prepatch_rollback_inplace_hrewoel48_2022-01-09_09-52-11AM.log
+CRS service brought down successfully on home /u02/app/19.3.0/grid
+
+
+Start rolling back binary patch on home /u02/app/19.3.0/grid
+Binary patch rolled back successfully on home /u02/app/19.3.0/grid
+
+
+Performing postpatch operations on CRS - starting CRS service on home /u02/app/19.3.0/grid
+
+
+
+
+
+
+
+
+Postpatch operation log file location: /u02/app/grid/crsdata/hrewoel48/crsconfig/crs_postpatch_rollback_inplace_hrewoel48_2022-01-09_09-54-21AM.log
+CRS service started successfully on home /u02/app/19.3.0/grid
+
+
+Preparing home /u02/app/oracle/product/19.3.0/db_1 after database service restarted
+No step execution required.........
+
+OPatchAuto successful.
+
+--------------------------------Summary--------------------------------
+
+Patching is completed successfully. Please find the summary as follows:
+
+Host:hrewoel48
+RAC Home:/u02/app/oracle/product/19.3.0/db_1
+Version:19.0.0.0.0
+Summary:
+
+==Following patches were SKIPPED:
+
+Patch: /infshare/oracle/software/32847378/32847378
+Reason: This Patch does not exist in the home, it cannot be rolled back.
+
+
+Host:hrewoel48
+CRS Home:/u02/app/19.3.0/grid
+Version:19.0.0.0.0
+Summary:
+
+==Following patches were SUCCESSFULLY rolled back:
+
+Patch: /infshare/oracle/software/32847378/32847378
+Log: /u02/app/19.3.0/grid/cfgtoollogs/opatchauto/core/opatch/opatch2022-01-09_09-53-38AM_1.log
+
+
+
+OPatchauto session completed at Sun Jan  9 09:59:59 2022
+Time taken to complete the session 8 minutes, 31 seconds
+
+
+
+
+
+[root@hrewoel48 ~]# $ORACLE_HOME/OPatch/opatchauto apply /infshare/oracle/patches/OCTPSU/33248471/33182768 &
+[1] 31765
+[root@hrewoel48 ~]#
+OPatchauto session is initiated at Sun Jan  9 10:04:45 2022
+
+System initialization log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchautodb/systemconfig2022-01-09_10-04-47AM.log.
+
+Session log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchauto/opatchauto2022-01-09_10-05-10AM.log
+The id for this session is CFCM
+
+Executing OPatch prereq operations to verify patch applicability on home /u02/app/19.3.0/grid
+
+Executing OPatch prereq operations to verify patch applicability on home /u02/app/oracle/product/19.3.0/db_1
+Patch applicability verified successfully on home /u02/app/oracle/product/19.3.0/db_1
+
+Patch applicability verified successfully on home /u02/app/19.3.0/grid
+
+
+Executing patch validation checks on home /u02/app/19.3.0/grid
+Patch validation checks successfully completed on home /u02/app/19.3.0/grid
+
+
+Executing patch validation checks on home /u02/app/oracle/product/19.3.0/db_1
+Patch validation checks successfully completed on home /u02/app/oracle/product/19.3.0/db_1
+
+
+Verifying SQL patch applicability on home /u02/app/oracle/product/19.3.0/db_1
+SQL patch applicability verified successfully on home /u02/app/oracle/product/19.3.0/db_1
+
+
+Preparing to bring down database service on home /u02/app/oracle/product/19.3.0/db_1
+Successfully prepared home /u02/app/oracle/product/19.3.0/db_1 to bring down database service
+
+
+Performing prepatch operations on CRS - bringing down CRS service on home /u02/app/19.3.0/grid
+

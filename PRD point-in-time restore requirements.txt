@@ -1,0 +1,55 @@
+
+
+
+
+Source : RMAN backups are taken from hrewoel07
+
+Target server : hrewoel29
+
+
+
+Step 1)
+
+Alllocate  storage of 2TB and attach it to Linux mgmt server hrvlprdsw7600.hr.state.sbu as a mountpoint '/rmanbackups'
+
+
+
+Step 2)
+
+Allocate 4 500GB chunks of raw devices  (total 2TB) attach them to hrewoel29 and hrewoel30
+
+Please provide me full device names for these 4 raw devices so that I can format them from my side
+
+
+Step 3):
+
+Following Backup-pieces to be retrieved from AVAMAR and placed in the mountpoint (/rmanbackups) on hrvlprdsw7600.hr.state.sbu
+
+
+ 
+        Handle: PRD_s100jrpm_1_1_20210605   Media: avtar007
+        Handle: PRD_s300jtlf_1_1_20210605   Media: avtar007
+        Handle: PRD_s000jqvs_1_1_20210605   Media: avtar007
+        Handle: PRD_ru00jpa2_1_1_20210605   Media: avtar007
+        Handle: PRD_rv00jq62_1_1_20210605   Media: avtar007
+        Handle: PRD_s400jue1_1_1_20210605   Media: avtar007
+        Handle: PRD_s200jsn8_1_1_20210605   Media: avtar007
+        Handle: PRD_nu0098bn_1_2_20210601   Media: avtar007
+        Handle: PRD_nv0098bn_1_2_20210601   Media: avtar007
+        Handle: PRD_o00098bn_1_2_20210601   Media: avtar007
+        Handle: PRD_o10098bo_1_2_20210601   Media: avtar007
+        Handle: PRD_o20098bo_1_2_20210601   Media: avtar007
+        Handle: PRD_o600bq8c_1_2_20210602   Media: avtar007
+        Handle: PRD_o700bq8c_1_2_20210602   Media: avtar007
+        Handle: PRD_o800bq8c_1_2_20210602   Media: avtar007
+        CONTROLFILE.c-1836890876-20210601-02
+ 
+
+
+Step 4) 
+
+Mount /rmanbackups to hrewoel29 so that I can read them from that host
+
+
+
+

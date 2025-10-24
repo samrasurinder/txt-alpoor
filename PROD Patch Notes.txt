@@ -1,0 +1,259 @@
+
+
+
+Pre Patch Steps:
+---------------
+
+
+Get Cluster status:
+
+on any node:
+As grid:  crsctl stat res -t  >  /infshare/software/PSU/APR2019/APR2019/crsctl_status_before_patch.log
+
+
+As Oracle: 
+
+on each node:
+/u02/app/oracle/product/11.2.0.4/db_1/bin/srvctl stop home -o /u02/app/oracle/product/11.2.0.4/db_1 -s /infshare/software/PSU/APR2019/APR2019/hrewoel06.txt -n hrewoel06
+
+/u02/app/oracle/product/11.2.0.4/db_1/bin/srvctl start home -o /u02/app/oracle/product/11.2.0.4/db_1 -s /infshare/software/PSU/APR2019/APR2019/hrewoel07_start.txt -n hrewoel07
+
+
+
+/u02/app/oracle/product/11.2.0.4/db_1/bin/srvctl stop home -o /u02/app/oracle/product/11.2.0.4/db_1 -s /infshare/software/PSU/APR2019/hrmdc1oel08.txt -n hrmdc1oel08
+
+
+
+
+
+For each database:
+-----------------
+
+Run following scripts and spool output:
+
+select owner,OBJECT_NAME,OBJECT_TYPE from dba_invalid_objects order by owner;
+
+select owner,count(*) from dba_invalid_objects group by owner order by owner;
+
+
+col comp_id format a20
+col comp_name format a40
+col version format a15
+col status format a10
+set linesize 100
+select comp_id,comp_name,version,status from dba_registry;
+
+
+
+[root@hrmdc1oel05 ~]# /u02/app/11.2.0.4/grid/crs/install/rootcrs.pl -unlock
+
+ find / -name java -print
+
+
+[root@hrmdc1oel05 ~]# chmod 777 /u02/app/11.2.0.4/grid/jdk/bin/java
+
+ ls -altrh /u02/app/11.2.0.4/grid/jdk/bin/java
+ 
+
+crsctl check crs
+
+
+ crsctl start crs
+
+/u02/app/oracle/product/11.2.0.4/db_1/OPatch/ocm/bin/emocmrsp -no_banner -output /infshare/software/PSU/APR2019/APR2019/ocm.rsp
+
+
+ /u02/app/oracle/product/11.2.0.4/db_1
+
+/u02/app/oracle/product/11.2.0.4/db_1/OPatch/opatch auto /infshare/software/PSU/APR2019/APR2019/29252208/29255947 -ocmrf /infshare/software/PSU/APR2019/APR2019/ocm.rsp -oh /u02/app/11.2.0.4/grid
+
+/u02/app/oracle/product/11.2.0.4/db_1/OPatch/opatch auto /infshare/software/PSU/APR2019/APR2019/29252208/29255947 -ocmrf /infshare/software/PSU/APR2019/APR2019/ocm.rsp -oh /u02/app/oracle/product/11.2.0.4/db_1
+
+
+/u02/app/oracle/product/11.2.0.4/db_1/OPatch/opatch auto /infshare/software/PSU/APR2019/29252208/29255947 -ocmrf /infshare/software/PSU/APR2019/ocm.rsp -oh /u02/app/oracle/product/11.2.0.4/db_1
+
+
+[root@hrmdc1oel05 ~]# ./opatch auto /infshare/software/PSU/APR2019/29252208/29255947 -ocmrf /infshare/software/PSU/APR2019/ocm.rsp -oh /u02/app/oracle/product/11.2.0.4/db_1
+
+
+
+[root@hrmdc1oel05 ~]# /u02/app/oracle/product/11.2.0.4/db_1/OPatch/opatch auto /infshare/software/PSU/APR2019/29252208/29255947 -ocmrf /infshare/software/PSU/APR2019/ocm.rsp -oh /u02/app/oracle/product/11.2.0.4/db_1
+
+
+
+select * from DBA_REGISTRY_SQLPATCH
+
+
+stop oracle agent
+stop oswatch ( as a root tfactl status)
+ps -ef | grep oracle
+ps-ef | grep grid
+
+
+
+
+
+Patch 29252208 - Combo of OJVM Component 11.2.0.4.190416 DB PSU + GI PSU 11.2.0.4.190416
+----------------------------------------------------------------------------------------
+
+Patch Number	  Description	                                                                  Applicable Homes
+
+29141056          DB PSU 11.2.0.4.190416 (INCLUDES CPUApr2019)                                    Both DB Homes and Grid Home
+29141201          OCW PATCH SET UPDATE 11.2.0.4.190416                                            Both DB Homes and Grid Home
+28729245          ACFS PATCH SET UPDATE 11.2.0.4.190115                                           Only Grid Home
+
+
+
+on each node
+
+Step 1) As ROOT user:
+
+/u02/app/11.2.0.4/grid/crs/install/rootcrs.pl -unlock  (2min)
+
+Step 2) As GRID user
+
+/u02/app/11.2.0.4/grid/OPatch/opatch napply -oh  /u02/app/11.2.0.4/grid -local /infshare/software/PSU/APR2019/APR2019/29252208/29255947/29141201/ -ocmrf /infshare/software/PSU/APR2019/APR2019/ocm.rsp
+/u02/app/11.2.0.4/grid/OPatch/opatch napply -oh  /u02/app/11.2.0.4/grid -local /infshare/software/PSU/APR2019/APR2019/29252208/29255947/28729245/ -ocmrf /infshare/software/PSU/APR2019/APR2019/ocm.rsp
+/u02/app/11.2.0.4/grid/OPatch/opatch apply  -oh   /u02/app/11.2.0.4/grid -local /infshare/software/PSU/APR2019/APR2019/29252208/29255947/29141056/ -ocmrf /infshare/software/PSU/APR2019/APR2019/ocm.rsp
+
+
+Step 3) As ORACLE user
+
+/infshare/software/PSU/APR2019/APR2019/29252208/29255947/29141201/custom/server/29141201/custom/scripts/prepatch.sh -dbhome /u02/app/oracle/product/11.2.0.4/db_1
+
+
+Step 4) As ORACLE user
+
+/u02/app/oracle/product/11.2.0.4/db_1/OPatch/opatch napply -oh /u02/app/oracle/product/11.2.0.4/db_1 -local /infshare/software/PSU/APR2019/APR2019/29252208/29255947/29141201/custom/server/29141201 -ocmrf /infshare/software/PSU/APR2019/APR2019/ocm.rsp
+/u02/app/oracle/product/11.2.0.4/db_1/OPatch/opatch apply -oh /u02/app/oracle/product/11.2.0.4/db_1 -local /infshare/software/PSU/APR2019/29252208/29255947/29141056 -ocmrf /infshare/software/PSU/APR2019/ocm.rsp
+
+Step 5) As ORACLE user
+
+/infshare/software/PSU/APR2019/29252208/29255947/29141201/custom/server/29141201/custom/scripts/postpatch.sh -dbhome /u02/app/oracle/product/11.2.0.4/db_1
+
+
+
+Step 6) As ROOT user
+
+/u02/app/11.2.0.4/grid/rdbms/install/rootadd_rdbms.sh 
+/u02/app/11.2.0.4/grid/crs/install/rootcrs.pl -patch
+
+
+Post Patch
+----------
+For each database, login as sys as sysdba
+@?/rdbms/admin/catbundle.sql psu apply
+
+
+
+
+
+Patch 29251270 - Oracle JavaVM Component 11.2.0.4.190416 Database PSU
+---------------------------------------------------------------------
+
+cd /infshare/software/PSU/APR2019/29252208/29251270
+/u02/app/oracle/product/11.2.0.4/db_1/OPatch/opatch apply
+
+Post Patch
+----------
+cd /u02/app/oracle/product/11.2.0.4/db_1/sqlpatch/29251270
+
+Login to each database
+
+For RAC,
+
+alter system set cluster_database=false scope=spfile sid='*';
+shtudown database on all nodes
+startup just first node, using sqlplus ( startup)
+@/u02/app/oracle/product/11.2.0.4/db_1/sqlpatch/29251270/postinstall.sql
+alter system set cluster_database=true scope=spfile sid='*';
+shutdown database;
+startup database using srvctl
+
+Once database starts up on all nodes:
+
+@?/rbdms/admin/utlrp
+
+
+
+
+
+
+
+[root@hrmdc1oel04 ~]# /u02/app/oracle/product/11.2.0.4/db_1/OPatch/opatch auto /infshare/software/PSU/APR2019/29252208/29255947 -ocmrf /infshare/software/PSU/APR2019/ocm.rsp -oh /u02/app/11.2.0.4/grid
+
+
+
+
+Executing /u02/app/11.2.0.4/grid/perl/bin/perl /u02/app/oracle/product/11.2.0.4/db_1/OPatch/crs/patch11203.pl -patchdir /infshare/software/PSU/APR2019/29252208 -patchn 29255947 -ocmrf /infshare/software/PSU/APR2019/ocm.rsp -oh /u02/app/11.2.0.4/grid -paramfile /u02/app/11.2.0.4/grid/crs/install/crsconfig_params
+
+This is the main log file: /u02/app/oracle/product/11.2.0.4/db_1/cfgtoollogs/opatchauto2019-06-21_12-17-53.log
+
+This file will show your detected configuration and all the steps that opatchauto attempted to do on your system:
+/u02/app/oracle/product/11.2.0.4/db_1/cfgtoollogs/opatchauto2019-06-21_12-17-53.report.log
+
+2019-06-21 12:17:53: Starting Clusterware Patch Setup
+Using configuration parameter file: /u02/app/11.2.0.4/grid/crs/install/crsconfig_params
+
+Stopping CRS...
+Stopped CRS successfully
+
+patch /infshare/software/PSU/APR2019/29252208/29255947/29141201  apply successful for home  /u02/app/11.2.0.4/grid
+patch /infshare/software/PSU/APR2019/29252208/29255947/29141056  apply failed  for home  /u02/app/11.2.0.4/grid
+
+Starting CRS...
+Installing Trace File Analyzer
+CRS-4123: Oracle High Availability Services has been started.
+
+opatch auto succeeded.
+You have new mail in /var/spool/mail/root
+[root@hrmdc1oel04 ~]# vi /u02/app/oracle/product/11.2.0.4/db_1/cfgtoollogs/opatchauto2019-06-21_12-17-53.report.log
+[root@hrmdc1oel04 ~]# /u02/app/oracle/product/11.2.0.4/db_1/OPatch/opatch auto /infshare/software/PSU/APR2019/29252208/29255947 -ocmrf /infshare/software/PSU/APR2019/ocm.rsp -oh /u02/app/oracle/product/11.2.0.4/db_1
+Executing /u02/app/11.2.0.4/grid/perl/bin/perl /u02/app/oracle/product/11.2.0.4/db_1/OPatch/crs/patch11203.pl -patchdir /infshare/software/PSU/APR2019/29252208 -patchn 29255947 -ocmrf /infshare/software/PSU/APR2019/ocm.rsp -oh /u02/app/oracle/product/11.2.0.4/db_1 -paramfile /u02/app/11.2.0.4/grid/crs/install/crsconfig_params
+
+This is the main log file: /u02/app/oracle/product/11.2.0.4/db_1/cfgtoollogs/opatchauto2019-06-21_12-33-55.log
+
+This file will show your detected configuration and all the steps that opatchauto attempted to do on your system:
+/u02/app/oracle/product/11.2.0.4/db_1/cfgtoollogs/opatchauto2019-06-21_12-33-55.report.log
+
+2019-06-21 12:33:55: Starting Clusterware Patch Setup
+Using configuration parameter file: /u02/app/11.2.0.4/grid/crs/install/crsconfig_params
+
+Stopping RAC /u02/app/oracle/product/11.2.0.4/db_1 ...
+Stopped RAC /u02/app/oracle/product/11.2.0.4/db_1 successfully
+
+patch /infshare/software/PSU/APR2019/29252208/29255947/29141201/custom/server/29141201  apply successful for home  /u02/app/oracle/product/11.2.0.4/db_1
+patch /infshare/software/PSU/APR2019/29252208/29255947/29141056  apply successful for home  /u02/app/oracle/product/11.2.0.4/db_1
+
+Starting RAC /u02/app/oracle/product/11.2.0.4/db_1 ...
+Started RAC /u02/app/oracle/product/11.2.0.4/db_1 successfully
+
+opatch auto succeeded.
+[root@hrmdc1oel04 ~]#
+
+
+
+
+
+
+ lsof /u02/app/11.2.0.4/grid/lib/libclntsh.so.11.1
+kill -9 job
+opatch error code 73: Prerequisite check "CheckActiveFilesAndExecutables" failed. (Doc ID 1942237.1)	To BottomTo Bottom	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,1143 @@
+create or replace PACKAGE BODY                               PKG_LOAD_MVIEWS
+IS
+   PROCEDURE prc_ilms_emp (pv_checksum_total_o OUT PLS_INTEGER)
+   IS
+      TYPE r_checksum IS RECORD
+      (
+         startkey      VARCHAR2 (7),
+         deleted_ind   VARCHAR (1)
+      );
+
+      TYPE t_checksum IS TABLE OF r_checksum
+                            INDEX BY PLS_INTEGER;
+
+      ltbl_checksum_delta   t_checksum;
+
+      lv_count              PLS_INTEGER;
+
+      lv_sysdate            DATE := SYSDATE;
+   BEGIN
+      SELECT COUNT (*) INTO lv_count FROM ilms_employee_checksum;
+
+      IF lv_count = 0 -- need to have reset flag to re-pull all data not matter what
+      THEN
+         BEGIN
+            INSERT INTO ilms_employee_checksum
+               SELECT startkey, lv_sysdate - 1, 'N'
+                 FROM (SELECT DISTINCT startkey FROM mv_ilms_employees);
+
+            COMMIT;
+         EXCEPTION
+            WHEN OTHERS
+            THEN
+               ROLLBACK;
+               RAISE;
+         END;
+      END IF;
+
+      -- Get any employee data that has changed
+      WITH ilms_emp
+           AS ( (SELECT a.*, 'N' deleted_ind
+                   FROM vw_ilms_employee a
+                 MINUS
+                 SELECT b.*, 'N' deleted_ind
+                   FROM mv_ilms_employees b)
+               UNION ALL
+               (SELECT c.*, 'Y' deleted_ind
+                  FROM mv_ilms_employees c
+                 WHERE startkey NOT IN
+                          (SELECT startkey FROM vw_ilms_employee)))
+        SELECT DISTINCT startkey, deleted_ind
+          BULK COLLECT INTO ltbl_checksum_delta
+          FROM ilms_emp
+      --make sure the delete happens after the update in case both exist
+      ORDER BY startkey, deleted_ind;
+
+      hr_online_s.write_hr_msg_info_logonly (
+         'ILMS Emp deltas ' || ltbl_checksum_delta.COUNT);
+
+      pv_checksum_total_o := ltbl_checksum_delta.COUNT;
+
+      FOR x IN 1 .. ltbl_checksum_delta.COUNT
+      LOOP
+         BEGIN
+            UPDATE ilms_employee_checksum
+               SET deleted_ind = ltbl_checksum_delta (x).deleted_ind,
+                   last_changed_date = lv_sysdate
+             WHERE startkey = ltbl_checksum_delta (x).startkey;
+
+            IF SQL%ROWCOUNT = 0
+            THEN
+               INSERT INTO ilms_employee_checksum
+                    VALUES (
+                              ltbl_checksum_delta (x).startkey,
+                              lv_sysdate,
+                              ltbl_checksum_delta (x).deleted_ind);
+            END IF;
+         EXCEPTION
+            WHEN OTHERS
+            THEN
+               ROLLBACK;
+               RAISE;
+         END;
+      END LOOP;
+
+
+      WITH ilms_emp_efm
+           AS ( (SELECT a.*
+                   FROM vw_ilms_traveler_efm a
+                 MINUS
+                 SELECT b.*
+                   FROM mv_ilms_traveler_efms b)
+               UNION ALL
+               (SELECT c.*
+                  FROM mv_ilms_traveler_efms c
+                 WHERE ecr_efm_id NOT IN
+                          (SELECT ecr_efm_id FROM vw_ilms_traveler_efm)))
+        SELECT DISTINCT e.startkey, 'N' deleted_ind
+          BULK COLLECT INTO ltbl_checksum_delta
+          FROM ilms_emp_efm d, vw_ilms_employee e
+         WHERE d.ecr_empl_id = e.emplid
+      -- make sure the delete happens after the update in case both exist
+      ORDER BY startkey, deleted_ind;
+
+      hr_online_s.write_hr_msg_info_logonly (
+         'ILMS Traveler EFM ' || ltbl_checksum_delta.COUNT);
+
+      FOR x IN 1 .. ltbl_checksum_delta.COUNT
+      LOOP
+         BEGIN
+            UPDATE ilms_employee_checksum
+               SET deleted_ind = ltbl_checksum_delta (x).deleted_ind,
+                   last_changed_date = lv_sysdate
+             WHERE     startkey = ltbl_checksum_delta (x).startkey
+                   AND last_changed_date <> lv_sysdate
+                   AND deleted_ind <> 'Y';
+
+            pv_checksum_total_o := pv_checksum_total_o + SQL%ROWCOUNT;
+         EXCEPTION
+            WHEN OTHERS
+            THEN
+               ROLLBACK;
+               RAISE;
+         END;
+      END LOOP;
+
+
+      WITH ilms_emp_train
+           AS ( (SELECT a.*
+                   FROM vw_ilms_emp_training a
+                 MINUS
+                 SELECT b.*
+                   FROM mv_ilms_emp_training b)
+               UNION ALL
+               (SELECT c.*
+                  FROM mv_ilms_emp_training c
+                 WHERE (EMPLID, GM_DOS_EVENT_ID) NOT IN
+                          (SELECT EMPLID, GM_DOS_EVENT_ID
+                             FROM vw_ilms_emp_training)))
+        SELECT DISTINCT e.startkey, 'N' deleted_ind
+          BULK COLLECT INTO ltbl_checksum_delta
+          FROM ilms_emp_train d, vw_ilms_employee e
+         WHERE d.emplid = e.emplid
+      -- make sure the delete happens after the update in case both exist
+      ORDER BY startkey, deleted_ind;
+
+      hr_online_s.write_hr_msg_info_logonly (
+         'ILMS Emp Training deltas ' || ltbl_checksum_delta.COUNT);
+
+      FOR x IN 1 .. ltbl_checksum_delta.COUNT
+      LOOP
+         BEGIN
+            UPDATE ilms_employee_checksum
+               SET deleted_ind = ltbl_checksum_delta (x).deleted_ind,
+                   last_changed_date = lv_sysdate
+             WHERE     startkey = ltbl_checksum_delta (x).startkey
+                   AND last_changed_date <> lv_sysdate
+                   AND deleted_ind <> 'Y';
+
+            pv_checksum_total_o := pv_checksum_total_o + SQL%ROWCOUNT;
+         EXCEPTION
+            WHEN OTHERS
+            THEN
+               ROLLBACK;
+               RAISE;
+         END;
+      END LOOP;
+
+      WITH ilms_emp_asg
+           AS ( (SELECT a.*
+                   FROM VW_FSBID_ASG_S a
+                 MINUS
+                 SELECT b.*
+                   FROM mv_ilms_emp_asg b)
+               UNION ALL
+               (SELECT c.*
+                  FROM mv_ilms_emp_asg c
+                 WHERE EMPLID NOT IN (SELECT EMPLID FROM VW_FSBID_ASG_S)))
+        SELECT DISTINCT e.startkey, 'N' deleted_ind
+          BULK COLLECT INTO ltbl_checksum_delta
+          FROM ilms_emp_asg d, vw_ilms_employee e
+         WHERE d.emplid = e.emplid
+      -- make sure the delete happens after the update in case both exist
+      ORDER BY startkey, deleted_ind;
+
+      hr_online_s.write_hr_msg_info_logonly (
+         'ILMS Emp Asgs ' || ltbl_checksum_delta.COUNT);
+
+      FOR x IN 1 .. ltbl_checksum_delta.COUNT
+      LOOP
+         BEGIN
+            UPDATE ilms_employee_checksum
+               SET deleted_ind = ltbl_checksum_delta (x).deleted_ind,
+                   last_changed_date = lv_sysdate
+             WHERE     startkey = ltbl_checksum_delta (x).startkey
+                   AND last_changed_date <> lv_sysdate
+                   AND deleted_ind <> 'Y';
+
+            pv_checksum_total_o := pv_checksum_total_o + SQL%ROWCOUNT;
+         EXCEPTION
+            WHEN OTHERS
+            THEN
+               ROLLBACK;
+               RAISE;
+         END;
+      END LOOP;
+
+
+      WITH ilms_emp_sep
+           AS ( (SELECT a.*
+                   FROM VW_FSBID_SEP_S a
+                 MINUS
+                 SELECT b.*
+                   FROM mv_ilms_emp_sep b)
+               UNION ALL
+               (SELECT c.*
+                  FROM mv_ilms_emp_sep c
+                 WHERE EMPLID NOT IN (SELECT EMPLID FROM VW_FSBID_SEP_S)))
+        SELECT DISTINCT e.startkey, 'N' deleted_ind
+          BULK COLLECT INTO ltbl_checksum_delta
+          FROM ilms_emp_sep d, vw_ilms_employee e
+         WHERE d.emplid = e.emplid
+      -- make sure the delete happens after the update in case both exist
+      ORDER BY startkey, deleted_ind;
+
+
+      hr_online_s.write_hr_msg_info_logonly (
+         'ILMS Emp Seps deltas ' || ltbl_checksum_delta.COUNT);
+
+      FOR x IN 1 .. ltbl_checksum_delta.COUNT
+      LOOP
+         BEGIN
+            UPDATE ilms_employee_checksum
+               SET deleted_ind = ltbl_checksum_delta (x).deleted_ind,
+                   last_changed_date = lv_sysdate
+             WHERE     startkey = ltbl_checksum_delta (x).startkey
+                   AND last_changed_date <> lv_sysdate
+                   AND deleted_ind <> 'Y';
+
+            pv_checksum_total_o := pv_checksum_total_o + SQL%ROWCOUNT;
+         EXCEPTION
+            WHEN OTHERS
+            THEN
+               ROLLBACK;
+               RAISE;
+         END;
+      END LOOP;
+
+      COMMIT;
+   END;
+
+
+      PROCEDURE prc_amer_pos (pv_checksum_total_o OUT PLS_INTEGER)
+      IS
+         TYPE r_checksum IS RECORD
+         (
+            amer_pos_guid   VARCHAR2 (36),
+            deleted_ind     VARCHAR (1)
+         );
+
+         TYPE t_checksum IS TABLE OF r_checksum
+                               INDEX BY PLS_INTEGER;
+
+         ltbl_checksum_delta   t_checksum;
+
+         lv_count              PLS_INTEGER;
+      BEGIN
+         SELECT COUNT (*) INTO lv_count FROM pibs_amer_pos_checksum;
+
+         IF lv_count = 0 -- need to have reset flag to re-pull all data not matter what
+         THEN
+            BEGIN
+               INSERT INTO pibs_amer_pos_checksum
+                  SELECT amer_pos_guid, SYSDATE - 1, 'N'
+                    FROM (SELECT DISTINCT amer_pos_guid
+                            FROM mv_eaps_pibs_amer_pos);
+
+               COMMIT;
+            EXCEPTION
+               WHEN OTHERS
+               THEN
+                  ROLLBACK;
+                  RAISE;
+            END;
+         END IF;
+
+         -- Get any foreign positions that have  changed
+         WITH amer_pos
+              AS ( (SELECT amer_pos_guid, checksum, 'N' deleted_ind
+                      FROM vw_pibs_amer_pos@eaps.hr.state.sbu
+                    MINUS
+                    SELECT amer_pos_guid, checksum, 'N'
+                      FROM mv_eaps_pibs_amer_pos)
+                  UNION ALL
+                  (SELECT amer_pos_guid, checksum, 'Y' deleted_ind
+                     FROM mv_eaps_pibs_amer_pos
+                    WHERE amer_pos_guid NOT IN
+                             (SELECT amer_pos_guid
+                                FROM vw_pibs_amer_pos@eaps.hr.state.sbu)))
+           SELECT DISTINCT amer_pos_guid, deleted_ind
+             BULK COLLECT INTO ltbl_checksum_delta
+             FROM amer_pos
+         --make sure the delete happens after the update in case both exist
+         ORDER BY amer_pos_guid, deleted_ind;
+
+         DBMS_OUTPUT.PUT_LINE (
+            'ltbl_checksum_delta.count = ' || ltbl_checksum_delta.COUNT);
+
+         pv_checksum_total_o := ltbl_checksum_delta.COUNT;
+
+         FOR x IN 1 .. ltbl_checksum_delta.COUNT
+         LOOP
+            DBMS_OUTPUT.PUT_LINE (
+                  'ltbl_checksum_delta(x).amer_pos_guid = '
+               || ltbl_checksum_delta (x).amer_pos_guid);
+            DBMS_OUTPUT.PUT_LINE (
+                  'ltbl_checksum_delta(x).deleted_ind = '
+               || ltbl_checksum_delta (x).deleted_ind);
+
+            BEGIN
+               UPDATE pibs_amer_pos_checksum
+                  SET deleted_ind = ltbl_checksum_delta (x).deleted_ind,
+                      last_changed_date = SYSDATE
+                WHERE amer_pos_guid = ltbl_checksum_delta (x).amer_pos_guid;
+
+               IF SQL%ROWCOUNT = 0
+               THEN
+                  INSERT INTO pibs_amer_pos_checksum
+                       VALUES (
+                                 ltbl_checksum_delta (x).amer_pos_guid,
+                                 SYSDATE,
+                                 ltbl_checksum_delta (x).deleted_ind);
+               END IF;
+            EXCEPTION
+               WHEN OTHERS
+               THEN
+                  ROLLBACK;
+                  RAISE;
+            END;
+         END LOOP;
+
+
+         WITH amer_emp_pos
+              AS ( (SELECT AMER_POS_GUID, checksum, 'N' deleted_ind
+                      FROM vw_pibs_amer_emp_pos@eaps.hr.state.sbu
+                    MINUS
+                    SELECT AMER_POS_GUID, checksum, 'N'
+                      FROM mv_eaps_pibs_amer_emp_pos)
+                  UNION ALL
+                  (SELECT AMER_POS_GUID, checksum, 'N' deleted_ind
+                     FROM mv_eaps_pibs_amer_emp_pos
+                    WHERE AMER_POS_GUID NOT IN
+                             (SELECT AMER_POS_GUID
+                                FROM vw_pibs_amer_emp_pos@eaps.hr.state.sbu)))
+           SELECT DISTINCT AMER_POS_GUID, deleted_ind
+             BULK COLLECT INTO ltbl_checksum_delta
+             FROM amer_emp_pos
+         -- make sure the delete happens after the update in case both exist
+         ORDER BY AMER_POS_GUID, deleted_ind;
+
+         FOR x IN 1 .. ltbl_checksum_delta.COUNT
+         LOOP
+            BEGIN
+               UPDATE pibs_amer_pos_checksum
+                  SET deleted_ind = ltbl_checksum_delta (x).deleted_ind,
+                      last_changed_date = SYSDATE
+                WHERE     amer_pos_guid = ltbl_checksum_delta (x).amer_pos_guid
+                      AND TRUNC (last_changed_date) <> TRUNC (SYSDATE)
+                      AND deleted_ind <> 'Y';
+
+               pv_checksum_total_o := pv_checksum_total_o + SQL%ROWCOUNT;
+            EXCEPTION
+               WHEN OTHERS
+               THEN
+                  ROLLBACK;
+                  RAISE;
+            END;
+         END LOOP;
+
+         COMMIT;
+      END;
+
+
+      PROCEDURE prc_fn_pos (pv_checksum_total_o OUT PLS_INTEGER)
+      IS
+         TYPE r_checksum IS RECORD
+         (
+            fn_pos_guid   VARCHAR2 (36),
+            deleted_ind   VARCHAR (1)
+         );
+
+         TYPE t_checksum IS TABLE OF r_checksum
+                               INDEX BY PLS_INTEGER;
+
+         ltbl_checksum_delta   t_checksum;
+
+         lv_count              PLS_INTEGER;
+      BEGIN
+         SELECT COUNT (*) INTO lv_count FROM pibs_fn_pos_checksum;
+
+         IF lv_count = 0 -- need to have reset flag to re-pull all data not matter what
+         THEN
+            BEGIN
+               INSERT INTO pibs_fn_pos_checksum
+                  SELECT fn_pos_guid, SYSDATE - 1, 'N'
+                    FROM (SELECT DISTINCT fn_pos_guid FROM mv_eaps_pibs_fn_pos);
+
+               COMMIT;
+            EXCEPTION
+               WHEN OTHERS
+               THEN
+                  ROLLBACK;
+                  RAISE;
+            END;
+         END IF;
+
+         -- Get any foreign positions that have  changed
+         WITH fn_pos
+              AS ( (SELECT fn_pos_guid, checksum, 'N' deleted_ind
+                      FROM vw_pibs_fn_pos@eaps.hr.state.sbu
+                    MINUS
+                    SELECT fn_pos_guid, checksum, 'N' FROM mv_eaps_pibs_fn_pos)
+                  UNION ALL
+                  (SELECT fn_pos_guid, checksum, 'Y' deleted_ind
+                     FROM mv_eaps_pibs_fn_pos
+                    WHERE fn_pos_guid NOT IN
+                             (SELECT fn_pos_guid
+                                FROM vw_pibs_fn_pos@eaps.hr.state.sbu)))
+           SELECT DISTINCT fn_pos_guid, deleted_ind
+             BULK COLLECT INTO ltbl_checksum_delta
+             FROM fn_pos
+         --make sure the delete happens after the update in case both exist
+         ORDER BY fn_pos_guid, deleted_ind;
+
+         DBMS_OUTPUT.PUT_LINE (
+            'ltbl_checksum_delta.count = ' || ltbl_checksum_delta.COUNT);
+
+         pv_checksum_total_o := ltbl_checksum_delta.COUNT;
+
+         FOR x IN 1 .. ltbl_checksum_delta.COUNT
+         LOOP
+            DBMS_OUTPUT.PUT_LINE (
+                  'ltbl_checksum_delta(x).fn_pos_guid = '
+               || ltbl_checksum_delta (x).fn_pos_guid);
+            DBMS_OUTPUT.PUT_LINE (
+                  'ltbl_checksum_delta(x).deleted_ind = '
+               || ltbl_checksum_delta (x).deleted_ind);
+
+            BEGIN
+               UPDATE pibs_fn_pos_checksum
+                  SET deleted_ind = ltbl_checksum_delta (x).deleted_ind,
+                      last_changed_date = SYSDATE
+                WHERE fn_pos_guid = ltbl_checksum_delta (x).fn_pos_guid;
+
+               IF SQL%ROWCOUNT = 0
+               THEN
+                  INSERT INTO pibs_fn_pos_checksum
+                       VALUES (
+                                 ltbl_checksum_delta (x).fn_pos_guid,
+                                 SYSDATE,
+                                 ltbl_checksum_delta (x).deleted_ind);
+               END IF;
+            EXCEPTION
+               WHEN OTHERS
+               THEN
+                  ROLLBACK;
+                  RAISE;
+            END;
+         END LOOP;
+
+
+         WITH fn_emp_pos
+              AS ( (SELECT FN_POS_GUID, checksum, 'N' deleted_ind
+                      FROM vw_pibs_fn_emp_pos@eaps.hr.state.sbu
+                    MINUS
+                    SELECT FN_POS_GUID, checksum, 'N'
+                      FROM mv_eaps_pibs_fn_emp_pos)
+                  UNION ALL
+                  (SELECT FN_POS_GUID, checksum, 'N' deleted_ind
+                     FROM mv_eaps_pibs_fn_emp_pos
+                    WHERE FN_POS_GUID NOT IN
+                             (SELECT FN_POS_GUID
+                                FROM vw_pibs_fn_emp_pos@eaps.hr.state.sbu)))
+           SELECT DISTINCT FN_POS_GUID, deleted_ind
+             BULK COLLECT INTO ltbl_checksum_delta
+             FROM fn_emp_pos
+         -- make sure the delete happens after the update in case both exist
+         ORDER BY FN_POS_GUID, deleted_ind;
+
+         FOR x IN 1 .. ltbl_checksum_delta.COUNT
+         LOOP
+            BEGIN
+               UPDATE pibs_fn_pos_checksum
+                  SET deleted_ind = ltbl_checksum_delta (x).deleted_ind,
+                      last_changed_date = SYSDATE
+                WHERE     fn_pos_guid = ltbl_checksum_delta (x).fn_pos_guid
+                      AND TRUNC (last_changed_date) <> TRUNC (SYSDATE)
+                      AND deleted_ind <> 'Y';
+
+               pv_checksum_total_o := pv_checksum_total_o + SQL%ROWCOUNT;
+            EXCEPTION
+               WHEN OTHERS
+               THEN
+                  ROLLBACK;
+                  RAISE;
+            END;
+         END LOOP;
+
+         COMMIT;
+      END;
+
+
+
+   PROCEDURE prc_fn_dep (pv_checksum_total_o OUT PLS_INTEGER)
+   IS
+      TYPE r_checksum IS RECORD
+      (
+         startkey      VARCHAR2 (73),
+         deleted_ind   VARCHAR (1)
+      );
+
+      TYPE t_checksum IS TABLE OF r_checksum
+                            INDEX BY PLS_INTEGER;
+
+      ltbl_checksum_delta   t_checksum;
+
+      lv_count              PLS_INTEGER;
+   BEGIN
+      SELECT COUNT (*) INTO lv_count FROM pairs_fn_dep_checksum;
+
+      IF lv_count = 0 -- need to have reset flag to re-pull all data not matter what
+      THEN
+         BEGIN
+            INSERT INTO pairs_fn_dep_checksum
+               SELECT startkey, SYSDATE - 1, 'N'
+                 FROM (SELECT DISTINCT startkey FROM mv_eaps_pairs_fn_dep);
+
+            COMMIT;
+         EXCEPTION
+            WHEN OTHERS
+            THEN
+               ROLLBACK;
+               RAISE;
+         END;
+      END IF;
+
+      -- Get any american dependent who has changed and record in the node tree - dep document
+      -- and update the checksum table
+      WITH amer_emp
+           AS ( (SELECT EMP_GUID || '-' || FN_EMP_DPNDNT_GUID startkey,
+                        checksum,
+                        'N' deleted_ind
+                   FROM vw_pairs_fnemp_dpnd@eaps.hr.state.sbu
+                 MINUS
+                 SELECT startkey, checksum, 'N' FROM mv_eaps_pairs_fn_dep)
+               UNION ALL
+               (SELECT startkey, checksum, 'Y' deleted_ind
+                  FROM mv_eaps_pairs_fn_dep
+                 WHERE startkey NOT IN
+                          (SELECT EMP_GUID || '-' || FN_EMP_DPNDNT_GUID
+                                     startkey
+                             FROM vw_pairs_fnemp_dpnd@eaps.hr.state.sbu)))
+        SELECT DISTINCT startkey, deleted_ind
+          BULK COLLECT INTO ltbl_checksum_delta
+          FROM amer_emp
+      --make sure the delete happens after the update in case both exist
+      ORDER BY startkey, deleted_ind;
+
+
+      pv_checksum_total_o := ltbl_checksum_delta.COUNT;
+
+      FOR x IN 1 .. ltbl_checksum_delta.COUNT
+      LOOP
+         BEGIN
+            UPDATE pairs_fn_dep_checksum
+               SET deleted_ind = ltbl_checksum_delta (x).deleted_ind,
+                   last_changed_date = SYSDATE
+             WHERE startkey = ltbl_checksum_delta (x).startkey;
+
+            IF SQL%ROWCOUNT = 0
+            THEN
+               INSERT INTO pairs_fn_dep_checksum
+                    VALUES (
+                              ltbl_checksum_delta (x).startkey,
+                              SYSDATE,
+                              ltbl_checksum_delta (x).deleted_ind);
+            END IF;
+         EXCEPTION
+            WHEN OTHERS
+            THEN
+               ROLLBACK;
+               RAISE;
+         END;
+      END LOOP;
+
+      COMMIT;
+   END;
+
+
+   PROCEDURE prc_fn_emp (pv_checksum_total_o OUT PLS_INTEGER)
+   IS
+      TYPE r_checksum IS RECORD
+      (
+         fn_emp_guid   VARCHAR2 (36),
+         deleted_ind   VARCHAR (1)
+      );
+
+      TYPE t_checksum IS TABLE OF r_checksum
+                            INDEX BY PLS_INTEGER;
+
+      ltbl_checksum_delta   t_checksum;
+
+      lv_count              PLS_INTEGER;
+   BEGIN
+      SELECT COUNT (*) INTO lv_count FROM pairs_fn_emp_checksum;
+
+      IF lv_count = 0 -- need to have reset flag to re-pull all data not matter what
+      THEN
+         BEGIN
+            INSERT INTO pairs_fn_emp_checksum
+               SELECT fn_emp_guid, SYSDATE - 1, 'N'
+                 FROM (SELECT DISTINCT fn_emp_guid FROM mv_eaps_pairs_fn_emp);
+
+            COMMIT;
+         EXCEPTION
+            WHEN OTHERS
+            THEN
+               ROLLBACK;
+               RAISE;
+         END;
+      END IF;
+
+      -- Get any foreign national employee who has changed and record in the node tree - fn emp, fn doc fn addr
+      -- and update the checksum table
+      WITH fn_emp
+           AS ( (SELECT fn_emp_guid, checksum, 'N' deleted_ind
+                   FROM vw_pairs_fnemp@eaps.hr.state.sbu
+                 MINUS
+                 SELECT fn_emp_guid, checksum, 'N' FROM mv_eaps_pairs_fn_emp)
+               UNION ALL
+               (SELECT fn_emp_guid, checksum, 'Y' deleted_ind
+                  FROM mv_eaps_pairs_fn_emp
+                 WHERE fn_emp_guid NOT IN
+                          (SELECT fn_emp_guid
+                             FROM vw_pairs_fnemp@eaps.hr.state.sbu)))
+        SELECT DISTINCT fn_emp_guid, deleted_ind
+          BULK COLLECT INTO ltbl_checksum_delta
+          FROM fn_emp
+      -- make sure the delete happens after the update in case both exist
+      ORDER BY fn_emp_guid, deleted_ind;
+
+
+      pv_checksum_total_o := ltbl_checksum_delta.COUNT;
+
+      FOR x IN 1 .. ltbl_checksum_delta.COUNT
+      LOOP
+         BEGIN
+            UPDATE pairs_fn_emp_checksum
+               SET deleted_ind = ltbl_checksum_delta (x).deleted_ind,
+                   last_changed_date = SYSDATE
+             WHERE fn_emp_guid = ltbl_checksum_delta (x).fn_emp_guid;
+
+            IF SQL%ROWCOUNT = 0
+            THEN
+               INSERT INTO pairs_fn_emp_checksum
+                    VALUES (
+                              ltbl_checksum_delta (x).fn_emp_guid,
+                              SYSDATE,
+                              ltbl_checksum_delta (x).deleted_ind);
+            END IF;
+         EXCEPTION
+            WHEN OTHERS
+            THEN
+               ROLLBACK;
+               RAISE;
+         END;
+      END LOOP;
+
+      -- Get any foreign national employee who has changed and record in the node tree - fn emp, fn doc fn addr
+      -- and update the checksum table
+      WITH fn_emp
+           AS ( (SELECT fn_emp_guid, checksum, 'N' deleted_ind
+                   FROM vw_pairs_fndoc@eaps.hr.state.sbu
+                 MINUS
+                 SELECT fn_emp_guid, checksum, 'N' FROM mv_eaps_pairs_fn_doc)
+               UNION ALL
+               (SELECT fn_emp_guid, checksum, 'N' deleted_ind
+                  FROM mv_eaps_pairs_fn_doc
+                 WHERE fn_emp_guid NOT IN
+                          (SELECT fn_emp_guid
+                             FROM vw_pairs_fndoc@eaps.hr.state.sbu))
+               UNION ALL
+               (SELECT fn_emp_guid, checksum, 'N' deleted_ind
+                  FROM vw_pairs_fnaddr@eaps.hr.state.sbu
+                MINUS
+                SELECT fn_emp_guid, checksum, 'N' FROM mv_eaps_pairs_fn_addr)
+               UNION ALL
+               (SELECT fn_emp_guid, checksum, 'N' deleted_ind
+                  FROM mv_eaps_pairs_fn_addr
+                 WHERE fn_emp_guid NOT IN
+                          (SELECT fn_emp_guid
+                             FROM vw_pairs_fnaddr@eaps.hr.state.sbu)))
+        SELECT DISTINCT fn_emp_guid, deleted_ind
+          BULK COLLECT INTO ltbl_checksum_delta
+          FROM fn_emp
+      -- make sure the delete happens after the update in case both exist
+      ORDER BY fn_emp_guid, deleted_ind;
+
+      --      DBMS_OUTPUT.PUT_LINE (
+      --         'ltbl_checksum_delta.count = ' || ltbl_checksum_delta.COUNT);
+
+
+      FOR x IN 1 .. ltbl_checksum_delta.COUNT
+      LOOP
+         BEGIN
+            UPDATE pairs_fn_emp_checksum
+               SET deleted_ind = ltbl_checksum_delta (x).deleted_ind,
+                   last_changed_date = SYSDATE
+             WHERE     fn_emp_guid = ltbl_checksum_delta (x).fn_emp_guid
+                   AND TRUNC (last_changed_date) <> TRUNC (SYSDATE)
+                   AND deleted_ind <> 'Y';
+
+            pv_checksum_total_o := pv_checksum_total_o + SQL%ROWCOUNT;
+         EXCEPTION
+            WHEN OTHERS
+            THEN
+               ROLLBACK;
+               RAISE;
+         END;
+      END LOOP;
+
+      COMMIT;
+   END;
+
+
+   PROCEDURE prc_amer_dep (pv_checksum_total_o OUT PLS_INTEGER)
+   IS
+      TYPE r_checksum IS RECORD
+      (
+         dep_guid      VARCHAR2 (36),
+         deleted_ind   VARCHAR (1)
+      );
+
+      TYPE t_checksum IS TABLE OF r_checksum
+                            INDEX BY PLS_INTEGER;
+
+      ltbl_checksum_delta   t_checksum;
+
+      lv_count              PLS_INTEGER;
+   BEGIN
+      SELECT COUNT (*) INTO lv_count FROM pairs_amer_dep_checksum;
+
+      IF lv_count = 0 -- need to have reset flag to re-pull all data not matter what
+      THEN
+         BEGIN
+            INSERT INTO pairs_amer_dep_checksum
+               SELECT dep_guid, SYSDATE - 1, 'N'
+                 FROM (SELECT DISTINCT dep_guid FROM mv_eaps_pairs_amer_dep);
+
+            COMMIT;
+         EXCEPTION
+            WHEN OTHERS
+            THEN
+               ROLLBACK;
+               RAISE;
+         END;
+      END IF;
+
+      -- Get any american dependent
+      WITH amer_emp
+           AS ( (SELECT dep_guid, checksum, 'N' deleted_ind
+                   FROM vw_pairs_amer_dpndnt@eaps.hr.state.sbu
+                 MINUS
+                 SELECT dep_guid, checksum, 'N' FROM mv_eaps_pairs_amer_dep)
+               UNION ALL
+               (SELECT dep_guid, checksum, 'Y' deleted_ind
+                  FROM mv_eaps_pairs_amer_dep
+                 WHERE dep_guid NOT IN
+                          (SELECT dep_guid
+                             FROM vw_pairs_amer_dpndnt@eaps.hr.state.sbu)))
+        SELECT DISTINCT dep_guid, deleted_ind
+          BULK COLLECT INTO ltbl_checksum_delta
+          FROM amer_emp
+      -- make sure the delete happens after the update in case both exist
+      ORDER BY dep_guid, deleted_ind;
+
+      pv_checksum_total_o := ltbl_checksum_delta.COUNT;
+
+      FOR x IN 1 .. ltbl_checksum_delta.COUNT
+      LOOP
+         BEGIN
+            UPDATE pairs_amer_dep_checksum
+               SET deleted_ind = ltbl_checksum_delta (x).deleted_ind,
+                   last_changed_date = SYSDATE
+             WHERE dep_guid = ltbl_checksum_delta (x).dep_guid;
+
+            IF SQL%ROWCOUNT = 0
+            THEN
+               INSERT INTO pairs_amer_dep_checksum
+                    VALUES (
+                              ltbl_checksum_delta (x).dep_guid,
+                              SYSDATE,
+                              ltbl_checksum_delta (x).deleted_ind);
+            END IF;
+         EXCEPTION
+            WHEN OTHERS
+            THEN
+               ROLLBACK;
+               RAISE;
+         END;
+      END LOOP;
+
+      -- Get dependent doc information that has changed
+      WITH amer_emp
+           AS ( (SELECT dep_guid, checksum, 'N' deleted_ind
+                   FROM vw_pairs_amer_dpndoc@eaps.hr.state.sbu
+                 MINUS
+                 SELECT dep_guid, checksum, 'N'
+                   FROM mv_eaps_pairs_amer_depdoc)
+               UNION ALL
+               (SELECT dep_guid, checksum, 'N' deleted_ind
+                  FROM mv_eaps_pairs_amer_depdoc
+                 WHERE dep_guid NOT IN
+                          (SELECT dep_guid
+                             FROM vw_pairs_amer_dpndoc@eaps.hr.state.sbu)))
+        SELECT DISTINCT dep_guid, deleted_ind
+          BULK COLLECT INTO ltbl_checksum_delta
+          FROM amer_emp
+      -- make sure the delete happens after the update in case both exist
+      ORDER BY dep_guid, deleted_ind;
+
+      FOR x IN 1 .. ltbl_checksum_delta.COUNT
+      LOOP
+         BEGIN
+            UPDATE pairs_amer_dep_checksum
+               SET deleted_ind = ltbl_checksum_delta (x).deleted_ind,
+                   last_changed_date = SYSDATE
+             WHERE     dep_guid = ltbl_checksum_delta (x).dep_guid
+                   AND TRUNC (last_changed_date) <> TRUNC (SYSDATE)
+                   AND deleted_ind <> 'Y';
+
+            pv_checksum_total_o := pv_checksum_total_o + SQL%ROWCOUNT;
+         EXCEPTION
+            WHEN OTHERS
+            THEN
+               ROLLBACK;
+               RAISE;
+         END;
+      END LOOP;
+
+
+      COMMIT;
+   END;
+
+
+   PROCEDURE prc_amer_emp (pv_checksum_total_o OUT PLS_INTEGER)
+   IS
+      TYPE r_checksum IS RECORD
+      (
+         emp_guid      VARCHAR2 (36),
+         deleted_ind   VARCHAR2 (1)
+      );
+
+      TYPE t_checksum IS TABLE OF r_checksum
+                            INDEX BY PLS_INTEGER;
+
+      ltbl_checksum_delta   t_checksum;
+
+      lv_count              PLS_INTEGER;
+   BEGIN
+      SELECT COUNT (*) INTO lv_count FROM pairs_amer_emp_checksum;
+
+      IF lv_count = 0 -- need to have reset flag to re-pull all data not matter what
+      THEN
+         BEGIN
+            INSERT INTO pairs_amer_emp_checksum
+               SELECT emp_guid, SYSDATE - 1, 'N'
+                 FROM (SELECT DISTINCT emp_guid FROM mv_eaps_pairs_amer_emp);
+
+            COMMIT;
+         EXCEPTION
+            WHEN OTHERS
+            THEN
+               ROLLBACK;
+               RAISE;
+         END;
+      END IF;
+
+      -- Get any american employee who has changed and record in the node tree - amer emp, amer doc, amer addr
+      -- and update the checksum table
+      WITH amer_emp
+           AS ( (SELECT emp_guid, checksum, 'N' deleted_ind
+                   FROM vw_pairs_amer_emp@eaps.hr.state.sbu
+                 MINUS
+                 SELECT emp_guid, checksum, 'N' FROM mv_eaps_pairs_amer_emp)
+               UNION ALL
+               (SELECT emp_guid, checksum, 'Y' deleted_ind
+                  FROM mv_eaps_pairs_amer_emp
+                 WHERE emp_guid NOT IN
+                          (SELECT emp_guid
+                             FROM vw_pairs_amer_emp@eaps.hr.state.sbu)))
+        SELECT DISTINCT emp_guid, deleted_ind
+          BULK COLLECT INTO ltbl_checksum_delta
+          FROM amer_emp
+      -- make sure the delete happens after the update in case both exist
+      ORDER BY emp_guid, deleted_ind;
+
+      hr_online_s.write_hr_msg_info_logonly (
+         'ltbl_checksum_delta.count = ' || ltbl_checksum_delta.COUNT);
+
+      pv_checksum_total_o := ltbl_checksum_delta.COUNT;
+
+      FOR x IN 1 .. ltbl_checksum_delta.COUNT
+      LOOP
+         BEGIN
+            UPDATE pairs_amer_emp_checksum
+               SET deleted_ind = ltbl_checksum_delta (x).deleted_ind,
+                   last_changed_date = SYSDATE
+             WHERE emp_guid = ltbl_checksum_delta (x).emp_guid;
+
+            IF SQL%ROWCOUNT = 0
+            THEN
+               INSERT INTO pairs_amer_emp_checksum
+                    VALUES (
+                              ltbl_checksum_delta (x).emp_guid,
+                              SYSDATE,
+                              ltbl_checksum_delta (x).deleted_ind);
+            END IF;
+         EXCEPTION
+            WHEN OTHERS
+            THEN
+               ROLLBACK;
+               RAISE;
+         END;
+      END LOOP;
+
+      -- Get any american employee who has changed and record in the node tree - amer emp, amer doc, amer addr
+      -- and update the checksum table
+      WITH amer_emp
+           AS ( (SELECT emp_guid, checksum, 'N' deleted_ind
+                   FROM vw_pairs_amer_doc@eaps.hr.state.sbu
+                 MINUS
+                 SELECT emp_guid, checksum, 'N' FROM mv_eaps_pairs_amer_doc)
+               UNION ALL
+               (SELECT emp_guid, checksum, 'N' deleted_ind
+                  FROM mv_eaps_pairs_amer_doc
+                 WHERE emp_guid NOT IN
+                          (SELECT emp_guid
+                             FROM vw_pairs_amer_doc@eaps.hr.state.sbu))
+               UNION ALL
+               (SELECT emp_guid, checksum, 'N' deleted_ind
+                  FROM vw_pairs_amer_addr@eaps.hr.state.sbu
+                MINUS
+                SELECT emp_guid, checksum, 'N' FROM mv_eaps_pairs_amer_addr)
+               UNION ALL
+               (SELECT emp_guid, checksum, 'N' deleted_ind
+                  FROM mv_eaps_pairs_amer_addr
+                 WHERE emp_guid NOT IN
+                          (SELECT emp_guid
+                             FROM vw_pairs_amer_addr@eaps.hr.state.sbu)))
+        SELECT DISTINCT emp_guid, deleted_ind
+          BULK COLLECT INTO ltbl_checksum_delta
+          FROM amer_emp
+      -- make sure the delete happens after the update in case both exist
+      ORDER BY emp_guid, deleted_ind;
+
+
+      FOR x IN 1 .. ltbl_checksum_delta.COUNT
+      LOOP
+         BEGIN
+            UPDATE pairs_amer_emp_checksum
+               SET deleted_ind = ltbl_checksum_delta (x).deleted_ind,
+                   last_changed_date = SYSDATE
+             WHERE     emp_guid = ltbl_checksum_delta (x).emp_guid
+                   AND deleted_ind <> 'Y'
+                   AND TRUNC (last_changed_date) <> TRUNC (SYSDATE);
+
+            pv_checksum_total_o := pv_checksum_total_o + SQL%ROWCOUNT;
+         EXCEPTION
+            WHEN OTHERS
+            THEN
+               ROLLBACK;
+               RAISE;
+         END;
+      END LOOP;
+
+
+      COMMIT;
+   END;
+
+
+   PROCEDURE PRC_LOAD_MVIEWS (pv_mv_group_num_i NUMBER)
+   IS
+      lv_dummy_cursor        SYS_REFCURSOR;
+
+
+      lv_rtn_code            PLS_INTEGER;
+      lv_mv_failures         PLS_INTEGER;
+      lv_count               PLS_INTEGER;
+      lv_sqlerrm             VARCHAR2 (4000);
+
+      ltbl_unstring_mviews   hr_online_s.tt_message;
+   BEGIN
+      BEGIN
+         -- Start Log for Load Job
+         hr_online_s.hr_begin_sql_tran (
+            'washdc\hrdataservice_batch',
+            CASE
+               WHEN pv_mv_group_num_i BETWEEN 1 AND 4
+               THEN
+                  'pairs_data_load_mviews'
+               WHEN pv_mv_group_num_i BETWEEN 5 AND 6
+               THEN
+                  'pibs_data_load_mviews'
+               WHEN pv_mv_group_num_i = 9
+               THEN
+                  'ilms_employee_profile'
+            END,
+            0);
+
+
+         BEGIN
+            CASE pv_mv_group_num_i
+               WHEN 1
+               THEN
+                  prc_amer_emp (lv_count);
+                  hr_online_s.write_hr_msg_info_logonly (
+                     'American Emp total deltas computed - ' || lv_count);
+               WHEN 2
+               THEN
+                  prc_amer_dep (lv_count);
+                  hr_online_s.write_hr_msg_info_logonly (
+                     'American Dep total deltas computed - ' || lv_count);
+               WHEN 3
+               THEN
+                  prc_fn_emp (lv_count);
+                  hr_online_s.write_hr_msg_info_logonly (
+                     'FN Emp total deltas computed - ' || lv_count);
+               WHEN 4
+               THEN
+                  prc_fn_dep (lv_count);
+                  hr_online_s.write_hr_msg_info_logonly (
+                     'FN Dep total deltas computed - ' || lv_count);
+               WHEN 5
+               THEN
+                  prc_fn_pos (lv_count);
+                  hr_online_s.write_hr_msg_info_logonly (
+                     'FN Pos total deltas computed - ' || lv_count);
+               WHEN 6
+               THEN
+                  prc_amer_pos (lv_count);
+                  hr_online_s.write_hr_msg_info_logonly (
+                     'Amer Pos total deltas computed - ' || lv_count);
+               WHEN 9
+               THEN
+                  prc_ilms_emp (lv_count);
+                  hr_online_s.write_hr_msg_info_logonly (
+                        'ILMS Employee Profile total deltas computed - '
+                     || lv_count);
+               ELSE
+                  NULL;
+            END CASE;
+         EXCEPTION
+            WHEN OTHERS
+            THEN
+               RAISE;
+         END;
+
+
+         -- Unstring materialized views from group
+         hr_online_s.unstring_varchar (ltbl_mviews (pv_mv_group_num_i),
+                                       ',',
+                                       ltbl_unstring_mviews);
+
+         -- Get before counts
+         FOR x IN 1 .. ltbl_unstring_mviews.COUNT
+         LOOP
+            hr_online_s.write_hr_msg_debug (
+               'mv ' || ltbl_unstring_mviews (x));
+
+            EXECUTE IMMEDIATE
+               'SELECT count(1) FROM ' || ltbl_unstring_mviews (x)
+               INTO lv_count;
+
+            hr_online_s.write_hr_msg_info_logonly (
+               ltbl_unstring_mviews (x) || ' before rowcount ' || lv_count);
+         END LOOP;
+
+         -- execute materialized view group
+         BEGIN
+            DBMS_MVIEW.REFRESH (ltbl_mviews (pv_mv_group_num_i),
+                                '',
+                                NULL,
+                                FALSE,
+                                FALSE,
+                                1,
+                                0,
+                                0,
+                                TRUE,
+                                FALSE);
+         EXCEPTION
+            WHEN OTHERS
+            THEN
+               hr_online_s.write_hr_msg_sqlerrm (SQLERRM);
+         END;
+
+
+
+         -- Get after counts
+         FOR x IN 1 .. ltbl_unstring_mviews.COUNT
+         LOOP
+            hr_online_s.write_hr_msg_debug (
+               'mv ' || ltbl_unstring_mviews (x));
+
+
+            EXECUTE IMMEDIATE
+               'SELECT count(1) FROM ' || ltbl_unstring_mviews (x)
+               INTO lv_count;
+
+            hr_online_s.write_hr_msg_info_logonly (
+               ltbl_unstring_mviews (x) || ' after rowcount ' || lv_count);
+         END LOOP;
+      EXCEPTION
+         WHEN OTHERS
+         THEN
+            hr_online_s.write_hr_msg_sqlerrm (SQLERRM);
+      END;
+
+      hr_online_s.hr_end_sql_tran (0, lv_dummy_cursor, lv_rtn_code);
+   END;
+BEGIN
+   ltbl_mviews.delete;
+
+   ltbl_mviews (1) :=
+      'mv_eaps_pairs_amer_emp,mv_eaps_pairs_amer_addr,mv_eaps_pairs_amer_doc';
+   ltbl_mviews (2) := 'mv_eaps_pairs_amer_dep,mv_eaps_pairs_amer_depdoc';
+   ltbl_mviews (3) :=
+      'mv_eaps_pairs_fn_emp,mv_eaps_pairs_fn_doc,mv_eaps_pairs_fn_addr';
+   ltbl_mviews (4) := 'mv_eaps_pairs_fn_dep';
+   ltbl_mviews (5) := 'mv_eaps_pibs_amer_emp_pos,mv_eaps_pibs_amer_pos';
+   ltbl_mviews (6) := 'mv_eaps_pibs_fn_emp_pos,mv_eaps_pibs_fn_pos';
+   ltbl_mviews (9) :=
+      'mv_ilms_employees,mv_ilms_traveler_efms,mv_ilms_emp_training,mv_ilms_emp_asg,mv_ilms_emp_sep';
+END;

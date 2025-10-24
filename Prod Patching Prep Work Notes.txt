@@ -1,0 +1,50 @@
+
+PROD clusters
+-------------
+
+hrewoel06
+hrewoel07
+hrewoel08
+
+
+hrewoel13
+hrewoel14
+hrewoel15
+
+
+
+hrewoel16
+hrewoel19
+
+
+
+
+PROD DR clusters
+----------------
+
+HRMDC1OEL01
+HRMDC1OEL02
+HRMDC1OEL03
+
+HRMDC1OEL04
+HRMDC1OEL05
+HRMDC1OEL06
+
+HRMDC1OEL07
+HRMDC1OEL08
+ssh 
+
+cd /inf
+
+PROD DMZ  clusters
+----------------
+
+HRDMZPRDDB01
+HRDMZPRDDB02
+
+
+PROD PRAS prod/dr Nodes
+-----------------------
+HREWPRASOEL01  ( PROD host) - 172.16.7.3
+HREWPRASOEL02  ( DR host - No databases) - 172.16.7.4
+

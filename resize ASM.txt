@@ -1,0 +1,1530 @@
+
+https://blog.dbi-services.com/oracle-18c-cluster-with-oracle-asm-filter-driver/
+
+During the installation of Oracle Grid Infrastructure, you can optionally enable automated installation and configuration of Oracle ASM Filter Driver for your system with the Configure ASM Filter Driver check box on the Create ASM Disk Group wizard page. When you enable the Configure ASM Filter Driver box, an automated process for Oracle ASMFD is launched during Oracle Grid Infrastructure installation.
+
+If Oracle ASMLIB exists on your Linux system, then deinstall Oracle ASMLIB before installing Oracle Grid Infrastructure, so that you can choose to install and configure Oracle ASMFD during an Oracle Grid Infrastructure installation.
+In this blog I do install a 2 nodes cluster of Oracle 18c using Oracle ASMFD. Below the disks we will use.
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+[root@rac18ca ~]# ls -l /dev/sd[d-f]
+brw-rw----. 1 root disk 8, 48 Sep  8 22:09 /dev/sdd
+brw-rw----. 1 root disk 8, 64 Sep  8 22:09 /dev/sde
+brw-rw----. 1 root disk 8, 80 Sep  8 22:09 /dev/sdf
+[root@rac18ca ~]#
+ 
+[root@rac18cb ~]# ls -l /dev/sd[d-f]
+brw-rw----. 1 root disk 8, 48 Sep  8 22:46 /dev/sdd
+brw-rw----. 1 root disk 8, 64 Sep  8 22:46 /dev/sde
+brw-rw----. 1 root disk 8, 80 Sep  8 22:46 /dev/sdf
+[root@rac18cb ~]#
+We suppose that all prerequisites are done (public IP, private IP, scan,shared disks ….). Also we will not show all print screens.
+The first step is to unzip the Oracle software in the ORACLE_HOME for the grid infrastructure.
+
+1
+unzip -d /u01/app/grid/18.0.0.0 LINUX.X64_180000_grid_home.zip
+After we have to use the ASMCMD afd_label command to provision disk devices for use with Oracle ASM Filter Driver as follows.
+
+1
+2
+3
+4
+5
+6
+[root@rac18ca ~]# export ORACLE_HOME=/u01/app/oracle/18.0.0.0/grid
+[root@rac18ca ~]# export ORACLE_BASE=/tmp                                       
+[root@rac18ca ~]# /u01/app/oracle/18.0.0.0/grid/bin/asmcmd afd_label VOTOCR /dev/sde --init
+[root@rac18ca ~]# /u01/app/oracle/18.0.0.0/grid/bin/asmcmd afd_label DATA /dev/sdd --init
+[root@rac18ca ~]# /u01/app/oracle/18.0.0.0/grid/bin/asmcmd afd_label DIVERS /dev/sdf --init
+[root@rac18ca ~]#
+And then we can use the ASMCMD afd_lslbl command to verify the device has been marked for use with Oracle ASMFD.
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+[root@rac18ca network-scripts]# /u01/app/oracle/18.0.0.0/grid/bin/asmcmd afd_lsl                              bl /dev/sde
+--------------------------------------------------------------------------------
+Label                     Duplicate  Path
+================================================================================
+VOTOCR                                /dev/sde
+[root@rac18ca network-scripts]# /u01/app/oracle/18.0.0.0/grid/bin/asmcmd afd_lslbl /dev/sdd
+--------------------------------------------------------------------------------
+Label                     Duplicate  Path
+================================================================================
+DATA                                  /dev/sdd
+[root@rac18ca network-scripts]# /u01/app/oracle/18.0.0.0/grid/bin/asmcmd afd_lslbl /dev/sdf
+--------------------------------------------------------------------------------
+Label                     Duplicate  Path
+================================================================================
+DIVERS                                /dev/sdf
+[root@rac18ca network-scripts]#
+
+
+
+
+[root@hrvltstdb20 ~]# asmcmd afd_lsdsk
+--------------------------------------------------------------------------------
+Label                     Filtering   Path
+================================================================================
+ASM_DISK01                  ENABLED   /dev/sdai1
+ASM_DISK02                  ENABLED   /dev/sdaj1
+ASM_DISK03                  ENABLED   /dev/sdak1
+ASM_DISK04                  ENABLED   /dev/sdz1
+ASM_DISK05                  ENABLED   /dev/sdaa1
+ASM_DISK06                  ENABLED   /dev/sdab1
+ASM_DISK07                  ENABLED   /dev/sdac1
+ASM_DISK08                  ENABLED   /dev/sdad1
+ASM_DISK09                  ENABLED   /dev/sdf1
+ASM_DISK10                  ENABLED   /dev/sdg1
+ASM_DISK11                  ENABLED   /dev/sdh1
+ASM_DISK12                  ENABLED   /dev/sdi1
+ASM_DISK13                  ENABLED   /dev/sdj1
+ASM_DISK14                  ENABLED   /dev/sdk1
+ASM_DISK15                  ENABLED   /dev/sdl1
+ASM_DISK16                  ENABLED   /dev/sdm1
+ASM_DISK17                  ENABLED   /dev/sdn1
+ASM_DISK18                  ENABLED   /dev/sdo1
+ASM_DISK19                  ENABLED   /dev/sdp1
+ASM_DISK20                  ENABLED   /dev/sdq1
+ASM_DISK21                  ENABLED   /dev/sdr1
+ASM_DISK22                  ENABLED   /dev/sds1
+ASM_DISK23                  ENABLED   /dev/sdt1
+ASM_DISK24                  ENABLED   /dev/sdu1
+ASM_DISK25                  ENABLED   /dev/sdv1
+ASM_DISK26                  ENABLED   /dev/sdw1
+ASM_DISK27                  ENABLED   /dev/sdx1
+ASM_DISK28                  ENABLED   /dev/sdy1
+ASM_DISK29                  ENABLED   /dev/sdae1
+ASM_DISK30                  ENABLED   /dev/sdaf1
+ASM_DISK31                  ENABLED   /dev/sdag1
+ASM_DISK32                  ENABLED   /dev/sdah1
+
+[root@hrvltstdb20 ~]#
+
+
+[Thursday 12:28 PM] Adenigbagbe Jr, Victor S
+    [root@hrvltstdb20 ~]# lsblk |grep 500G |sort
+sdal                         66:80   0  500G  0 disk
+sdam                         66:96   0  500G  0 disk
+sdan                         66:112  0  500G  0 disk
+sdao                         66:128  0  500G  0 disk
+sdap                         66:144  0  500G  0 disk
+sdaq                         66:160  0  500G  0 disk
+sdar                         66:176  0  500G  0 disk
+sdas                         66:192  0  500G  0 disk
+
+fdisk /dev/sdal
+fdisk /dev/sdam
+fdisk /dev/sdan 
+fdisk /dev/sdao
+fdisk /dev/sdap
+fdisk /dev/sdaq
+fdisk /dev/sdar
+fdisk /dev/sdas
+
+
+asmcmd afd_label ASM_DISK33 /dev/sdal1
+asmcmd afd_label ASM_DISK34 /dev/sdam1
+asmcmd afd_label ASM_DISK35 /dev/sdan1
+asmcmd afd_label ASM_DISK36 /dev/sdao1
+asmcmd afd_label ASM_DISK37 /dev/sdap1
+asmcmd afd_label ASM_DISK38 /dev/sdaq1
+asmcmd afd_label ASM_DISK39 /dev/sdar1
+asmcmd afd_label ASM_DISK40 /dev/sdas1
+
+
+[root@hrvltstdb20 ~]# asmcmd afd_lsdsk
+--------------------------------------------------------------------------------
+Label                     Filtering   Path
+================================================================================
+ASM_DISK01                  ENABLED   /dev/sdai1
+ASM_DISK02                  ENABLED   /dev/sdaj1
+ASM_DISK03                  ENABLED   /dev/sdak1
+ASM_DISK04                  ENABLED   /dev/sdz1
+ASM_DISK05                  ENABLED   /dev/sdaa1
+ASM_DISK06                  ENABLED   /dev/sdab1
+ASM_DISK07                  ENABLED   /dev/sdac1
+ASM_DISK08                  ENABLED   /dev/sdad1
+ASM_DISK09                  ENABLED   /dev/sdf1
+ASM_DISK10                  ENABLED   /dev/sdg1
+ASM_DISK11                  ENABLED   /dev/sdh1
+ASM_DISK12                  ENABLED   /dev/sdi1
+ASM_DISK13                  ENABLED   /dev/sdj1
+ASM_DISK14                  ENABLED   /dev/sdk1
+ASM_DISK15                  ENABLED   /dev/sdl1
+ASM_DISK16                  ENABLED   /dev/sdm1
+ASM_DISK17                  ENABLED   /dev/sdn1
+ASM_DISK18                  ENABLED   /dev/sdo1
+ASM_DISK19                  ENABLED   /dev/sdp1
+ASM_DISK20                  ENABLED   /dev/sdq1
+ASM_DISK21                  ENABLED   /dev/sdr1
+ASM_DISK22                  ENABLED   /dev/sds1
+ASM_DISK23                  ENABLED   /dev/sdt1
+ASM_DISK24                  ENABLED   /dev/sdu1
+ASM_DISK25                  ENABLED   /dev/sdv1
+ASM_DISK26                  ENABLED   /dev/sdw1
+ASM_DISK27                  ENABLED   /dev/sdx1
+ASM_DISK28                  ENABLED   /dev/sdy1
+ASM_DISK29                  ENABLED   /dev/sdae1
+ASM_DISK30                  ENABLED   /dev/sdaf1
+ASM_DISK31                  ENABLED   /dev/sdag1
+ASM_DISK32                  ENABLED   /dev/sdah1
+ASM_DISK33                  ENABLED   /dev/sdal1
+ASM_DISK34                  ENABLED   /dev/sdam1
+ASM_DISK35                  ENABLED   /dev/sdan1
+ASM_DISK36                  ENABLED   /dev/sdao1
+ASM_DISK37                  ENABLED   /dev/sdap1
+ASM_DISK38                  ENABLED   /dev/sdaq1
+ASM_DISK39                  ENABLED   /dev/sdar1
+ASM_DISK40                  ENABLED   /dev/sdas1
+
+
+
+[root@hrvltstdb20 ~]# asmcmd lsdsk --candidate
+Path
+AFD:ASM_DISK33
+AFD:ASM_DISK34
+AFD:ASM_DISK35
+AFD:ASM_DISK36
+AFD:ASM_DISK37
+AFD:ASM_DISK38
+AFD:ASM_DISK39
+AFD:ASM_DISK40
+[root@hrvltstdb20 ~]# asmcmd lsdsk -k
+Total_MB  Free_MB   OS_MB  Name        Failgroup   Site_Name  Site_GUID                         Site_Status  Failgroup_Type  Library                                      Label       Failgroup_Label  Site_Label  UDID  Product  Redund   Path
+    5116     4944    5119  ASM_DISK01  ASM_DISK01             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK01                                              UNKNOWN  AFD:ASM_DISK01
+    5116     4992    5119  ASM_DISK02  ASM_DISK02             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK02                                              UNKNOWN  AFD:ASM_DISK02
+    5116     4988    5119  ASM_DISK03  ASM_DISK03             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK03                                              UNKNOWN  AFD:ASM_DISK03
+  255996    23836  255999  ASM_DISK04  ASM_DISK04             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK04                                              UNKNOWN  AFD:ASM_DISK04
+  255996    23768  255999  ASM_DISK05  ASM_DISK05             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK05                                              UNKNOWN  AFD:ASM_DISK05
+  255996    23796  255999  ASM_DISK06  ASM_DISK06             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK06                                              UNKNOWN  AFD:ASM_DISK06
+  255996    23824  255999  ASM_DISK07  ASM_DISK07             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK07                                              UNKNOWN  AFD:ASM_DISK07
+  255996    23860  255999  ASM_DISK08  ASM_DISK08             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK08                                              UNKNOWN  AFD:ASM_DISK08
+  255996    23768  255999  ASM_DISK09  ASM_DISK09             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK09                                              UNKNOWN  AFD:ASM_DISK09
+  255996    23808  255999  ASM_DISK10  ASM_DISK10             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK10                                              UNKNOWN  AFD:ASM_DISK10
+  255996   159248  255999  ASM_DISK11  ASM_DISK11             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK11                                              UNKNOWN  AFD:ASM_DISK11
+  255996   159344  255999  ASM_DISK12  ASM_DISK12             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK12                                              UNKNOWN  AFD:ASM_DISK12
+  255996    23820  255999  ASM_DISK13  ASM_DISK13             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK13                                              UNKNOWN  AFD:ASM_DISK13
+  255996    23828  255999  ASM_DISK14  ASM_DISK14             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK14                                              UNKNOWN  AFD:ASM_DISK14
+  255996    23844  255999  ASM_DISK15  ASM_DISK15             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK15                                              UNKNOWN  AFD:ASM_DISK15
+  255996    23796  255999  ASM_DISK16  ASM_DISK16             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK16                                              UNKNOWN  AFD:ASM_DISK16
+  255996    23872  255999  ASM_DISK17  ASM_DISK17             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK17                                              UNKNOWN  AFD:ASM_DISK17
+  255996    23832  255999  ASM_DISK18  ASM_DISK18             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK18                                              UNKNOWN  AFD:ASM_DISK18
+  255996    23788  255999  ASM_DISK19  ASM_DISK19             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK19                                              UNKNOWN  AFD:ASM_DISK19
+  255996    23796  255999  ASM_DISK20  ASM_DISK20             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK20                                              UNKNOWN  AFD:ASM_DISK20
+  255996    23816  255999  ASM_DISK21  ASM_DISK21             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK21                                              UNKNOWN  AFD:ASM_DISK21
+  255996    23792  255999  ASM_DISK22  ASM_DISK22             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK22                                              UNKNOWN  AFD:ASM_DISK22
+  255996    23800  255999  ASM_DISK23  ASM_DISK23             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK23                                              UNKNOWN  AFD:ASM_DISK23
+  255996    23828  255999  ASM_DISK24  ASM_DISK24             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK24                                              UNKNOWN  AFD:ASM_DISK24
+  255996    23844  255999  ASM_DISK25  ASM_DISK25             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK25                                              UNKNOWN  AFD:ASM_DISK25
+  255996    23820  255999  ASM_DISK26  ASM_DISK26             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK26                                              UNKNOWN  AFD:ASM_DISK26
+  255996    23768  255999  ASM_DISK27  ASM_DISK27             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK27                                              UNKNOWN  AFD:ASM_DISK27
+  255996    23800  255999  ASM_DISK28  ASM_DISK28             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK28                                              UNKNOWN  AFD:ASM_DISK28
+  255996    23852  255999  ASM_DISK29  ASM_DISK29             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK29                                              UNKNOWN  AFD:ASM_DISK29
+  255996    23792  255999  ASM_DISK30  ASM_DISK30             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK30                                              UNKNOWN  AFD:ASM_DISK30
+  255996    23836  255999  ASM_DISK31  ASM_DISK31             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK31                                              UNKNOWN  AFD:ASM_DISK31
+  255996    23780  255999  ASM_DISK32  ASM_DISK32             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK32                                              UNKNOWN  AFD:ASM_DISK32
+[root@hrvltstdb20 ~]# asmcmd lsdsk -k --candidate
+Total_MB  Free_MB   OS_MB  Name        Failgroup   Site_Name  Site_GUID                         Site_Status  Failgroup_Type  Library                                      Label       Failgroup_Label  Site_Label  UDID  Product  Redund   Path
+       0        0  511999                                                                                    REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK33                                              UNKNOWN  AFD:ASM_DISK33
+       0        0  511999                                                                                    REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK34                                              UNKNOWN  AFD:ASM_DISK34
+       0        0  511999                                                                                    REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK35                                              UNKNOWN  AFD:ASM_DISK35
+       0        0  511999                                                                                    REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK36                                              UNKNOWN  AFD:ASM_DISK36
+       0        0  511999                                                                                    REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK37                                              UNKNOWN  AFD:ASM_DISK37
+       0        0  511999                                                                                    REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK38                                              UNKNOWN  AFD:ASM_DISK38
+       0        0  511999                                                                                    REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK39                                              UNKNOWN  AFD:ASM_DISK39
+       0        0  511999                                                                                    REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK40                                              UNKNOWN  AFD:ASM_DISK40
+[root@hrvltstdb20 ~]#
+
+[grid@hrvltstdb20 ~]$ asmcmd lsdg
+State    Type    Rebal  Sector  Logical_Sector  Block       AU  Total_MB  Free_MB  Req_mir_free_MB  Usable_file_MB  Offline_disks  Voting_files  Name
+MOUNTED  EXTERN  N         512             512   4096  4194304   6911892   642964                0          642964              0             N  DATA/
+MOUNTED  EXTERN  N         512             512   4096  4194304    511992   318592                0          318592              0             N  FRA/
+MOUNTED  EXTERN  N         512             512   4096  4194304     15348    14924                0           14924              0             Y  OCR_VD_DG/
+
+
+[grid@hrvltstdb20 ~]$ sqlplus / as sysasm
+
+SQL*Plus: Release 19.0.0.0.0 - Production on Sat Jul 17 20:25:11 2021
+Version 19.11.0.0.0
+
+Copyright (c) 1982, 2020, Oracle.  All rights reserved.
+
+
+Connected to:
+Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production
+Version 19.11.0.0.0
+
+SQL> alter diskgroup data add disk 'AFD:ASM_DISK33';
+
+Diskgroup altered.
+
+SQL> !asmcmd
+ASMCMD> exit
+
+SQL> !asmcmd lsdg
+State    Type    Rebal  Sector  Logical_Sector  Block       AU  Total_MB  Free_MB  Req_mir_free_MB  Usable_file_MB  Offline_disks  Voting_files  Name
+MOUNTED  EXTERN  Y         512             512   4096  4194304   7423888  1154948                0         1154948              0             N  DATA/
+MOUNTED  EXTERN  N         512             512   4096  4194304    511992   318592                0          318592              0             N  FRA/
+MOUNTED  EXTERN  N         512             512   4096  4194304     15348    14924                0           14924              0             Y  OCR_VD_DG/
+
+SQL>
+
+SQL> !asmcmd lsdg
+State    Type    Rebal  Sector  Logical_Sector  Block       AU  Total_MB  Free_MB  Req_mir_free_MB  Usable_file_MB  Offline_disks  Voting_files  Name
+MOUNTED  EXTERN  Y         512             512   4096  4194304   7423888  1154948                0         1154948              0             N  DATA/
+MOUNTED  EXTERN  N         512             512   4096  4194304    511992   318592                0          318592              0             N  FRA/
+MOUNTED  EXTERN  N         512             512   4096  4194304     15348    14924                0           14924              0             Y  OCR_VD_DG/
+
+SQL> alter diskgroup data add disk 'AFD:ASM_DISK34';
+
+Diskgroup altered.
+
+SQL> alter diskgroup data add disk 'AFD:ASM_DISK35';
+
+Diskgroup altered.
+
+SQL> alter diskgroup data add disk 'AFD:ASM_DISK36';
+
+Diskgroup altered.
+
+SQL> alter diskgroup data add disk 'AFD:ASM_DISK37';
+
+Diskgroup altered.
+
+SQL> alter diskgroup data add disk 'AFD:ASM_DISK38';
+
+Diskgroup altered.
+
+SQL> alter diskgroup data add disk 'AFD:ASM_DISK39';
+
+Diskgroup altered.
+
+SQL> alter diskgroup data add disk 'AFD:ASM_DISK40';
+alter diskgroup data add disk 'AFD:ASM_DISK40'
+*
+ERROR at line 1:
+ORA-15032: not all alterations performed
+ORA-15075: disk AFD:ASM_DISK40 is not visible on instance number 3
+ORA-15075: disk AFD:ASM_DISK40 is not visible on instance number 2
+
+
+SQL> !asmcmd lsdg
+State    Type    Rebal  Sector  Logical_Sector  Block       AU  Total_MB  Free_MB  Req_mir_free_MB  Usable_file_MB  Offline_disks  Voting_files  Name
+MOUNTED  EXTERN  Y         512             512   4096  4194304  10495864  4226852                0         4226852              0             N  DATA/
+MOUNTED  EXTERN  N         512             512   4096  4194304    511992   318376                0          318376              0             N  FRA/
+MOUNTED  EXTERN  N         512             512   4096  4194304     15348    14924                0           14924              0             Y  OCR_VD_DG/
+
+SQL>
+
+
+SQL> select * from v$asm_operation;
+
+GROUP_NUMBER OPERA PASS      STAT      POWER     ACTUAL      SOFAR   EST_WORK
+------------ ----- --------- ---- ---------- ---------- ---------- ----------
+  EST_RATE EST_MINUTES ERROR_CODE                                       CON_ID
+---------- ----------- -------------------------------------------- ----------
+           1 REBAL COMPACT   WAIT          1
+                                                                             0
+
+           1 REBAL REBALANCE WAIT          1
+                                                                             0
+
+           1 REBAL REBUILD   WAIT          1
+                                                                             0
+
+
+SQL> alter diskgroup data rebalance power 8;
+
+Diskgroup altered.
+
+SQL> select * from v$asm_operation;
+
+GROUP_NUMBER OPERA PASS      STAT      POWER     ACTUAL      SOFAR   EST_WORK
+------------ ----- --------- ---- ---------- ---------- ---------- ----------
+  EST_RATE EST_MINUTES ERROR_CODE                                       CON_ID
+---------- ----------- -------------------------------------------- ----------
+           1 REBAL COMPACT   WAIT          8          8          0          0
+         0           0                                                       0
+
+           1 REBAL REBALANCE RUN           8          8       1121       1121
+     24776           0                                                       0
+
+           1 REBAL REBUILD   DONE          8          8          0          0
+         0           0                                                       0
+
+
+SQL>
+
+SQL> select * from v$asm_operation;
+
+GROUP_NUMBER OPERA PASS      STAT      POWER     ACTUAL      SOFAR   EST_WORK
+------------ ----- --------- ---- ---------- ---------- ---------- ----------
+  EST_RATE EST_MINUTES ERROR_CODE                                       CON_ID
+---------- ----------- -------------------------------------------- ----------
+           1 REBAL COMPACT   WAIT          8          8          0          0
+         0           0                                                       0
+
+           1 REBAL REBALANCE RUN           8          8     265008     416913
+     43076           3                                                       0
+
+           1 REBAL REBUILD   DONE          8          8          0          0
+         0           0                                                       0
+
+
+
+[root@hrvltstdb20 ~]# asmcmd afd_unlabel ASM_DISK40;
+
+[root@hrvltstdb20 ~]# asmcmd afd_lsdsk
+--------------------------------------------------------------------------------
+Label                     Filtering   Path
+================================================================================
+ASM_DISK01                  ENABLED   /dev/sdai1
+ASM_DISK02                  ENABLED   /dev/sdaj1
+ASM_DISK03                  ENABLED   /dev/sdak1
+ASM_DISK04                  ENABLED   /dev/sdz1
+ASM_DISK05                  ENABLED   /dev/sdaa1
+ASM_DISK06                  ENABLED   /dev/sdab1
+ASM_DISK07                  ENABLED   /dev/sdac1
+ASM_DISK08                  ENABLED   /dev/sdad1
+ASM_DISK09                  ENABLED   /dev/sdf1
+ASM_DISK10                  ENABLED   /dev/sdg1
+ASM_DISK11                  ENABLED   /dev/sdh1
+ASM_DISK12                  ENABLED   /dev/sdi1
+ASM_DISK13                  ENABLED   /dev/sdj1
+ASM_DISK14                  ENABLED   /dev/sdk1
+ASM_DISK15                  ENABLED   /dev/sdl1
+ASM_DISK16                  ENABLED   /dev/sdm1
+ASM_DISK17                  ENABLED   /dev/sdn1
+ASM_DISK18                  ENABLED   /dev/sdo1
+ASM_DISK19                  ENABLED   /dev/sdp1
+ASM_DISK20                  ENABLED   /dev/sdq1
+ASM_DISK21                  ENABLED   /dev/sdr1
+ASM_DISK22                  ENABLED   /dev/sds1
+ASM_DISK23                  ENABLED   /dev/sdt1
+ASM_DISK24                  ENABLED   /dev/sdu1
+ASM_DISK25                  ENABLED   /dev/sdv1
+
+ASM_DISK26                  ENABLED   /dev/sdw1
+ASM_DISK27                  ENABLED   /dev/sdx1
+ASM_DISK28                  ENABLED   /dev/sdy1
+ASM_DISK29                  ENABLED   /dev/sdae1
+ASM_DISK30                  ENABLED   /dev/sdaf1
+ASM_DISK31                  ENABLED   /dev/sdag1
+ASM_DISK32                  ENABLED   /dev/sdah1
+
+
+ASM_DISK33                  ENABLED   /dev/sdal1
+ASM_DISK34                  ENABLED   /dev/sdam1
+ASM_DISK35                  ENABLED   /dev/sdan1
+ASM_DISK36                  ENABLED   /dev/sdao1
+ASM_DISK37                  ENABLED   /dev/sdap1
+ASM_DISK38                  ENABLED   /dev/sdaq1
+ASM_DISK39                  ENABLED   /dev/sdar1
+[root@hrvltstdb20 ~]#
+
+
+[root@hrvltstdb20 ~]# asmcmd lsdsk
+Path
+AFD:ASM_DISK01
+AFD:ASM_DISK02
+AFD:ASM_DISK03
+AFD:ASM_DISK04
+AFD:ASM_DISK05
+AFD:ASM_DISK06
+AFD:ASM_DISK07
+AFD:ASM_DISK08
+AFD:ASM_DISK09
+AFD:ASM_DISK10
+AFD:ASM_DISK11
+AFD:ASM_DISK12
+AFD:ASM_DISK13
+AFD:ASM_DISK14
+AFD:ASM_DISK15
+AFD:ASM_DISK16
+AFD:ASM_DISK17
+AFD:ASM_DISK18
+AFD:ASM_DISK19
+AFD:ASM_DISK20
+AFD:ASM_DISK21
+AFD:ASM_DISK22
+AFD:ASM_DISK23
+AFD:ASM_DISK24
+AFD:ASM_DISK25
+AFD:ASM_DISK26
+AFD:ASM_DISK27
+AFD:ASM_DISK28
+AFD:ASM_DISK29
+AFD:ASM_DISK30
+AFD:ASM_DISK31
+AFD:ASM_DISK32
+AFD:ASM_DISK33
+AFD:ASM_DISK34
+AFD:ASM_DISK35
+AFD:ASM_DISK36
+AFD:ASM_DISK37
+AFD:ASM_DISK38
+AFD:ASM_DISK39
+[root@hrvltstdb20 ~]#
+
+
+[root@hrvltstdb20 ~]# asmcmd lsdsk --candidate
+Path
+[root@hrvltstdb20 ~]#
+
+
+
+[grid@hrvltstdb20 ~]$ . oraenv
+ORACLE_SID = [grid] ? +ASM1
+The Oracle base has been set to /u02/app/grid
+[grid@hrvltstdb20 ~]$ sqlplus / as sysasm
+
+SQL*Plus: Release 19.0.0.0.0 - Production on Sat Jul 17 20:57:07 2021
+Version 19.11.0.0.0
+
+Copyright (c) 1982, 2020, Oracle.  All rights reserved.
+
+
+Connected to:
+Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production
+Version 19.11.0.0.0
+
+SQL> !asmcmd lsdg
+State    Type    Rebal  Sector  Logical_Sector  Block       AU  Total_MB  Free_MB  Req_mir_free_MB  Usable_file_MB  Offline_disks  Voting_files  Name
+MOUNTED  EXTERN  Y         512             512   4096  4194304  10495864  4226852                0         4226852              0             N  DATA/
+MOUNTED  EXTERN  N         512             512   4096  4194304    511992   318376                0          318376              0             N  FRA/
+MOUNTED  EXTERN  N         512             512   4096  4194304     15348    14924                0           14924              0             Y  OCR_VD_DG/
+
+SQL>
+
+SQL> !asmcmd lsdg
+State    Type    Rebal  Sector  Logical_Sector  Block       AU  Total_MB  Free_MB  Req_mir_free_MB  Usable_file_MB  Offline_disks  Voting_files  Name
+MOUNTED  EXTERN  Y         512             512   4096  4194304  10495864  4226852                0         4226852              0             N  DATA/
+MOUNTED  EXTERN  N         512             512   4096  4194304    511992   318376                0          318376              0             N  FRA/
+MOUNTED  EXTERN  N         512             512   4096  4194304     15348    14924                0           14924              0             Y  OCR_VD_DG/
+
+SQL> alter diskgroup data drop disk 'AFD:ASM_DISK26';
+alter diskgroup data drop disk 'AFD:ASM_DISK26'
+*
+ERROR at line 1:
+ORA-15032: not all alterations performed
+ORA-15054: disk "AFD:ASM_DISK26" does not exist in diskgroup "DATA"
+
+
+SQL> alter diskgroup data drop disk 'ASM_DISK26';
+
+Diskgroup altered.
+
+SQL> !asmcmd lsdg
+State    Type    Rebal  Sector  Logical_Sector  Block       AU  Total_MB  Free_MB  Req_mir_free_MB  Usable_file_MB  Offline_disks  Voting_files  Name
+MOUNTED  EXTERN  Y         512             512   4096  4194304  10495864  4226852                0         4226852              0             N  DATA/
+MOUNTED  EXTERN  N         512             512   4096  4194304    511992   318376                0          318376              0             N  FRA/
+MOUNTED  EXTERN  N         512             512   4096  4194304     15348    14924                0           14924              0             Y  OCR_VD_DG/
+
+SQL> !asmcmd lsdg
+State    Type    Rebal  Sector  Logical_Sector  Block       AU  Total_MB  Free_MB  Req_mir_free_MB  Usable_file_MB  Offline_disks  Voting_files  Name
+MOUNTED  EXTERN  Y         512             512   4096  4194304  10495864  4226852                0         4226852              0             N  DATA/
+MOUNTED  EXTERN  N         512             512   4096  4194304    511992   318376                0          318376              0             N  FRA/
+MOUNTED  EXTERN  N         512             512   4096  4194304     15348    14924                0           14924              0             Y  OCR_VD_DG/
+
+SQL> !asmcmd lsdsk --candidate
+Path
+
+SQL> select * from v$asm_operation;
+
+GROUP_NUMBER OPERA PASS      STAT      POWER     ACTUAL      SOFAR   EST_WORK
+------------ ----- --------- ---- ---------- ---------- ---------- ----------
+  EST_RATE EST_MINUTES ERROR_CODE                                       CON_ID
+---------- ----------- -------------------------------------------- ----------
+           1 REBAL COMPACT   WAIT          1          1          0          0
+         0           0                                                       0
+
+           1 REBAL REBALANCE RUN           1          1      24101      39633
+     41220           0                                                       0
+
+           1 REBAL REBUILD   DONE          1          1          0          0
+         0           0                                                       0
+
+
+SQL> alter diskgroup data rebalance power 8;
+
+
+Diskgroup altered.
+
+SQL> SQL> select * from v$asm_operation;
+
+GROUP_NUMBER OPERA PASS      STAT      POWER     ACTUAL      SOFAR   EST_WORK
+------------ ----- --------- ---- ---------- ---------- ---------- ----------
+  EST_RATE EST_MINUTES ERROR_CODE                                       CON_ID
+---------- ----------- -------------------------------------------- ----------
+           1 REBAL COMPACT   WAIT          8          8          0          0
+         0           0                                                       0
+
+           1 REBAL REBALANCE RUN           8          8         73         73
+     41287           0                                                       0
+
+           1 REBAL REBUILD   DONE          8          8          0          0
+         0           0                                                       0
+
+
+SQL>
+
+
+SQL> select * from v$asm_operation;
+
+no rows selected
+
+SQL> alter diskgroup data drop disk 'ASM_DISK27';
+alter diskgroup data drop disk 'ASM_DISK28';
+alter diskgroup data drop disk 'ASM_DISK29';
+alter diskgroup data drop disk 'ASM_DISK30';
+alter diskgroup data drop disk 'ASM_DISK31';
+alter diskgroup data drop disk 'ASM_DISK32';
+Diskgroup altered.
+
+SQL>
+Diskgroup altered.
+
+SQL>
+Diskgroup altered.
+
+SQL>
+
+Diskgroup altered.
+
+SQL>
+
+Diskgroup altered.
+
+SQL>
+Diskgroup altered.
+
+SQL> SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL> select * from v$asm_operation;
+
+GROUP_NUMBER OPERA PASS      STAT      POWER     ACTUAL      SOFAR   EST_WORK
+------------ ----- --------- ---- ---------- ---------- ---------- ----------
+  EST_RATE EST_MINUTES ERROR_CODE                                       CON_ID
+---------- ----------- -------------------------------------------- ----------
+           1 REBAL COMPACT   WAIT          1          1          0          0
+         0           0                                                       0
+
+           1 REBAL REBALANCE RUN           1          1       2805     237992
+     57969           4                                                       0
+
+           1 REBAL REBUILD   DONE          1          1          0          0
+         0           0                                                       0
+
+
+SQL> alter diskgroup data rebalance power 8;
+
+Diskgroup altered.
+
+SQL> select * from v$asm_operation;
+
+GROUP_NUMBER OPERA PASS      STAT      POWER     ACTUAL      SOFAR   EST_WORK
+------------ ----- --------- ---- ---------- ---------- ---------- ----------
+  EST_RATE EST_MINUTES ERROR_CODE                                       CON_ID
+---------- ----------- -------------------------------------------- ----------
+           1 REBAL COMPACT   WAIT          8          8          0          0
+         0           0                                                       0
+
+           1 REBAL REBALANCE RUN           8          8        648        648
+     23023           0                                                       0
+
+           1 REBAL REBUILD   DONE          8          8          0          0
+         0           0                                                       0
+
+
+SQL>
+
+SQL> /
+
+GROUP_NUMBER OPERA PASS      STAT      POWER     ACTUAL      SOFAR   EST_WORK
+------------ ----- --------- ---- ---------- ---------- ---------- ----------
+  EST_RATE EST_MINUTES ERROR_CODE                                       CON_ID
+---------- ----------- -------------------------------------------- ----------
+           1 REBAL COMPACT   WAIT          8          8          0          0
+         0           0                                                       0
+
+           1 REBAL REBALANCE RUN           8          8     211626     226267
+     38509           0                                                       0
+
+           1 REBAL REBUILD   DONE          8          8          0          0
+         0           0                                                       0
+
+
+SQL> /
+
+no rows selected
+
+SQL>
+
+
+SQL> !asmcmd lsdsk --candidate
+Path
+AFD:ASM_DISK26
+AFD:ASM_DISK27
+AFD:ASM_DISK28
+AFD:ASM_DISK29
+AFD:ASM_DISK30
+AFD:ASM_DISK31
+AFD:ASM_DISK32
+
+SQL>
+
+[root@hrvltstdb20 ~]# asmcmd afd_lsdsk
+--------------------------------------------------------------------------------
+Label                     Filtering   Path
+================================================================================
+ASM_DISK01                  ENABLED   /dev/sdai1
+ASM_DISK02                  ENABLED   /dev/sdaj1
+ASM_DISK03                  ENABLED   /dev/sdak1
+ASM_DISK04                  ENABLED   /dev/sdz1
+ASM_DISK05                  ENABLED   /dev/sdaa1
+ASM_DISK06                  ENABLED   /dev/sdab1
+ASM_DISK07                  ENABLED   /dev/sdac1
+ASM_DISK08                  ENABLED   /dev/sdad1
+ASM_DISK09                  ENABLED   /dev/sdf1
+ASM_DISK10                  ENABLED   /dev/sdg1
+ASM_DISK11                  ENABLED   /dev/sdh1
+ASM_DISK12                  ENABLED   /dev/sdi1
+ASM_DISK13                  ENABLED   /dev/sdj1
+ASM_DISK14                  ENABLED   /dev/sdk1
+ASM_DISK15                  ENABLED   /dev/sdl1
+ASM_DISK16                  ENABLED   /dev/sdm1
+ASM_DISK17                  ENABLED   /dev/sdn1
+ASM_DISK18                  ENABLED   /dev/sdo1
+ASM_DISK19                  ENABLED   /dev/sdp1
+ASM_DISK20                  ENABLED   /dev/sdq1
+ASM_DISK21                  ENABLED   /dev/sdr1
+ASM_DISK22                  ENABLED   /dev/sds1
+ASM_DISK23                  ENABLED   /dev/sdt1
+ASM_DISK24                  ENABLED   /dev/sdu1
+ASM_DISK25                  ENABLED   /dev/sdv1
+
+
+
+ASM_DISK26                  ENABLED   /dev/sdw1
+ASM_DISK27                  ENABLED   /dev/sdx1
+ASM_DISK28                  ENABLED   /dev/sdy1
+ASM_DISK29                  ENABLED   /dev/sdae1
+ASM_DISK30                  ENABLED   /dev/sdaf1
+ASM_DISK31                  ENABLED   /dev/sdag1
+ASM_DISK32                  ENABLED   /dev/sdah1
+ASM_DISK33                  ENABLED   /dev/sdal1
+ASM_DISK34                  ENABLED   /dev/sdam1
+ASM_DISK35                  ENABLED   /dev/sdan1
+ASM_DISK36                  ENABLED   /dev/sdao1
+ASM_DISK37                  ENABLED   /dev/sdap1
+ASM_DISK38                  ENABLED   /dev/sdaq1
+ASM_DISK39                  ENABLED   /dev/sdar1
+[root@hrvltstdb20 ~]#
+
+
+[root@hrvltstdb20 ~]# afd_unlabel 'ASM_DISK26'
+bash: afd_unlabel: command not found...
+[root@hrvltstdb20 ~]# asmcmd afd_unlabel 'ASM_DISK26'
+[root@hrvltstdb20 ~]# asmcmd afd_unlabel 'ASM_DISK27'
+[root@hrvltstdb20 ~]# asmcmd afd_unlabel 'ASM_DISK28'
+[root@hrvltstdb20 ~]# asmcmd afd_unlabel 'ASM_DISK29';
+[root@hrvltstdb20 ~]# asmcmd afd_unlabel 'ASM_DISK30'
+[root@hrvltstdb20 ~]# asmcmd afd_unlabel 'ASM_DISK31'
+[root@hrvltstdb20 ~]# asmcmd afd_unlabel 'ASM_DISK32'
+[root@hrvltstdb20 ~]#  asmcmd afd_lsdsk
+--------------------------------------------------------------------------------
+Label                     Filtering   Path
+================================================================================
+ASM_DISK01                  ENABLED   /dev/sdai1
+ASM_DISK02                  ENABLED   /dev/sdaj1
+ASM_DISK03                  ENABLED   /dev/sdak1
+ASM_DISK04                  ENABLED   /dev/sdz1
+ASM_DISK05                  ENABLED   /dev/sdaa1
+ASM_DISK06                  ENABLED   /dev/sdab1
+ASM_DISK07                  ENABLED   /dev/sdac1
+ASM_DISK08                  ENABLED   /dev/sdad1
+ASM_DISK09                  ENABLED   /dev/sdf1
+ASM_DISK10                  ENABLED   /dev/sdg1
+ASM_DISK11                  ENABLED   /dev/sdh1
+ASM_DISK12                  ENABLED   /dev/sdi1
+ASM_DISK13                  ENABLED   /dev/sdj1
+ASM_DISK14                  ENABLED   /dev/sdk1
+ASM_DISK15                  ENABLED   /dev/sdl1
+ASM_DISK16                  ENABLED   /dev/sdm1
+ASM_DISK17                  ENABLED   /dev/sdn1
+ASM_DISK18                  ENABLED   /dev/sdo1
+ASM_DISK19                  ENABLED   /dev/sdp1
+ASM_DISK20                  ENABLED   /dev/sdq1
+ASM_DISK21                  ENABLED   /dev/sdr1
+ASM_DISK22                  ENABLED   /dev/sds1
+ASM_DISK23                  ENABLED   /dev/sdt1
+ASM_DISK24                  ENABLED   /dev/sdu1
+ASM_DISK25                  ENABLED   /dev/sdv1
+ASM_DISK33                  ENABLED   /dev/sdal1
+ASM_DISK34                  ENABLED   /dev/sdam1
+ASM_DISK35                  ENABLED   /dev/sdan1
+ASM_DISK36                  ENABLED   /dev/sdao1
+ASM_DISK37                  ENABLED   /dev/sdap1
+ASM_DISK38                  ENABLED   /dev/sdaq1
+ASM_DISK39                  ENABLED   /dev/sdar1
+[root@hrvltstdb20 ~]#  asmcmd lsdsk --candidate
+Path
+[root@hrvltstdb20 ~]#
+
+Following can be released:
+
+
+
+ASM_DISK26                  ENABLED   /dev/sdw1
+ASM_DISK27                  ENABLED   /dev/sdx1
+ASM_DISK28                  ENABLED   /dev/sdy1
+ASM_DISK29                  ENABLED   /dev/sdae1
+ASM_DISK30                  ENABLED   /dev/sdaf1
+ASM_DISK31                  ENABLED   /dev/sdag1
+ASM_DISK32                  ENABLED   /dev/sdah1
+
+
+[root@hrvltstdb20 ~]#  asmcmd lsdsk --candidate
+Path
+[root@hrvltstdb20 ~]# blkid | grep oracleasm
+/dev/sdg1: LABEL="ASM_DISK10" TYPE="oracleasm"
+/dev/sdf1: LABEL="ASM_DISK09" TYPE="oracleasm"
+/dev/sdj1: LABEL="ASM_DISK13" TYPE="oracleasm"
+/dev/sdi1: LABEL="ASM_DISK12" TYPE="oracleasm"
+/dev/sdk1: LABEL="ASM_DISK14" TYPE="oracleasm"
+/dev/sdm1: LABEL="ASM_DISK16" TYPE="oracleasm"
+/dev/sdn1: LABEL="ASM_DISK17" TYPE="oracleasm"
+/dev/sdh1: LABEL="ASM_DISK11" TYPE="oracleasm"
+/dev/sdl1: LABEL="ASM_DISK15" TYPE="oracleasm"
+/dev/sdp1: LABEL="ASM_DISK19" TYPE="oracleasm"
+/dev/sdo1: LABEL="ASM_DISK18" TYPE="oracleasm"
+/dev/sdr1: LABEL="ASM_DISK21" TYPE="oracleasm"
+/dev/sdx1: TYPE="oracleasm"
+/dev/sdq1: LABEL="ASM_DISK20" TYPE="oracleasm"
+/dev/sds1: LABEL="ASM_DISK22" TYPE="oracleasm"
+/dev/sdz1: LABEL="ASM_DISK04" TYPE="oracleasm"
+/dev/sdw1: TYPE="oracleasm"
+/dev/sdu1: LABEL="ASM_DISK24" TYPE="oracleasm"
+/dev/sdy1: TYPE="oracleasm"
+/dev/sdaa1: LABEL="ASM_DISK05" TYPE="oracleasm"
+/dev/sdab1: LABEL="ASM_DISK06" TYPE="oracleasm"
+/dev/sdv1: LABEL="ASM_DISK25" TYPE="oracleasm"
+/dev/sdad1: LABEL="ASM_DISK08" TYPE="oracleasm"
+/dev/sdac1: LABEL="ASM_DISK07" TYPE="oracleasm"
+/dev/sdae1: TYPE="oracleasm"
+/dev/sdai1: LABEL="ASM_DISK01" TYPE="oracleasm"
+/dev/sdaj1: LABEL="ASM_DISK02" TYPE="oracleasm"
+/dev/sdak1: LABEL="ASM_DISK03" TYPE="oracleasm"
+/dev/sdt1: LABEL="ASM_DISK23" TYPE="oracleasm"
+/dev/sdaf1: TYPE="oracleasm"
+/dev/sdag1: TYPE="oracleasm"
+/dev/sdah1: TYPE="oracleasm"
+/dev/sdal1: LABEL="ASM_DISK33" TYPE="oracleasm"
+/dev/sdam1: LABEL="ASM_DISK34" TYPE="oracleasm"
+/dev/sdan1: LABEL="ASM_DISK35" TYPE="oracleasm"
+/dev/sdao1: LABEL="ASM_DISK36" TYPE="oracleasm"
+/dev/sdap1: LABEL="ASM_DISK37" TYPE="oracleasm"
+/dev/sdaq1: LABEL="ASM_DISK38" TYPE="oracleasm"
+/dev/sdar1: LABEL="ASM_DISK39" TYPE="oracleasm"
+/dev/sdas1: TYPE="oracleasm"
+[root@hrvltstdb20 ~]#
+
+
+
+[root@hrvltstdb20 ~]# blkid | grep oracleasm | grep 26
+[root@hrvltstdb20 ~]# blkid | grep oracleasm | grep 27
+[root@hrvltstdb20 ~]# blkid | grep oracleasm | grep 28
+[root@hrvltstdb20 ~]# blkid | grep oracleasm | grep 29
+[root@hrvltstdb20 ~]# blkid | grep oracleasm | grep 30
+[root@hrvltstdb20 ~]# blkid | grep oracleasm | grep 31
+[root@hrvltstdb20 ~]# blkid | grep oracleasm | grep 32
+[root@hrvltstdb20 ~]# blkid | grep oracleasm | grep 33
+/dev/sdal1: LABEL="ASM_DISK33" TYPE="oracleasm"
+[root@hrvltstdb20 ~]#
+
+
+[root@hrvltstdb20 ~]# asmcmd lsdsk -k | awk {' print $1 "   " $2 " " $3 "  " $4 "  " $5'}
+Total_MB   Free_MB OS_MB  Name  Failgroup
+5116   4944 5119  ASM_DISK01  ASM_DISK01
+5116   4992 5119  ASM_DISK02  ASM_DISK02
+5116   4988 5119  ASM_DISK03  ASM_DISK03
+255996   71612 255999  ASM_DISK04  ASM_DISK04
+255996   71620 255999  ASM_DISK05  ASM_DISK05
+255996   71608 255999  ASM_DISK06  ASM_DISK06
+255996   71608 255999  ASM_DISK07  ASM_DISK07
+255996   71620 255999  ASM_DISK08  ASM_DISK08
+255996   71620 255999  ASM_DISK09  ASM_DISK09
+255996   71608 255999  ASM_DISK10  ASM_DISK10
+255996   156368 255999  ASM_DISK11  ASM_DISK11
+255996   156436 255999  ASM_DISK12  ASM_DISK12
+255996   71612 255999  ASM_DISK13  ASM_DISK13
+255996   71612 255999  ASM_DISK14  ASM_DISK14
+255996   71612 255999  ASM_DISK15  ASM_DISK15
+255996   71612 255999  ASM_DISK16  ASM_DISK16
+255996   71616 255999  ASM_DISK17  ASM_DISK17
+255996   71612 255999  ASM_DISK18  ASM_DISK18
+
+255996   71620 255999  ASM_DISK19  ASM_DISK19
+255996   71616 255999  ASM_DISK20  ASM_DISK20
+255996   71608 255999  ASM_DISK21  ASM_DISK21
+255996   71620 255999  ASM_DISK22  ASM_DISK22
+255996   71612 255999  ASM_DISK23  ASM_DISK23
+255996   71616 255999  ASM_DISK24  ASM_DISK24
+255996   71616 255999  ASM_DISK25  ASM_DISK25
+
+511996   143252 511999  ASM_DISK33  ASM_DISK33
+511996   143252 511999  ASM_DISK34  ASM_DISK34
+511996   143236 511999  ASM_DISK35  ASM_DISK35
+511996   143232 511999  ASM_DISK36  ASM_DISK36
+511996   143232 511999  ASM_DISK37  ASM_DISK37
+511996   143244 511999  ASM_DISK38  ASM_DISK38
+511996   143236 511999  ASM_DISK39  ASM_DISK39
+[root@hrvltstdb20 ~]#
+
+alter diskgroup data drop disk 'ASM_DISK19';
+alter diskgroup data drop disk 'ASM_DISK20';
+alter diskgroup data drop disk 'ASM_DISK21';
+alter diskgroup data drop disk 'ASM_DISK22';
+alter diskgroup data drop disk 'ASM_DISK23';
+alter diskgroup data drop disk 'ASM_DISK24';
+alter diskgroup data drop disk 'ASM_DISK25';
+
+
+SQL> alter diskgroup data drop disk 'ASM_DISK19';
+alter diskgroup data drop disk 'ASM_DISK20';
+alter diskgroup data drop disk 'ASM_DISK21';
+alter diskgroup data drop disk 'ASM_DISK22';
+alter diskgroup data drop disk 'ASM_DISK23';
+alter diskgroup data drop disk 'ASM_DISK24';
+alter diskgroup data drop disk 'ASM_DISK25';
+Diskgroup altered.
+
+SQL>
+Diskgroup altered.
+
+SQL>
+Diskgroup altered.
+
+SQL>
+
+Diskgroup altered.
+
+SQL>
+Diskgroup altered.
+
+SQL>
+Diskgroup altered.
+
+SQL>
+Diskgroup altered.
+
+SQL>
+SQL>
+SQL>
+SQL>
+
+SQL> select * from v$asm_operation;
+
+GROUP_NUMBER OPERA PASS      STAT      POWER     ACTUAL      SOFAR   EST_WORK
+------------ ----- --------- ---- ---------- ---------- ---------- ----------
+  EST_RATE EST_MINUTES ERROR_CODE                                       CON_ID
+---------- ----------- -------------------------------------------- ----------
+           1 REBAL COMPACT   WAIT          1          1          0          0
+         0           0                                                       0
+
+           1 REBAL REBALANCE RUN           1          1      10895     328641
+     53785           5                                                       0
+
+           1 REBAL REBUILD   DONE          1          1          0          0
+         0           0                                                       0
+
+
+SQL>
+
+SQL> select name,state from v$asm_disk;
+
+NAME                           STATE
+------------------------------ --------
+ASM_DISK10                     NORMAL
+ASM_DISK09                     NORMAL
+ASM_DISK14                     NORMAL
+ASM_DISK13                     NORMAL
+ASM_DISK12                     NORMAL
+ASM_DISK16                     NORMAL
+ASM_DISK17                     NORMAL
+ASM_DISK19                     DROPPING
+ASM_DISK15                     NORMAL
+ASM_DISK11                     NORMAL
+ASM_DISK18                     NORMAL
+
+NAME                           STATE
+------------------------------ --------
+ASM_DISK21                     DROPPING
+ASM_DISK20                     DROPPING
+ASM_DISK24                     DROPPING
+ASM_DISK22                     DROPPING
+ASM_DISK04                     NORMAL
+ASM_DISK08                     NORMAL
+ASM_DISK05                     NORMAL
+ASM_DISK25                     DROPPING
+ASM_DISK06                     NORMAL
+ASM_DISK01                     NORMAL
+ASM_DISK07                     NORMAL
+
+NAME                           STATE
+------------------------------ --------
+ASM_DISK03                     NORMAL
+ASM_DISK02                     NORMAL
+ASM_DISK23                     DROPPING
+ASM_DISK33                     NORMAL
+ASM_DISK34                     NORMAL
+ASM_DISK35                     NORMAL
+ASM_DISK36                     NORMAL
+ASM_DISK37                     NORMAL
+ASM_DISK38                     NORMAL
+ASM_DISK39                     NORMAL
+
+32 rows selected.
+
+SQL>
+
+
+[grid@hrvltstdb20 ~]$ asmcmd lsdsk --candidate
+Path
+AFD:ASM_DISK19
+AFD:ASM_DISK20
+AFD:ASM_DISK21
+AFD:ASM_DISK22
+AFD:ASM_DISK23
+AFD:ASM_DISK24
+AFD:ASM_DISK25
+
+
+
+asmcmd afd_unlabel 'ASM_DISK19'
+asmcmd afd_unlabel 'ASM_DISK20'
+asmcmd afd_unlabel 'ASM_DISK21'
+asmcmd afd_unlabel 'ASM_DISK22'
+asmcmd afd_unlabel 'ASM_DISK23'
+asmcmd afd_unlabel 'ASM_DISK24'
+asmcmd afd_unlabel 'ASM_DISK25'
+
+
+[grid@hrvltstdb20 ~]$ asmcmd lsdg
+
+State    Type    Rebal  Sector  Logical_Sector  Block       AU  Total_MB  Free_MB  Req_mir_free_MB  Usable_file_MB  Offline_disks  Voting_files  Name
+MOUNTED  EXTERN  N         512             512   4096  4194304   6911920   643076                0          643076              0             N  DATA/
+MOUNTED  EXTERN  N         512             512   4096  4194304    511992   312080                0          312080              0             N  FRA/
+MOUNTED  EXTERN  N         512             512   4096  4194304     15348    14924                0           14924              0             Y  OCR_VD_DG/
+[grid@hrvltstdb20 ~]$
+[grid@hrvltstdb20 ~]$
+
+
+
+on 07/19
+
+[root@hrvltstdb20 ~]# asmcmd afd_lsdsk
+--------------------------------------------------------------------------------
+Label                     Filtering   Path
+================================================================================
+ASM_DISK01                  ENABLED   /dev/sdai1
+ASM_DISK02                  ENABLED   /dev/sdaj1
+ASM_DISK03                  ENABLED   /dev/sdak1
+ASM_DISK04                  ENABLED   /dev/sdz1
+ASM_DISK05                  ENABLED   /dev/sdaa1
+ASM_DISK06                  ENABLED   /dev/sdab1
+ASM_DISK07                  ENABLED   /dev/sdac1
+ASM_DISK08                  ENABLED   /dev/sdad1
+ASM_DISK09                  ENABLED   /dev/sdf1
+ASM_DISK10                  ENABLED   /dev/sdg1
+ASM_DISK11                  ENABLED   /dev/sdh1
+ASM_DISK12                  ENABLED   /dev/sdi1
+ASM_DISK13                  ENABLED   /dev/sdj1
+ASM_DISK14                  ENABLED   /dev/sdk1
+ASM_DISK15                  ENABLED   /dev/sdl1
+ASM_DISK16                  ENABLED   /dev/sdm1
+ASM_DISK17                  ENABLED   /dev/sdn1
+ASM_DISK18                  ENABLED   /dev/sdo1
+ASM_DISK33                  ENABLED   /dev/sdal1
+ASM_DISK34                  ENABLED   /dev/sdam1
+ASM_DISK35                  ENABLED   /dev/sdan1
+ASM_DISK36                  ENABLED   /dev/sdao1
+ASM_DISK37                  ENABLED   /dev/sdap1
+ASM_DISK38                  ENABLED   /dev/sdaq1
+
+[root@hrvltstdb20 ~]# asmcmd lsdg
+State    Type    Rebal  Sector  Logical_Sector  Block       AU  Total_MB  Free_MB  Req_mir_free_MB  Usable_file_MB  Offline_disks  Voting_files  Name
+MOUNTED  EXTERN  N         512             512   4096  4194304   6399924   128732                0          128732              0             N  DATA/
+MOUNTED  EXTERN  N         512             512   4096  4194304    511992   233444                0          233444              0             N  FRA/
+MOUNTED  EXTERN  N         512             512   4096  4194304     15348    14924                0           14924              0             Y  OCR_VD_DG/
+[root@hrvltstdb20 ~]#
+
+[12:54 PM] Mueller, Mark J
+    [35:0:8:0]   disk    VMware   Virtual disk     2.0   /dev/sdp -- done
+[35:0:9:0]   disk    VMware   Virtual disk     2.0   /dev/sdq  -- done
+[35:0:10:0]  disk    VMware   Virtual disk     2.0   /dev/sdr  -- done
+[35:0:11:0]  disk    VMware   Virtual disk     2.0   /dev/sds
+[35:0:12:0]  disk    VMware   Virtual disk     2.0   /dev/sdt  -- done
+[35:0:13:0]  disk    VMware   Virtual disk     2.0   /dev/sdu  -- done
+[35:0:14:0]  disk    VMware   Virtual disk     2.0   /dev/sdv  -- done
+[35:0:15:0]  disk    VMware   Virtual disk     2.0   /dev/sdw  -- done
+[35:0:16:0]  disk    VMware   Virtual disk     2.0   /dev/sdx  -- done
+[35:0:17:0]  disk    VMware   Virtual disk     2.0   /dev/sdy  -- done
+[35:0:18:0]  disk    VMware   Virtual disk     2.0   /dev/sdae -- done
+[35:0:19:0]  disk    VMware   Virtual disk     2.0   /dev/sdaf -- done
+[35:0:20:0]  disk    VMware   Virtual disk     2.0   /dev/sdag -- done
+ 
+
+
+[root@hrvltstdb20 ~]# asmcmd lsdsk --candidate -k
+Total_MB  Free_MB   OS_MB  Name        Failgroup   Site_Name  Site_GUID                         Site_Status  Failgroup_Type  Library                                      Label       Failgroup_Label  Site_Label  UDID  Product  Redund   Path
+       0        0  511999                                                                                    REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK40                                              UNKNOWN  AFD:ASM_DISK40
+       0        0  511999                                                                                    REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK41                                              UNKNOWN  AFD:ASM_DISK41
+       0        0  511999                                                                                    REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK42                                              UNKNOWN  AFD:ASM_DISK42
+       0        0  511999                                                                                    REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK43                                              UNKNOWN  AFD:ASM_DISK43
+       0        0  511999                                                                                    REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK44                                              UNKNOWN  AFD:ASM_DISK44
+       0        0  511999                                                                                    REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK45                                              UNKNOWN  AFD:ASM_DISK45
+       0        0  511999                                                                                    REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK46                                              UNKNOWN  AFD:ASM_DISK46
+       0        0  511999                                                                                    REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK47                                              UNKNOWN  AFD:ASM_DISK47
+       0        0  511999                                                                                    REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK48                                              UNKNOWN  AFD:ASM_DISK48
+       0        0  511999                                                                                    REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK49                                              UNKNOWN  AFD:ASM_DISK49
+       0        0  511999                                                                                    REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK50                                              UNKNOWN  AFD:ASM_DISK50
+[root@hrvltstdb20 ~]#
+
+[grid@hrvltstdb20 ~]$ asmcmd lsdsk --candidate
+Path
+AFD:ASM_DISK40
+AFD:ASM_DISK41
+AFD:ASM_DISK42
+AFD:ASM_DISK43
+AFD:ASM_DISK44
+AFD:ASM_DISK45
+AFD:ASM_DISK46
+AFD:ASM_DISK47
+AFD:ASM_DISK48
+AFD:ASM_DISK49
+AFD:ASM_DISK50
+[grid@hrvltstdb20 ~]$ asmcmd lsdg
+State    Type    Rebal  Sector  Logical_Sector  Block       AU  Total_MB  Free_MB  Req_mir_free_MB  Usable_file_MB  Offline_disks  Voting_files  Name
+MOUNTED  EXTERN  N         512             512   4096  4194304   6911920   640588                0          640588              0             N  DATA/
+MOUNTED  EXTERN  N         512             512   4096  4194304    511992   240340                0          240340              0             N  FRA/
+MOUNTED  EXTERN  N         512             512   4096  4194304     15348    14924                0           14924              0             Y  OCR_VD_DG/
+[grid@hrvltstdb20 ~]$
+
+
+SQL> alter diskgroup data add disk 'AFD:ASM_DISK41';
+
+Diskgroup altered.
+
+SQL> alter diskgroup data add disk 'AFD:ASM_DISK42';
+
+Diskgroup altered.
+
+SQL> alter diskgroup data add disk 'AFD:ASM_DISK43';
+
+Diskgroup altered.
+
+SQL> alter diskgroup data add disk 'AFD:ASM_DISK44';
+
+Diskgroup altered.
+
+SQL> alter diskgroup data add disk 'AFD:ASM_DISK45';
+
+Diskgroup altered.
+
+SQL> alter diskgroup data add disk 'AFD:ASM_DISK46';
+
+Diskgroup altered.
+
+SQL> alter diskgroup data add disk 'AFD:ASM_DISK47';
+
+Diskgroup altered.
+
+SQL> alter diskgroup data add disk 'AFD:ASM_DISK48';
+
+Diskgroup altered.
+
+SQL> alter diskgroup data add disk 'AFD:ASM_DISK49';
+
+Diskgroup altered.
+
+SQL> alter diskgroup data add disk 'AFD:ASM_DISK50';
+
+Diskgroup altered.
+
+SQL> !asmcmd lsdg
+State    Type    Rebal  Sector  Logical_Sector  Block       AU  Total_MB  Free_MB  Req_mir_free_MB  Usable_file_MB  Offline_disks  Voting_files  Name
+MOUNTED  EXTERN  Y         512             512   4096  4194304  12543876  6272412                0         6272412              0             N  DATA/
+MOUNTED  EXTERN  N         512             512   4096  4194304    511992   240340                0          240340              0             N  FRA/
+MOUNTED  EXTERN  N         512             512   4096  4194304     15348    14924                0           14924              0             Y  OCR_VD_DG/
+
+SQL>
+
+
+
+SQL> !asmcmd lsdg
+State    Type    Rebal  Sector  Logical_Sector  Block       AU  Total_MB  Free_MB  Req_mir_free_MB  Usable_file_MB  Offline_disks  Voting_files  Name
+MOUNTED  EXTERN  Y         512             512   4096  4194304  13055872  6784396                0         6784396              0             N  DATA/
+MOUNTED  EXTERN  N         512             512   4096  4194304    511992   240340                0          240340              0             N  FRA/
+MOUNTED  EXTERN  N         512             512   4096  4194304     15348    14924                0           14924              0             Y  OCR_VD_DG/
+
+SQL> !asmcmd lsdsk -k
+Total_MB  Free_MB   OS_MB  Name        Failgroup   Site_Name  Site_GUID                         Site_Status  Failgroup_Type  Library                                      Label       Failgroup_Label  Site_Label  UDID  Product  Redund   Path
+    5116     4944    5119  ASM_DISK01  ASM_DISK01             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK01                                              UNKNOWN  AFD:ASM_DISK01
+    5116     4992    5119  ASM_DISK02  ASM_DISK02             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK02                                              UNKNOWN  AFD:ASM_DISK02
+    5116     4988    5119  ASM_DISK03  ASM_DISK03             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK03                                              UNKNOWN  AFD:ASM_DISK03
+  255996    50160  255999  ASM_DISK04  ASM_DISK04             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK04                                              UNKNOWN  AFD:ASM_DISK04
+  255996    50168  255999  ASM_DISK05  ASM_DISK05             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK05                                              UNKNOWN  AFD:ASM_DISK05
+  255996    50160  255999  ASM_DISK06  ASM_DISK06             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK06                                              UNKNOWN  AFD:ASM_DISK06
+  255996    50164  255999  ASM_DISK07  ASM_DISK07             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK07                                              UNKNOWN  AFD:ASM_DISK07
+  255996    50168  255999  ASM_DISK08  ASM_DISK08             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK08                                              UNKNOWN  AFD:ASM_DISK08
+  255996    50164  255999  ASM_DISK09  ASM_DISK09             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK09                                              UNKNOWN  AFD:ASM_DISK09
+  255996    50164  255999  ASM_DISK10  ASM_DISK10             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK10                                              UNKNOWN  AFD:ASM_DISK10
+  255996   120120  255999  ASM_DISK11  ASM_DISK11             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK11                                              UNKNOWN  AFD:ASM_DISK11
+  255996   120220  255999  ASM_DISK12  ASM_DISK12             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK12                                              UNKNOWN  AFD:ASM_DISK12
+  255996    50172  255999  ASM_DISK13  ASM_DISK13             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK13                                              UNKNOWN  AFD:ASM_DISK13
+  255996    50156  255999  ASM_DISK14  ASM_DISK14             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK14                                              UNKNOWN  AFD:ASM_DISK14
+  255996    50164  255999  ASM_DISK15  ASM_DISK15             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK15                                              UNKNOWN  AFD:ASM_DISK15
+  255996    50164  255999  ASM_DISK16  ASM_DISK16             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK16                                              UNKNOWN  AFD:ASM_DISK16
+  255996    50172  255999  ASM_DISK17  ASM_DISK17             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK17                                              UNKNOWN  AFD:ASM_DISK17
+  255996    50172  255999  ASM_DISK18  ASM_DISK18             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK18                                              UNKNOWN  AFD:ASM_DISK18
+  511996   100360  511999  ASM_DISK33  ASM_DISK33             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK33                                              UNKNOWN  AFD:ASM_DISK33
+  511996   100356  511999  ASM_DISK34  ASM_DISK34             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK34                                              UNKNOWN  AFD:ASM_DISK34
+  511996   100348  511999  ASM_DISK35  ASM_DISK35             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK35                                              UNKNOWN  AFD:ASM_DISK35
+  511996   100356  511999  ASM_DISK36  ASM_DISK36             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK36                                              UNKNOWN  AFD:ASM_DISK36
+  511996   100356  511999  ASM_DISK37  ASM_DISK37             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK37                                              UNKNOWN  AFD:ASM_DISK37
+  511996   100360  511999  ASM_DISK38  ASM_DISK38             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK38                                              UNKNOWN  AFD:ASM_DISK38
+  511996   100364  511999  ASM_DISK39  ASM_DISK39             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK39                                              UNKNOWN  AFD:ASM_DISK39
+  511996   450972  511999  ASM_DISK40  ASM_DISK40             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK40                                              UNKNOWN  AFD:ASM_DISK40
+  511996   450968  511999  ASM_DISK41  ASM_DISK41             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK41                                              UNKNOWN  AFD:ASM_DISK41
+  511996   450976  511999  ASM_DISK42  ASM_DISK42             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK42                                              UNKNOWN  AFD:ASM_DISK42
+  511996   450976  511999  ASM_DISK43  ASM_DISK43             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK43                                              UNKNOWN  AFD:ASM_DISK43
+  511996   450968  511999  ASM_DISK44  ASM_DISK44             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK44                                              UNKNOWN  AFD:ASM_DISK44
+  511996   450968  511999  ASM_DISK45  ASM_DISK45             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK45                                              UNKNOWN  AFD:ASM_DISK45
+  511996   450972  511999  ASM_DISK46  ASM_DISK46             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK46                                              UNKNOWN  AFD:ASM_DISK46
+  511996   450972  511999  ASM_DISK47  ASM_DISK47             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK47                                              UNKNOWN  AFD:ASM_DISK47
+  511996   450964  511999  ASM_DISK48  ASM_DISK48             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK48                                              UNKNOWN  AFD:ASM_DISK48
+  511996   450976  511999  ASM_DISK49  ASM_DISK49             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK49                                              UNKNOWN  AFD:ASM_DISK49
+  511996   450968  511999  ASM_DISK50  ASM_DISK50             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK50                                              UNKNOWN  AFD:ASM_DISK50
+  511996   469068  511999  ASM_DISK51  ASM_DISK51             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK51                                              UNKNOWN  AFD:ASM_DISK51
+
+
+
+
+[grid@hrvltstdb20 ~]$ asmcmd lsdsk -k
+Total_MB  Free_MB   OS_MB  Name        Failgroup   Site_Name  Site_GUID                         Site_Status  Failgroup_Type  Library                                      Label       Failgroup_Label  Site_Label  UDID  Product  Redund   Path
+    5116     4944    5119  ASM_DISK01  ASM_DISK01             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK01                                              UNKNOWN  AFD:ASM_DISK01
+    5116     4992    5119  ASM_DISK02  ASM_DISK02             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK02                                              UNKNOWN  AFD:ASM_DISK02
+    5116     4988    5119  ASM_DISK03  ASM_DISK03             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK03                                              UNKNOWN  AFD:ASM_DISK03
+  255996   133012  255999  ASM_DISK04  ASM_DISK04             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK04                                              UNKNOWN  AFD:ASM_DISK04
+  255996   133012  255999  ASM_DISK05  ASM_DISK05             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK05                                              UNKNOWN  AFD:ASM_DISK05
+  255996   133012  255999  ASM_DISK06  ASM_DISK06             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK06                                              UNKNOWN  AFD:ASM_DISK06
+  255996   133012  255999  ASM_DISK07  ASM_DISK07             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK07                                              UNKNOWN  AFD:ASM_DISK07
+  255996   133012  255999  ASM_DISK08  ASM_DISK08             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK08                                              UNKNOWN  AFD:ASM_DISK08
+  255996   133012  255999  ASM_DISK09  ASM_DISK09             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK09                                              UNKNOWN  AFD:ASM_DISK09
+  255996   133016  255999  ASM_DISK10  ASM_DISK10             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK10                                              UNKNOWN  AFD:ASM_DISK10
+  255996   116976  255999  ASM_DISK11  ASM_DISK11             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK11                                              UNKNOWN  AFD:ASM_DISK11
+  255996   117096  255999  ASM_DISK12  ASM_DISK12             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK12                                              UNKNOWN  AFD:ASM_DISK12
+  255996   133012  255999  ASM_DISK13  ASM_DISK13             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK13                                              UNKNOWN  AFD:ASM_DISK13
+  255996   133012  255999  ASM_DISK14  ASM_DISK14             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK14                                              UNKNOWN  AFD:ASM_DISK14
+  255996   133016  255999  ASM_DISK15  ASM_DISK15             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK15                                              UNKNOWN  AFD:ASM_DISK15
+  255996   133016  255999  ASM_DISK16  ASM_DISK16             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK16                                              UNKNOWN  AFD:ASM_DISK16
+  255996   133016  255999  ASM_DISK17  ASM_DISK17             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK17                                              UNKNOWN  AFD:ASM_DISK17
+  255996   133016  255999  ASM_DISK18  ASM_DISK18             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK18                                              UNKNOWN  AFD:ASM_DISK18
+  511996   266056  511999  ASM_DISK33  ASM_DISK33             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK33                                              UNKNOWN  AFD:ASM_DISK33
+  511996   266056  511999  ASM_DISK34  ASM_DISK34             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK34                                              UNKNOWN  AFD:ASM_DISK34
+  511996   266052  511999  ASM_DISK35  ASM_DISK35             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK35                                              UNKNOWN  AFD:ASM_DISK35
+  511996   266052  511999  ASM_DISK36  ASM_DISK36             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK36                                              UNKNOWN  AFD:ASM_DISK36
+  511996   266056  511999  ASM_DISK37  ASM_DISK37             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK37                                              UNKNOWN  AFD:ASM_DISK37
+  511996   266052  511999  ASM_DISK38  ASM_DISK38             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK38                                              UNKNOWN  AFD:ASM_DISK38
+  511996   266052  511999  ASM_DISK39  ASM_DISK39             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK39                                              UNKNOWN  AFD:ASM_DISK39
+  511996   266076  511999  ASM_DISK40  ASM_DISK40             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK40                                              UNKNOWN  AFD:ASM_DISK40
+  511996   266068  511999  ASM_DISK41  ASM_DISK41             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK41                                              UNKNOWN  AFD:ASM_DISK41
+  511996   266076  511999  ASM_DISK42  ASM_DISK42             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK42                                              UNKNOWN  AFD:ASM_DISK42
+  511996   266068  511999  ASM_DISK43  ASM_DISK43             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK43                                              UNKNOWN  AFD:ASM_DISK43
+  511996   266068  511999  ASM_DISK44  ASM_DISK44             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK44                                              UNKNOWN  AFD:ASM_DISK44
+  511996   266072  511999  ASM_DISK45  ASM_DISK45             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK45                                              UNKNOWN  AFD:ASM_DISK45
+  511996   266072  511999  ASM_DISK46  ASM_DISK46             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK46                                              UNKNOWN  AFD:ASM_DISK46
+  511996   266068  511999  ASM_DISK47  ASM_DISK47             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK47                                              UNKNOWN  AFD:ASM_DISK47
+  511996   266064  511999  ASM_DISK48  ASM_DISK48             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK48                                              UNKNOWN  AFD:ASM_DISK48
+  511996   266076  511999  ASM_DISK49  ASM_DISK49             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK49                                              UNKNOWN  AFD:ASM_DISK49
+  511996   266072  511999  ASM_DISK50  ASM_DISK50             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK50                                              UNKNOWN  AFD:ASM_DISK50
+  511996   266064  511999  ASM_DISK51  ASM_DISK51             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK51                                              UNKNOWN  AFD:ASM_DISK51
+[grid@hrvltstdb20 ~]$
+
+
+[grid@hrvltstdb20 ~]$ asmcmd lsdg
+State    Type    Rebal  Sector  Logical_Sector  Block       AU  Total_MB  Free_MB  Req_mir_free_MB  Usable_file_MB  Offline_disks  Voting_files  Name
+MOUNTED  EXTERN  N         512             512   4096  4194304   8703932  2431320                0         2431320              0             N  DATA/
+MOUNTED  EXTERN  N         512             512   4096  4194304   1023992   733932                0          733932              0             N  FRA/
+MOUNTED  EXTERN  N         512             512   4096  4194304     15348    14924                0           14924              0             Y  OCR_VD_DG/
+[grid@hrvltstdb20 ~]$ asmcmd lsdsk --candidate
+Path
+AFD:ASM_DISK04
+AFD:ASM_DISK05
+AFD:ASM_DISK06
+AFD:ASM_DISK07
+AFD:ASM_DISK08
+AFD:ASM_DISK09
+AFD:ASM_DISK10
+AFD:ASM_DISK11
+AFD:ASM_DISK12
+AFD:ASM_DISK13
+AFD:ASM_DISK14
+AFD:ASM_DISK15
+AFD:ASM_DISK16
+AFD:ASM_DISK17
+AFD:ASM_DISK18
+[grid@hrvltstdb20 ~]$
+
+
+
+
+
+
+SQL> exit
+Disconnected from Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production
+Version 19.11.0.0.0
+[grid@hrvltstdb20 ~]$ asmcmd lsdg
+State    Type    Rebal  Sector  Logical_Sector  Block       AU  Total_MB  Free_MB  Req_mir_free_MB  Usable_file_MB  Offline_disks  Voting_files  Name
+MOUNTED  EXTERN  N         512             512   4096  4194304   8703932  2431320                0         2431320              0             N  DATA/
+MOUNTED  EXTERN  N         512             512   4096  4194304   1023992   733932                0          733932              0             N  FRA/
+MOUNTED  EXTERN  N         512             512   4096  4194304     15348    14924                0           14924              0             Y  OCR_VD_DG/
+[grid@hrvltstdb20 ~]$ asmcmd lsdsk --candidate
+Path
+AFD:ASM_DISK04
+AFD:ASM_DISK05
+AFD:ASM_DISK06
+AFD:ASM_DISK07
+AFD:ASM_DISK08
+AFD:ASM_DISK09
+AFD:ASM_DISK10
+AFD:ASM_DISK11
+AFD:ASM_DISK12
+AFD:ASM_DISK13
+AFD:ASM_DISK14
+AFD:ASM_DISK15
+AFD:ASM_DISK16
+AFD:ASM_DISK17
+AFD:ASM_DISK18
+[grid@hrvltstdb20 ~]$ asmcmd afd_lsdsk
+--------------------------------------------------------------------------------
+Label                     Filtering   Path
+================================================================================
+ASM_DISK01                  ENABLED   /dev/sdai1
+ASM_DISK02                  ENABLED   /dev/sdaj1
+ASM_DISK03                  ENABLED   /dev/sdak1
+ASM_DISK04                  ENABLED   /dev/sdz1
+ASM_DISK05                  ENABLED   /dev/sdaa1
+ASM_DISK06                  ENABLED   /dev/sdab1
+ASM_DISK07                  ENABLED   /dev/sdac1
+ASM_DISK08                  ENABLED   /dev/sdad1
+ASM_DISK09                  ENABLED   /dev/sdf1
+ASM_DISK10                  ENABLED   /dev/sdg1
+ASM_DISK11                  ENABLED   /dev/sdh1
+ASM_DISK12                  ENABLED   /dev/sdi1
+ASM_DISK13                  ENABLED   /dev/sdj1
+ASM_DISK14                  ENABLED   /dev/sdk1
+ASM_DISK15                  ENABLED   /dev/sdl1
+ASM_DISK16                  ENABLED   /dev/sdm1
+ASM_DISK17                  ENABLED   /dev/sdn1
+ASM_DISK18                  ENABLED   /dev/sdo1
+ASM_DISK33                  ENABLED   /dev/sdal1
+ASM_DISK34                  ENABLED   /dev/sdam1
+ASM_DISK35                  ENABLED   /dev/sdan1
+ASM_DISK36                  ENABLED   /dev/sdao1
+ASM_DISK37                  ENABLED   /dev/sdap1
+ASM_DISK38                  ENABLED   /dev/sdaq1
+ASM_DISK39                  ENABLED   /dev/sdq1
+ASM_DISK40                  ENABLED   /dev/sdr1
+ASM_DISK41                  ENABLED   /dev/sdp1
+ASM_DISK42                  ENABLED   /dev/sdt1
+ASM_DISK43                  ENABLED   /dev/sdu1
+ASM_DISK44                  ENABLED   /dev/sdv1
+ASM_DISK45                  ENABLED   /dev/sdw1
+ASM_DISK46                  ENABLED   /dev/sdx1
+ASM_DISK47                  ENABLED   /dev/sdy1
+ASM_DISK48                  ENABLED   /dev/sdae1
+ASM_DISK49                  ENABLED   /dev/sdaf1
+ASM_DISK50                  ENABLED   /dev/sdag1
+ASM_DISK51                  ENABLED   /dev/sds1
+[grid@hrvltstdb20 ~]$ asmcmd lsdsk -k
+Total_MB  Free_MB   OS_MB  Name        Failgroup   Site_Name  Site_GUID                         Site_Status  Failgroup_Type  Library                                      Label       Failgroup_Label  Site_Label  UDID  Product  Redund   Path
+    5116     4944    5119  ASM_DISK01  ASM_DISK01             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK01                                              UNKNOWN  AFD:ASM_DISK01
+    5116     4992    5119  ASM_DISK02  ASM_DISK02             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK02                                              UNKNOWN  AFD:ASM_DISK02
+    5116     4988    5119  ASM_DISK03  ASM_DISK03             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK03                                              UNKNOWN  AFD:ASM_DISK03
+  511996   366972  511999  ASM_DISK33  ASM_DISK33             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK33                                              UNKNOWN  AFD:ASM_DISK33
+  511996   366960  511999  ASM_DISK34  ASM_DISK34             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK34                                              UNKNOWN  AFD:ASM_DISK34
+  511996   143016  511999  ASM_DISK35  ASM_DISK35             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK35                                              UNKNOWN  AFD:ASM_DISK35
+  511996   143020  511999  ASM_DISK36  ASM_DISK36             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK36                                              UNKNOWN  AFD:ASM_DISK36
+  511996   143016  511999  ASM_DISK37  ASM_DISK37             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK37                                              UNKNOWN  AFD:ASM_DISK37
+  511996   143028  511999  ASM_DISK38  ASM_DISK38             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK38                                              UNKNOWN  AFD:ASM_DISK38
+  511996   143028  511999  ASM_DISK39  ASM_DISK39             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK39                                              UNKNOWN  AFD:ASM_DISK39
+  511996   143020  511999  ASM_DISK40  ASM_DISK40             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK40                                              UNKNOWN  AFD:ASM_DISK40
+  511996   143012  511999  ASM_DISK41  ASM_DISK41             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK41                                              UNKNOWN  AFD:ASM_DISK41
+  511996   143024  511999  ASM_DISK42  ASM_DISK42             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK42                                              UNKNOWN  AFD:ASM_DISK42
+  511996   143020  511999  ASM_DISK43  ASM_DISK43             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK43                                              UNKNOWN  AFD:ASM_DISK43
+  511996   143020  511999  ASM_DISK44  ASM_DISK44             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK44                                              UNKNOWN  AFD:ASM_DISK44
+  511996   143024  511999  ASM_DISK45  ASM_DISK45             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK45                                              UNKNOWN  AFD:ASM_DISK45
+  511996   143020  511999  ASM_DISK46  ASM_DISK46             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK46                                              UNKNOWN  AFD:ASM_DISK46
+  511996   143008  511999  ASM_DISK47  ASM_DISK47             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK47                                              UNKNOWN  AFD:ASM_DISK47
+  511996   143012  511999  ASM_DISK48  ASM_DISK48             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK48                                              UNKNOWN  AFD:ASM_DISK48
+  511996   143020  511999  ASM_DISK49  ASM_DISK49             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK49                                              UNKNOWN  AFD:ASM_DISK49
+  511996   143016  511999  ASM_DISK50  ASM_DISK50             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK50                                              UNKNOWN  AFD:ASM_DISK50
+  511996   143016  511999  ASM_DISK51  ASM_DISK51             00000000000000000000000000000000               REGULAR         AFD Library - Generic , version 3 (KABI_V3)  ASM_DISK51                                              UNKNOWN  AFD:ASM_DISK51
+[grid@hrvltstdb20 ~]$
+
+
+[root@hrvltstdb20 ~]# asmcmd afd_lsdsk
+--------------------------------------------------------------------------------
+Label                     Filtering   Path
+================================================================================
+ASM_DISK01                  ENABLED   /dev/sdai1
+ASM_DISK02                  ENABLED   /dev/sdaj1
+ASM_DISK03                  ENABLED   /dev/sdak1
+
+
+
+
+
+ASM_DISK33                  ENABLED   /dev/sdal1
+ASM_DISK34                  ENABLED   /dev/sdam1
+ASM_DISK35                  ENABLED   /dev/sdan1
+ASM_DISK36                  ENABLED   /dev/sdao1
+ASM_DISK37                  ENABLED   /dev/sdap1
+ASM_DISK38                  ENABLED   /dev/sdaq1
+ASM_DISK39                  ENABLED   /dev/sdq1
+ASM_DISK40                  ENABLED   /dev/sdr1
+ASM_DISK41                  ENABLED   /dev/sdp1
+ASM_DISK42                  ENABLED   /dev/sdt1
+ASM_DISK43                  ENABLED   /dev/sdu1
+ASM_DISK44                  ENABLED   /dev/sdv1
+ASM_DISK45                  ENABLED   /dev/sdw1
+ASM_DISK46                  ENABLED   /dev/sdx1
+ASM_DISK47                  ENABLED   /dev/sdy1
+ASM_DISK48                  ENABLED   /dev/sdae1
+ASM_DISK49                  ENABLED   /dev/sdaf1
+ASM_DISK50                  ENABLED   /dev/sdag1
+ASM_DISK51                  ENABLED   /dev/sds1
+[root@hrvltstdb20 ~]# asmcmd lsdsk --candidate
+Path
+AFD:ASM_DISK04
+AFD:ASM_DISK05
+AFD:ASM_DISK06
+AFD:ASM_DISK07
+AFD:ASM_DISK08
+AFD:ASM_DISK09
+AFD:ASM_DISK10
+AFD:ASM_DISK11
+AFD:ASM_DISK12
+AFD:ASM_DISK13
+AFD:ASM_DISK14
+AFD:ASM_DISK15
+AFD:ASM_DISK16
+AFD:ASM_DISK17
+AFD:ASM_DISK18
+[root@hrvltstdb20 ~]#
+
+[root@hrvltstdb20 ~]# asmcmd lsdg
+
+State    Type    Rebal  Sector  Logical_Sector  Block       AU  Total_MB  Free_MB  Req_mir_free_MB  Usable_file_MB  Offline_disks  Voting_files  Name
+MOUNTED  EXTERN  N         512             512   4096  4194304   8703932  2431320                0         2431320              0             N  DATA/
+MOUNTED  EXTERN  N         512             512   4096  4194304   1023992   732380                0          732380              0             N  FRA/
+MOUNTED  EXTERN  N         512             512   4096  4194304     15348    14924                0           14924              0             Y  OCR_VD_DG/
+[root@hrvltstdb20 ~]#
+
+
+
+[root@hrvltstdb20 ~]#
+[root@hrvltstdb20 ~]# asmcmd afd_unlabel ASM_DISK04
+[root@hrvltstdb20 ~]# asmcmd afd_unlabel ASM_DISK05
+[root@hrvltstdb20 ~]# asmcmd afd_unlabel ASM_DISK06
+[root@hrvltstdb20 ~]# asmcmd afd_unlabel ASM_DISK07
+[root@hrvltstdb20 ~]# asmcmd afd_unlabel ASM_DISK08
+[root@hrvltstdb20 ~]# asmcmd afd_unlabel ASM_DISK09
+[root@hrvltstdb20 ~]# asmcmd afd_unlabel ASM_DISK10
+[root@hrvltstdb20 ~]# asmcmd afd_unlabel ASM_DISK11
+[root@hrvltstdb20 ~]# asmcmd afd_unlabel ASM_DISK12
+[root@hrvltstdb20 ~]# asmcmd afd_unlabel ASM_DISK13
+
+[root@hrvltstdb20 ~]#
+[root@hrvltstdb20 ~]# asmcmd afd_unlabel ASM_DISK14
+[root@hrvltstdb20 ~]# asmcmd afd_unlabel ASM_DISK15
+[root@hrvltstdb20 ~]# asmcmd afd_unlabel ASM_DISK16
+[root@hrvltstdb20 ~]# asmcmd afd_unlabel ASM_DISK17
+[root@hrvltstdb20 ~]# asmcmd afd_unlabel ASM_DISK18
+[root@hrvltstdb20 ~]# asmcmd lsdsk --candidate
+Path
+[root@hrvltstdb20 ~]# asmcmd afd_lsdsk
+--------------------------------------------------------------------------------
+Label                     Filtering   Path
+================================================================================
+ASM_DISK01                  ENABLED   /dev/sdai1
+ASM_DISK02                  ENABLED   /dev/sdaj1
+ASM_DISK03                  ENABLED   /dev/sdak1
+ASM_DISK33                  ENABLED   /dev/sdal1
+ASM_DISK34                  ENABLED   /dev/sdam1
+ASM_DISK35                  ENABLED   /dev/sdan1
+ASM_DISK36                  ENABLED   /dev/sdao1
+ASM_DISK37                  ENABLED   /dev/sdap1
+ASM_DISK38                  ENABLED   /dev/sdaq1
+ASM_DISK39                  ENABLED   /dev/sdq1
+ASM_DISK40                  ENABLED   /dev/sdr1
+ASM_DISK41                  ENABLED   /dev/sdp1
+ASM_DISK42                  ENABLED   /dev/sdt1
+ASM_DISK43                  ENABLED   /dev/sdu1
+ASM_DISK44                  ENABLED   /dev/sdv1
+ASM_DISK45                  ENABLED   /dev/sdw1
+ASM_DISK46                  ENABLED   /dev/sdx1
+ASM_DISK47                  ENABLED   /dev/sdy1
+ASM_DISK48                  ENABLED   /dev/sdae1
+ASM_DISK49                  ENABLED   /dev/sdaf1
+ASM_DISK50                  ENABLED   /dev/sdag1
+ASM_DISK51                  ENABLED   /dev/sds1
+[root@hrvltstdb20 ~]#
+
+
+Release following ( from hrvltstdb20.hr.state.sbu)
+
+ASM_DISK04                  ENABLED   /dev/sdz1
+ASM_DISK05                  ENABLED   /dev/sdaa1
+ASM_DISK06                  ENABLED   /dev/sdab1
+ASM_DISK07                  ENABLED   /dev/sdac1
+ASM_DISK08                  ENABLED   /dev/sdad1
+ASM_DISK09                  ENABLED   /dev/sdf1
+ASM_DISK10                  ENABLED   /dev/sdg1
+ASM_DISK11                  ENABLED   /dev/sdh1
+ASM_DISK12                  ENABLED   /dev/sdi1
+ASM_DISK13                  ENABLED   /dev/sdj1
+ASM_DISK14                  ENABLED   /dev/sdk1
+ASM_DISK15                  ENABLED   /dev/sdl1
+ASM_DISK16                  ENABLED   /dev/sdm1
+ASM_DISK17                  ENABLED   /dev/sdn1
+ASM_DISK18                  ENABLED   /dev/sdo1

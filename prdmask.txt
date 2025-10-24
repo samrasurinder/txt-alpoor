@@ -1,0 +1,118 @@
++ASMSHAREDG/hfprd/backupset/2020_05_20
+
+
+SQL> set lines 170
+SQL> /
+
+OWNER      DB_LINK                             USERNAME                                 HOST                                     CREATED
+---------- ----------------------------------- ---------------------------------------- ---------------------------------------- ----------------------------------------
+BMA        BMA_DW.HR.STATE.SBU                 DW                                       TSTKC1                                   05-FEB-20
+EOPF_DOS   EOPF_PRD.HR.STATE.SBU               EOPF                                     prd                                      04-FEB-20
+ESRT       CONTDB.HR.STATE.SBU                 CONTDB                                   PRD_CONTDB                               04-FEB-20
+ESRT       EOPFLINK.HR.STATE.SBU               EOPFUSER                                 TST2_EOPFLINK                            05-FEB-20
+ESRT       CAMPUS7.HR.STATE.SBU                HRSVCTSTCAMPUS7LINK                      tst2_campus7                             05-FEB-20
+ESRT       EDW_SRC_LNK.HR.STATE.SBU            DW                                       tstkc1                                   05-FEB-20
+ESRT_INTER EAPS.HR.STATE.SBU                   HRORATSTSECREF                           TST2_EAPS                                05-FEB-20
+FACE
+
+REETA      REETA_DB_LINK.HR.STATE.SBU          REETA                                    dev1                                     21-MAY-16
+SECREF     DB_LINK_REETA_UAT.HR.STATE.SBU      SECREF                                   PRDMASK                                  05-FEB-20
+SECREF     EAPS.HR.STATE.SBU                   HRORATSTSECREF                           TST2_EAPS                                05-FEB-20
+SECREF     CRM.HR.STATE.SBU                    SYSADM                                   CRMMASK                                  05-FEB-20
+SYSADM     EOD.HR.STATE.SBU                    SYSADM                                   EODMASK                                  05-FEB-20
+SYSADM     GEMS_CRM_LINK.HR.STATE.SBU          SYSADM                                   CRMMASK                                  05-FEB-20
+SYSADM     EAPS.HR.STATE.SBU                   HRORATSTREFBANK                          TST2_EAPS_REFBANK                        05-FEB-20
+
+14 rows selected.
+
+SQL>
+
+
+
+/infshare/oracle/export/PRDMASK
+
+
+/infshare/oracle/backup/PRDMASK/DONT_DELETE_ESSR66969
+
+
+
+[oracle@hrewoel29 DONT_DELETE_ESSR66969]$ cat dupdb.bash
+#!/bin/bash
+
+export ORACLE_SID=PRDMASK1
+export ORACLE_HOME=/u02/app/oracle/product/11.2.0.4/db_1
+export PATH=$ORACLE_HOME/bin:$PATH
+export TNS_ADMIN=$ORACLE_HOME/network/admin
+export ORACLE_UNQNAME=PRDMASK
+
+INST=`hostname`
+TODAY=`date +%d%b`
+LOG_DIR=/infshare/oracle/backup/PRDMASK/DONT_DELETE_ESSR66969
+LOGFILE=$LOG_DIR/rman_dup_${ORACLE_SID}_${TODAY}.log
+
+$ORACLE_HOME/bin/rman <<EOF > ${LOGFILE}
+connect auxiliary /
+run {
+allocate auxiliary channel t1 TYPE DISK;
+allocate auxiliary channel t2 TYPE DISK;
+allocate auxiliary channel t3 TYPE DISK;
+allocate auxiliary channel t4 TYPE DISK;
+duplicate target database to PRDMASK NOFILENAMECHECK backup location '+ASMSHAREDG/hfprd/backupset/2020_05_20';
+release channel t1;
+release channel t2;
+release channel t3;
+release channel t4;
+}
+exit
+EOF
+[oracle@hrewoel29 DONT_DELETE_ESSR66969]$
+
+
+
+
+
+07 00 * * * /infshare/oracle/backup/PRDMASK/DONT_DELETE_ESSR66969/dupdb.bash
+
+
+
+
+
+
+SQL> select * from dba_db_links;
+
+OWNER
+------------------------------
+DB_LINK
+--------------------------------------------------------------------------------
+USERNAME
+------------------------------
+HOST
+--------------------------------------------------------------------------------
+CREATED
+---------
+SYSADM
+CRM_GEMS_DBLINK.HR.STATE.SBU
+CRM_GEMS_DBLINK
+
+OWNER
+------------------------------
+DB_LINK
+--------------------------------------------------------------------------------
+USERNAME
+------------------------------
+HOST
+--------------------------------------------------------------------------------
+CREATED
+---------
+PRD
+07-DEC-19
+
+
+SQL> select count(*) from dba_db_links;
+
+  COUNT(*)
+----------
+         1
+
+SQL>
+

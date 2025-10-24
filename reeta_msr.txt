@@ -1,0 +1,31 @@
+Microsoft Windows [Version 10.0.17134.2026]
+(c) 2018 Microsoft Corporation. All rights reserved.
+
+H:\>imp REETA/xxxxxx@PRD tables=(QEP_STAGING,QEP_PN_QUESTION_STAGING,QEP_ESSAY_QUESTION_STAGING) rows=Y ignore=Y file=\\hrinffp1001\DataExchange\Production\PRD\REE\FSOT_Feb_2021.DMP log=\\hrinffp1001\DataExchange\Production\PRD\REE\FSOT_Feb_2021_prd_imp.log
+
+Import: Release 12.1.0.2.0 - Production on Wed Feb 24 09:56:50 2021
+
+Copyright (c) 1982, 2014, Oracle and/or its affiliates.  All rights reserved.
+
+
+Connected to: Oracle Database 11g Enterprise Edition Release 11.2.0.4.0 - 64bit Production
+With the Partitioning, Real Application Clusters, Automatic Storage Management, OLAP,
+Data Mining and Real Application Tes
+
+Export file created by EXPORT:V12.01.00 via conventional path
+
+Warning: the objects were exported by BHOJANIKG, not by you
+
+import done in WE8MSWIN1252 character set and AL16UTF16 NCHAR character set
+import server uses AL32UTF8 character set (possible charset conversion)
+. importing BHOJANIKG's objects into REETA
+. importing BHOJANIKG's objects into REETA
+. . importing table                  "QEP_STAGING"       2415 rows imported
+. . importing table      "QEP_PN_QUESTION_STAGING"          1 rows imported
+. . importing table   "QEP_ESSAY_QUESTION_STAGING"          1 rows imported
+Import terminated successfully without warnings.
+
+H:\>
+H:\>
+H:\>
+

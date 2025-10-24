@@ -1,0 +1,171 @@
+------------------------------------------------
+UI server - hrewltstws1005.hr.state.sbu
+------------------------------------------------
+
+------------------------------------------------
+Backup Instructions
+------------------------------------------------
+
+# Back up IVV UI directory with environment and date as suffix (ex: IVV-20190708)
+cd /data/www/html/talentmap-ivv/
+sudo zip -r ~/UI_DEPLOYMENT_BACKUP-IVV-[CURRENT DATE].zip ./*
+
+------------------------------------------------
+Deployment Instructions
+------------------------------------------------
+
+# Stop Apache
+sudo service httpd stop
+
+# Back up config file
+sudo cp /data/www/html/talentmap-ivv/config/config.json /tmp
+
+# Clear out legacy build
+sudo rm -rf /data/www/html/talentmap-ivv/*
+
+# Copy UI files from TST
+sudo cp -R /data/www/html/talentmap/* /data/www/html/talentmap-ivv/
+
+# Restore config file
+sudo cp /tmp/config.json /data/www/html/talentmap-ivv/config
+
+# Update index.html paths
+
+cd /data/www/html/talentmap-ivv
+
+sudo cp index.html index.html.bak
+
+sudo sed -i "s:/talentmap/:/talentmap-ivv/:g" index.html
+
+
+
+# Update main.css paths
+
+cd /data/www/html/talentmap-ivv/static/css
+
+sudo cp main.css main.css.bak
+
+sudo sed -i "s:/talentmap/:/talentmap-ivv/:g" main.css
+
+# Update main.js paths
+
+cd /data/www/html/talentmap-ivv/static/js
+
+sudo cp main.js main.js.bak
+
+sudo sed -i "s:/talentmap:/talentmap-ivv:g" main.js
+
+# Start Apache
+sudo service httpd start
+
+# Validate Apache
+sudo service httpd status
+
+------------------------------------------------
+Backout Instructions
+------------------------------------------------
+
+# Stop Apache
+sudo service httpd stop
+
+# Clear out build
+sudo rm -rf /data/www/html/talentmap-ivv/*
+
+# Unzip backup
+cd /data/www/html/talentmap-ivv/
+sudo unzip ~/UI_DEPLOYMENT_BACKUP-IVV-[DATE OF BACKUP].zip
+
+# Start Apache
+sudo service httpd start
+
+# Validate Apache
+sudo service httpd status
+
+
+------------------------------------------------
+API server - hrewltstap1005.hr.state.sbu
+------------------------------------------------
+
+------------------------------------------------
+Backup Instructions
+------------------------------------------------
+
+# Back up API directory with environment and date as suffix (ex: prd-10052020)
+cd /data/www/ivv-oracle/api/
+sudo zip -r ~/API_DEPLOYMENT_BACKUP-IVV-10052020.zip ./*
+
+# Manually backup settings files with current date in folder name
+cd ~
+mkdir BACKUP-ivv-10052020/
+sudo cp /data/www/ivv-oracle/api/setup_environment.sh ~/BACKUP-ivv-10052020/
+
+------------------------------------------------
+Deployment Instructions
+------------------------------------------------
+
+# Stop Apache
+sudo service httpd stop
+
+# Apply permissions on log directory
+chmod g+rws /tm_logs/talentmap/ivv-oracle/*.log
+
+# Clear build
+sudo rm -rf /data/www/ivv-oracle/api/*
+
+# Copy API files from TST
+sudo cp -R /data/www/talentmap-dev-2/api/* /data/www/ivv-oracle/api/
+
+# Manually restore settings files
+sudo cp ~/BACKUP-ivv-10052020/setup_environment.sh /data/www/ivv-oracle/api/
+
+# Modify setup_environment file
+sudo vi /data/www/ivv-oracle/api/setup_environment.sh
+# Add the following lines to the bottom of the file
+export SECREF_URL='https://hrtst.hr.state.sbu/tst1/hrtmapdata/api/v1/SECREF'
+export CP_API_URL='https://hrtst.hr.state.sbu/tst1/hrtmapdata/api/v1/cyclePositions'
+
+# Save the file
+
+# Modify Apache configuration
+sudo vi /etc/httpd/conf.d/ivv-oracle.conf
+# Change 8011 to 8010
+
+# Save the file
+
+sudo mv /etc/httpd/conf.d/ivv.conf /etc/httpd/conf.d/ivv.conf.bak
+
+# Apply data table migrations - add columns
+cd /data/www/ivv-oracle/api/ 
+source /var/www/venv/bin/activate
+source setup_environment.sh
+python manage.py migrate
+
+# Start Apache
+sudo service httpd start
+
+# Validate Apache
+sudo service httpd status
+
+# Run the Copy from Postgres to Oracle Instructions for this environment (needs DBA)
+
+------------------------------------------------
+Backout Instructions
+------------------------------------------------
+
+# Stop Apache
+sudo service httpd stop
+
+# Clear API directory and unzip backup
+sudo rm -rf cd /data/www/ivv-oracle/api/*
+cd /data/www/ivv-oracle/api/
+sudo unzip ~/API_DEPLOYMENT_BACKUP-IVV-10052020.zip
+
+# Manually restore settings files
+cp ~/BACKUP-ivv-[current-date]/setup_environment.sh /data/www/ivv-oracle/api/ 
+
+
+# Start Apache
+sudo service httpd start
+
+# Validate Apache
+sudo service httpd status

@@ -1,0 +1,148 @@
+
+
+	
+
+
+ALTER DATABASE DATAFILE '+DATA/OPSMASK/DATAFILE/web_mask_data_tde.1532.1073344221' OFFLINE;
+
+RMAN> COPY DATAFILE '+DATA/OPSMASK/DATAFILE/web_mask_data_tde.1532.1073344221' to '+PRD_DATA';
+
+Starting backup at 23-JUN-21
+using target database control file instead of recovery catalog
+allocated channel: ORA_DISK_1
+channel ORA_DISK_1: SID=1256 device type=DISK
+channel ORA_DISK_1: starting datafile copy
+input datafile file number=00126 name=+DATA/OPSMASK/DATAFILE/web_mask_data_tde.1532.1073344221
+output file name=+PRD_DATA/OPSMASK/DATAFILE/web_mask_data_tde.258.1075984213 tag=TAG20210623T123012 RECID=128 STAMP=1075984213
+channel ORA_DISK_1: datafile copy complete, elapsed time: 00:00:01
+Finished backup at 23-JUN-21
+
+Starting Control File and SPFILE Autobackup at 23-JUN-21
+piece handle=+PRD_FRA/OPSMASK/AUTOBACKUP/2021_06_23/s_1075984213.1162.1075984215 comment=NONE
+Finished Control File and SPFILE Autobackup at 23-JUN-21
+
+RMAN>
+
+
+
+RMAN> run {
+set newname for datafile '+DATA/OPSMASK/DATAFILE/web_mask_data_tde.1532.107334422' to '+PRD_DATA/OPSMASK/DATAFILE/web_mask_data_tde.258.1075984213' ;
+
+} 
+
+RMAN>  switch datafile 126 to COPY;
+
+datafile 126 switched to datafile copy "+PRD_DATA/OPSMASK/DATAFILE/web_mask_data_tde.258.1075984213"
+
+RMAN> select file_id from dba_data_files where file_name like '+DATA%';
+
+
+no rows selected
+
+RMAN> recover datafile 126;
+
+Starting recover at 23-JUN-21
+allocated channel: ORA_DISK_1
+channel ORA_DISK_1: SID=1386 device type=DISK
+
+starting media recovery
+media recovery complete, elapsed time: 00:00:00
+
+Finished recover at 23-JUN-21
+
+RMAN> alter database datafile 126 online;
+
+Statement processed
+
+RMAN>
+
+
+
+1. Restart database in mount mode.
+First thing first, we need to start the database in mount mode to be able to perform the relocation.
+
+SQL> shutdown immediate;
+SQL> startup mount;
+2. Copy all datafiles to the new location
+Next step is to start copying the datafiles to new location. There are 2 cases here.
+a. Copying datafiles with different names (database residing on OS file system)
+When you specify the variable %U, RMAN auto generates new filenames while copying.
+
+RMAN> backup as copy database format '/data02/oradata/%U';
+
+
+
+SQL> select member from v$logfile;
+
+MEMBER
+--------------------------------------------------------------------------------
++PRD_DATA/OPSMASK/ONLINELOG/group_3.449.1073142635
++PRD_FRA/OPSMASK/ONLINELOG/group_3.1540.1073142637
++PRD_DATA/OPSMASK/ONLINELOG/group_2.452.1073142635
++PRD_FRA/OPSMASK/ONLINELOG/group_2.1474.1073142637
++PRD_DATA/OPSMASK/ONLINELOG/group_1.303.1073142635
++PRD_FRA/OPSMASK/ONLINELOG/group_1.1543.1073142637
+
+6 rows selected.
+
+SQL>
+
+#!/bin/sh
+
+export ORACLE_SID=OPSMASK
+export ORACLE_HOME=/u02/app/oracle/product/19.3.0/db_1
+export PATH=$ORACLE_HOME/bin:$PATH
+export TNS_ADMIN=$ORACLE_HOME/network/admin
+
+INST=`hostname`
+TODAY=`date +%d%b`
+BACKUP_DIR=/home/oracle/alpoor_scripts
+LOG_DIR=/home/oracle/alpoor_scripts
+LOGFILE=$LOG_DIR/rman_backup_${ORACLE_SID}_${TODAY}.log
+$ORACLE_HOME/bin/rman <<EOF > ${LOG_DIR}/rman_backup_${ORACLE_SID}_${TODAY}.log
+connect target/
+run {
+backup as copy database format '+DATA';
+}
+EOF
+~
+
+
+
+
+switch database to copy;
+
+
+
+[oracle@hrvltstdb7602 alpoor_scripts]$ rman target /
+
+Recovery Manager: Release 19.0.0.0.0 - Production on Wed Jun 23 13:58:32 2021
+Version 19.11.0.0.0
+
+Copyright (c) 1982, 2019, Oracle and/or its affiliates.  All rights reserved.
+
+connected to target database: OPSMASK (DBID=2815555611, not open)
+
+RMAN> backup as copy current controlfile format '+DATA';
+
+Starting backup at 23-JUN-21
+using target database control file instead of recovery catalog
+allocated channel: ORA_DISK_1
+channel ORA_DISK_1: SID=876 device type=DISK
+channel ORA_DISK_1: starting datafile copy
+copying current control file
+output file name=+DATA/OPSMASK/CONTROLFILE/backup.1790.1075989537 tag=TAG20210623T135856 RECID=388 STAMP=1075989536
+channel ORA_DISK_1: datafile copy complete, elapsed time: 00:00:01
+Finished backup at 23-JUN-21
+
+Starting Control File and SPFILE Autobackup at 23-JUN-21
+piece handle=+PRD_FRA/OPSMASK/AUTOBACKUP/2021_06_23/s_1075985158.1049.1075989539 comment=NONE
+Finished Control File and SPFILE Autobackup at 23-JUN-21
+
+RMAN>
+
+SQL> alter system set control_files='+DATA/OPSMASK/CONTROLFILE/backup.1790.1075989537','+PRD_FRA/OPSMASK/CONTROLFILE/current.1505.1073141805' scope=spfile;
+
+System altered.
+
+SQL>

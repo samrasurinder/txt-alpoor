@@ -1,0 +1,113 @@
+[root@hrvlprddb7602 ~]# /home/grid/asm_disk_map_to_device.sh
+The ASM disk: 'DATA01' mapped to '/dev/sdi1'  Totalsize=214.7 GB,
+The ASM disk: 'DATA02' mapped to '/dev/sdj1'  Totalsize=214.7 GB,
+The ASM disk: 'DATA03' mapped to '/dev/sdk1'  Totalsize=214.7 GB,
+The ASM disk: 'DRSHARE01' mapped to '/dev/sdo1'  Totalsize=549.8 GB,
+The ASM disk: 'FRA01' mapped to '/dev/sdc1'  Totalsize=214.7 GB,
+The ASM disk: 'FRA02' mapped to '/dev/sdd1'  Totalsize=214.7 GB,
+The ASM disk: 'FRA03' mapped to '/dev/sde1'  Totalsize=214.7 GB,
+The ASM disk: 'OCR_VOTE1' mapped to '/dev/sdl1'  Totalsize=53.7 GB,
+[root@hrvlprddb7602 ~]#
+
+[root@hrvlprddb7602 ~]# renamedg dgname=ops_data newdgname=opsstby_data verbose=true check=true asm_diskstring='/dev/sdi*'
+
+Parsing parameters..
+
+Parameters in effect:
+
+         Old DG name       : OPS_DATA
+         New DG name          : OPSSTBY_DATA
+         Phases               :
+                 Phase 1
+                 Phase 2
+         Discovery str        : /dev/sdi*
+         Check              : TRUE
+         Clean              : TRUE
+         Raw only           : TRUE
+renamedg operation: dgname=ops_data newdgname=opsstby_data verbose=true check=true asm_diskstring=/dev/sdi*
+Executing phase 1
+Discovering the group
+Performing discovery with string:/dev/sdi*
+Identified disk UFS:/dev/sdi1 with disk number:0 and timestamp (33088106 1261703168)
+Checking for hearbeat...
+Re-discovering the group
+Performing discovery with string:/dev/sdi*
+Identified disk UFS:/dev/sdi1 with disk number:0 and timestamp (33088106 1261703168)
+Checking if the diskgroup is mounted or used by CSS
+Checking disk number:0
+Generating configuration file..
+Completed phase 1
+Executing phase 2
+Looking for /dev/sdi1
+Leaving the header unchanged
+Completed phase 2
+[root@hrvlprddb7602 ~]#
+
+[root@hrvlprddb7602 ~]# renamedg dgname=ops_data newdgname=opsstby_data verbose=true asm_diskstring='/dev/sdi*'
+
+Parsing parameters..
+
+Parameters in effect:
+
+         Old DG name       : OPS_DATA
+         New DG name          : OPSSTBY_DATA
+         Phases               :
+                 Phase 1
+                 Phase 2
+         Discovery str        : /dev/sdi*
+         Clean              : TRUE
+         Raw only           : TRUE
+renamedg operation: dgname=ops_data newdgname=opsstby_data verbose=true asm_diskstring=/dev/sdi*
+Executing phase 1
+Discovering the group
+Performing discovery with string:/dev/sdi*
+Identified disk UFS:/dev/sdi1 with disk number:0 and timestamp (33088106 1261703168)
+Checking for hearbeat...
+Re-discovering the group
+Performing discovery with string:/dev/sdi*
+Identified disk UFS:/dev/sdi1 with disk number:0 and timestamp (33088106 1261703168)
+Checking if the diskgroup is mounted or used by CSS
+Checking disk number:0
+Generating configuration file..
+Completed phase 1
+Executing phase 2
+Looking for /dev/sdi1
+Modifying the header
+Completed phase 2
+[root@hrvlprddb7602 ~]#
+
+
+
+[root@hrvlprddb7602 ~]# renamedg dgname=ops_fra newdgname=opsstby_fra verbose=true asm_diskstring='/dev/sdc*'
+
+Parsing parameters..
+
+Parameters in effect:
+
+         Old DG name       : OPS_FRA
+         New DG name          : OPSSTBY_FRA
+         Phases               :
+                 Phase 1
+                 Phase 2
+         Discovery str        : /dev/sdc*
+         Clean              : TRUE
+         Raw only           : TRUE
+renamedg operation: dgname=ops_fra newdgname=opsstby_fra verbose=true asm_diskstring=/dev/sdc*
+Executing phase 1
+Discovering the group
+Performing discovery with string:/dev/sdc*
+Identified disk UFS:/dev/sdc1 with disk number:0 and timestamp (33088106 1313552384)
+Checking for hearbeat...
+Re-discovering the group
+Performing discovery with string:/dev/sdc*
+Identified disk UFS:/dev/sdc1 with disk number:0 and timestamp (33088106 1313552384)
+Checking if the diskgroup is mounted or used by CSS
+Checking disk number:0
+Generating configuration file..
+Completed phase 1
+Executing phase 2
+Looking for /dev/sdc1
+Modifying the header
+Completed phase 2
+[root@hrvlprddb7602 ~]#
+

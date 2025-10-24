@@ -1,0 +1,41 @@
+$ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir /infshare/oracle/patches/OCTPSU/33248471/33182768/33192793
+$ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir /infshare/oracle/patches/OCTPSU/33248471/33182768/33208123
+
+
+srvctl stop home -oraclehome $ORACLE_HOME -statefile ~/state.txt -node hrewoel48
+
+srvctl start home -oraclehome $ORACLE_HOME -statefile ~/state.txt -node hrewoel48
+
+./opatch rollback -id 31602782
+./opatch rollback -id 31143146
+./opatch rollback -id 32847378
+
+
+------------------------------------------------------------------------
+
+
+
+
+./opatchauto rollback /infshare/oracle/software/32847378/
+
+
+
+$ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir /infshare/oracle/patches/OCTPSU/33248471/33182768/33192793
+
+$ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir /infshare/oracle/patches/OCTPSU/33248471/33182768/33208123
+
+$ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir /infshare/oracle/patches/OCTPSU/33248471/33182768/33208107
+
+$ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir /infshare/oracle/patches/OCTPSU/33248471/33182768/33239955
+
+$ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir /infshare/oracle/patches/OCTPSU/33248471/33182768/32585572
+
+
+$ORACLE_HOME/OPatch/opatchauto apply /infshare/oracle/patches/OCTPSU/33248471/33182768 -analyze
+
+
+
+
+
+
+

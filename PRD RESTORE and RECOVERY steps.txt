@@ -1,0 +1,184 @@
+[oracle@hrvlstgdb019 PRD]$ . oraenv
+ORACLE_SID = [oracle] ? PRD
+
+[oracle@hrvlstgdb019 PRD]$ sqlplus / as sysdba
+
+SQL*Plus: Release 19.0.0.0.0 - Production on Wed Dec 29 10:39:08 2021
+Version 19.11.0.0.0
+
+Copyright (c) 1982, 2020, Oracle.  All rights reserved.
+
+Connected to an idle instance.
+
+
+SQL> startup nomount pfile='/u02/app/oracle/scripts/backups/restore_stuff/PRD/initPRD.ora'
+ORACLE instance started.
+
+Total System Global Area 1.0737E+10 bytes
+Fixed Size                  8923248 bytes
+Variable Size            8069840896 bytes
+Database Buffers         2650800128 bytes
+Redo Buffers                7852032 bytes
+SQL>
+
+
+
+[oracle@hrvlstgdb019 PRD]$ pwd
+/u02/app/oracle/scripts/backups/restore_stuff/PRD
+[oracle@hrvlstgdb019 PRD]$ ls -altrh
+total 124K
+-rw-r-----. 1 oracle oinstall  24K Oct 13 18:11 spfileTNTMPPRD.ora
+-rw-r--r--. 1 oracle oinstall  11K Oct 13 18:11 initTNTMPPRD.ora
+-rw-r--r--. 1 oracle oinstall  11K Oct 13 18:11 initPRDPHR.ora
+-rw-r--r--. 1 oracle oinstall  280 Oct 13 18:17 avtar-flags.txt
+-rwxr-xr-x. 1 oracle oinstall 2.8K Oct 13 18:26 ewallet.p12
+-rw-------. 1 oracle oinstall 3.3K Oct 13 18:26 cwallet.sso
+-rw-r--r--. 1 oracle oinstall   36 Oct 13 18:29 PRD.ora
+-rw-r--r--. 1 oracle oinstall 6.2K Oct 13 18:34 initPRD.ora-ORIG_RESTORED
+-rwxr-xr-x. 1 oracle oinstall  533 Oct 13 20:11 PRD_DB_restore.rcv-ORIG
+-rwxr-xr-x. 1 oracle oinstall  491 Oct 14 16:34 rman_script.bash
+-rwxr-xr-x. 1 oracle oinstall  571 Dec 16 12:34 PRD_spfile_restore.rcv
+-rw-r-----. 1 oracle oinstall 8.5K Dec 16 12:35 spfilePRD.ora
+-rw-r--r--. 1 oracle oinstall 3.6K Dec 16 12:40 initPRD.ora
+-rwxr-xr-x. 1 oracle oinstall 2.5K Dec 16 14:28 PRD_DB_restore.rcv
+-rwxr-xr-x. 1 oracle oinstall 2.5K Dec 16 14:29 PRD_DB_recover.rcv
+-rw-r--r--. 1 oracle oinstall  175 Dec 16 15:50 sysadm.par
+drwxr-xr-x. 6 oracle oinstall 4.0K Dec 29 10:36 ..
+-rwxr-xr-x. 1 oracle oinstall  505 Dec 29 10:38 PRD_ctl_restore.rcv
+drwxr-xr-x. 2 oracle oinstall 4.0K Dec 29 10:38 .
+[oracle@hrvlstgdb019 PRD]$
+
+
+
+
+
+[oracle@hrvlstgdb019 PRD]$ cat PRD_ctl_restore.rcv
+set DBID=2150699902
+set controlfile autobackup format for device type sbt to "CONTROLFILE.%F";
+run {
+allocate channel c1 type 'SBT' PARMS="SBT_LIBRARY=/usr/local/avamar/lib/libobk_avamar64.so" format '%d_%U_%T';
+send channel='c1' '"--nohist" "--flagfile=/u02/app/oracle/scripts/backups/restore_stuff/19CPRD/avtar-flags.txt" "--bindir=/usr/local/avamar/bin" "--cacheprefix=orcl-c1"';
+set until time "to_date('25-DEC-202107:00:00','dd-mm-yyyyhh24:mi:ss')";
+restore controlfile from autobackup MAXSEQ=00;
+}
+[oracle@hrvlstgdb019 PRD]$
+
+
+
+
+[oracle@hrvlstgdb019 PRD]$ cat rman_script.bash
+export ORACLE_SID=PRD
+export ORACLE_HOME=/u02/app/oracle/product/19.3.0/db_1
+export LD_LIBRARY_PATH=/u02/app/oracle/product/19.3.0/db_1/lib
+export PATH=$ORACLE_HOME/bin:$PATH
+export TNS_ADMIN=$ORACLE_HOME/network/admin
+export NLS_DATE_FORMAT='yyyy/mm/dd hh24:mi:ss';
+export CURRENT_TIME=`date +%y%m%d%H%M%S`
+$ORACLE_HOME/bin/rman target / nocatalog @/u02/app/oracle/scripts/backups/restore_stuff/PRD/${1} log=/u02/app/oracle/scripts/backups/restore_stuff/PRD/${1}.${CURRENT_TIME}.log
+
+
+
+
+
+[oracle@hrvlstgdb019 PRD]$ ./rman_script.bash PRD_ctl_restore.rcv &
+[1] 66444
+[oracle@hrvlstgdb019 PRD]$ RMAN> 2> 3> 4> 5> 6> 7> 8> 9>
+
+RMAN> set DBID=2150699902
+2> set controlfile autobackup format for device type sbt to "CONTROLFILE.%F";
+3> run {
+4> allocate channel c1 type 'SBT' PARMS="SBT_LIBRARY=/usr/local/avamar/lib/libobk_avamar64.so" format '%d_%U_%T';
+5> send channel='c1' '"--nohist" "--flagfile=/u02/app/oracle/scripts/backups/restore_stuff/PRD/avtar-flags.txt" "--bindir=/usr/local/avamar/bin" "--cacheprefix=orcl-c1"';
+6> set until time "to_date('25-DEC-202107:00:00','dd-mm-yyyyhh24:mi:ss')";
+7> restore controlfile from autobackup MAXSEQ=00;
+8> }
+9>
+executing command: SET DBID
+
+executing command: SET CONTROLFILE AUTOBACKUP FORMAT
+
+allocated channel: c1
+channel c1: SID=1013 device type=SBT_TAPE
+channel c1: EMC|Avamar (avtar backup)
+
+sent command to channel: c1
+
+executing command: SET until clause
+
+Starting restore at 2021/12/29 10:44:37
+
+channel c1: looking for AUTOBACKUP on day: 20211225
+channel c1: AUTOBACKUP found: CONTROLFILE.c-2150699902-20211225-00
+channel c1: restoring control file from AUTOBACKUP CONTROLFILE.c-2150699902-20211225-00
+channel c1: control file restore from AUTOBACKUP complete
+output file name=+PRD_DATA/PRD/CONTROLFILE/current.701.1092566683
+output file name=+PRD_FRA/PRD/CONTROLFILE/current.452.1092566685
+Finished restore at 2021/12/29 10:44:52
+released channel: c1
+
+[oracle@hrvlstgdb019 PRD]$ sqlplus / as sysdba
+
+SQL*Plus: Release 19.0.0.0.0 - Production on Wed Dec 29 10:45:46 2021
+Version 19.11.0.0.0
+
+Copyright (c) 1982, 2020, Oracle.  All rights reserved.
+
+
+Connected to:
+Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production
+Version 19.11.0.0.0
+
+SQL> alter database mount;
+
+Database altered.
+
+SQL> show parameters control
+
+NAME                                 TYPE        VALUE
+------------------------------------ ----------- ------------------------------
+control_file_record_keep_time        integer     7
+control_files                        string      +PRD_DATA/PRD/CONTROLFILE/curr
+                                                 ent.701.1092566683, +PRD_FRA/P
+                                                 RD/CONTROLFILE/current.452.109
+                                                 2566685
+control_management_pack_access       string      DIAGNOSTIC+TUNING
+SQL>
+
+
+
+
+[oracle@hrvlstgdb019 PRD]$ cat PRD_DB_restore.rcv
+allocate channel for maintenance device type disk;
+crosscheck archivelog all;
+set controlfile autobackup format for device type sbt to "CONTROLFILE.%F";
+run {
+allocate channel c1 type 'SBT' PARMS="SBT_LIBRARY=/usr/local/avamar/lib/libobk_avamar64.so" format '%d_%U_%T';
+allocate channel c2 type 'SBT' PARMS="SBT_LIBRARY=/usr/local/avamar/lib/libobk_avamar64.so" format '%d_%U_%T';
+allocate channel c3 type 'SBT' PARMS="SBT_LIBRARY=/usr/local/avamar/lib/libobk_avamar64.so" format '%d_%U_%T';
+allocate channel c4 type 'SBT' PARMS="SBT_LIBRARY=/usr/local/avamar/lib/libobk_avamar64.so" format '%d_%U_%T';
+allocate channel c5 type 'SBT' PARMS="SBT_LIBRARY=/usr/local/avamar/lib/libobk_avamar64.so" format '%d_%U_%T';
+allocate channel c6 type 'SBT' PARMS="SBT_LIBRARY=/usr/local/avamar/lib/libobk_avamar64.so" format '%d_%U_%T';
+allocate channel c7 type 'SBT' PARMS="SBT_LIBRARY=/usr/local/avamar/lib/libobk_avamar64.so" format '%d_%U_%T';
+allocate channel c8 type 'SBT' PARMS="SBT_LIBRARY=/usr/local/avamar/lib/libobk_avamar64.so" format '%d_%U_%T';
+send channel='c1' '"--nohist" "--flagfile=/u02/app/oracle/scripts/backups/restore_stuff/PRD/avtar-flags.txt" "--bindir=/usr/local/avamar/bin" "--cacheprefix=orcl-c1"';
+send channel='c2' '"--nohist" "--flagfile=/u02/app/oracle/scripts/backups/restore_stuff/PRD/avtar-flags.txt" "--bindir=/usr/local/avamar/bin" "--cacheprefix=orcl-c2"';
+send channel='c3' '"--nohist" "--flagfile=/u02/app/oracle/scripts/backups/restore_stuff/PRD/avtar-flags.txt" "--bindir=/usr/local/avamar/bin" "--cacheprefix=orcl-c3"';
+send channel='c4' '"--nohist" "--flagfile=/u02/app/oracle/scripts/backups/restore_stuff/PRD/avtar-flags.txt" "--bindir=/usr/local/avamar/bin" "--cacheprefix=orcl-c4"';
+send channel='c5' '"--nohist" "--flagfile=/u02/app/oracle/scripts/backups/restore_stuff/PRD/avtar-flags.txt" "--bindir=/usr/local/avamar/bin" "--cacheprefix=orcl-c5"';
+send channel='c6' '"--nohist" "--flagfile=/u02/app/oracle/scripts/backups/restore_stuff/PRD/avtar-flags.txt" "--bindir=/usr/local/avamar/bin" "--cacheprefix=orcl-c6"';
+send channel='c7' '"--nohist" "--flagfile=/u02/app/oracle/scripts/backups/restore_stuff/PRD/avtar-flags.txt" "--bindir=/usr/local/avamar/bin" "--cacheprefix=orcl-c7"';
+send channel='c8' '"--nohist" "--flagfile=/u02/app/oracle/scripts/backups/restore_stuff/PRD/avtar-flags.txt" "--bindir=/usr/local/avamar/bin" "--cacheprefix=orcl-c8"';
+set until time "to_date('23-DEC-202107:00:00','dd-mm-yyyyhh24:mi:ss')";
+restore database;
+}
+[oracle@hrvlstgdb019 PRD]$
+
+
+
+
+
+[oracle@hrvlstgdb019 PRD]$ ./rman_script.bash PRD_DB_restore.rcv &
+[1] 72196
+[oracle@hrvlstgdb019 PRD]$ RMAN> 2> 3> 4> 5> 6> 7> 8> 9> 10> 11> 12> 13> 14> 15> 16> 17> 18> 19> 20> 21> 22> 23> 24>
+
+

@@ -1,0 +1,289 @@
+
+
+Patch 29252208 - Combo of OJVM Component 11.2.0.4.190416 DB PSU + GI PSU 11.2.0.4.190416
+----------------------------------------------------------------------------------------
+
+
+Table 1-2 Patch Numbers Getting Installed as Part of this GI PSU Patch
+
+Patch Number	  Description	                                                                  Applicable Homes
+29141056          DB PSU 11.2.0.4.190416 (INCLUDES CPUApr2019)                                    Both DB Homes and Grid Home
+
+29141201          OCW PATCH SET UPDATE 11.2.0.4.190416                                            Both DB Homes and Grid Home
+ 
+   
+28729245          ACFS PATCH SET UPDATE 11.2.0.4.190115                                           Only Grid Home
+
+
+ 
+
+
+
+
+
+
+ 
+
+
+
+You must stop the EM agent processes running from the database home, prior to patching the Oracle RAC database or GI Home.
+Execute the following command on the node to be patched.As the Oracle RAC database home owner execute:
+
+$ <ORACLE_HOME>/bin/emctl stop dbconsole
+
+
+----------------------------------------------STEP 1 as ORACLE USER ----------------------------------------------------------------------------
+
+Execute the following on each node of the cluster in non-shared CRS and DB home environment to apply the patch.
+
+Stop the CRS managed resources running from DB homes. If this is a GI Home environment, as the database home owner execute:
+$ <ORACLE_HOME>/bin/srvctl stop home -o <ORACLE_HOME> -s <status file location> -n <node name>
+If this is an Oracle Restart Home environment, as the database home owner execute:
+$ <ORACLE_HOME>/bin/srvctl stop home -o <ORACLE_HOME> -s <status file location>
+
+Note: You need to make sure that the Oracle ACFS file systems are unmounted (see My Oracle Support document 1494652.1 
+How to Mount or Unmount ACFS File System While Applying GI Patches?) and all other Oracle processes are shutdown before you proceed.
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+------------------------------------------------STEP2 as ROOT-------------------------------------------------------------------------------------------
+
+Run the pre root script. If this is a GI Home, as the root user execute:
+# <GI_HOME>/crs/install/rootcrs.pl -unlock
+If this is an Oracle Restart Home, as the root user execute:
+# <GI_HOME>/crs/install/roothas.pl -unlock
+
+
+/u02/app/11.2.0.4/grid/crs/install/rootcrs.pl -unlock
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+------------------------------------------------STEP3 as GRID-------------------------------------------------------------------------------------------
+
+Apply the CRS patch using (Generate response file, if needed, using the emocmrsp and specify using -ocmrf option) As the GI home owner execute:
+
+$ <GI_HOME>/OPatch/opatch napply -oh <GI_HOME> -local <UNZIPPED_PATCH_LOCATION>/<GI_PSU_number>/<OCW Components_number>
+As the GI home owner execute:
+$ <GI_HOME>/OPatch/opatch napply -oh <GI_HOME> -local <UNZIPPED_PATCH_LOCATION>/<GI_PSU_number>/<ACFS Components_number>
+As the GI home owner execute:
+$ <GI_HOME>/OPatch/opatch apply -oh <GI_HOME> -local <UNZIPPED_PATCH_LOCATION>/<GI_PSU_number>/<DB_PSU_number>
+
+
+
+
+/u02/app/11.2.0.4/grid/OPatch/opatch napply -oh  u02/app/11.2.0.4/grid -local /infshare/software/PSU/APR2019/29252208/29255947/29141201/
+/u02/app/11.2.0.4/grid/OPatch/opatch napply -oh  u02/app/11.2.0.4/grid -local /infshare/software/PSU/APR2019/29252208/29255947/28729245/
+/u02/app/11.2.0.4/grid/OPatch/opatch apply -oh   u02/app/11.2.0.4/grid -local /infshare/software/PSU/APR2019/29252208/29255947/29141056/
+
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+------------------------------------------------STEP4 as ORACLE-------------------------------------------------------------------------------------------
+
+
+
+Run the pre script for DB component of the patch. As the database home owner execute:
+$ <UNZIPPED_PATCH_LOCATION>/<GI_PSU_number>/<OCW Components_number>/custom/server/<OCW Components_number>/custom/scripts/prepatch.sh -dbhome <ORACLE_HOME>
+
+/infshare/software/PSU/APR2019/29252208/29255947/29141201/custom/server/29141201/custom/scripts/prepatch.sh -dbhome /u02/app/oracle/product/11.2.0.4/db_1
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+------------------------------------------------STEP5 as ORACLE-------------------------------------------------------------------------------------------
+
+Apply the DB patch. As the database home owner execute (Generate response file, if needed, using the emocmrsp and specify using -ocmrf option):
+
+$ <ORACLE_HOME>/OPatch/opatch napply -oh <ORACLE_HOME> -local <UNZIPPED_PATCH_LOCATION>/<GI_PSU_number>/<OCW Components_number>/custom/server/<OCW Components_number>
+$ <ORACLE_HOME>/OPatch/opatch apply -oh <ORACLE_HOME> -local <UNZIPPED_PATCH_LOCATION>/<GI_PSU_number>/<DB_PSU_number>
+
+
+/u02/app/oracle/product/11.2.0.4/db_1/OPatch/opatch napply -oh /u02/app/oracle/product/11.2.0.4/db_1 -local /infshare/software/PSU/APR2019/29252208/29255947/29141201/custom/server/29141201
+/u02/app/oracle/product/11.2.0.4/db_1/OPatch/opatch apply -oh /u02/app/oracle/product/11.2.0.4/db_1 -local /infshare/software/PSU/APR2019/29252208/29255947/29141056
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+------------------------------------------------STEP6 as ORACLE-------------------------------------------------------------------------------------------
+
+
+Run the post script for DB component of the patch. As the database home owner execute:
+$ <UNZIPPED_PATCH_LOCATION>/<GI_PSU_number>/<OCW Components_number>/custom/server/<OCW Components_number>/custom/scripts/postpatch.sh -dbhome <ORACLE_HOME>
+
+/infshare/software/PSU/APR2019/29252208/29255947/29141201/custom/server/29141201/custom/scripts/postpatch.sh -dbhome /u02/app/oracle/product/11.2.0.4/db_1
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+------------------------------------------------STEP7 as ROOT-------------------------------------------------------------------------------------------
+
+
+Run the post script. As the root user execute:
+# <GI_HOME>/rdbms/install/rootadd_rdbms.sh
+If this is a GI Home, as the root user execute:
+# <GI_HOME>/crs/install/rootcrs.pl -patch
+If this is an Oracle Restart Home, as the root user execute:
+# <GI_HOME>/crs/install/roothas.pl -patch
+
+/u02/app/11.2.0.4/grid/rdbms/install/rootadd_rdbms.sh 
+/u02/app/11.2.0.4/grid/crs/install/roothas.pl -patch
+
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+------------------------------------------------STEP8 as ORACLE-------------------------------------------------------------------------------------------
+
+Start the CRS managed resources that were earlier running from DB homes. If this is a GI Home environment, as the database home owner execute:
+$ <ORACLE_HOME>/bin/srvctl start home -o <ORACLE_HOME> -s <status file location> -n <node name>
+If this is an Oracle Restart Home environment, as the database home owner execute:
+$ <ORACLE_HOME>/bin/srvctl start home -o <ORACLE_HOME> -s <status file location> 
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+ Patch Post-Installation Instructions
+-------------------------------------
+2.5.2 Loading Modified SQL Files into the Database
+The following steps load modified SQL files into the database. For an Oracle RAC environment, perform these steps on only one node.
+
+For each database instance running on the Oracle home being patched, connect to the database using SQL*Plus. Connect as SYSDBA and run the catbundle.sql script as follows:
+cd $ORACLE_HOME/rdbms/admin
+sqlplus /nolog
+SQL> CONNECT / AS SYSDBA
+SQL> STARTUP
+SQL> @catbundle.sql psu apply
+SQL> QUIT
+The catbundle.sql execution is reflected in the dba_registry_history view by a row associated with bundle series PSU. For information about the catbundle.sql script, see My Oracle Support Document 605795.1 Introduction to Oracle Database catbundle.sql.
+Check the following log files in $ORACLE_BASE/cfgtoollogs/catbundle for any errors:
+catbundle_PSU_&lt;database SID&gt;_APPLY_&lt;TIMESTAMP&gt;.log
+catbundle_PSU_&lt;database SID&gt;_GENERATE_<TIMESTAMP&gt;.log
+where TIMESTAMP is of the form YYYYMMMDD_HH_MM_SS. If there are errors, see Section 3, "Known Issues".
+
+
+
+
+
+
+
+Patch 29251270 - Oracle JavaVM Component 11.2.0.4.190416 Database PSU
+---------------------------------------------------------------------
+
+
+
+
+
+To install the patch, follow these steps.
+
+Set your current directory to the directory where the patch is located and then run the OPatch utility by entering the following commands:
+
+$ cd <PATCH_TOP_DIR>/29251270
+Install the patch by running the following command:
+
+$ opatch apply
+Verify whether the patch has been successfully installed by running the following command:
+
+$ opatch lsinventory
+If apply fails for make target jox_refresh_knlopt when applying the patch to the database home, see Issue #1 in Known Issues for more information.
+
+Start the services from the Oracle home after all the nodes are patched.
+
+If there are errors, see Known Issues.
+
+1.4 Postinstallation
+Beginning with the Jan2017 OJVM PSU patchset for 11.2.0.4 and for 12.1.0.2, Oracle Development is relaxing the requirement to restart the database in upgrade mode. Prior to the Jan2017 OJVM PSU patchsets, the installation of the OJVM PSU patchset into the $ORACLE_HOME binaries was required to be followed by a postinstallation of the OJVM PSU patchset into each associated database while in restricted startup upgrade mode.
+
+Beginning with the Jan2017 OJVM PSU patchset for 11.2.0.4 and for 12.1.0.2, Oracle Development is defining a few very specific situations and prerequisites where the OJVM PSU patchset can be postinstalled into each database while the database remains in unrestricted startup mode. If your business needs are compatible with the legacy requirement to restart each database into restricted startup upgrade mode, then Oracle recommends that you continue to postinstall the OJVM PSU patchset into each database while it is in restricted startup upgrade mode. In this case, you should skip the next two paragraphs, and continue to Loading Modified SQL Files Into the Database.
+
+The very specific situations and prerequisites where the OJVM PSU patchset can be postinstalled into each database in unrestricted “startup" mode are defined and detailed in My Oracle Support Document 2217053.1, RAC Rolling Install Process for the "Oracle JavaVM Component Database PSU" (OJVM PSU) Patches. At a high level, the ability to use unrestricted startup mode involves a two-part decision tree for OJVM PSU for each database; is OJVM installed and is OJVM used? The Appendix to My Oracle Support Document 2217053.1 provides detailed procedures for each specific situation where it is possible to use unrestricted startup mode.
+
+There are pros and cons to each of the very specific situations and prerequisites are discussed in My Oracle Support Document 2217053.1. Therefore, Oracle recommends that the legacy requirement to restart each database into restricted startup upgrade mode be observed when possible.
+
+1.4.1 Loading Modified SQL Files Into the Database
+The following steps load modified SQL files into the database. For an Oracle RAC environment, perform these steps on only one node.
+
+Install the SQL portion of the patch by running the following command for a single instance environment.
+
+cd $ORACLE_HOME/sqlpatch/29251270
+sqlplus /nolog
+SQL> CONNECT / AS SYSDBA
+SQL> startup upgrade
+SQL> @postinstall.sql
+SQL> shutdown
+SQL> startup
+For an Oracle RAC environment, reload the packages on one of the nodes using the following commands. Make sure no other instance of the database is up on the remote nodes.
+
+cd $ORACLE_HOME/sqlpatch/29251270
+sqlplus /nolog
+SQL> CONNECT / AS SYSDBA
+SQL> STARTUP
+SQL> alter system set cluster_database=false scope=spfile;
+SQL> SHUTDOWN
+SQL> STARTUP UPGRADE
+SQL> @postinstall.sql
+SQL> alter system set cluster_database=true scope=spfile;
+SQL> SHUTDOWN
+SQL> STARTUP 
+After installing the SQL portion of the patch, some packages could become INVALID. This will get recompiled upon access or you can run utlrp.sql to get them back into a VALID state.
+
+cd $ORACLE_HOME/rdbms/admin
+sqlplus /nolog
+SQL> CONNECT / AS SYSDBA
+SQL> @utlrp.sql
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,190 @@
+
+3 Node Cluster:
+
+[grid@hrewoel06 ~]$ olsnodes
+hrewoel06
+hrewoel07
+hrewoel08
+
+[root@hrewoel06 ~]# lscpu | egrep 'Socket|CPU|Core'
+CPU op-mode(s):        32-bit, 64-bit
+CPU(s):                40
+On-line CPU(s) list:   0-39
+Core(s) per socket:    10
+Socket(s):             2
+CPU family:            6
+Model name:            Intel(R) Xeon(R) CPU E5-2680 v2 @ 2.80GHz
+CPU MHz:               1200.000
+NUMA node0 CPU(s):     0-39
+
+[oracle@hrewoel07 ~]$ lscpu | egrep 'Socket|CPU|Core'
+CPU op-mode(s):        32-bit, 64-bit
+CPU(s):                40
+On-line CPU(s) list:   0-39
+Core(s) per socket:    10
+Socket(s):             2
+CPU family:            6
+Model name:            Intel(R) Xeon(R) CPU E5-2680 v2 @ 2.80GHz
+CPU MHz:               1200.000
+NUMA node0 CPU(s):     0-39
+[oracle@hrewoel07 ~]$
+
+
+[oracle@hrewoel08 ~]$ lscpu | egrep 'Socket|CPU|Core'
+CPU op-mode(s):        32-bit, 64-bit
+CPU(s):                40
+On-line CPU(s) list:   0-39
+Core(s) per socket:    10
+Socket(s):             2
+CPU family:            6
+Model name:            Intel(R) Xeon(R) CPU E5-2680 v2 @ 2.80GHz
+CPU MHz:               1200.000
+NUMA node0 CPU(s):     0-39
+
+========================================================================================================================
+
+[grid@hrewoel13 ~]$ olsnodes
+hrewoel13
+hrewoel14
+hrewoel15
+
+[oracle@hrewoel13 ~]$ lscpu | egrep 'Socket|CPU|Core'
+CPU op-mode(s):        32-bit, 64-bit
+CPU(s):                40
+On-line CPU(s) list:   0-39
+Core(s) per socket:    10
+Socket(s):             2
+CPU family:            6
+Model name:            Intel(R) Xeon(R) CPU E5-2680 v2 @ 2.80GHz
+CPU MHz:               1200.000
+NUMA node0 CPU(s):     0-39
+
+[oracle@hrewoel14 ~]$  lscpu | egrep 'Socket|CPU|Core'
+CPU op-mode(s):        32-bit, 64-bit
+CPU(s):                40
+On-line CPU(s) list:   0-39
+Core(s) per socket:    10
+Socket(s):             2
+CPU family:            6
+Model name:            Intel(R) Xeon(R) CPU E5-2680 v2 @ 2.80GHz
+CPU MHz:               1200.000
+NUMA node0 CPU(s):     0-39
+[oracle@hrewoel14 ~]$
+
+
+[oracle@hrewoel15 ~]$ lscpu | egrep 'Socket|CPU|Core'
+CPU op-mode(s):        32-bit, 64-bit
+CPU(s):                40
+On-line CPU(s) list:   0-39
+Core(s) per socket:    10
+Socket(s):             2
+CPU family:            6
+Model name:            Intel(R) Xeon(R) CPU E5-2680 v2 @ 2.80GHz
+CPU MHz:               1200.000
+NUMA node0 CPU(s):     0-39
+
+
+==============================================================================================================
+
+[grid@hrewoel16 ~]$ olsnodes
+hrewoel16
+hrewoel19
+
+[oracle@hrewoel16 ~]$ lscpu | egrep 'Socket|CPU|Core'
+CPU op-mode(s):        32-bit, 64-bit
+CPU(s):                40
+On-line CPU(s) list:   0-39
+Core(s) per socket:    10
+Socket(s):             2
+CPU family:            6
+Model name:            Intel(R) Xeon(R) CPU E5-2680 v2 @ 2.80GHz
+CPU MHz:               1200.000
+NUMA node0 CPU(s):     0-39
+
+[oracle@hrewoel19 ~]$ lscpu | egrep 'Socket|CPU|Core'
+CPU op-mode(s):        32-bit, 64-bit
+CPU(s):                40
+On-line CPU(s) list:   0-39
+Core(s) per socket:    10
+Socket(s):             2
+CPU family:            6
+Model name:            Intel(R) Xeon(R) CPU E5-2680 v2 @ 2.80GHz
+CPU MHz:               1200.000
+NUMA node0 CPU(s):     0-9,20-29
+NUMA node1 CPU(s):     10-19,30-39
+[oracle@hrewoel19 ~]$
+
+
+
+======================================================================================================================================================================
+
+
+[grid@hrewoel02 ~]$ olsnodes
+hrewoel02
+hrewoel03
+[grid@hrewoel02 ~]$
+
+
+[oracle@hrewoel02 ~]$ lscpu | egrep 'Socket|CPU|Core'
+CPU op-mode(s):        32-bit, 64-bit
+CPU(s):                40
+On-line CPU(s) list:   0-39
+Core(s) per socket:    10
+Socket(s):             2
+CPU family:            6
+Model name:            Intel(R) Xeon(R) CPU E5-2680 v2 @ 2.80GHz
+CPU MHz:               2245.140
+NUMA node0 CPU(s):     0-39
+[oracle@hrewoel02 ~]$
+
+
+
+[oracle@hrewoel03 ~]$ lscpu | egrep 'Socket|CPU|Core'
+CPU op-mode(s):        32-bit, 64-bit
+CPU(s):                40
+On-line CPU(s) list:   0-39
+Core(s) per socket:    10
+Socket(s):             2
+CPU family:            6
+Model name:            Intel(R) Xeon(R) CPU E5-2680 v2 @ 2.80GHz
+CPU MHz:               3074.750
+NUMA node0 CPU(s):     0-39
+[oracle@hrewoel03 ~]$
+
+
+==========================================================================================================================================================================
+
+
+
+[grid@hrewoel29 ~]$ olsnodes
+hrewoel29
+hrewoel30
+[grid@hrewoel29 ~]$
+
+
+[grid@hrewoel29 ~]$ lscpu | egrep 'Socket|CPU|Core'
+CPU op-mode(s):        32-bit, 64-bit
+CPU(s):                40
+On-line CPU(s) list:   0-39
+Core(s) per socket:    10
+Socket(s):             2
+CPU family:            6
+Model name:            Intel(R) Xeon(R) CPU E5-2680 v2 @ 2.80GHz
+CPU MHz:               1200.000
+NUMA node0 CPU(s):     0-39
+[grid@hrewoel29 ~]$
+
+
+[grid@hrewoel30 ~]$ lscpu | egrep 'Socket|CPU|Core'
+CPU op-mode(s):        32-bit, 64-bit
+CPU(s):                40
+On-line CPU(s) list:   0-39
+Core(s) per socket:    10
+Socket(s):             2
+CPU family:            6
+Model name:            Intel(R) Xeon(R) CPU E5-2680 v2 @ 2.80GHz
+CPU MHz:               1200.000
+NUMA node0 CPU(s):     0-39
+[grid@hrewoel30 ~]$
+
+

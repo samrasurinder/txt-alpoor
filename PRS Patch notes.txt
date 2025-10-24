@@ -1,0 +1,1072 @@
+[oracle@HREWPRASOEL01 software]$ sudo chown -R 777 PSU
+
+
+[grid@HREWPRASOEL02 ~]$ crsctl check has
+CRS-4638: Oracle High Availability Services is online
+
+[grid@HREWPRASOEL02 ~]$ crsctl stop  has
+CRS-2791: Starting shutdown of Oracle High Availability Services-managed resources on 'hrewprasoel02'
+CRS-2673: Attempting to stop 'ora.DATASTBY.dg' on 'hrewprasoel02'
+CRS-2673: Attempting to stop 'ora.LISTENER.lsnr' on 'hrewprasoel02'
+CRS-2677: Stop of 'ora.LISTENER.lsnr' on 'hrewprasoel02' succeeded
+
+
+CRS-2677: Stop of 'ora.DATASTBY.dg' on 'hrewprasoel02' succeeded
+CRS-2679: Attempting to clean 'ora.DATASTBY.dg' on 'hrewprasoel02'
+CRS-2681: Clean of 'ora.DATASTBY.dg' on 'hrewprasoel02' succeeded
+CRS-2673: Attempting to stop 'ora.asm' on 'hrewprasoel02'
+CRS-2677: Stop of 'ora.asm' on 'hrewprasoel02' succeeded
+CRS-2673: Attempting to stop 'ora.cssd' on 'hrewprasoel02'
+CRS-2677: Stop of 'ora.cssd' on 'hrewprasoel02' succeeded
+CRS-2673: Attempting to stop 'ora.evmd' on 'hrewprasoel02'
+CRS-2677: Stop of 'ora.evmd' on 'hrewprasoel02' succeeded
+CRS-2793: Shutdown of Oracle High Availability Services-managed resources on 'hrewprasoel02' has completed
+CRS-4133: Oracle High Availability Services has been stopped.
+
+
+
+
+[grid@HREWPRASOEL02 ~]$ ps -ef|grep  grid
+
+root      77847  77823  0 16:41 pts/0    00:00:00 sudo su - grid
+root      77848  77847  0 16:41 pts/0    00:00:00 su - grid
+grid      77849  77848  0 16:41 pts/0    00:00:00 -bash
+grid      77985  77849  9 16:49 pts/0    00:00:00 ps -ef
+grid      77986  77849  0 16:49 pts/0    00:00:00 grep grid
+[grid@HREWPRASOEL02 ~]$ ps -ef|grep  oracle
+root      77818   4438  0 16:40 ?        00:00:00 sshd: oracle [priv]
+oracle    77822  77818  0 16:40 ?        00:00:00 sshd: oracle@pts/0
+oracle    77823  77822  0 16:41 pts/0    00:00:00 -bash
+grid      77991  77849  0 16:49 pts/0    00:00:00 grep oracle
+
+kill -9 process num
+
+as root:
+
+[root@HREWPRASOEL02 ~]# /u02/app/grid/product/11.2.0.4/grid/crs/install/roothas.pl -unlock
+Using configuration parameter file: /u02/app/grid/product/11.2.0.4/grid/crs/install/crsconfig_params
+Successfully unlock /u02/app/grid/product/11.2.0.4/grid
+
+
+patches start
+
+
+/u02/app/grid/product/11.2.0.4/grid/OPatch/opatch version
+
+[grid@HREWPRASOEL02 OPatch]$ ./opatch version
+OPatch Version: 11.2.0.3.12
+
+[grid@HREWPRASOEL01 grid]$ sudo chown grid:oinstall p6880880_112000_Linux-x86-64.zip
+
+cp 
+[grid@HREWPRASOEL02 grid]$ mv OPatch OPatch20190320backup
+[grid@HREWPRASOEL02 grid]$ cp /infshare/software/PSU/JAN2019/p6880880_112000_Linux-x86-64.zip .
+cp: cannot stat `/infshare/software/PSU/JAN2019/p6880880_112000_Linux-x86-64.zip': Permission denied
+[grid@HREWPRASOEL02 grid]$ sudo cp /infshare/software/PSU/JAN2019/p6880880_112000_Linux-x86-64.zip .
+[grid@HREWPRASOEL02 grid]$ ls *zip
+p6880880_112000_Linux-x86-64.zip
+[grid@HREWPRASOEL02 grid]$ ls -ltr *zip
+-rwx------ 1 root root 108230042 Mar 20 17:07 p6880880_112000_Linux-x86-64.zip
+[grid@HREWPRASOEL02 grid]$ sudo chown grid:oinstall p6880880_112000_Linux-x86-64.zip
+[grid@HREWPRASOEL02 grid]$ ls -ltr *zip
+-rwx------ 1 grid oinstall 108230042 Mar 20 17:07 p6880880_112000_Linux-x86-64.zip
+
+[grid@HREWPRASOEL02 OPatch]$ unzip p6880880_112000_Linux-x86-64.zip
+
+[grid@HREWPRASOEL02 grid]$ cd OPatch
+[grid@HREWPRASOEL02 OPatch]$ ./opatch version
+OPatch Version: 11.2.0.3.19
+
+OPatch succeeded.
+[grid@HREWPRASOEL02 OPatch]$
+
+
+
+
+
+
+patch 1
+as grid
+
+sudo chown -R oracle:o
+
+/u02/app/grid/product/11.2.0.4/grid/OPatch/opatch napply -oh /u02/app/grid/product/11.2.0.4/grid -local ./28729234
+
+
+[grid@HREWPRASOEL02 28813878]$ pwdls -altrh
+/infshare/software/PSU/JAN2019/28813878
+[grid@HREWPRASOEL02 28813878]$ /u02/app/grid/product/11.2.0.4/grid/OPatch/opatch napply -oh /u02/app/grid/product/11.2.0.4/grid -local ./28729234
+Oracle Interim Patch Installer version 11.2.0.3.19
+Copyright (c) 2019, Oracle Corporation.  All rights reserved.
+
+
+Oracle Home       : /u02/app/grid/product/11.2.0.4/grid
+Central Inventory : /u02/app/oraInventory
+   from           : /u02/app/grid/product/11.2.0.4/grid/oraInst.loc
+OPatch version    : 11.2.0.3.19
+OUI version       : 11.2.0.4.0
+Log file location : /u02/app/grid/product/11.2.0.4/grid/cfgtoollogs/opatch/opatch2019-03-20_17-31-21PM_1.log
+
+Verifying environment and performing prerequisite checks...
+OPatch continues with these patches:   28729234
+
+Do you want to proceed? [y|n]
+y
+User Responded with: Y
+All checks passed.
+Provide your email address to be informed of security issues, install and
+initiate Oracle Configuration Manager. Easier for you if you use your My
+Oracle Support Email address/User Name.
+Visit http://www.oracle.com/support/policies.html for details.
+Email address/User Name:
+
+You have not provided an email address for notification of security issues.
+Do you wish to remain uninformed of security issues ([Y]es, [N]o) [N]:  y
+
+
+
+Please shutdown Oracle instances running out of this ORACLE_HOME on the local system.
+(Oracle Home = '/u02/app/grid/product/11.2.0.4/grid')
+
+
+Is the local system ready for patching? [y|n]
+y
+User Responded with: Y
+Backing up files...
+Applying interim patch '28729234' to OH '/u02/app/grid/product/11.2.0.4/grid'
+
+Patching component oracle.crs, 11.2.0.4.0...
+Patch 28729234 successfully applied.
+Sub-set patch [27441052] has become inactive due to the application of a super-set patch [28729234].
+Please refer to Doc ID 2161861.1 for any possible further required actions.
+Log file location: /u02/app/grid/product/11.2.0.4/grid/cfgtoollogs/opatch/opatch2019-03-20_17-31-21PM_1.log
+
+OPatch succeeded.
+
+
+
+
+
+patch 2
+as grid
+
+/u02/app/grid/product/11.2.0.4/grid/OPatch/opatch apply -oh /u02/app/grid/product/11.2.0.4/grid -local ./28729262
+
+
+[grid@HREWPRASOEL02 28813878]$ /u02/app/grid/product/11.2.0.4/grid/OPatch/opatch apply -oh /u02/app/grid/product/11.2.0.4/grid -local ./28729262
+Oracle Interim Patch Installer version 11.2.0.3.19
+Copyright (c) 2019, Oracle Corporation.  All rights reserved.
+
+
+Oracle Home       : /u02/app/grid/product/11.2.0.4/grid
+Central Inventory : /u02/app/oraInventory
+   from           : /u02/app/grid/product/11.2.0.4/grid/oraInst.loc
+OPatch version    : 11.2.0.3.19
+OUI version       : 11.2.0.4.0
+Log file location : /u02/app/grid/product/11.2.0.4/grid/cfgtoollogs/opatch/opatch2019-03-20_17-34-56PM_1.log
+
+Verifying environment and performing prerequisite checks...
+OPatch continues with these patches:   28204707  28729262
+
+Do you want to proceed? [y|n]
+Could not recognize input. Please re-enter.
+y
+User Responded with: Y
+All checks passed.
+Provide your email address to be informed of security issues, install and
+initiate Oracle Configuration Manager. Easier for you if you use your My
+Oracle Support Email address/User Name.
+Visit http://www.oracle.com/support/policies.html for details.
+Email address/User Name:
+
+You have not provided an email address for notification of security issues.
+Do you wish to remain uninformed of security issues ([Y]es, [N]o) [N]:  y
+
+
+
+Please shutdown Oracle instances running out of this ORACLE_HOME on the local system.
+(Oracle Home = '/u02/app/grid/product/11.2.0.4/grid')
+
+
+Is the local system ready for patching? [y|n]
+y
+User Responded with: Y
+Backing up files...
+Applying sub-patch '28204707' to OH '/u02/app/grid/product/11.2.0.4/grid'
+ApplySession: Optional component(s) [ oracle.sysman.agent, 10.2.0.4.5 ] , [ oracle.sysman.console.db, 11.2.0.4.0 ] , [ oracle.ctx, 11.2.0.4.0 ]  not present in the Oracle Home or a higher version is found.
+Applying changes to emctl script on the home: /u02/app/grid/product/11.2.0.4/grid ...
+
+Patching component oracle.rdbms, 11.2.0.4.0...
+
+Patching component oracle.oracore.rsf, 11.2.0.4.0...
+
+Patching component oracle.rdbms.rsf, 11.2.0.4.0...
+
+Patching component oracle.ldap.rsf, 11.2.0.4.0...
+
+Patching component oracle.ldap.rsf.ic, 11.2.0.4.0...
+
+Patching component oracle.network.rsf, 11.2.0.4.0...
+
+Patching component oracle.ldap.security.osdt, 11.2.0.4.0...
+
+Patching component oracle.ldap.owm, 11.2.0.4.0...
+
+Patching component oracle.sqlplus.rsf, 11.2.0.4.0...
+Applying sub-patch '28729262' to OH '/u02/app/grid/product/11.2.0.4/grid'
+ApplySession: Optional component(s) [ oracle.ctx, 11.2.0.4.0 ]  not present in the Oracle Home or a higher version is found.
+INFO: Script isn't applicable to this port!
+
+Patching component oracle.rdbms, 11.2.0.4.0...
+
+Patching component oracle.rdbms.rsf, 11.2.0.4.0...
+
+Patching component oracle.rdbms.util, 11.2.0.4.0...
+
+Patching component oracle.ldap.rsf, 11.2.0.4.0...
+
+Patching component oracle.ldap.rsf.ic, 11.2.0.4.0...
+
+Patching component oracle.network.rsf, 11.2.0.4.0...
+
+Patching component oracle.rdbms.rman, 11.2.0.4.0...
+Composite patch 28729262 successfully applied.
+Log file location: /u02/app/grid/product/11.2.0.4/grid/cfgtoollogs/opatch/opatch2019-03-20_17-34-56PM_1.log
+
+OPatch succeeded.
+
+
+patch 3
+as grid 
+
+/u02/app/grid/product/11.2.0.4/grid/OPatch/opatch apply -oh /u02/app/grid/product/11.2.0.4/grid -local ./28729245
+
+
+[grid@HREWPRASOEL02 28813878]$ /u02/app/grid/product/11.2.0.4/grid/OPatch/opatch apply -oh /u02/app/grid/product/11.2.0.4/grid -local ./28729245
+Oracle Interim Patch Installer version 11.2.0.3.19
+Copyright (c) 2019, Oracle Corporation.  All rights reserved.
+
+
+Oracle Home       : /u02/app/grid/product/11.2.0.4/grid
+Central Inventory : /u02/app/oraInventory
+   from           : /u02/app/grid/product/11.2.0.4/grid/oraInst.loc
+OPatch version    : 11.2.0.3.19
+OUI version       : 11.2.0.4.0
+Log file location : /u02/app/grid/product/11.2.0.4/grid/cfgtoollogs/opatch/opatch2019-03-20_17-37-57PM_1.log
+
+Verifying environment and performing prerequisite checks...
+OPatch continues with these patches:   28729245
+
+Do you want to proceed? [y|n]
+y
+User Responded with: Y
+All checks passed.
+Provide your email address to be informed of security issues, install and
+initiate Oracle Configuration Manager. Easier for you if you use your My
+Oracle Support Email address/User Name.
+Visit http://www.oracle.com/support/policies.html for details.
+Email address/User Name:
+
+You have not provided an email address for notification of security issues.
+Do you wish to remain uninformed of security issues ([Y]es, [N]o) [N]:  y
+
+
+
+Please shutdown Oracle instances running out of this ORACLE_HOME on the local system.
+(Oracle Home = '/u02/app/grid/product/11.2.0.4/grid')
+
+
+Is the local system ready for patching? [y|n]
+y
+User Responded with: Y
+Backing up files...
+Applying interim patch '28729245' to OH '/u02/app/grid/product/11.2.0.4/grid'
+
+Patching component oracle.usm, 11.2.0.4.0...
+
+Patch 28729245 successfully applied.
+Sub-set patch [27959254] has become inactive due to the application of a super-set patch [28729245].
+Please refer to Doc ID 2161861.1 for any possible further required actions.
+Log file location: /u02/app/grid/product/11.2.0.4/grid/cfgtoollogs/opatch/opatch2019-03-20_17-37-57PM_1.log
+
+OPatch succeeded.
+
+
+
+
+patch 4
+as grid
+
+/u02/app/grid/product/11.2.0.4/grid/OPatch/opatch apply -oh /u02/app/grid/product/11.2.0.4/grid -local ./25803774
+
+unzip 
+
+[grid@HREWPRASOEL01 p25803774_112040_Linux-x86-64]$ export PATH=$ORACLE_HOME/jdk/jre/bin:$PATH
+[grid@HREWPRASOEL01 p25803774_112040_Linux-x86-64]$ echo $PATH
+/jdk/jre/bin:/usr/lib64/qt-3.3/bin:/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:/home/grid/bin
+[grid@HREWPRASOEL01 p25803774_112040_Linux-x86-64]$ . oraenv
+ORACLE_SID = [grid] ? +ASM
+The Oracle base has been set to /u02/app/grid
+[grid@HREWPRASOEL01 p25803774_112040_Linux-x86-64]$  export PATH=$ORACLE_HOME/jdk/jre/bin:$PATH
+[grid@HREWPRASOEL01 p25803774_112040_Linux-x86-64]$ echo $PATH
+/u02/app/grid/product/11.2.0.4/grid/jdk/jre/bin:/jdk/jre/bin:/usr/lib64/qt-3.3/bin:/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:/home/grid/bin:/u02/app/grid/product/11.2.0.4/grid/bin
+
+cd /infshare/software/PSU/JAN2019/p25803774_112040_Linux-x86-64
+
+
+[grid@HREWPRASOEL02 p25803774_112040_Linux-x86-64]$ /u02/app/grid/product/11.2.0.4/grid/OPatch/opatch apply -oh /u02/app/grid/product/11.2.0.4/grid -local ./25803774
+Oracle Interim Patch Installer version 11.2.0.3.19
+Copyright (c) 2019, Oracle Corporation.  All rights reserved.
+
+
+Oracle Home       : /u02/app/grid/product/11.2.0.4/grid
+Central Inventory : /u02/app/oraInventory
+   from           : /u02/app/grid/product/11.2.0.4/grid/oraInst.loc
+OPatch version    : 11.2.0.3.19
+OUI version       : 11.2.0.4.0
+Log file location : /u02/app/grid/product/11.2.0.4/grid/cfgtoollogs/opatch/opatch2019-03-20_17-47-00PM_1.log
+
+Verifying environment and performing prerequisite checks...
+OPatch continues with these patches:   25803774
+
+Do you want to proceed? [y|n]
+y
+User Responded with: Y
+All checks passed.
+Provide your email address to be informed of security issues, install and
+initiate Oracle Configuration Manager. Easier for you if you use your My
+Oracle Support Email address/User Name.
+Visit http://www.oracle.com/support/policies.html for details.
+Email address/User Name:
+
+You have not provided an email address for notification of security issues.
+Do you wish to remain uninformed of security issues ([Y]es, [N]o) [N]:  y
+
+
+
+Please shutdown Oracle instances running out of this ORACLE_HOME on the local system.
+(Oracle Home = '/u02/app/grid/product/11.2.0.4/grid')
+
+
+Is the local system ready for patching? [y|n]
+y
+User Responded with: Y
+Backing up files...
+Applying interim patch '25803774' to OH '/u02/app/grid/product/11.2.0.4/grid'
+
+Patching component oracle.jdk, 1.5.0.51.10...
+Patch 25803774 successfully applied.
+Log file location: /u02/app/grid/product/11.2.0.4/grid/cfgtoollogs/opatch/opatch2019-03-20_17-47-00PM_1.log
+
+OPatch succeeded.
+
+-----finish grid
+
+start oracle home 
+
+[oracle@HREWPRASOEL02 ~]$ cd /u02/app/oracle/product/11.2.0.4/dbhome_1
+[oracle@HREWPRASOEL02 dbhome_1]$ export ORACLE_HOME=/u02/app/oracle/product/11.2.0.4/dbhome_1
+
+patch 1
+
+cd /infshare/software/PSU/JAN2019/28813878/28729234/custom/scripts
+
+./prepatch.sh -dbhome /u02/app/oracle/product/11.2.0.4/dbhome_1
+
+[oracle@HREWPRASOEL02 scripts]$ ./prepatch.sh -dbhome /u02/app/oracle/product/11.2.0.4/dbhome_1
+./prepatch.sh completed successfully.
+
+
+
+patch 2
+
+cd /infshare/software/PSU/JAN2019/28813878
+
+/u02/app/oracle/product/11.2.0.4/dbhome_1/OPatch/opatch napply -oh /u02/app/oracle/product/11.2.0.4/dbhome_1 -local ./28729234
+
+[oracle@HREWPRASOEL02 28813878]$ /u02/app/oracle/product/11.2.0.4/dbhome_1/OPatch/opatch napply -oh /u02/app/oracle/product/11.2.0.4/dbhome_1 -local ./28729234
+Oracle Interim Patch Installer version 11.2.0.3.19
+Copyright (c) 2019, Oracle Corporation.  All rights reserved.
+
+
+Oracle Home       : /u02/app/oracle/product/11.2.0.4/dbhome_1
+Central Inventory : /u02/app/oraInventory
+   from           : /u02/app/oracle/product/11.2.0.4/dbhome_1/oraInst.loc
+OPatch version    : 11.2.0.3.19
+OUI version       : 11.2.0.4.0
+Log file location : /u02/app/oracle/product/11.2.0.4/dbhome_1/cfgtoollogs/opatch/opatch2019-03-20_17-57-39PM_1.log
+
+Verifying environment and performing prerequisite checks...
+UtilSession failed: Patch 28729234 requires component(s) that are not installed in OracleHome. These not-installed components are oracle.crs:11.2.0.4.0,
+Log file location: /u02/app/oracle/product/11.2.0.4/dbhome_1/cfgtoollogs/opatch/opatch2019-03-20_17-57-39PM_1.log
+
+OPatch failed with error code 73
+
+
+
+
+patch 3
+
+cd /infshare/software/PSU/JAN2019/28813878
+
+/u02/app/oracle/product/11.2.0.4/dbhome_1/OPatch/opatch apply -oh /u02/app/oracle/product/11.2.0.4/dbhome_1 -local ./28729262
+
+[oracle@HREWPRASOEL02 28813878]$ /u02/app/oracle/product/11.2.0.4/dbhome_1/OPatch/opatch apply -oh /u02/app/oracle/product/11.2.0.4/dbhome_1 -local ./28729262
+Oracle Interim Patch Installer version 11.2.0.3.19
+Copyright (c) 2019, Oracle Corporation.  All rights reserved.
+
+
+Oracle Home       : /u02/app/oracle/product/11.2.0.4/dbhome_1
+Central Inventory : /u02/app/oraInventory
+   from           : /u02/app/oracle/product/11.2.0.4/dbhome_1/oraInst.loc
+OPatch version    : 11.2.0.3.19
+OUI version       : 11.2.0.4.0
+Log file location : /u02/app/oracle/product/11.2.0.4/dbhome_1/cfgtoollogs/opatch/opatch2019-03-20_18-00-01PM_1.log
+
+Verifying environment and performing prerequisite checks...
+OPatch continues with these patches:   28204707  28729262
+
+Do you want to proceed? [y|n]
+y
+User Responded with: Y
+All checks passed.
+Provide your email address to be informed of security issues, install and
+initiate Oracle Configuration Manager. Easier for you if you use your My
+Oracle Support Email address/User Name.
+Visit http://www.oracle.com/support/policies.html for details.
+Email address/User Name:
+
+You have not provided an email address for notification of security issues.
+Do you wish to remain uninformed of security issues ([Y]es, [N]o) [N]:  y
+
+
+
+Please shutdown Oracle instances running out of this ORACLE_HOME on the local system.
+(Oracle Home = '/u02/app/oracle/product/11.2.0.4/dbhome_1')
+
+
+Is the local system ready for patching? [y|n]
+y
+User Responded with: Y
+Backing up files...
+Applying sub-patch '28204707' to OH '/u02/app/oracle/product/11.2.0.4/dbhome_1'
+Applying changes to emctl script on the home: /u02/app/oracle/product/11.2.0.4/dbhome_1 ...
+
+Patching component oracle.rdbms, 11.2.0.4.0...
+
+Patching component oracle.oracore.rsf, 11.2.0.4.0...
+
+Patching component oracle.rdbms.rsf, 11.2.0.4.0...
+
+Patching component oracle.ldap.rsf, 11.2.0.4.0...
+
+Patching component oracle.ldap.rsf.ic, 11.2.0.4.0...
+
+Patching component oracle.network.rsf, 11.2.0.4.0...
+
+Patching component oracle.sysman.agent, 10.2.0.4.5...
+
+Patching component oracle.sysman.console.db, 11.2.0.4.0...
+
+Patching component oracle.ldap.security.osdt, 11.2.0.4.0...
+
+Patching component oracle.ldap.owm, 11.2.0.4.0...
+
+Patching component oracle.sqlplus.rsf, 11.2.0.4.0...
+
+Patching component oracle.ctx, 11.2.0.4.0...
+Applying sub-patch '28729262' to OH '/u02/app/oracle/product/11.2.0.4/dbhome_1'
+INFO: Script isn't applicable to this port!
+
+Patching component oracle.rdbms, 11.2.0.4.0...
+
+Patching component oracle.rdbms.rsf, 11.2.0.4.0...
+
+Patching component oracle.rdbms.util, 11.2.0.4.0...
+
+Patching component oracle.ldap.rsf, 11.2.0.4.0...
+
+Patching component oracle.ldap.rsf.ic, 11.2.0.4.0...
+
+Patching component oracle.network.rsf, 11.2.0.4.0...
+
+Patching component oracle.rdbms.rman, 11.2.0.4.0...
+
+Patching component oracle.ctx, 11.2.0.4.0...
+Composite patch 28729262 successfully applied.
+Sub-set patch [27794246] has become inactive due to the application of a super-set patch [28729262].
+Please refer to Doc ID 2161861.1 for any possible further required actions.
+Log file location: /u02/app/oracle/product/11.2.0.4/dbhome_1/cfgtoollogs/opatch/opatch2019-03-20_18-00-01PM_1.log
+
+OPatch succeeded.
+
+
+patch 4
+cd /infshare/software/PSU/JAN2019/28790660
+
+/u02/app/oracle/product/11.2.0.4/dbhome_1/OPatch/opatch apply -local
+
+[oracle@HREWPRASOEL02 28790660]$ /u02/app/oracle/product/11.2.0.4/dbhome_1/OPatch/opatch apply -local
+Oracle Interim Patch Installer version 11.2.0.3.19
+Copyright (c) 2019, Oracle Corporation.  All rights reserved.
+
+
+Oracle Home       : /u02/app/oracle/product/11.2.0.4/dbhome_1
+Central Inventory : /u02/app/oraInventory
+   from           : /u02/app/oracle/product/11.2.0.4/dbhome_1/oraInst.loc
+OPatch version    : 11.2.0.3.19
+OUI version       : 11.2.0.4.0
+Log file location : /u02/app/oracle/product/11.2.0.4/dbhome_1/cfgtoollogs/opatch/opatch2019-03-20_18-06-21PM_1.log
+
+Verifying environment and performing prerequisite checks...
+OPatch continues with these patches:   28790660
+
+Do you want to proceed? [y|n]
+y
+User Responded with: Y
+All checks passed.
+Provide your email address to be informed of security issues, install and
+initiate Oracle Configuration Manager. Easier for you if you use your My
+Oracle Support Email address/User Name.
+Visit http://www.oracle.com/support/policies.html for details.
+Email address/User Name:
+
+You have not provided an email address for notification of security issues.
+Do you wish to remain uninformed of security issues ([Y]es, [N]o) [N]:  y
+
+
+
+Please shutdown Oracle instances running out of this ORACLE_HOME on the local system.
+(Oracle Home = '/u02/app/oracle/product/11.2.0.4/dbhome_1')
+
+
+Is the local system ready for patching? [y|n]
+y
+User Responded with: Y
+Backing up files...
+Applying interim patch '28790660' to OH '/u02/app/oracle/product/11.2.0.4/dbhome_1'
+ApplySession: Optional component(s) [ oracle.sqlj, 11.2.0.4.0 ] , [ oracle.sqlj.companion, 11.2.0.4.0 ]  not present in the Oracle Home or a higher version is found.
+
+Patching component oracle.javavm.server, 11.2.0.4.0...
+
+Patching component oracle.precomp.common, 11.2.0.4.0...
+
+Patching component oracle.rdbms, 11.2.0.4.0...
+
+Patching component oracle.rdbms.dbscripts, 11.2.0.4.0...
+
+Patching component oracle.javavm.client, 11.2.0.4.0...
+
+Patching component oracle.dbjava.jdbc, 11.2.0.4.0...
+
+Patching component oracle.dbjava.ic, 11.2.0.4.0...
+Patch 28790660 successfully applied.
+Sub-set patch [27923163] has become inactive due to the application of a super-set patch [28790660].
+Please refer to Doc ID 2161861.1 for any possible further required actions.
+Log file location: /u02/app/oracle/product/11.2.0.4/dbhome_1/cfgtoollogs/opatch/opatch2019-03-20_18-06-21PM_1.log
+
+OPatch succeeded.
+
+
+
+
+patch 5
+
+
+cd /infshare/software/PSU/JAN2019/28813878/28729234/custom/scripts
+
+./postpatch.sh -dbhome /u02/app/oracle/product/11.2.0.4/dbhome_1
+
+[oracle@HREWPRASOEL02 scripts]$ ./postpatch.sh -dbhome /u02/app/oracle/product/11.2.0.4/dbhome_1
+Reading /u02/app/oracle/product/11.2.0.4/dbhome_1/install/params.ora..
+Reading /u02/app/oracle/product/11.2.0.4/dbhome_1/install/params.ora..
+Parsing file /u02/app/oracle/product/11.2.0.4/dbhome_1/bin/racgwrap
+Parsing file /u02/app/oracle/product/11.2.0.4/dbhome_1/bin/srvctl
+Parsing file /u02/app/oracle/product/11.2.0.4/dbhome_1/bin/srvconfig
+Parsing file /u02/app/oracle/product/11.2.0.4/dbhome_1/bin/cluvfy
+Verifying file /u02/app/oracle/product/11.2.0.4/dbhome_1/bin/racgwrap
+Verifying file /u02/app/oracle/product/11.2.0.4/dbhome_1/bin/srvctl
+Verifying file /u02/app/oracle/product/11.2.0.4/dbhome_1/bin/srvconfig
+Verifying file /u02/app/oracle/product/11.2.0.4/dbhome_1/bin/cluvfy
+Reapplying file permissions on /u02/app/oracle/product/11.2.0.4/dbhome_1/bin/racgwrap
+Reapplying file permissions on /u02/app/oracle/product/11.2.0.4/dbhome_1/bin/srvctl
+Reapplying file permissions on /u02/app/oracle/product/11.2.0.4/dbhome_1/bin/srvconfig
+Reapplying file permissions on /u02/app/oracle/product/11.2.0.4/dbhome_1/bin/cluvfy
+Reapplying file permissions on /u02/app/oracle/product/11.2.0.4/dbhome_1/bin/diskmon.bin
+Reapplying file permissions on /u02/app/oracle/product/11.2.0.4/dbhome_1/bin/lsnodes
+Reapplying file permissions on /u02/app/oracle/product/11.2.0.4/dbhome_1/bin/osdbagrp
+Reapplying file permissions on /u02/app/oracle/product/11.2.0.4/dbhome_1/bin/rawutl
+Reapplying file permissions on /u02/app/oracle/product/11.2.0.4/dbhome_1/srvm/admin/ractrans
+Reapplying file permissions on /u02/app/oracle/product/11.2.0.4/dbhome_1/srvm/admin/getcrshome
+Reapplying file permissions on /u02/app/oracle/product/11.2.0.4/dbhome_1/bin/gnsd
+Reapplying file permissions on /u02/app/oracle/product/11.2.0.4/dbhome_1/bin/crsdiag.pl
+Postpatch completed successfully
+
+
+post script as root
+
+cd /u02/app/grid/product/11.2.0.4/grid/rdbms/install
+
+[root@HREWPRASOEL02 install]# ./rootadd_rdbms.sh
+[root@HREWPRASOEL02 install]#
+
+
+cd /u02/app/grid/product/11.2.0.4/grid/perl/bin
+
+[root@HREWPRASOEL02 bin]# ./perl /u02/app/grid/product/11.2.0.4/grid/crs/install/roothas.pl -patch
+
+
+
+
+
+[root@HREWPRASOEL02 bin]# crsctl stat res -t
+--------------------------------------------------------------------------------
+NAME           TARGET  STATE        SERVER                   STATE_DETAILS
+--------------------------------------------------------------------------------
+Local Resources
+--------------------------------------------------------------------------------
+ora.DATASTBY.dg
+               ONLINE  ONLINE       hrewprasoel02
+ora.LISTENER.lsnr
+               ONLINE  ONLINE       hrewprasoel02
+ora.asm
+               ONLINE  ONLINE       hrewprasoel02            Started
+ora.ons
+               OFFLINE OFFLINE      hrewprasoel02
+--------------------------------------------------------------------------------
+Cluster Resources
+--------------------------------------------------------------------------------
+ora.cssd
+      1        ONLINE  ONLINE       hrewprasoel02
+ora.diskmon
+      1        OFFLINE OFFLINE
+ora.evmd
+      1        ONLINE  ONLINE       hrewprasoel02
+[root@HREWPRASOEL02 bin]#
+
+
+
+
+
+[oracle@HREWPRASOEL02 scripts]$ cd $ORACLE_HOME
+[oracle@HREWPRASOEL02 dbhome_1]$ cd OPatch
+[oracle@HREWPRASOEL02 OPatch]$ ./opatch lsinventory
+Oracle Interim Patch Installer version 11.2.0.3.19
+Copyright (c) 2019, Oracle Corporation.  All rights reserved.
+
+
+Oracle Home       : /u02/app/oracle/product/11.2.0.4/dbhome_1
+Central Inventory : /u02/app/oraInventory
+   from           : /u02/app/oracle/product/11.2.0.4/dbhome_1/oraInst.loc
+OPatch version    : 11.2.0.3.19
+OUI version       : 11.2.0.4.0
+Log file location : /u02/app/oracle/product/11.2.0.4/dbhome_1/cfgtoollogs/opatch/opatch2019-03-20_18-22-15PM_1.log
+
+Lsinventory Output file location : /u02/app/oracle/product/11.2.0.4/dbhome_1/cfgtoollogs/opatch/lsinv/lsinventory2019-03-20_18-22-15PM.txt
+
+--------------------------------------------------------------------------------
+Local Machine Information::
+Hostname: HREWPRASOEL02.HREWPRAS.LCL
+ARU platform id: 226
+ARU platform description:: Linux x86-64
+
+Installed Top-level Products (1):
+
+Oracle Database 11g                                                  11.2.0.4.0
+There are 1 products installed in this Oracle Home.
+
+
+Interim patches (3) :
+
+Patch  28790660     : applied on Wed Mar 20 18:07:13 EDT 2019
+Unique Patch ID:  22678133
+Patch description:  "OJVM PATCH SET UPDATE 11.2.0.4.190115"
+   Created on 24 Jan 2019, 12:31:00 hrs PST8PDT
+   Bugs fixed:
+     23727132, 19554117, 19006757, 14774730, 18933818, 18458318, 18166577
+     19231857, 19153980, 19058059, 19007266, 17285560, 17201047, 17056813
+     19223010, 19852360, 19909862, 19895326, 19374518, 20408829, 21047766
+     21566944, 19176885, 17804361, 17528315, 21811517, 22253904, 19187988
+     21911849, 22118835, 22670385, 23265914, 22675136, 24448240, 25067795
+     24534298, 25076732, 25494379, 26023002, 19699946, 26637592, 27000663
+     25649873, 27461842, 27952577, 27642235, 28502128, 28915933
+
+Patch  28729262     : applied on Wed Mar 20 18:01:25 EDT 2019
+Unique Patch ID:  22664181
+Patch description:  "Database Patch Set Update : 11.2.0.4.190115 (28729262)"
+   Created on 19 Dec 2018, 22:33:21 hrs PST8PDT
+Sub-patch  28204707; "Database Patch Set Update : 11.2.0.4.181016 (28204707)"
+Sub-patch  27734982; "Database Patch Set Update : 11.2.0.4.180717 (27734982)"
+Sub-patch  27338049; "Database Patch Set Update : 11.2.0.4.180417 (27338049)"
+Sub-patch  26925576; "Database Patch Set Update : 11.2.0.4.180116 (26925576)"
+Sub-patch  26392168; "Database Patch Set Update : 11.2.0.4.171017 (26392168)"
+Sub-patch  26609445; "Database Patch Set Update : 11.2.0.4.170814 (26609445)"
+Sub-patch  25869727; "Database Patch Set Update : 11.2.0.4.170718 (25869727)"
+Sub-patch  24732075; "Database Patch Set Update : 11.2.0.4.170418 (24732075)"
+Sub-patch  24006111; "Database Patch Set Update : 11.2.0.4.161018 (24006111)"
+Sub-patch  23054359; "Database Patch Set Update : 11.2.0.4.160719 (23054359)"
+Sub-patch  22502456; "Database Patch Set Update : 11.2.0.4.160419 (22502456)"
+Sub-patch  21948347; "Database Patch Set Update : 11.2.0.4.160119 (21948347)"
+Sub-patch  21352635; "Database Patch Set Update : 11.2.0.4.8 (21352635)"
+Sub-patch  20760982; "Database Patch Set Update : 11.2.0.4.7 (20760982)"
+Sub-patch  20299013; "Database Patch Set Update : 11.2.0.4.6 (20299013)"
+Sub-patch  19769489; "Database Patch Set Update : 11.2.0.4.5 (19769489)"
+Sub-patch  19121551; "Database Patch Set Update : 11.2.0.4.4 (19121551)"
+Sub-patch  18522509; "Database Patch Set Update : 11.2.0.4.3 (18522509)"
+Sub-patch  18031668; "Database Patch Set Update : 11.2.0.4.2 (18031668)"
+Sub-patch  17478514; "Database Patch Set Update : 11.2.0.4.1 (17478514)"
+   Bugs fixed:
+     17184721, 21174504, 21538558, 16091637, 18092127, 17381384, 15979965
+     20671094, 16731148, 16314254, 13837378, 18441944, 23105538, 17291347
+     17835048, 28254374, 13558557, 21842740, 21656630, 17008068, 17201159
+     25427662, 17853498, 20717359, 17246576, 18356166, 18681862, 18440047
+     20569094, 20031873, 16875449, 20387265, 19788842, 17296856, 21330264
+     14010183, 17648596, 17025461, 17551063, 24719736, 17267114, 21063322
+     22507210, 17912217, 17889583, 18202441, 17040764, 17478145, 16524926
+     25655390, 19358317, 22730454, 22148226, 18747196, 26544823, 18641419
+     17036973, 18948177, 17811789, 16542886, 14285317, 18009564, 17359610
+     16618694, 8322815, 16832076, 18247991, 16692232, 22507234, 17570240
+     13871092, 24624166, 26631046, 19429927, 24348685, 17848897, 17441661
+     14034426, 17465741, 20273319, 19207156, 16596890, 17437634, 21343897
+     20506706, 18339044, 21453153, 17951233, 21795111, 22321741, 18430495
+     21787056, 22380919, 19469538, 19692824, 20506715, 17811429, 17903598
+     19721304, 18230522, 19554106, 19458377, 21281607, 17612828, 6599380
+     22092979, 17040527, 22321756, 17811438, 18641461, 18682983, 14657740
+     25635149, 13364795, 19490948, 21387964, 17346671, 17588480, 22351572
+     18235390, 18849970, 26474853, 17889549, 19309466, 16472716, 25775213
+     20596234, 18331850, 18641451, 17019356, 17344412, 19461270, 21179898
+     17546761, 24842886, 17231779, 14521849, 18203835, 18203838, 18964939
+     18203837, 17313525, 22195457, 18139690, 16837842, 14106803, 22296366
+     17842825, 22657942, 21352646, 16360112, 22594718, 20657441, 22195441
+     17389192, 26198926, 14565184, 17019345, 17205719, 18740837, 18440095
+     14764829, 22195448, 14354737, 17019086, 13944971, 16571443, 21868720
+     17186905, 17080436, 18673342, 22905130, 17027426, 27374796, 19972569
+     19972568, 20144308, 19972566, 17282229, 19972564, 16870214, 16410570
+     21629064, 19615136, 26039623, 21354456, 17390431, 18762750, 23007241
+     16613964, 17957017, 18098207, 17484762, 18471685, 19730508, 18264060
+     21538485, 17323222, 17754782, 17600719, 18317531, 17852463, 17596908
+     17655634, 18166013, 16228604, 20074391, 27053456, 24790914, 19972570
+     20856766, 19891090, 18090142, 18996843, 16042673, 19854503, 22901797
+     17835627, 20334344, 17393683, 20861693, 18000422, 17551709, 26575788
+     23315889, 20506699, 19006849, 18277454, 18456514, 19174430, 17258090
+     17174582, 25654936, 17242746, 27097854, 16399083, 17824637, 21132297
+     22465352, 17762296, 22168163, 18604692, 17397545, 16450169, 12364061
+     20067212, 18856999, 19211724, 19463893, 19463897, 21343775, 17853456
+     18673304, 20004021, 26030218, 21668627, 16194160, 17477958, 23140259
+     16538760, 12982566, 24570598, 20828947, 18259031, 20296213, 28855981
+     18293054, 17610798, 19699191, 23065323, 17311728, 18135678, 18774543
+     23294548, 16785708, 10136473, 24560906, 19777862, 22551446, 17786518
+     25879984, 18315328, 18334586, 12747740, 18096714, 19032867, 21641760
+     17390160, 18899974, 17232014, 20598042, 26245237, 26679352, 16354467
+     17484731, 18673325, 16422541, 18155762, 19827973, 14015842, 22683225
+     17726838, 18554871, 23177648, 18051556, 20803583, 21972320, 15990359
+     17922254, 18282562, 16855292, 16668584, 21343838, 20299015, 17446237
+     18043064, 18093615, 23713236, 17694209, 17288409, 20475845, 18308268
+     17274537, 13955826, 16934803, 17634921, 17501491, 16315398, 23725036
+     22683212, 17006183, 13829543, 18191164, 26746894, 22809871, 17655240
+     28819280, 18384391, 19393542, 21538567, 16198143, 21847223, 25823754
+     17892268, 20142975, 19584068, 17165204, 25165496, 18604493, 21756699
+     18508861, 18554763, 16901385, 21532755, 18189036, 17443671, 17385178
+     14829250, 17936109, 20925795, 20509482, 17478514, 27441326, 16850630
+     13951456, 16595641, 14054676, 15861775, 21142837, 16912439, 17299889
+     17297939, 23003979, 16833527, 18619917, 17798953, 19697993, 17816865
+     25914276, 18607546, 17571306, 21286665, 17341326, 26910644, 17851160
+     17586955, 20558005, 19049453, 21051840, 17587063, 16956380, 18328509
+     25423453, 29033139, 14133975, 19718981, 18061914, 18522509, 17518652
+     21051833, 20294666, 18765602, 20860659, 18272672, 20324049, 18199537
+     17332800, 13609098, 22502493, 18384537, 14338435, 17945983, 16392068
+     21067387, 17752995, 21051862, 16863422, 17237521, 25505382, 18244962
+     19544839, 24433711, 24717859, 17156148, 18973907, 23026585, 17449815
+     17877323, 18180390, 17088068, 17037130, 20004087, 21422580, 19466309
+     11733603, 25505371, 18610915, 21051858, 18084625, 18674024, 26243698
+     21051852, 18091059, 18306996, 25369547, 16306373, 17787259, 18193833
+     19915271, 20513399, 20631274, 16344544, 25879656, 14692762, 18614015
+     17346091, 18228645, 17721717, 13960236, 18685892, 18436307, 19888853
+     21756677, 11883252, 17891943, 19475971, 22353199, 16384983, 19121551
+     25634317, 27825893, 12816846, 17982555, 17761775, 22243719, 17265217
+     25505394, 17071721, 16721594, 18262334, 21756661, 17891946, 15913355
+     17672719, 17602269, 17239687, 17042658, 25555252, 17238511, 17811456
+     17284817, 17752121, 20879889, 28806384, 21380789, 17394950, 17011832
+     16579084, 22195465, 14602788, 28790634, 18325460, 27567477, 24476265
+     26569225, 24476274, 12611721, 18674465, 16903536, 17006570, 19689979
+     28076295, 16043574, 18783224, 24662775, 16494615, 21526048, 17392698
+     19197175, 16069901, 17811447, 27870645, 28876684, 17308789, 24835538
+     22195477, 17865671, 17343514, 19013183, 17325413, 18316692, 16180763
+     17348614, 14368995, 21983325, 17393915, 16285691, 19211433, 20331945
+     17883081, 17705023, 24316947, 17614227, 19578350, 22195485, 14084247
+     24975421, 26078387, 23115139, 13645875, 16777840, 19727057, 14852021
+     18744139, 18674047, 17716305, 19285025, 18482502, 17622427, 19289642
+     27534509, 25947799, 22195492, 14458214, 20869721, 21172913, 17767676
+     18723434, 25505407, 17786278, 19258504, 17082983, 17365043, 21351877
+     13498382, 18331812, 16065166, 25489607, 16685417, 18031668, 22893153
+     17551674, 16943711, 19272701, 21517440, 25897615, 17649265, 13866822
+     18094246, 24528741, 17783588, 14245531, 17082359, 18280813, 20448824
+     23330119, 16268425, 19487147, 25600421, 18018515, 17302277, 17215560
+     24411921, 19271443, 14176370, 25764020, 17016369, 20777150, 16756406
+     23330124, 20441797, 19769489, 28100487, 17545847, 25093656, 18260550
+     13853126, 17227277, 17551699, 23536835, 25957038, 24652769, 20725343
+     19207117, 9756271, 18868646, 17614134, 26667023, 17546973, 18704244
+     19680952, 26667015, 17050888, 18273830, 18828868, 17360606, 16992075
+     24563422, 17375354, 12905058, 18362222, 21429602, 26667032, 28364007
+     27086138, 17571039, 17468141, 18436647, 17570606, 17235750, 21168487
+     17279227, 16220077, 16929165
+
+Patch  27441052     : applied on Fri Jul 27 16:00:50 EDT 2018
+Unique Patch ID:  22172315
+Patch description:  "OCW PATCH SET UPDATE: 11.2.0.4.180417 (27441052)"
+   Created on 5 Feb 2018, 01:05:15 hrs PST8PDT
+   Bugs fixed:
+     18328800, 19270660, 18691572, 18508710, 20038451, 21251192, 22162062
+     20365005, 21232394, 17387214, 17750548, 17617807, 14497275, 20219458
+     17733927, 18180541, 23757020, 18962892, 17292250, 17378618, 16759171
+     20110156, 17843489, 17065496, 13991403, 21694632, 17273020, 22762046
+     17155238, 18261183, 18053580, 20012766, 21245437, 20218012, 17013634
+     17886392, 24422155, 20995001, 17039197, 16317771, 17947785, 10052729
+     20340620, 22353346, 16237657, 20317221, 18199185, 15917869, 18399991
+     20186278, 18024089, 17374271, 16849642, 20246071, 20746251, 14270845
+     23621494, 20552947, 18414137, 18882642, 17001914, 17927970, 14378120
+     16346413, 15986647, 18068871, 21222147, 16206997, 18143836, 21982225
+     25490238, 19168690, 18343490, 20235511, 21875360, 16613232, 19276791
+     17722664, 20440643, 12928658, 18226143, 18520351, 16249829, 18952577
+     17172091, 18229842, 16076412, 18265482, 20676340, 17818075, 20091753
+     18231837, 14373486, 17483479, 20136892, 20551654, 18120545, 18729166
+     13843841, 17405302, 21225209, 18709496, 18330979, 18744838, 14525998
+     18187697, 17087371, 20531190, 20598625, 14385860, 18348155, 19479503
+     12928592, 17516024, 18370031, 17764053, 19272663, 17551223, 14671408
+     18272135, 14207615, 21255373, 17500165, 18875012, 14769643, 25656952
+     19558324, 18464784, 18848125, 19241857, 14851828, 17955615, 14693336
+     20315294, 16284825, 17352230, 20014326, 17238586, 17089344, 17405605
+     17531342, 21327402, 26546632, 19398098, 17159489, 17640316, 13823394
+     16543190, 22024217, 17983675, 20795241, 17481314, 18346135, 17598201
+     16281493, 15986311, 17208793, 19601468, 18999857, 18700935, 14076173
+     18428146, 17435488, 18352845, 18352846, 20408163, 17592037, 19616601
+     17387779, 17391726, 14777968, 15851860, 16206882, 20141091, 15832129
+     17305100, 20175174, 21113068, 19885321, 16901346, 17985714, 25591658
+     18536826, 17780903, 18752378, 18946768, 16876500, 16875342, 17769597
+     19955755, 16429265, 18336452, 17273003, 17209968, 25484507, 16988311
+     19319357, 20094984, 17046460, 17059927, 18053631, 16867761, 18774591
+     21442094, 20235486, 19359787, 15869775, 17447588, 19642566, 21152052
+     16798862, 15920201
+
+
+
+--------------------------------------------------------------------------------
+
+OPatch succeeded.
+[oracle@HREWPRASOEL02 OPatch]$
+
+[grid@HREWPRASOEL02 ~]$ cd $ORACLE_HOME
+[grid@HREWPRASOEL02 grid]$ cd OPatch
+[grid@HREWPRASOEL02 OPatch]$ ./opatch lsinventory
+Oracle Interim Patch Installer version 11.2.0.3.19
+Copyright (c) 2019, Oracle Corporation.  All rights reserved.
+
+
+Oracle Home       : /u02/app/grid/product/11.2.0.4/grid
+Central Inventory : /u02/app/oraInventory
+   from           : /u02/app/grid/product/11.2.0.4/grid/oraInst.loc
+OPatch version    : 11.2.0.3.19
+OUI version       : 11.2.0.4.0
+Log file location : /u02/app/grid/product/11.2.0.4/grid/cfgtoollogs/opatch/opatch2019-03-20_18-24-11PM_1.log
+
+Lsinventory Output file location : /u02/app/grid/product/11.2.0.4/grid/cfgtoollogs/opatch/lsinv/lsinventory2019-03-20_18-24-11PM.txt
+
+--------------------------------------------------------------------------------
+Local Machine Information::
+Hostname: HREWPRASOEL02.HREWPRAS.LCL
+ARU platform id: 226
+ARU platform description:: Linux x86-64
+
+Installed Top-level Products (1):
+
+Oracle Grid Infrastructure 11g                                       11.2.0.4.0
+There are 1 products installed in this Oracle Home.
+
+
+Interim patches (4) :
+
+Patch  25803774     : applied on Wed Mar 20 17:47:51 EDT 2019
+Unique Patch ID:  21487016
+Patch description:  "UPDATE CLIENT JDK IN ORACLE HOME"
+   Created on 19 Sep 2017, 03:43:37 hrs PST8PDT
+   Bugs fixed:
+     25803774
+
+Patch  28729245     : applied on Wed Mar 20 17:40:50 EDT 2019
+Unique Patch ID:  22546711
+Patch description:  "ACFS Patch Set Update : 11.2.0.4.190115 (28729245)"
+   Created on 2 Nov 2018, 04:47:07 hrs PST8PDT
+   Bugs fixed:
+     28069955, 26247490, 21369858, 16318126, 19690653, 17503605, 17203009
+     17359415, 20140148, 17611362, 25098392, 17270418, 17164243, 19053182
+     17696547, 17488768, 25078431, 18168684, 21519796, 18143006, 21208140
+     23321114, 17428148, 17070158, 20438706, 17510275, 17172303, 28142134
+     18610307, 17376318, 17721778, 22198405, 17699423, 22810422, 18915417
+     21233961, 18155334, 25381434, 19919907, 18321597, 18185024, 17363999
+     17636008, 27593263, 20681968, 17475946, 27463879
+
+Patch  28729262     : applied on Wed Mar 20 17:35:42 EDT 2019
+Unique Patch ID:  22664181
+Patch description:  "Database Patch Set Update : 11.2.0.4.190115 (28729262)"
+   Created on 19 Dec 2018, 22:33:21 hrs PST8PDT
+Sub-patch  28204707; "Database Patch Set Update : 11.2.0.4.181016 (28204707)"
+Sub-patch  27734982; "Database Patch Set Update : 11.2.0.4.180717 (27734982)"
+Sub-patch  27338049; "Database Patch Set Update : 11.2.0.4.180417 (27338049)"
+Sub-patch  26925576; "Database Patch Set Update : 11.2.0.4.180116 (26925576)"
+Sub-patch  26392168; "Database Patch Set Update : 11.2.0.4.171017 (26392168)"
+Sub-patch  26609445; "Database Patch Set Update : 11.2.0.4.170814 (26609445)"
+Sub-patch  25869727; "Database Patch Set Update : 11.2.0.4.170718 (25869727)"
+Sub-patch  24732075; "Database Patch Set Update : 11.2.0.4.170418 (24732075)"
+Sub-patch  24006111; "Database Patch Set Update : 11.2.0.4.161018 (24006111)"
+Sub-patch  23054359; "Database Patch Set Update : 11.2.0.4.160719 (23054359)"
+Sub-patch  22502456; "Database Patch Set Update : 11.2.0.4.160419 (22502456)"
+Sub-patch  21948347; "Database Patch Set Update : 11.2.0.4.160119 (21948347)"
+Sub-patch  21352635; "Database Patch Set Update : 11.2.0.4.8 (21352635)"
+Sub-patch  20760982; "Database Patch Set Update : 11.2.0.4.7 (20760982)"
+Sub-patch  20299013; "Database Patch Set Update : 11.2.0.4.6 (20299013)"
+Sub-patch  19769489; "Database Patch Set Update : 11.2.0.4.5 (19769489)"
+Sub-patch  19121551; "Database Patch Set Update : 11.2.0.4.4 (19121551)"
+Sub-patch  18522509; "Database Patch Set Update : 11.2.0.4.3 (18522509)"
+Sub-patch  18031668; "Database Patch Set Update : 11.2.0.4.2 (18031668)"
+Sub-patch  17478514; "Database Patch Set Update : 11.2.0.4.1 (17478514)"
+   Bugs fixed:
+     17184721, 21174504, 21538558, 16091637, 18092127, 17381384, 15979965
+     20671094, 16731148, 16314254, 13837378, 18441944, 23105538, 17291347
+     17835048, 28254374, 13558557, 21842740, 21656630, 17008068, 17201159
+     25427662, 17853498, 20717359, 17246576, 18356166, 18681862, 18440047
+     20569094, 20031873, 16875449, 20387265, 19788842, 17296856, 21330264
+     14010183, 17648596, 17025461, 17551063, 24719736, 17267114, 21063322
+     22507210, 17912217, 17889583, 18202441, 17040764, 17478145, 16524926
+     25655390, 19358317, 22730454, 22148226, 18747196, 26544823, 18641419
+     17036973, 18948177, 17811789, 16542886, 14285317, 18009564, 17359610
+     16618694, 8322815, 16832076, 18247991, 16692232, 22507234, 17570240
+     13871092, 24624166, 26631046, 19429927, 24348685, 17848897, 17441661
+     14034426, 17465741, 20273319, 19207156, 16596890, 17437634, 21343897
+     20506706, 18339044, 21453153, 17951233, 21795111, 22321741, 18430495
+     21787056, 22380919, 19469538, 19692824, 20506715, 17811429, 17903598
+     19721304, 18230522, 19554106, 19458377, 21281607, 17612828, 6599380
+     22092979, 17040527, 22321756, 17811438, 18641461, 18682983, 14657740
+     25635149, 13364795, 19490948, 21387964, 17346671, 17588480, 22351572
+     18235390, 18849970, 26474853, 17889549, 19309466, 16472716, 25775213
+     20596234, 18331850, 18641451, 17019356, 17344412, 19461270, 21179898
+     17546761, 24842886, 17231779, 14521849, 18203835, 18203838, 18964939
+     18203837, 17313525, 22195457, 18139690, 16837842, 14106803, 22296366
+     17842825, 22657942, 21352646, 16360112, 22594718, 20657441, 22195441
+     17389192, 26198926, 14565184, 17019345, 17205719, 18740837, 18440095
+     14764829, 22195448, 14354737, 17019086, 13944971, 16571443, 21868720
+     17186905, 17080436, 18673342, 22905130, 17027426, 27374796, 19972569
+     19972568, 20144308, 19972566, 17282229, 19972564, 16870214, 16410570
+     21629064, 19615136, 26039623, 21354456, 17390431, 18762750, 23007241
+     16613964, 17957017, 18098207, 17484762, 18471685, 19730508, 18264060
+     21538485, 17323222, 17754782, 17600719, 18317531, 17852463, 17596908
+     17655634, 18166013, 16228604, 20074391, 27053456, 24790914, 19972570
+     20856766, 19891090, 18090142, 18996843, 16042673, 19854503, 22901797
+     17835627, 20334344, 17393683, 20861693, 18000422, 17551709, 26575788
+     23315889, 20506699, 19006849, 18277454, 18456514, 19174430, 17258090
+     17174582, 25654936, 17242746, 27097854, 16399083, 17824637, 21132297
+     22465352, 17762296, 22168163, 18604692, 17397545, 16450169, 12364061
+     20067212, 18856999, 19211724, 19463893, 19463897, 21343775, 17853456
+     18673304, 20004021, 26030218, 21668627, 16194160, 17477958, 23140259
+     16538760, 12982566, 24570598, 20828947, 18259031, 20296213, 28855981
+     18293054, 17610798, 19699191, 23065323, 17311728, 18135678, 18774543
+     23294548, 16785708, 10136473, 24560906, 19777862, 22551446, 17786518
+     25879984, 18315328, 18334586, 12747740, 18096714, 19032867, 21641760
+     17390160, 18899974, 17232014, 20598042, 26245237, 26679352, 16354467
+     17484731, 18673325, 16422541, 18155762, 19827973, 14015842, 22683225
+     17726838, 18554871, 23177648, 18051556, 20803583, 21972320, 15990359
+     17922254, 18282562, 16855292, 16668584, 21343838, 20299015, 17446237
+     18043064, 18093615, 23713236, 17694209, 17288409, 20475845, 18308268
+     17274537, 13955826, 16934803, 17634921, 17501491, 16315398, 23725036
+     22683212, 17006183, 13829543, 18191164, 26746894, 22809871, 17655240
+     28819280, 18384391, 19393542, 21538567, 16198143, 21847223, 25823754
+     17892268, 20142975, 19584068, 17165204, 25165496, 18604493, 21756699
+     18508861, 18554763, 16901385, 21532755, 18189036, 17443671, 17385178
+     14829250, 17936109, 20925795, 20509482, 17478514, 27441326, 16850630
+     13951456, 16595641, 14054676, 15861775, 21142837, 16912439, 17299889
+     17297939, 23003979, 16833527, 18619917, 17798953, 19697993, 17816865
+     25914276, 18607546, 17571306, 21286665, 17341326, 26910644, 17851160
+     17586955, 20558005, 19049453, 21051840, 17587063, 16956380, 18328509
+     25423453, 29033139, 14133975, 19718981, 18061914, 18522509, 17518652
+     21051833, 20294666, 18765602, 20860659, 18272672, 20324049, 18199537
+     17332800, 13609098, 22502493, 18384537, 14338435, 17945983, 16392068
+     21067387, 17752995, 21051862, 16863422, 17237521, 25505382, 18244962
+     19544839, 24433711, 24717859, 17156148, 18973907, 23026585, 17449815
+     17877323, 18180390, 17088068, 17037130, 20004087, 21422580, 19466309
+     11733603, 25505371, 18610915, 21051858, 18084625, 18674024, 26243698
+     21051852, 18091059, 18306996, 25369547, 16306373, 17787259, 18193833
+     19915271, 20513399, 20631274, 16344544, 25879656, 14692762, 18614015
+     17346091, 18228645, 17721717, 13960236, 18685892, 18436307, 19888853
+     21756677, 11883252, 17891943, 19475971, 22353199, 16384983, 19121551
+     25634317, 27825893, 12816846, 17982555, 17761775, 22243719, 17265217
+     25505394, 17071721, 16721594, 18262334, 21756661, 17891946, 15913355
+     17672719, 17602269, 17239687, 17042658, 25555252, 17238511, 17811456
+     17284817, 17752121, 20879889, 28806384, 21380789, 17394950, 17011832
+     16579084, 22195465, 14602788, 28790634, 18325460, 27567477, 24476265
+     26569225, 24476274, 12611721, 18674465, 16903536, 17006570, 19689979
+     28076295, 16043574, 18783224, 24662775, 16494615, 21526048, 17392698
+     19197175, 16069901, 17811447, 27870645, 28876684, 17308789, 24835538
+     22195477, 17865671, 17343514, 19013183, 17325413, 18316692, 16180763
+     17348614, 14368995, 21983325, 17393915, 16285691, 19211433, 20331945
+     17883081, 17705023, 24316947, 17614227, 19578350, 22195485, 14084247
+     24975421, 26078387, 23115139, 13645875, 16777840, 19727057, 14852021
+     18744139, 18674047, 17716305, 19285025, 18482502, 17622427, 19289642
+     27534509, 25947799, 22195492, 14458214, 20869721, 21172913, 17767676
+     18723434, 25505407, 17786278, 19258504, 17082983, 17365043, 21351877
+     13498382, 18331812, 16065166, 25489607, 16685417, 18031668, 22893153
+     17551674, 16943711, 19272701, 21517440, 25897615, 17649265, 13866822
+     18094246, 24528741, 17783588, 14245531, 17082359, 18280813, 20448824
+     23330119, 16268425, 19487147, 25600421, 18018515, 17302277, 17215560
+     24411921, 19271443, 14176370, 25764020, 17016369, 20777150, 16756406
+     23330124, 20441797, 19769489, 28100487, 17545847, 25093656, 18260550
+     13853126, 17227277, 17551699, 23536835, 25957038, 24652769, 20725343
+     19207117, 9756271, 18868646, 17614134, 26667023, 17546973, 18704244
+     19680952, 26667015, 17050888, 18273830, 18828868, 17360606, 16992075
+     24563422, 17375354, 12905058, 18362222, 21429602, 26667032, 28364007
+     27086138, 17571039, 17468141, 18436647, 17570606, 17235750, 21168487
+     17279227, 16220077, 16929165
+
+Patch  28729234     : applied on Wed Mar 20 17:32:29 EDT 2019
+Unique Patch ID:  22546711
+Patch description:  "OCW Patch Set Update : 11.2.0.4.190115 (28729234)"
+   Created on 8 Nov 2018, 23:01:45 hrs PST8PDT
+   Bugs fixed:
+     18328800, 19270660, 18691572, 18508710, 20038451, 21251192, 22162062
+     20365005, 21232394, 17336871, 17387214, 17750548, 17617807, 14497275
+     20219458, 17733927, 18180541, 23757020, 18962892, 17292250, 17378618
+     16759171, 20110156, 17843489, 17065496, 13991403, 21694632, 17273020
+     22762046, 17336884, 17155238, 17336889, 18261183, 18053580, 20012766
+     21245437, 20218012, 17013634, 17886392, 20995001, 24422155, 17039197
+     16317771, 17947785, 10052729, 20340620, 22353346, 16237657, 20317221
+     18199185, 15917869, 18399991, 20186278, 18024089, 17374271, 16849642
+     20246071, 20746251, 14270845, 23621494, 20552947, 18414137, 18882642
+     17001914, 17927970, 14378120, 16346413, 15986647, 17336898, 18068871
+     21222147, 16206997, 18143836, 21982225, 25490238, 19168690, 18343490
+     20235511, 21875360, 16613232, 19276791, 17722664, 20440643, 12928658
+     18226143, 18520351, 16249829, 18952577, 17172091, 18229842, 16076412
+     18265482, 20676340, 17818075, 20091753, 18231837, 14373486, 17483479
+     20136892, 20551654, 18120545, 18729166, 13843841, 17405302, 21225209
+     18709496, 18330979, 18744838, 14525998, 18187697, 17087371, 20531190
+     20598625, 14385860, 18348155, 19479503, 12928592, 17516024, 18370031
+     17764053, 19272663, 17551223, 14671408, 18272135, 14207615, 21255373
+     17500165, 18875012, 14769643, 25656952, 19558324, 18464784, 18848125
+     19241857, 17955615, 14851828, 14693336, 20315294, 16284825, 17352230
+     20014326, 17238586, 17089344, 17405605, 17531342, 21327402, 26546632
+     19398098, 17159489, 17640316, 13823394, 16543190, 22024217, 17983675
+     20795241, 17481314, 18346135, 17598201, 16281493, 15986311, 17208793
+     19601468, 18999857, 18700935, 14076173, 18428146, 16709532, 17435488
+     18352845, 18352846, 20408163, 17592037, 19616601, 17387779, 17391726
+     14777968, 15851860, 16206882, 20141091, 15832129, 17305100, 20175174
+     21113068, 19885321, 16901346, 17985714, 25591658, 18536826, 17780903
+     18752378, 18946768, 16876500, 16875342, 17769597, 19955755, 16429265
+     18336452, 17273003, 17209968, 25484507, 16988311, 19319357, 20094984
+     17046460, 17059927, 18053631, 16867761, 18774591, 21442094, 20235486
+     19359787, 15869775, 17447588, 19642566, 21152052, 16798862, 15920201
+
+
+
+--------------------------------------------------------------------------------
+
+OPatch succeeded.
+[grid@HREWPRASOEL02 OPatch]$
+
+

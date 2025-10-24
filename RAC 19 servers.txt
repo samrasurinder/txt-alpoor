@@ -1,0 +1,235 @@
+SCAN IPs per Cluster
+10.68.26.214	TST2-EW-SCAN
+10.68.26.215	TST2-EW-SCAN
+10.68.26.216	TST2-EW-SCAN
+10.68.26.217	CPY2-EW-SCAN
+10.68.26.218	CPY2-EW-SCAN
+10.68.26.219	CPY2-EW-SCAN
+10.68.26.224	TRN2-EW-SCAN
+10.68.26.225	TRN2-EW-SCAN
+10.68.26.226	TRN2-EW-SCAN
+ 
+TSTDB10/11
+10.68.26.227	SAND1-EW-SCAN
+10.68.26.228	SAND1-EW-SCAN
+10.68.26.229	SAND1-EW-SCAN
+ 
+OEL40/41
+10.68.26.246	SAND2-EW-SCAN
+10.68.26.247	SAND2-EW-SCAN
+10.68.26.248	SAND2-EW-SCAN
+
+
+
+
+Can one of you ensure the below servers are added to DNS:
+
+ServerName	Public/VLAN 16
+HRVLTSTDB20	10.68.26.232
+HRVLTSTDB21	10.68.26.233
+HRVLTSTDB22	10.68.26.234
+
+HRVLTRNDB23	10.68.26.235
+HRVLTRNDB24	10.68.26.236
+
+HRVLCPYDB25	10.68.26.237
+HRVLCPYDB26	10.68.26.238
+
+
+HRVLTSTDB10	 	10.68.26.194 
+HRVLTSTDB11	 	10.68.26.195 
+ 	 	 	 
+HREWOEL40	 	192.168.155.241	192.168.10.71
+HREWOEL41		192.168.155.242	192.168.10.72
+
+
+oracle-database-preinstall-19c.x86_64 : "Sets the system for Oracle Database single instance and Real Application Cluster 19c install for Oracle Linux .el7"
+oracleasm-support.x86_64 : The Oracle Automatic Storage Management support programs.
+
+
+
+
+mkdir -p /u02/app/19.3.0/grid
+mkdir -p /u02/app/grid
+mkdir -p /u02/app/oracle
+chown -R grid:oinstall /u02
+chown oracle:oinstall /u02/app/oracle
+chmod -R 775 /u02/
+
+
+
+ cd /u02/app/19.3.0/grid/
+ ./runcluvfy.sh stage -pre crsinst -n hrvltrndb23,hrvltrndb24 -verbose -r 19 -verbose > /tmp/grid_user_hrvltrndb23_24.txt &
+
+./runcluvfy.sh stage -pre crsinst -n hrewoel40,hrewoel41 -verbose -r 19  > /tmp/grid_user_hrewoel40_41.txt &
+
+
+
+10.68.26.235    hrvltrndb23.hr.state.sbu        hrvltrndb23
+10.68.26.210    hrvltrndb23-vip
+192.168.10.63   hrvltrndb23-priv1
+192.168.20.63   hrvltrndb23-priv2
+192.168.155.235 hrvltrndb23-sl
+
+10.68.26.236    hrvltrndb24.hr.state.sbu        hrvltrndb24
+10.68.26.211    hrvltrndb24-vip
+192.168.10.64   hrvltrndb24-priv1
+192.168.20.64   hrvltrndb24-priv2
+192.168.155.236 hrvltrndb24-sl
+
+
+[root@hrvltstdb10 OPatch]# ./opatchauto apply /tmp/PSU/32126842/32067171/ &
+[1] 7488
+[root@hrvltstdb10 OPatch]#
+OPatchauto session is initiated at Tue Feb  2 05:43:12 2021
+
+System initialization log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchautodb/systemconfig2021-02-02_05-43-14AM.log.
+
+Session log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchauto/opatchauto2021-02-02_05-43-44AM.log
+The id for this session is KAVP
+
+Executing OPatch prereq operations to verify patch applicability on home /u02/app/oracle/product/19.3.0/db_1
+
+Executing OPatch prereq operations to verify patch applicability on home /u02/app/19.3.0/grid
+Patch applicability verified successfully on home /u02/app/19.3.0/grid
+
+Patch applicability verified successfully on home /u02/app/oracle/product/19.3.0/db_1
+
+
+Executing patch validation checks on home /u02/app/19.3.0/grid
+Patch validation checks successfully completed on home /u02/app/19.3.0/grid
+
+
+Executing patch validation checks on home /u02/app/oracle/product/19.3.0/db_1
+Patch validation checks successfully completed on home /u02/app/oracle/product/19.3.0/db_1
+
+
+Verifying SQL patch applicability on home /u02/app/oracle/product/19.3.0/db_1
+
+
+
+[root@hrvltstdb10 OPatch]# ./opatchauto apply /tmp/PSU/32126842/32226239/ &
+[1] 5009
+[root@hrvltstdb10 OPatch]#
+OPatchauto session is initiated at Tue Feb  2 06:00:21 2021
+
+System initialization log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchautodb/systemconfig2021-02-02_06-00-25AM.log.
+
+Session log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchauto/opatchauto2021-02-02_06-00-57AM.log
+The id for this session is PFT7
+
+Executing OPatch prereq operations to verify patch applicability on home /u02/app/oracle/product/19.3.0/db_1
+
+Executing OPatch prereq operations to verify patch applicability on home /u02/app/19.3.0/grid
+Patch applicability verified successfully on home /u02/app/oracle/product/19.3.0/db_1
+
+Patch applicability verified successfully on home /u02/app/19.3.0/grid
+
+
+Executing patch validation checks on home /u02/app/19.3.0/grid
+Patch validation checks successfully completed on home /u02/app/19.3.0/grid
+
+
+Executing patch validation checks on home /u02/app/oracle/product/19.3.0/db_1
+Patch validation checks successfully completed on home /u02/app/oracle/product/19.3.0/db_1
+
+
+Verifying SQL patch applicability on home /u02/app/oracle/product/19.3.0/db_1
+SQL patch applicability verified successfully on home /u02/app/oracle/product/19.3.0/db_1
+
+
+Preparing to bring down database service on home /u02/app/oracle/product/19.3.0/db_1
+Successfully prepared home /u02/app/oracle/product/19.3.0/db_1 to bring down database service
+
+
+Bringing down CRS service on home /u02/app/19.3.0/grid
+
+
+
+
+[root@hrvltstdb11 OPatch]# ./opatchauto apply /tmp/PSU/32126842/32226239/ &
+[1] 8614
+[root@hrvltstdb11 OPatch]#
+OPatchauto session is initiated at Tue Feb  2 06:42:25 2021
+
+System initialization log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchautodb/systemconfig2021-02-02_06-42-29AM.log.
+
+Session log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchauto/opatchauto2021-02-02_06-42-57AM.log
+The id for this session is QLT7
+
+Executing OPatch prereq operations to verify patch applicability on home /u02/app/19.3.0/grid
+
+Executing OPatch prereq operations to verify patch applicability on home /u02/app/oracle/product/19.3.0/db_1
+Patch applicability verified successfully on home /u02/app/oracle/product/19.3.0/db_1
+
+Patch applicability verified successfully on home /u02/app/19.3.0/grid
+
+
+Executing patch validation checks on home /u02/app/19.3.0/grid
+Patch validation checks successfully completed on home /u02/app/19.3.0/grid
+
+
+Executing patch validation checks on home /u02/app/oracle/product/19.3.0/db_1
+Patch validation checks successfully completed on home /u02/app/oracle/product/19.3.0/db_1
+
+
+Verifying SQL patch applicability on home /u02/app/oracle/product/19.3.0/db_1
+SQL patch applicability verified successfully on home /u02/app/oracle/product/19.3.0/db_1
+
+
+Preparing to bring down database service on home /u02/app/oracle/product/19.3.0/db_1
+Successfully prepared home /u02/app/oracle/product/19.3.0/db_1 to bring down database service
+
+
+Bringing down CRS service on home /u02/app/19.3.0/grid
+Prepatch operation log file location: /u02/app/grid/crsdata/hrvltstdb11/crsconfig/crs_prepatch_apply_inplace_hrvltstdb11_2021-02-02_06-44-15AM.log
+CRS service brought down successfully on home /u02/app/19.3.0/grid
+
+
+Performing prepatch operation on home /u02/app/oracle/product/19.3.0/db_1
+Perpatch operation completed successfully on home /u02/app/oracle/product/19.3.0/db_1
+
+
+Start applying binary patch on home /u02/app/oracle/product/19.3.0/db_1
+
+[root@hrvltstdb11 OPatch]# Binary patch applied successfully on home /u02/app/oracle/product/19.3.0/db_1
+
+
+Performing postpatch operation on home /u02/app/oracle/product/19.3.0/db_1
+Postpatch operation completed successfully on home /u02/app/oracle/product/19.3.0/db_1
+
+
+Start applying binary patch on home /u02/app/19.3.0/grid
+Failed while applying binary patches on home /u02/app/19.3.0/grid
+
+Execution of [OPatchAutoBinaryAction] patch action failed, check log for more details. Failures:
+Patch Target : hrvltstdb11->/u02/app/19.3.0/grid Type[crs]
+Details: [
+---------------------------Patching Failed---------------------------------
+Command execution failed during patching in home: /u02/app/19.3.0/grid, host: hrvltstdb11.
+Command failed:  /u02/app/19.3.0/grid/OPatch/opatchauto  apply /tmp/PSU/32126842/32226239/ -oh /u02/app/19.3.0/grid -target_type cluster -binary -invPtrLoc /u02/app/19.3.0/grid/oraInst.loc -jre /u02/app/19.3.0/grid/OPatch/jre -persistresult /u02/app/19.3.0/grid/opatchautocfg/db/sessioninfo/sessionresult_hrvltstdb11_crs_1.ser -analyzedresult /u02/app/19.3.0/grid/opatchautocfg/db/sessioninfo/sessionresult_analyze_hrvltstdb11_crs_1.ser
+Command failure output:
+==Following patches FAILED in apply:
+
+Patch: /tmp/PSU/32126842/32226239/29340594
+Log: /u02/app/19.3.0/grid/cfgtoollogs/opatchauto/core/opatch/opatch2021-02-02_06-54-33AM_1.log
+Reason: Failed during Patching: oracle.opatch.opatchsdk.OPatchException: ApplySession failed in system modification phase... 'ApplySession::apply failed: java.io.IOException: oracle.sysman.oui.patch.PatchException: java.io.FileNotFoundException: /u02/app/oraInventory/ContentsXML/oui-patch.xml (Permission denied)'
+
+After fixing the cause of failure Run opatchauto resume
+
+]
+OPATCHAUTO-68061: The orchestration engine failed.
+OPATCHAUTO-68061: The orchestration engine failed with return code 1
+OPATCHAUTO-68061: Check the log for more details.
+OPatchAuto failed.
+
+OPatchauto session completed at Tue Feb  2 06:55:14 2021
+Time taken to complete the session 12 minutes, 49 seconds
+
+ opatchauto failed with error code 42
+
+
+
+
+
+

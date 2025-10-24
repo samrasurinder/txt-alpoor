@@ -1,0 +1,104 @@
+
+
+vi /data/www/talentmap/api/setup_environment.sh
+ 1029  cp /data/www/talentmap/api/setup_environment.sh /data/www/talentmap/api/setup_environment.sh-ORIG
+
+
+
+
+[talentmap@hrewlprdap1005 prod]$ pwd
+/tm_logs/talentmap/prod
+
+
+
+Database Server Names
+
+TST: hrewltstdb1001.hr.state.sbu
+IVV: hrewltstdb1001.hr.state.sbu
+UAT: hrewltstdb1001.hr.state.sbu
+PRD: hrewlprddb1001.hr.state.sbu ( DBname : PROD)
+
+
+[root@hrewlprdws1005 ~]# shutdown -r now
+
+hrewlprdap1005
+
+
+DB Names
+
+TST: DEV2
+IVV: IVV
+UAT: UAT
+PRD: PROD
+
+
+delete from bidding_biddingstatus;
+ delete from position_positionbidstatistics;
+ delete from bidding_waiver;
+ delete from bidding_bid;
+ delete from user_profile_userprofile_favorite_positions;
+
+TSTYzDIy4q0Na9$xy
+
+
+
+
+-bash-4.2$ pwd
+/var/lib/pgsql
+-bash-4.2$ pg_dump prod > prod.bak &
+[1] 25708
+-bash-4.2$
+
+SELECT
+    pg_terminate_backend (pid)
+FROM
+    pg_stat_activity
+WHERE
+    datname = 'UAT';
+
+
+-bash-4.2$ cd /var/lib/pgsql/9.6/data
+-bash-4.2$ cd base/
+-bash-4.2$ ls -altrh
+total 212K
+drwx------.  2 postgres postgres 4.0K Nov 16  2017 13322
+drwx------.  2 postgres postgres 4.0K Apr 20  2018 1
+drwx------. 20 postgres postgres 4.0K Sep  3 12:23 ..
+drwx------.  2 postgres postgres  32K Sep  3 12:23 763558
+drwx------.  2 postgres postgres  36K Sep  3 12:24 16385
+drwx------.  2 postgres postgres 4.0K Sep  3 12:24 13323
+drwx------. 11 postgres postgres 4.0K Sep 16 17:13 .
+drwx------.  2 postgres postgres  36K Oct  4 15:43 82147
+drwx------.  2 postgres postgres 4.0K Oct  8 15:08 pgsql_tmp
+drwx------.  2 postgres postgres  36K Oct 15 12:06 82148
+drwx------.  2 postgres postgres  36K Oct 15 13:30 38962
+
+
+
+-bash-4.2$ jobs
+[1]+  Running                 psql UAT < prod.bak &
+-bash-4.2$
+
+
+
+
+
+CREATED
+---------
+BMA
+BMA_DW.HR.STATE.SBU
+DW
+
+OWNER
+------------------------------
+DB_LINK
+--------------------------------------------------------------------------------
+USERNAME
+------------------------------
+HOST
+--------------------------------------------------------------------------------
+CREATED
+---------
+HFKC
+07-SEP-19
+

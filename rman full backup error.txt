@@ -1,0 +1,12 @@
+Calling krmmpem from krmmexe
+RMAN-00571: ===========================================================
+RMAN-00569: =============== ERROR MESSAGE STACK FOLLOWS ===============
+RMAN-00571: ===========================================================
+RMAN-03009: failure of backup command on c1 channel at 02/14/2021 15:29:21
+RMAN-10035: exception raised in RPC:
+ORA-19624: operation failed, retry possible
+ORA-19505: failed to identify file "+PRD_FRA/prd/backupset/2021_02_13/annnf0_prd$oem_level_0_0.3504.1064408799"
+ORA-17503: ksfdopn:2 Failed to open file +PRD_FRA/prd/backupset/2021_02_13/annnf0_prd$oem_level_0_0.3504.1064408799
+ORA-15012: ASM file '+PRD_FRA/prd/backupset/2021_02_13/annnf0_prd$oem_level_0_0.3504.1064408799' does not exist
+ORA-19600: input file is backup piece  (+PRD_FRA/prd/backupset/2021_02_13/annnf0_prd$oem_level_0_0.3504.1064408799)
+RMAN-10031: RPC Error: ORA-19624  occurred during call to DBMS_BACKUP_RESTORE.BACKUPBACKUPPIECE

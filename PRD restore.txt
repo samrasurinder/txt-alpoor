@@ -1,0 +1,18 @@
+
+
+Target :  hrewoel29/30
+Total storage required: 3TB
+
+
+Staging area for backup-pieces to be placed ( from production AVAMAR whre RMAN backup-pieces stored): 
+----------------------------------------------------------------------------------------------------
+Require 1.5TB ( Not sure whether these piceces compressed, if compressed on Avamar side,
+we probably require less space)
+(This can be a regular filesystem mounted to either 29 or 30, doesn't have be shared)
+
+
+Restore area : 
+--------------
+
+This is where actual DB gets resoted to Requires 1.5 TB 
+need 500GB chunks of plain raw devices attached to either 29 or 30 or both
