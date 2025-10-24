@@ -1,0 +1,205 @@
+[root@hrvlcpydb7601 ~]# /home/grid/asm_disk_map_to_device.sh
+The ASM disk: 'DATA01' mapped to '/dev/sdi1'  Totalsize=214.7 GB,
+The ASM disk: 'DATA02' mapped to '/dev/sdj1'  Totalsize=214.7 GB,
+The ASM disk: 'DATA03' mapped to '/dev/sdk1'  Totalsize=214.7 GB,
+The ASM disk: 'DRSHARE01' mapped to '/dev/sdo1'  Totalsize=549.8 GB,
+The ASM disk: 'FRA01' mapped to '/dev/sdc1'  Totalsize=214.7 GB,
+The ASM disk: 'FRA02' mapped to '/dev/sdd1'  Totalsize=214.7 GB,
+The ASM disk: 'FRA03' mapped to '/dev/sde1'  Totalsize=214.7 GB,
+The ASM disk: 'OCR_VOTE1' mapped to '/dev/sdl1'  Totalsize=53.7 GB,
+[root@hrvlcpydb7601 ~]#
+
+[root@hrvlcpydb7601 ~]# blkid
+/dev/sdc1: LABEL="FRA01" TYPE="oracleasm"
+/dev/sdb1: UUID="0NWKdk-rvWr-5rdg-Arpm-BPfE-H0YE-Gni0UT" TYPE="LVM2_member"
+/dev/sdb2: UUID="sndvui-AkJ4-n8Gn-uwRW-w2AE-6Tq8-JHKape" TYPE="LVM2_member"
+/dev/sda1: UUID="492875b4-68cb-4a3e-a56d-b12097944fca" TYPE="xfs"
+/dev/sda2: UUID="bXU5wD-ySG0-iU7U-s4pv-Icx1-7WBo-ujlsfp" TYPE="LVM2_member"
+/dev/sda3: UUID="0SOwbk-cT7b-lEI4-X46J-6l2P-vR0t-PuoVPH" TYPE="LVM2_member"
+/dev/sdd1: LABEL="FRA02" TYPE="oracleasm"
+/dev/sde1: LABEL="FRA03" TYPE="oracleasm"
+/dev/sdj1: LABEL="DATA02" TYPE="oracleasm"
+/dev/sdl1: LABEL="OCR_VOTE1" TYPE="oracleasm"
+/dev/sdk1: LABEL="DATA03" TYPE="oracleasm"
+/dev/sdi1: LABEL="DATA01" TYPE="oracleasm"
+/dev/sdn1: UUID="3390e885-67d3-4f76-a06c-7951845ee619" TYPE="xfs"
+/dev/sdo1: LABEL="DRSHARE01" TYPE="oracleasm"
+/dev/mapper/basevg-root: UUID="ea475411-b99b-4f0b-91b7-501603c4877e" TYPE="xfs"
+/dev/mapper/basevg-swap: UUID="19f93685-64b3-41e7-8ced-35e54fe8c86d" TYPE="swap"
+/dev/mapper/basevg-usr: UUID="cbe42892-cb69-426a-9870-4a21fc6d4e7d" TYPE="xfs"
+/dev/mapper/basevg-home: UUID="799339aa-8ac3-44a9-9cfb-098c92420083" TYPE="xfs"
+/dev/mapper/basevg-var: UUID="915a0d40-c143-4cf9-a55e-a93c67be6d2f" TYPE="xfs"
+/dev/mapper/basevg-tmp: UUID="7bc1345c-36f6-4289-ac9e-e1242deabfa5" TYPE="xfs"
+/dev/mapper/basevg-var_log: UUID="72c738b1-59f1-4a9a-9b73-14c7e1adaf7b" TYPE="xfs"
+/dev/mapper/basevg-var_log_audit: UUID="ab52a7d1-c222-487e-b92b-7dd86fa38164" TYPE="xfs"
+[root@hrvlcpydb7601 ~]#
+
+
+/u02/app/12.2.0/grid/perl/bin/perl /u02/app/12.2.0/grid/crs/install/roothas.pl -deconfig -force -verbose
+
+
+
+[root@hrvlcpydb7601 app]# /u02/app/12.2.0/grid/perl/bin/perl /u02/app/12.2.0/grid/crs/install/roothas.pl -deconfig -force -verbose
+Using configuration parameter file: /u02/app/12.2.0/grid/crs/install/crsconfig_params
+The log of current session can be found at:
+  /u02/app/oracle/crsdata/hrvlcpydb7601/crsconfig/hadeconfig.log
+
+
+2020-07-22 18:25:13: Executing cmd: /etc/init.d/ohasd deinstall
+2020-07-22 18:25:13: Removing file /etc/init.d/ohasd
+2020-07-22 18:25:13:
+2020-07-22 18:25:13: Successfully removed file: /etc/init.d/ohasd
+2020-07-22 18:25:13: Remove /var/tmp/.oracle
+2020-07-22 18:25:13: Remove /tmp/.oracle
+2020-07-22 18:25:13: Remove /etc/oracle/lastgasp
+2020-07-22 18:25:13: Removing file /etc/oracle/ocr.loc.orig
+2020-07-22 18:25:13:
+2020-07-22 18:25:13: Successfully removed file: /etc/oracle/ocr.loc.orig
+2020-07-22 18:25:13: Removing file /etc/oracle/olr.loc.orig
+2020-07-22 18:25:13:
+2020-07-22 18:25:13: Successfully removed file: /etc/oracle/olr.loc.orig
+2020-07-22 18:25:13: Executing cmd: /u02/app/12.2.0/grid/bin/clsecho -p has -f clsrsc -m 337
+2020-07-22 18:25:13: Command output:
+>  CLSRSC-337: Successfully deconfigured Oracle Restart stack
+>End Command output
+2020-07-22 18:25:13: CLSRSC-337: Successfully deconfigured Oracle Restart stack
+
+
+
+  
+dd if=/dev/zero of=/dev/sdl1 bs=32768 count=32768 conv=notrunc  
+
+
+
+
+[grid@hrvlcpydb7601 grid]$ ./gridSetup.sh -silent -ignorePrereqFailure -responseFile /u02/app/19.3.0/grid/install/response/gridsetup.rsp &
+[1] 8651
+[grid@hrvlcpydb7601 grid]$ Launching Oracle Grid Infrastructure Setup Wizard...
+
+[WARNING] [INS-41812] OSDBA and OSASM are the same OS group.
+   CAUSE: The chosen values for OSDBA group and the chosen value for OSASM group are the same.
+   ACTION: Select an OS group that is unique for ASM administrators. The OSASM group should not be the same as the OS groups that grant privileges for Oracle ASM access, or for database administration.
+[WARNING] [INS-41874] Oracle ASM Administrator (OSASM) Group specified is same as the inventory group.
+   CAUSE: Operating system group oinstall specified for OSASM Group is same as the inventory group.
+   ACTION: It is not recommended to have OSASM group same as inventory group. Select any of the group other than the inventory group to avoid incorrect configuration.
+[WARNING] [INS-13014] Target environment does not meet some optional requirements.
+   CAUSE: Some of the optional prerequisites are not met. See logs for details. /u02/app/oraInventory/logs/GridSetupActions2020-07-22_06-53-37PM/gridSetupActions2020-07-22_06-53-37PM.log
+   ACTION: Identify the list of failed prerequisite checks from the log: /u02/app/oraInventory/logs/GridSetupActions2020-07-22_06-53-37PM/gridSetupActions2020-07-22_06-53-37PM.log. Then either from the log file or from installation manual find the appropriate configuration to meet the prerequisites and fix it manually.
+The response file for this session can be found at:
+ /u02/app/19.3.0/grid/install/response/grid_2020-07-22_06-53-37PM.rsp
+
+You can find the log of this install session at:
+ /u02/app/oraInventory/logs/GridSetupActions2020-07-22_06-53-37PM/gridSetupActions2020-07-22_06-53-37PM.log
+
+As a root user, execute the following script(s):
+        1. /u02/app/19.3.0/grid/root.sh
+
+Execute /u02/app/19.3.0/grid/root.sh on the following nodes:
+[hrvlcpydb7601]
+
+
+
+Successfully Setup Software with warning(s).
+As install user, execute the following command to complete the configuration.
+        /u02/app/19.3.0/grid/gridSetup.sh -executeConfigTools -responseFile /u02/app/19.3.0/grid/install/response/gridsetup.rsp [-silent]
+
+
+
+[root@hrvlcpydb7601 ~]# /u02/app/19.3.0/grid/root.sh &
+[1] 15754
+[root@hrvlcpydb7601 ~]# Check /u02/app/19.3.0/grid/install/root_hrvlcpydb7601.hr.state.sbu_2020-07-22_18-55-51-573720637.log for the output of root script
+
+
+[root@hrvlcpydb7601 ~]# tail -f /u02/app/19.3.0/grid/install/root_hrvlcpydb7601.hr.state.sbu_2020-07-22_18-55-51-573720637.lo
+tail: cannot open â/u02/app/19.3.0/grid/install/root_hrvlcpydb7601.hr.state.sbu_2020-07-22_18-55-51-573720637.loâ for reading: No such file or directory
+tail: no files remaining
+[root@hrvlcpydb7601 ~]# tail -f /u02/app/19.3.0/grid/install/root_hrvlcpydb7601.hr.state.sbu_2020-07-22_18-55-51-573720637.log
+2020/07/22 18:56:07 CLSRSC-363: User ignored prerequisites during installation
+LOCAL ADD MODE
+Creating OCR keys for user 'grid', privgrp 'oinstall'..
+Operation successful.
+LOCAL ONLY MODE
+Successfully accumulated necessary OCR keys.
+Creating OCR keys for user 'root', privgrp 'root'..
+Operation successful.
+CRS-4664: Node hrvlcpydb7601 successfully pinned.
+2020/07/22 18:56:16 CLSRSC-330: Adding Clusterware entries to file 'oracle-ohasd.service'
+
+hrvlcpydb7601     2020/07/22 18:56:59     /u02/app/grid/crsdata/hrvlcpydb7601/olr/backup_20200722_185659.olr     724960844
+2020/07/22 18:57:00 CLSRSC-327: Successfully configured Oracle Restart for a standalone server
+
+
+
+[grid@hrvlcpydb7601 ~]$  /u02/app/19.3.0/grid/gridSetup.sh -executeConfigTools -responseFile /u02/app/19.3.0/grid/install/response/gridsetup.rsp -silent &
+[1] 17884
+[grid@hrvlcpydb7601 ~]$ Launching Oracle Grid Infrastructure Setup Wizard...
+
+You can find the logs of this session at:
+/u02/app/oraInventory/logs/GridSetupActions2020-07-22_06-57-58PM
+
+
+
+[root@hrvlcpydb7601 OPatch]# ./opatchauto apply /u02/PSU/APR2020/30783556/30805684 -oh /u02/app/19.3.0/grid/ &
+[1] 23891
+[root@hrvlcpydb7601 OPatch]#
+OPatchauto session is initiated at Wed Jul 22 19:16:57 2020
+
+System initialization log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchautodb/systemconfig2020-07-22_07-17-01PM.log.
+
+Session log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchauto/opatchauto2020-07-22_07-17-06PM.log
+The id for this session is Q4BA
+
+Executing OPatch prereq operations to verify patch applicability on home /u02/app/19.3.0/grid
+Patch applicability verified successfully on home /u02/app/19.3.0/grid
+
+
+Bringing down CRS service on home /u02/app/19.3.0/grid
+Prepatch operation log file location: /u02/app/grid/crsdata/hrvlcpydb7601/crsconfig/hapatch_2020-07-22_07-17-14PM.log
+CRS service brought down successfully on home /u02/app/19.3.0/grid
+
+
+Start applying binary patch on home /u02/app/19.3.0/grid
+
+
+[root@hrvlcpydb7601 OPatch]#  ./opatchauto apply /u02/PSU/APR2020/30783556/30899722/ -oh /u02/app/19.3.0/grid/ &
+[1] 28893
+[root@hrvlcpydb7601 OPatch]#
+OPatchauto session is initiated at Wed Jul 22 19:21:17 2020
+
+System initialization log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchautodb/systemconfig2020-07-22_07-21-22PM.log.
+
+Session log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchauto/opatchauto2020-07-22_07-21-26PM.log
+The id for this session is XESR
+
+
+
+[root@hrvlcpydb7601 OPatch]#  ./opatchauto apply /u02/PSU/APR2020/30783556/30899722/ -oh /u02/app/19.3.0/grid/ &
+[1] 28893
+[root@hrvlcpydb7601 OPatch]#
+OPatchauto session is initiated at Wed Jul 22 19:21:17 2020
+
+System initialization log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchautodb/systemconfig2020-07-22_07-21-22PM.log.
+
+Session log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchauto/opatchauto2020-07-22_07-21-26PM.log
+The id for this session is XESR
+
+Executing OPatch prereq operations to verify patch applicability on home /u02/app/19.3.0/grid
+Patch applicability verified successfully on home /u02/app/19.3.0/grid
+
+
+Bringing down CRS service on home /u02/app/19.3.0/grid
+Prepatch operation log file location: /u02/app/grid/crsdata/hrvlcpydb7601/crsconfig/hapatch_2020-07-22_07-21-54PM.log
+CRS service brought down successfully on home /u02/app/19.3.0/grid
+
+
+Start applying binary patch on home /u02/app/19.3.0/grid
+
+
+DELETE_DRSHARE_BACKUPS /bin/bash /infshare/oracle/scripts/dba/delete_drshare_backup.bash hrvlprddb7602.hr.state.sbu
+OPSSTBY_BACKUP_TO_DRSHARE /infshare/oracle/scripts/backup/RMAN_BACKUP_FOR_REFRESH_DRSHARE.bash OPSSTBY 	hrvlprddb7602.hr.state.sbu
+DISMOUNT_DRSHARE_DISKGROUP /bin/bash /infshare/oracle/scripts/dba/umount_drshare.bash hrvlprddb7602.hr.state.sbu
+MOUNT_DRSHARE /u02/app/oracle/scripts/dba/mount_drshare.bash hrvlcpydb7601.hr.state.sbu
+REFRESH_OPSCPY1 /u02/app/oracle/scripts/refresh/ops.bash hrvlcpydb7601.hr.state.sbu
+DISMOUNT_DRSHARE /u02/app/oracle/scripts/dba/dismount_drshare.bash hrvlcpydb7601.hr.state.sbu
+
+

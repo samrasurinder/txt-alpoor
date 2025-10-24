@@ -1,0 +1,96 @@
+on hrewoel06
+------------
+/infshare/oracle/backup/OPS/0823/hotbkp.bash (backup takes 15 minutes)
+scp /infshare/oracle/backup/OPS/0823/*.* oracle@hrvlprddb7601:/hrinffp1001/Output/backup/OPS/0823
+
+
+alter system enable restricted session ;
+
+
+ALTER DATABASE DROP LOGFILE GROUP 3;
+
+
+col comp_id format a10
+col comp_name format a30
+col version format a10
+col status format a8
+select substr(comp_id,1,15) comp_id,substr(comp_name,1,30) comp_name,substr(version,1,10) version,status from dba_registry;
+
+
+
+SQL> select group#,thread# from v$log;
+
+    GROUP#    THREAD#
+---------- ----------
+         1          1
+         2          1
+         3          1
+         4          2
+         5          2
+         6          2
+         7          3
+         8          3
+         9          3
+
+9 rows selected.
+
+SQL>
+
+
+ALTER DATABASE DISABLE THREAD 2;
+ALTER DATABASE DISABLE THREAD 3;
+
+ALTER DATABASE DROP LOGFILE GROUP 4;
+
+
+db_recovery_file_dest_size=644245094400
+db_recovery_file_dest='+OPS_FRA'
+
+
+alter system set resource_limit=FALSE scope=both;
+
+
+On Primary:
+----------
+
+ALTER DATABASE ADD STANDBY LOGFILE THREAD 1 '+OPS_FRA' SIZE 270M ;
+ALTER DATABASE ADD STANDBY LOGFILE THREAD 1 '+OPS_FRA' SIZE 270M ;
+ALTER DATABASE ADD STANDBY LOGFILE THREAD 1 '+OPS_FRA' SIZE 270M ;
+ALTER DATABASE ADD STANDBY LOGFILE THREAD 1 '+OPS_FRA' SIZE 270M ;
+SELECT GROUP#,THREAD#,SEQUENCE#,ARCHIVED,STATUS FROM V$STANDBY_LOG;
+
+ALTER SYSTEM SET LOG_ARCHIVE_CONFIG='DG_CONFIG=(OPS,OPSSTBY)' scope=BOTH;
+ALTER SYSTEM SET LOG_ARCHIVE_DEST_2= 'SERVICE=OPSSTBY ASYNC VALID_FOR=(ONLINE_LOGFILES,PRIMARY_ROLE) DB_UNIQUE_NAME=OPSSTBY' scope=BOTH;
+
+ALTER SYSTEM SET ARCHIVE_LAG_TARGET=1800 scope=BOTH;
+alter system set FAL_SERVER ='OPSSTBY' scope=BOTH;
+alter system set STANDBY_FILE_MANAGEMENT='AUTO' scope=BOTH;
+
+
+ALTER SYSTEM SET DB_FILE_NAME_CONVERT='OPSSTBY_DATA','OPS_DATA' SCOPE=BOTH;
+ALTER SYSTEM SET LOG_FILE_NAME_CONVERT='OPSSTBY_FRA','OPS_FRA'  SCOPE=BOTH;
+
+
+SET DB_FILE_NAME_CONVERT='OPS_DATA','OPSSTBY_DATA' 
+SET LOG_FILE_NAME_CONVERT='OPS_FRA','OPSSTBY_FRA'  
+
+
+
+alter system set DB_FLASHBACK_RETENTION_TARGET =2880 scope=BOTH;
+ALTER DATABASE FLASHBACK ON;
+
+
+
+
+alter diskgroup OPS_DATA add alias '+ops_data/ops/spfileOPS.ora' for '+ops_data/ops/parameterfile/spfile.390.1017061107';
+
+
+
+alter diskgroup OPS_DATA add alias '+ops_data/ops/spfileOPS.ora' for '+OPS_DATA/OPS/PARAMETERFILE/spfile.343.1017097837'
+
+
+
+
+
+
+

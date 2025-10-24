@@ -1,0 +1,83 @@
+TST RAC - 3 nodes
+------------------
+
+SCAN name: TST2-EW-SCAN.hr.state.sbu, Network: 1
+
+SCAN 1 IPv4 VIP: 10.68.26.214
+SCAN VIP is enabled.
+SCAN 2 IPv4 VIP: 10.68.26.215
+SCAN VIP is enabled.
+SCAN 3 IPv4 VIP: 10.68.26.216
+SCAN VIP is enabled.
+
+10.68.26.232    hrvltstdb20.washdc.state.sbu        hrvltstdb20
+10.68.26.207    hrvltstdb20-vip
+192.168.10.60   hrvltstdb20-priv1
+192.168.20.60   hrvltstdb20-priv2
+192.168.155.232 hrvltstdb20-sl
+
+10.68.26.233    hrvltstdb21.washdc.state.sbu        hrvltstdb21
+10.68.26.208    hrvltstdb21-vip
+192.168.10.61   hrvltstdb21-priv1
+192.168.20.61   hrvltstdb21-priv2
+192.168.155.233 hrvltstdb21-sl
+
+
+10.68.26.234    hrvltstdb22.washdc.state.sbu        hrvltstdb22
+10.68.26.209    hrvltstdb22-vip
+192.168.10.62   hrvltstdb22-priv1
+192.168.20.62   hrvltstdb22-priv2
+192.168.155.234 hrvltstdb22-sl
+
+
+
+
+
+
+
+CPY RAC - 2 nodes
+-----------------
+
+SCAN name: CPY2-EW-SCAN.hr.state.sbu, Network: 1
+SCAN 1 IPv4 VIP: 10.68.26.217
+SCAN VIP is enabled.
+SCAN 2 IPv4 VIP: 10.68.26.218
+SCAN VIP is enabled.
+SCAN 3 IPv4 VIP: 10.68.26.219
+
+10.68.26.237    hrvlcpydb25.washdc.state.sbu    hrvlcpydb25
+10.68.26.212    hrvlcpydb25-vip
+192.168.10.65   hrvlcpydb25-priv1
+192.168.20.65   hrvlcpydb25-priv2
+192.168.155.237 hrvlcpydb25-sl
+
+10.68.26.238    hrvlcpydb26.washdc.state.sbu        hrvlcpydb26
+10.68.26.213    hrvlcpydb26-vip
+192.168.10.66   hrvlcpydb26-priv1
+192.168.20.66   hrvlcpydb26-priv2
+192.168.155.238 hrvlcpydb26-sl
+
+
+TRN RAC - 2 nodes
+-----------------
+
+
+SCAN name: TRN2-EW-SCAN.hr.state.sbu, Network: 1
+
+SCAN 1 IPv4 VIP: 10.68.26.225
+SCAN VIP is enabled.
+SCAN 2 IPv4 VIP: 10.68.26.226
+SCAN VIP is enabled.
+SCAN 3 IPv4 VIP: 10.68.26.224
+
+10.68.26.235    hrvltrndb23.washdc.state.sbu        hrvltrndb23
+10.68.26.210    hrvltrndb23-vip
+192.168.10.63   hrvltrndb23-priv1
+192.168.20.63   hrvltrndb23-priv2
+192.168.155.235 hrvltrndb23-sl
+
+10.68.26.236    hrvltrndb24.washdc.state.sbu        hrvltrndb24
+10.68.26.211    hrvltrndb24-vip
+192.168.10.64   hrvltrndb24-priv1
+192.168.20.64   hrvltrndb24-priv2
+192.168.155.236 hrvltrndb24-sl

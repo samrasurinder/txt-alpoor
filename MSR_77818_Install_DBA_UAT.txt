@@ -1,0 +1,130 @@
+SQL> SET SERVEROUTPUT ON
+SQL> 
+SQL> select * from global_name;
+
+GLOBAL_NAME                                                                     
+--------------------------------------------------------------------------------
+UAT.HR.STATE.SBU                                                                
+
+SQL> 
+SQL> show user;
+USER is "DEPLOY_USER"
+SQL> 
+SQL> select sysdate from dual;
+
+SYSDATE                                                                         
+---------                                                                       
+05-JAN-22                                                                       
+
+SQL> 
+SQL> BEGIN
+  2  DBMS_OUTPUT.PUT_LINE('--BACKUP GRANTS FOR BACKOUT SCRIPT BEGIN--');
+  3  FOR DW_PRIVS IN (select 'GRANT '|| PRIVILEGE ||' ON SYSADM.'||TABLE_NAME||' TO '||GRANTEE||';' AS PRIV from dba_tab_privs where OWNER = 'SYSADM' and GRANTEE = 'DW' AND PRIVILEGE NOT IN ( 'SELECT','EXECUTE')) LOOP
+  4  DBMS_OUTPUT.PUT_LINE(DW_PRIVS.PRIV);
+  5  END LOOP;
+  6  DBMS_OUTPUT.PUT_LINE('--BACKUP GRANTS FOR BACKOUT SCRIPT END--');
+  7  DBMS_OUTPUT.PUT_LINE('--REVOKING EXTRANEOUS DW GRANTS BEGIN--');
+  8  FOR DW_PRIVS IN (select 'REVOKE '|| PRIVILEGE ||' ON SYSADM.'||TABLE_NAME||' FROM '||GRANTEE||'' AS PRIV from dba_tab_privs where OWNER = 'SYSADM' and GRANTEE = 'DW' AND PRIVILEGE NOT IN ( 'SELECT','EXECUTE')) LOOP
+  9  DBMS_OUTPUT.PUT_LINE(DW_PRIVS.PRIV);
+ 10  EXECUTE IMMEDIATE DW_PRIVS.PRIV;
+ 11  END LOOP;
+ 12  DBMS_OUTPUT.PUT_LINE('--REVOKING EXTRANEOUS DW GRANTS END--');
+ 13  END;
+ 14  /
+--BACKUP GRANTS FOR BACKOUT SCRIPT BEGIN--                                      
+GRANT ALTER ON SYSADM.PS_CITIZENSHIP TO DW;                                     
+GRANT ALTER ON SYSADM.PS_COUNTRY_TBL TO DW;                                     
+GRANT DELETE ON SYSADM.PS_CITIZENSHIP TO DW;                                    
+GRANT DELETE ON SYSADM.PS_GM_PE_BRD_INFO TO DW;                                 
+GRANT DELETE ON SYSADM.PS_GM_PE_EMP_INFO TO DW;                                 
+GRANT DELETE ON SYSADM.PS_DEPENDENT_BENEF TO DW;                                
+GRANT DELETE ON SYSADM.PS_GVT_JOB TO DW;                                        
+GRANT DELETE ON SYSADM.PS_COUNTRY_TBL TO DW;                                    
+GRANT DELETE ON SYSADM.PS_POSITION_DATA TO DW;                                  
+GRANT DELETE ON SYSADM.PS_GM_SALEXP_DATA TO DW;                                 
+GRANT INDEX ON SYSADM.PS_CITIZENSHIP TO DW;                                     
+GRANT INDEX ON SYSADM.PS_COUNTRY_TBL TO DW;                                     
+GRANT INSERT ON SYSADM.PS_CITIZENSHIP TO DW;                                    
+GRANT INSERT ON SYSADM.PS_GM_PE_BRD_INFO TO DW;                                 
+GRANT INSERT ON SYSADM.PS_GM_PE_EMP_INFO TO DW;                                 
+GRANT INSERT ON SYSADM.PS_DEPENDENT_BENEF TO DW;                                
+GRANT INSERT ON SYSADM.PS_GVT_JOB TO DW;                                        
+GRANT INSERT ON SYSADM.PS_COUNTRY_TBL TO DW;                                    
+GRANT INSERT ON SYSADM.PS_POSITION_DATA TO DW;                                  
+GRANT INSERT ON SYSADM.PS_GM_SALEXP_DATA TO DW;                                 
+GRANT UPDATE ON SYSADM.PS_CITIZENSHIP TO DW;                                    
+GRANT UPDATE ON SYSADM.PS_GM_PE_BRD_INFO TO DW;                                 
+GRANT UPDATE ON SYSADM.PS_GM_PE_EMP_INFO TO DW;                                 
+GRANT UPDATE ON SYSADM.PS_DEPENDENT_BENEF TO DW;                                
+GRANT UPDATE ON SYSADM.PS_GVT_JOB TO DW;                                        
+GRANT UPDATE ON SYSADM.PS_COUNTRY_TBL TO DW;                                    
+GRANT UPDATE ON SYSADM.PS_POSITION_DATA TO DW;                                  
+GRANT UPDATE ON SYSADM.PS_GM_SALEXP_DATA TO DW;                                 
+GRANT REFERENCES ON SYSADM.PS_CITIZENSHIP TO DW;                                
+GRANT REFERENCES ON SYSADM.PS_DEPENDENT_BENEF TO DW;                            
+GRANT REFERENCES ON SYSADM.PS_COUNTRY_TBL TO DW;                                
+GRANT ON COMMIT REFRESH ON SYSADM.PS_CITIZENSHIP TO DW;                         
+GRANT ON COMMIT REFRESH ON SYSADM.PS_DEPENDENT_BENEF TO DW;                     
+GRANT ON COMMIT REFRESH ON SYSADM.PS_COUNTRY_TBL TO DW;                         
+GRANT QUERY REWRITE ON SYSADM.PS_CITIZENSHIP TO DW;                             
+GRANT QUERY REWRITE ON SYSADM.PS_DEPENDENT_BENEF TO DW;                         
+GRANT QUERY REWRITE ON SYSADM.PS_COUNTRY_TBL TO DW;                             
+GRANT DEBUG ON SYSADM.PS_CITIZENSHIP TO DW;                                     
+GRANT DEBUG ON SYSADM.PS_DEPENDENT_BENEF TO DW;                                 
+GRANT DEBUG ON SYSADM.PS_COUNTRY_TBL TO DW;                                     
+GRANT FLASHBACK ON SYSADM.PS_CITIZENSHIP TO DW;                                 
+GRANT FLASHBACK ON SYSADM.PS_DEPENDENT_BENEF TO DW;                             
+GRANT FLASHBACK ON SYSADM.PS_COUNTRY_TBL TO DW;                                 
+--BACKUP GRANTS FOR BACKOUT SCRIPT END--                                        
+--REVOKING EXTRANEOUS DW GRANTS BEGIN--                                         
+REVOKE ALTER ON SYSADM.PS_CITIZENSHIP FROM DW                                   
+REVOKE ALTER ON SYSADM.PS_COUNTRY_TBL FROM DW                                   
+REVOKE DELETE ON SYSADM.PS_CITIZENSHIP FROM DW                                  
+REVOKE DELETE ON SYSADM.PS_GM_PE_BRD_INFO FROM DW                               
+REVOKE DELETE ON SYSADM.PS_GM_PE_EMP_INFO FROM DW                               
+REVOKE DELETE ON SYSADM.PS_DEPENDENT_BENEF FROM DW                              
+REVOKE DELETE ON SYSADM.PS_GVT_JOB FROM DW                                      
+REVOKE DELETE ON SYSADM.PS_COUNTRY_TBL FROM DW                                  
+REVOKE DELETE ON SYSADM.PS_GM_SALEXP_DATA FROM DW                               
+REVOKE DELETE ON SYSADM.PS_POSITION_DATA FROM DW                                
+REVOKE INDEX ON SYSADM.PS_CITIZENSHIP FROM DW                                   
+REVOKE INDEX ON SYSADM.PS_COUNTRY_TBL FROM DW                                   
+REVOKE INSERT ON SYSADM.PS_CITIZENSHIP FROM DW                                  
+REVOKE INSERT ON SYSADM.PS_GM_PE_BRD_INFO FROM DW                               
+REVOKE INSERT ON SYSADM.PS_GM_PE_EMP_INFO FROM DW                               
+REVOKE INSERT ON SYSADM.PS_DEPENDENT_BENEF FROM DW                              
+REVOKE INSERT ON SYSADM.PS_GVT_JOB FROM DW                                      
+REVOKE INSERT ON SYSADM.PS_COUNTRY_TBL FROM DW                                  
+REVOKE INSERT ON SYSADM.PS_GM_SALEXP_DATA FROM DW                               
+REVOKE INSERT ON SYSADM.PS_POSITION_DATA FROM DW                                
+REVOKE UPDATE ON SYSADM.PS_CITIZENSHIP FROM DW                                  
+REVOKE UPDATE ON SYSADM.PS_GM_PE_BRD_INFO FROM DW                               
+REVOKE UPDATE ON SYSADM.PS_GM_PE_EMP_INFO FROM DW                               
+REVOKE UPDATE ON SYSADM.PS_DEPENDENT_BENEF FROM DW                              
+REVOKE UPDATE ON SYSADM.PS_GVT_JOB FROM DW                                      
+REVOKE UPDATE ON SYSADM.PS_COUNTRY_TBL FROM DW                                  
+REVOKE UPDATE ON SYSADM.PS_GM_SALEXP_DATA FROM DW                               
+REVOKE UPDATE ON SYSADM.PS_POSITION_DATA FROM DW                                
+REVOKE REFERENCES ON SYSADM.PS_CITIZENSHIP FROM DW                              
+REVOKE REFERENCES ON SYSADM.PS_DEPENDENT_BENEF FROM DW                          
+REVOKE REFERENCES ON SYSADM.PS_COUNTRY_TBL FROM DW                              
+REVOKE ON COMMIT REFRESH ON SYSADM.PS_CITIZENSHIP FROM DW                       
+REVOKE ON COMMIT REFRESH ON SYSADM.PS_DEPENDENT_BENEF FROM DW                   
+REVOKE ON COMMIT REFRESH ON SYSADM.PS_COUNTRY_TBL FROM DW                       
+REVOKE QUERY REWRITE ON SYSADM.PS_CITIZENSHIP FROM DW                           
+REVOKE QUERY REWRITE ON SYSADM.PS_DEPENDENT_BENEF FROM DW                       
+REVOKE QUERY REWRITE ON SYSADM.PS_COUNTRY_TBL FROM DW                           
+REVOKE DEBUG ON SYSADM.PS_CITIZENSHIP FROM DW                                   
+REVOKE DEBUG ON SYSADM.PS_DEPENDENT_BENEF FROM DW                               
+REVOKE DEBUG ON SYSADM.PS_COUNTRY_TBL FROM DW                                   
+REVOKE FLASHBACK ON SYSADM.PS_CITIZENSHIP FROM DW                               
+REVOKE FLASHBACK ON SYSADM.PS_DEPENDENT_BENEF FROM DW                           
+REVOKE FLASHBACK ON SYSADM.PS_COUNTRY_TBL FROM DW                               
+--REVOKING EXTRANEOUS DW GRANTS END--                                           
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> SHOW ERRORS
+No errors.
+SQL> SPOOL OFF

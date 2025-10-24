@@ -1,0 +1,307 @@
+
+
+Format disks:-
+
+[root@hrvltstdb7602 dev]# ls -ltr sdd
+brw-rw----. 1 root disk 8, 48 Oct 24 10:02 sdd
+[root@hrvltstdb7602 dev]# ls -ltr sde
+brw-rw----. 1 root disk 8, 64 Oct 24 10:02 sde
+[root@hrvltstdb7602 dev]# fdisk /dev/sdd
+Welcome to fdisk (util-linux 2.23.2).
+
+Changes will remain in memory only, until you decide to write them.
+Be careful before using the write command.
+
+Device does not contain a recognized partition table
+Building a new DOS disklabel with disk identifier 0xff929413.
+
+Command (m for help): n
+Partition type:
+   p   primary (0 primary, 0 extended, 4 free)
+   e   extended
+Select (default p): p
+Partition number (1-4, default 1): 1
+First sector (2048-532676607, default 2048):
+Using default value 2048
+Last sector, +sectors or +size{K,M,G} (2048-532676607, default 532676607):
+Using default value 532676607
+Partition 1 of type Linux and of size 254 GiB is set
+
+Command (m for help): w
+The partition table has been altered!
+
+Calling ioctl() to re-read partition table.
+Syncing disks.
+********** 2nd disk*************
+[root@hrvltstdb7602 dev]# fdisk /dev/sde
+Welcome to fdisk (util-linux 2.23.2).
+
+Changes will remain in memory only, until you decide to write them.
+Be careful before using the write command.
+
+Device does not contain a recognized partition table
+Building a new DOS disklabel with disk identifier 0x0d8648d3.
+
+Command (m for help): n
+Partition type:
+   p   primary (0 primary, 0 extended, 4 free)
+   e   extended
+Select (default p): p
+Partition number (1-4, default 1): 1
+First sector (2048-2143289343, default 2048):
+Using default value 2048
+Last sector, +sectors or +size{K,M,G} (2048-2143289343, default 2143289343):
+Using default value 2143289343
+
+Partition 1 of type Linux and of size 1022 GiB is set
+
+Command (m for help): w
+The partition table has been altered!
+
+Calling ioctl() to re-read partition table.
+Syncing disks.
+
+********************************
+[root@hrvltstdb7602 dev]# ls -ltr /dev/sdd*
+brw-rw----. 1 root disk 8, 48 Oct 24 15:38 /dev/sdd
+brw-rw----. 1 root disk 8, 49 Oct 24 15:38 /dev/sdd1
+[root@hrvltstdb7602 dev]# ls -ltr /dev/sde*
+brw-rw----. 1 root disk 8, 64 Oct 24 15:56 /dev/sde
+brw-rw----. 1 root disk 8, 65 Oct 24 15:56 /dev/sde1
+[root@hrvltstdb7602 dev]#
+****************************************************
+[root@hrvltstdb7602 dev]# fdisk -l |grep sdd
+Disk /dev/sdd: 272.7 GB, 272730423296 bytes, 532676608 sectors
+/dev/sdd1            2048   532676607   266337280   83  Linux
+[root@hrvltstdb7602 dev]# fdisk -l |grep sde
+Disk /dev/sde: 1097.4 GB, 1097364144128 bytes, 2143289344 sectors
+/dev/sde1            2048  2143289343  1071643648   83  Linux
+******************************************************
+Install Oracle ASMLIB
+
+yum install kmod-oracleasm
+**********************************************************
+oracleasm createdisk DATA01 /dev/sde1
+oracleasm createdisk FRA01 /dev/sdd1
+**************************************
+[root@hrvltstdb7602 dev]# oracleasm createdisk DATA01 /dev/sde1
+Writing disk header: done
+Instantiating disk: done
+[root@hrvltstdb7602 dev]# oracleasm createdisk FRA01 /dev/sdd1
+Writing disk header: done
+Instantiating disk: done
+[root@hrvltstdb7602 dev]# oracleasm scandisks
+Reloading disk partitions: done
+Cleaning any stale ASM disks...
+Scanning system for ASM disks...
+[root@hrvltstdb7602 dev]# oracleasm listdisks
+DATA01
+FRA01
+[root@hrvltstdb7602 dev]#
+
+*************************************
+[root@hrvltstdb7602 disks]# pwd
+/dev/oracleasm/disks
+[root@hrvltstdb7602 disks]# ls -ltrh
+total 0
+brw-rw----. 1 grid oinstall 8, 65 Oct 24 16:21 DATA01
+brw-rw----. 1 grid oinstall 8, 49 Oct 24 16:21 FRA01
+[root@hrvltstdb7602 disks]#
+
+************************************************
+UPDAte Response File:-
+
+[grid@hrvltstdb7602 response]$ pwd
+/u02/app/19.3.0/grid/install/response
+[grid@hrvltstdb7602 response]$
+
+***********************
+[grid@hrvltstdb7602 grid]$ pwd
+/u02/app/19.3.0/grid
+[grid@hrvltstdb7602 grid]$ ./runcluvfy.sh stage -pre hacfg
+*******************************************
+
+./gridSetup.sh -silent -ignorePrereqFailure -responseFile  /u02/app/19.3.0/grid/install/response/gridsetup.rsp
+
+[grid@hrvltstdb7602 grid]$ ls -ltr gridSetup.sh
+-rwxr-x---. 1 grid oinstall 3294 Mar  8  2017 gridSetup.sh
+[grid@hrvltstdb7602 grid]$ ./gridSetup.sh -silent -ignorePrereqFailure -responseFile  /u02/app/19.3.0/grid/install/response/gridsetup.rsp &
+[1] 2217
+[grid@hrvltstdb7602 grid]$ Launching Oracle Grid Infrastructure Setup Wizard...
+
+
+[grid@hrvltstdb7602 grid]$ [WARNING] [INS-41812] OSDBA and OSASM are the same OS group.
+   CAUSE: The chosen values for OSDBA group and the chosen value for OSASM group are the same.
+   ACTION: Select an OS group that is unique for ASM administrators. The OSASM group should not be the same as the OS groups that grant privileges for Oracle ASM access, or for database administration.
+[WARNING] [INS-41875] Oracle ASM Administrator (OSASM) Group specified is same as the users primary group.
+   CAUSE: Operating system group oinstall specified for OSASM Group is same as the users primary group.
+   ACTION: It is not recommended to have OSASM group same as primary group of user as it becomes the inventory group. Select any of the group other than the primary group to avoid misconfiguration.
+[WARNING] [INS-13014] Target environment does not meet some optional requirements.
+   CAUSE: Some of the optional prerequisites are not met. See logs for details. gridSetupActions2019-10-24_04-42-28PM.log
+   ACTION: Identify the list of failed prerequisite checks from the log: gridSetupActions2019-10-24_04-42-28PM.log. Then either from the log file or from installation manual find the appropriate configuration to meet the prerequisites and fix it manually.
+The response file for this session can be found at:
+ /u02/app/19.3.0/grid/install/response/grid_2019-10-24_04-42-28PM.rsp
+
+You can find the log of this install session at:
+ /tmp/GridSetupActions2019-10-24_04-42-28PM/gridSetupActions2019-10-24_04-42-28PM.log
+As a root user, execute the following script(s):
+        1. /u02/app/oraInventory/orainstRoot.sh
+        2. /u02/app/19.3.0/grid/root.sh
+
+Execute /u02/app/19.3.0/grid/root.sh on the following nodes:
+******************
+[root@hrvltstdb7602 disks]# /u02/app/oraInventory/orainstRoot.sh
+Changing permissions of /u02/app/oraInventory.
+Adding read,write permissions for group.
+Removing read,write,execute permissions for world.
+
+Changing groupname of /u02/app/oraInventory to oinstall.
+The execution of the script is complete.
+**
+[root@hrvltstdb7602 disks]# /u02/app/19.3.0/grid/root.sh
+Check /u02/app/19.3.0/grid/install/root_hrvltstdb7602.hr.state.sbu_2019-10-24_16-45-36-606453527.log for the output of root script
+[root@hrvltstdb7602 disks]#
+************************************************************************************************************
+[root@hrvltstdb7602 disks]# cd /u02/app/19.3.0//grid/bin
+[root@hrvltstdb7602 bin]# ./crsctl stat res -t
+--------------------------------------------------------------------------------
+Name           Target  State        Server                   State details
+--------------------------------------------------------------------------------
+Local Resources
+--------------------------------------------------------------------------------
+ora.ons
+               OFFLINE OFFLINE      hrvltstdb7602            STABLE
+--------------------------------------------------------------------------------
+Cluster Resources
+--------------------------------------------------------------------------------
+ora.cssd
+      1        OFFLINE OFFLINE                               STABLE
+ora.diskmon
+      1        OFFLINE OFFLINE                               STABLE
+ora.evmd
+      1        ONLINE  ONLINE       hrvltstdb7602            STABLE
+--------------------------------------------------------------------------------
+
+****************************************************************************
+** Configure ASM Instance:-
+[grid@hrvltstdb7602 ~]$ /u02/app/19.3.0/grid/gridSetup.sh -executeConfigTools -responseFile /u02/app/19.3.0/grid/install/response/gridsetup.rsp -silent
+Launching Oracle Grid Infrastructure Setup Wizard...
+
+You can find the logs of this session at:
+/u02/app/oraInventory/logs/GridSetupActions2019-10-24_04-52-43PM
+
+You can find the log of this install session at:
+ /u02/app/oraInventory/logs/UpdateNodeList2019-10-24_04-52-43PM.log
+Successfully Configured Software.
+[grid@hrvltstdb7602 ~]$
+
+***********************************
+[grid@hrvltstdb7602 ~]$ . oraenv
+ORACLE_SID = [grid] ? +ASM
+The Oracle base has been set to /u02/app/19.3.0
+[grid@hrvltstdb7602 ~]$ crsctl stat res -t
+--------------------------------------------------------------------------------
+Name           Target  State        Server                   State details
+--------------------------------------------------------------------------------
+Local Resources
+--------------------------------------------------------------------------------
+ora.LISTENER.lsnr
+               ONLINE  ONLINE       hrvltstdb7602            STABLE
+ora.PRD_DATA.dg
+               ONLINE  ONLINE       hrvltstdb7602            STABLE
+ora.asm
+               ONLINE  ONLINE       hrvltstdb7602            Started,STABLE
+ora.ons
+               OFFLINE OFFLINE      hrvltstdb7602            STABLE
+--------------------------------------------------------------------------------
+Cluster Resources
+--------------------------------------------------------------------------------
+ora.cssd
+      1        ONLINE  ONLINE       hrvltstdb7602            STABLE
+ora.diskmon
+      1        OFFLINE OFFLINE                               STABLE
+ora.evmd
+      1        ONLINE  ONLINE       hrvltstdb7602            STABLE
+--------------------------------------------------------------------------------
+
+
+[grid@hrvltstdb7602 ~]$ asmcmd lsdg
+State    Type    Rebal  Sector  Logical_Sector  Block       AU  Total_MB  Free_MB  Req_mir_free_MB  Usable_file_MB  Offline_disks  Voting_files  Name
+MOUNTED  EXTERN  N         512             512   4096  1048576   1046527  1046446                0         1046446              0             N  PRD_DATA/
+[grid@hrvltstdb7602 ~]$ sqlplus / as sysasm
+
+SQL*Plus: Release 19.0.0.0.0 - Production on Thu Oct 24 16:56:14 2019
+Version 19.3.0.0.0
+
+Copyright (c) 1982, 2019, Oracle.  All rights reserved.
+
+
+Connected to:
+Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production
+Version 19.3.0.0.0
+
+SQL> create diskgroup PRD_FRA external redundancy disk '/dev/oracleasm/disks/FRA01';
+
+Diskgroup created.
+
+SQL> alter diskgroup PRD_DATA set attribute 'compatible.asm' = '19.3.';
+
+Diskgroup altered.
+
+SQL> alter diskgroup PRD_FRA set attribute 'compatible.asm' = '19.3.';
+
+Diskgroup altered.
+
+SQL> alter diskgroup PRD_DATA set attribute 'compatible.rdbms' = '19.3.';
+
+Diskgroup altered.
+
+SQL> alter diskgroup PRD_FRA set attribute 'compatible.rdbms' = '19.3.';
+
+Diskgroup altered.
+*********************************************
+[grid@hrvltstdb7602 ~]$ crsctl query has softwareversion
+Oracle High Availability Services version on the local node is [19.0.0.0.0]
+[grid@hrvltstdb7602 ~]$ crsctl query has releasepatch
+Oracle Clusterware release patch level is [724960844] and the complete list of patches [29401763 29517242 29517247 29585399 ] have been applied on the local node. The release patch string is [19.3.0.0.0].
+[grid@hrvltstdb7602 ~]$ crsctl query has releaseversion
+Oracle High Availability Services release version on the local node is [19.0.0.0.0]
+
+**************************************************************************
+** Install Oracle DATABSE SOFTWARE
+-- Unzip the Oracle 19c db software in the Oracle Home
+
+[oracle@hrvltstdb7602 db_1]$ ./runInstaller -ignorePrereq -waitforcompletion  -silent -responseFile /u02/app/oracle/product/19.3.0/db_1/install/response/db_install.rsp
+Launching Oracle Database Setup Wizard...
+
+[WARNING] [INS-13013] Target environment does not meet some mandatory requirements.
+   CAUSE: Some of the mandatory prerequisites are not met. See logs for details. /u02/app/oraInventory/logs/InstallActions2019-10-24_05-13-46PM/installActions2019-10-24_05-13-46PM.log
+   ACTION: Identify the list of failed prerequisite checks from the log: /u02/app/oraInventory/logs/InstallActions2019-10-24_05-13-46PM/installActions2019-10-24_05-13-46PM.log. Then either from the log file or from installation manual find the appropriate configuration to meet the prerequisites and fix it manually.
+The response file for this session can be found at:
+ /u02/app/oracle/product/19.3.0/db_1/install/response/db_2019-10-24_05-13-46PM.rsp
+
+You can find the log of this install session at:
+ /u02/app/oraInventory/logs/InstallActions2019-10-24_05-13-46PM/installActions2019-10-24_05-13-46PM.log
+
+As a root user, execute the following script(s):
+        1. /u02/app/oracle/product/19.3.0/db_1/root.sh
+
+Execute /u02/app/oracle/product/19.3.0/db_1/root.sh on the following nodes:
+[hrvltstdb7602]
+
+
+Successfully Setup Software with warning(s).
+[oracle@hrvltstdb7602 db_1]$
+
+**root script Executed**
+[oracle@hrvltstdb7602 db_1]$ sudo su -
+[sudo] password for oracle:
+Last login: Thu Oct 24 15:55:41 EDT 2019 on pts/2
+Last login: Thu Oct 24 17:16:12 EDT 2019 on pts/2
+[root@hrvltstdb7602 ~]# /u02/app/oracle/product/19.3.0/db_1/root.sh
+Check /u02/app/oracle/product/19.3.0/db_1/install/root_hrvltstdb7602.hr.state.sbu_2019-10-24_17-16-21-331792461.log for the output of root script
+[root@hrvltstdb7602 ~]#
+************************************
+
+
+

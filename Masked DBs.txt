@@ -1,0 +1,36 @@
+Good Morning Everyone.
+
+After speaking with a number of folks, this is what we have:
+
+DEVKC
+Sourced from DEV1, therefore masked
+
+TSTKC1
+Sourced from TST1, therefore masked
+
+TSTKC2 
+Sourced from UAT, therefore non-masked.  Apparently TSTKC2 serves as the Knowledge Center UAT environment until the proposed, real UAT environment is stood up.  So, it appears that “TSTKC2” is not really the best name for the current use of this Knowledge Center environment.
+
+TSTKC2 originated long ago when it was necessary to source from more than one test database to load various application data into the KC. Over the years, TSTKC2 became the KC’s “UAT” source for SOD and customers to validate universe and reporting changes. 
+
+The KC team is in the process of standing up a UAT environment that will eventually replace the need to have unmasked data in test.
+
+This database wasn’t even on the masking radar, as can be seen by the below masking listing.
+
+
+HrOnline - DEV1, DEV2, EODDEV, EODDEV2, CRMDEV, CRMDEV2, OPSDEV1, OPSDEV2, DEVKC, SNCDEV1
+Overseas - HREWWDEVDB1218\DEV1, HREWWDEVDB1218\DEV2
+WebPass - HREWWDEVDB1002\POST, HREWWDEVDB1232\POST , HREWWDEVDB1231\CDB
+Kofax - HREWWDEVDB1217\DEV1_Kofax
+
+HrOnline - TST1, TST3, TST5, EODTST, EODTST2, CRMTST, CRMTST5, OPSTST1, OPSTST2, TSTKC1, SNCTST1
+Overseas - HREWWTSTDB1218\TST2
+
+HrOnline - IVV1, OPSIVV1
+Overseas - HREWWIVVDB1218\IVV1
+
+HrOnline - TRN1, TRN2, OPSTRN1
+Overseas - HREWWTRNDB1218\TRN1
+
+There are 5 known databases (TST2, TST4, OPSSTG1, OPSSTG2, OPSSTG3) that are on the exceptions list. These 5 databases will be masked once their exceptions are lifted. 
+

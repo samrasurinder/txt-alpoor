@@ -1,0 +1,27 @@
+Detailed report (html) -  /u01/ahf_data_dir/oracle.ahf/data//orachk/user_root/output/orachk_hrvltstdb20_TST2_040121_084147/orachk_hrvltstdb20_TST2_040121_084147.html
+
+
+
+
+
+UPLOAD [if required] - /u01/ahf_data_dir/oracle.ahf/data//orachk/user_root/output/orachk_hrvltstdb20_TST2_040121_084147.zip
+
+
+
+Detailed report (html) -  /u01/ahf_data_dir/oracle.ahf/data//orachk/user_root/output/orachk_hrvltstdb21_TST2_040121_090119/orachk_hrvltstdb21_TST2_040121_090119.html
+
+
+
+
+
+UPLOAD [if required] - /u01/ahf_data_dir/oracle.ahf/data//orachk/user_root/output/orachk_hrvltstdb21_TST2_040121_090119.zip
+
+
+Detailed report (html) -  /u01/ahf_data_dir/oracle.ahf/data//orachk/user_root/output/orachk_hrvltstdb22_TST2_040121_09193/orachk_hrvltstdb22_TST2_040121_09193.html
+
+
+
+
+
+UPLOAD [if required] - /u01/ahf_data_dir/oracle.ahf/data//orachk/user_root/output/orachk_hrvltstdb22_TST2_040121_09193.zip
+

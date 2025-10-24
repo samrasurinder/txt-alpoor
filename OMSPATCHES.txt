@@ -1,0 +1,454 @@
+[oracle@hostnameoem7603 alpoor_scripts]$  omspatcher lspatches
+OMSPatcher Automation Tool
+Copyright (c) 2017, Oracle Corporation.  All rights reserved.
+
+
+OMSPatcher version : 13.9.4.5.0
+OUI version        : 13.9.4.0.0
+Running from       : /u02/app/oracle/middleware134
+Log file location  : /u02/app/oracle/middleware134/cfgtoollogs/omspatcher/opatch2021-08-24_11-12-40AM_1.log
+
+Component Name/Version                            Component Type      System Patch        (Sub)-Patches       Patch Description
+------------------------                          -------------       -------------       --------------      ------------------
+oracle.sysman.si.oms.plugin/13.4.1.0.0            Plugin              32567298            32436258            Oracle Enterprise Manager for Systems Infrastructure 13c Release 4 Plug-in Update 11 (13.4.1.11) for Oracle Management Service
+
+oracle.wls.common.cam/12.2.1.3.0                  Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.wls.clients/12.2.1.3.0                     Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.sysman.emas.oms.plugin/13.4.1.0.0          Plugin              32567298            32436144            Oracle Enterprise Manager for Fusion Middleware 13c Release 4 Plug-in Update 11 (13.4.1.11) for Oracle Management Service
+
+oracle.jrf.iau/12.2.1.3.0                         Core                N/A                 30146350            OPSS Bundle Patch 12.2.1.3.191015
+
+oracle.jaxb.tools/2.3.0.0.0                       Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.bi.server/12.2.1.3.0                       Core                N/A                 27329720            OBI BUNDLE PATCH 12.2.1.3.180717
+
+oracle.jrf.tenancy.ee/12.2.1.3.0                  Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.wls.jrf.tenancy.common.sharedlib/          Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+12.2.1.3.0
+
+oracle.jrf.adfrt/12.2.1.3.0                       Core                N/A                 30772572            ADF BUNDLE PATCH 12.2.1.3.0(ID:200116.1114.S)
+
+oracle.java.jaxws/12.2.1.3.0                      Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.wls.jrf.tenancy.ee.only.sharedlib          Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+/12.2.1.3.0
+
+org.codehaus.woodstox/4.2.0.0.0                   Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.bi.publisher.jdev.common/12.2.1.3          Core                N/A                 27329720            OBI BUNDLE PATCH 12.2.1.3.180717
+.0
+
+oracle.javavm.jrf/12.2.0.1.0                      Core                N/A                 25423296            One-off
+                                                                      N/A                 25977056            One-off
+                                                                      N/A                 26045997            One-off
+
+oracle.wls.core.app.server/12.2.1.3.0             Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+                                                                      N/A                 30510407            One-off
+
+oracle.sysman.ssa.oms.plugin/13.4.1.0.0           Plugin              32567298            32436238            Oracle Enterprise Manager for Cloud 13c Release 4 Plug-in Update 11 (13.4.1.11) for Oracle Management Service
+
+oracle.wls.wlsportable.mod/12.2.1.3.0             Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.jrf.infra.common/12.2.1.3.0                Core                N/A                 28659321            One-off
+
+oracle.sysman.smf.oms.plugin/13.4.1.0.0           Plugin              32567298            31802539            Oracle Enterprise Manager for Storage Management 13c Release 4 Plug-in Update 7 (13.4.1.7) for Oracle Management Service
+
+oracle.webservices.jrf/12.2.1.3.0                 Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.org.bouncycastle/12.2.1.3.0                Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.jaxb.core/2.3.0.0.0                        Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.sysman.db.oms.plugin/13.4.1.0.0            Plugin              32567298            32436157            Oracle Enterprise Manager for Oracle Database 13c Release 4 Plug-in Update 11 (13.4.1.11) for Oracle Management Service
+
+oracle.bi.fndn/12.2.1.3.0                         Core                N/A                 27329720            OBI BUNDLE PATCH 12.2.1.3.180717
+
+oracle.wls.thirdparty.javax.json/12.2.1.          Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+3.0
+
+oracle.webservices.orawsdl/12.2.1.3.0             Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.wls.weblogic.sca/12.2.1.3.0                Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.wls.libraries/12.2.1.3.0                   Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+                                                                      N/A                 30465861            One-off
+
+oracle.java.xml.bind/2.3.0.0.0                    Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.sysman.emct.oms.plugin/13.4.1.0.0          Plugin              32567298            32436201            Oracle Enterprise Manager for Chargeback and Capacity Planning 13c Release 4 Plug-in Update 11 (13.4.1.11) for Oracle Management Service
+
+oracle.wls.security.core/12.2.1.3.0               Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.opss.core/12.2.1.3.0                       Core                N/A                 30146350            OPSS Bundle Patch 12.2.1.3.191015
+
+oracle.fmw.upgrade.fmwconfig/12.2.1.3.0           Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.webservices.wls/12.2.1.3.0                 Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.wls.shared.with.coh.standalone/12          Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+.2.1.3.0
+
+oracle.sysman.vi.oms.plugin/13.4.1.0.0            Plugin              32567298            32198970            Oracle Enterprise Manager for Oracle Virtual Infrastructure 13c Release 4 Plug-in Update 10 (13.4.1.10) for Oracle Management Service
+
+oracle.sysman.cfw.oms.plugin/13.4.1.0.0           Plugin              32567298            31812958            Oracle Enterprise Manager for Cloud Framework 13c Release 4 Plug-in Update 6 (13.4.1.6) for Oracle Management Service
+
+oracle.sysman.rcu/12.2.1.3.0                      Core                N/A                 30152128            One-off
+
+oracle.wls.admin.console.en/12.2.1.3.0            Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.sysman.vt.oms.plugin/13.4.1.0.0            Plugin              32567298            32198935            Oracle Enterprise Manager for Virtualization 13c Release 4 Plug-in Update 10 (13.4.1.10) for Oracle Management Service
+
+oracle.help.ohw.rcf/12.2.1.3.0                    Core                N/A                 30772572            ADF BUNDLE PATCH 12.2.1.3.0(ID:200116.1114.S)
+
+oracle.jrf.adfrt.javatools/12.2.1.3.0             Core                N/A                 30772572            ADF BUNDLE PATCH 12.2.1.3.0(ID:200116.1114.S)
+
+oracle.diagnostics.common/12.2.1.3.0              Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.ohs2/12.2.1.3.0                            Core                N/A                 30158713            OHS (NATIVE) BUNDLE PATCH 12.2.1.3.0(ID:190808.0523)
+                                                                      N/A                 30269564            One-off
+
+oracle.wls.common.cam.wlst/12.2.1.3.0             Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.wls.workshop.code.completion.supp          Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+ort/12.2.1.3.0
+
+oracle.sysman.emfa.oms.plugin/13.4.1.0.0          Plugin              32567298            32198853            Oracle Enterprise Manager for Fusion Applications 13c Release 4 Plug-in Update 10 (13.4.1.10) for Oracle Management Service
+
+oracle.sysman.csm.oms.plugin/13.4.1.0.0           Plugin              32567298            31889317            Oracle Enterprise Manager for Cloud Services Management 13c Release 4 Plug-in Update 7 (13.4.1.7) for Oracle Management Service
+
+oracle.wls.shared.with.inst/12.2.1.3.0            Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.wls.core.app.server.tier1nativeli          Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+b/12.2.1.3.0
+
+oracle.wls.admin.console.nonen/12.2.1.3.          Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+0
+
+oracle.jrf.toplink/12.2.1.3.0                     Core                N/A                 29878681            One-off
+
+oracle.wls.common.nodemanager/12.2.1.3.0          Core                N/A                 27570450            One-off
+                                                                      N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.help.ohw.share/12.2.1.3.0                  Core                N/A                 30772572            ADF BUNDLE PATCH 12.2.1.3.0(ID:200116.1114.S)
+
+oracle.webcenter.wccore/12.2.1.3.0                Core                N/A                 30387597            WebCenter Core Bundle Patch 12.2.1.3.0(ID:191002.2131.S)
+
+oracle.legacy_oc4j_xml_schemas/12.2.1.3.          Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+0
+
+oracle.sysman.am.oms.plugin/13.4.1.0.0            Plugin              32567298            32198861            Oracle Enterprise Manager for Zero Data Loss Recovery Appliance 13c Release 4 Plug-in Update 10 (13.4.1.10) for Oracle Management Service
+
+oracle.xdk.jrf.xmlparserv2/12.2.1.3.0             Core                N/A                 26626168            One-off
+
+oracle.wls.rcu/12.2.1.3.0                         Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.bi.publisher/12.2.1.3.0                    Core                N/A                 27329720            OBI BUNDLE PATCH 12.2.1.3.180717
+                                                                      N/A                 27580645            One-off
+
+oracle.sysman.top.oms/13.4.0.0.0                  Core                32567298            32436128            Oracle Enterprise Manager 13c Release 4 Platform Update 11 (13.4.0.11) for Oracle Management Service
+
+oracle.wls.security.core.sharedlib/12.2.          Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+1.3.0
+
+oracle.sysman.xa.oms.plugin/13.4.1.0.0            Plugin              32567298            32436229            Oracle Enterprise Manager for Exadata 13c Release 4 Plug-in Update 11 (13.4.1.11) for Oracle Management Service
+
+oracle.jrf.tenancy.se/12.2.1.3.0                  Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.apache.commons.collections.mod/3.          Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+2.0.0.2
+
+oracle.bi.cam.obijh/12.2.1.1.0                    Core                N/A                 27329720            OBI BUNDLE PATCH 12.2.1.3.180717
+
+oracle.jrf.adfrt.help/12.2.1.3.0                  Core                N/A                 30772572            ADF BUNDLE PATCH 12.2.1.3.0(ID:200116.1114.S)
+
+oracle.opss.wls/12.2.1.3.0                        Core                N/A                 30146350            OPSS Bundle Patch 12.2.1.3.191015
+
+oracle.jaxb.impl/2.3.0.0.0                        Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.fmwconfig.common.wls.shared.inter          Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+nal/12.2.1.3.0
+
+oracle.wls.shared.with.cam/12.2.1.3.0             Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.wls.shared.with.inst.sharedlib/12          Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+.2.1.3.0
+
+oracle.bi.publisher.clients/12.2.1.3.0            Core                N/A                 27329720            OBI BUNDLE PATCH 12.2.1.3.180717
+
+oracle.ldap.rsf/12.2.1.3.0                        Core                N/A                 29321695            OSS BUNDLE PATCH 12.2.1.3.190716
+
+oracle.jrf.tenancy/12.2.1.3.0                     Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.wls.jrf.tenancy.common/12.2.1.3.0          Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.fmwconfig.common.config.shared/12          Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+.2.1.3.0
+
+oracle.xdk.jrf.jaxp/12.2.1.3.0                    Core                N/A                 26626168            One-off
+
+oracle.wls.http.pubsub.server/12.2.1.3.0          Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.wls.inst.only/12.2.1.3.0                   Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.bi.tech.analysis.application/12.2          Core                N/A                 27329720            OBI BUNDLE PATCH 12.2.1.3.180717
+.1.3.0
+
+oracle.sysman.bda.oms.plugin/13.4.1.0.0           Plugin              32567298            32436193            Oracle Enterprise Manager for Big Data Appliance 13c Release 4 Plug-in Update 11 (13.4.1.11) for Oracle Management Service
+
+oracle.java.activation/12.2.1.3.0                 Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.jrf.infra.fmw.wls/12.2.1.3.0               Core                N/A                 28659321            One-off
+
+oracle.opss.jrf/12.2.1.3.0                        Core                N/A                 30146350            OPSS Bundle Patch 12.2.1.3.191015
+
+oracle.java.servlet/12.2.1.3.0                    Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.wls.evaluation.database/12.2.1.3.          Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+0
+
+oracle.apache.commons.lang.mod/2.6.0.0.2          Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.webservices.base/12.2.1.3.0                Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.fmw.upgrade.ohs/12.2.1.3.0                 Core                N/A                 30158713            OHS (NATIVE) BUNDLE PATCH 12.2.1.3.0(ID:190808.0523)
+
+
+NOTE: N/A indicates that the subpatch mentioned in the Subpatches column was applied as a one-off patch and not as part of any system patch.
+
+OMSPatcher has saved inventory details for the above component at below location.
+"/u02/app/oracle/middleware134"
+
+For more details on installed patch(es), Please do "/u02/app/oracle/middleware134/OPatch/opatch lsinventory -details"
+
+OMSPatcher succeeded.
+[oracle@[oracle@hostnameoem7603 alpoor_scripts]$  omspatcher lspatches
+OMSPatcher Automation Tool
+Copyright (c) 2017, Oracle Corporation.  All rights reserved.
+
+
+OMSPatcher version : 13.9.4.5.0
+OUI version        : 13.9.4.0.0
+Running from       : /u02/app/oracle/middleware134
+Log file location  : /u02/app/oracle/middleware134/cfgtoollogs/omspatcher/opatch2021-08-24_11-12-40AM_1.log
+
+Component Name/Version                            Component Type      System Patch        (Sub)-Patches       Patch Description
+------------------------                          -------------       -------------       --------------      ------------------
+oracle.sysman.si.oms.plugin/13.4.1.0.0            Plugin              32567298            32436258            Oracle Enterprise Manager for Systems Infrastructure 13c Release 4 Plug-in Update 11 (13.4.1.11) for Oracle Management Service
+
+oracle.wls.common.cam/12.2.1.3.0                  Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.wls.clients/12.2.1.3.0                     Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.sysman.emas.oms.plugin/13.4.1.0.0          Plugin              32567298            32436144            Oracle Enterprise Manager for Fusion Middleware 13c Release 4 Plug-in Update 11 (13.4.1.11) for Oracle Management Service
+
+oracle.jrf.iau/12.2.1.3.0                         Core                N/A                 30146350            OPSS Bundle Patch 12.2.1.3.191015
+
+oracle.jaxb.tools/2.3.0.0.0                       Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.bi.server/12.2.1.3.0                       Core                N/A                 27329720            OBI BUNDLE PATCH 12.2.1.3.180717
+
+oracle.jrf.tenancy.ee/12.2.1.3.0                  Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.wls.jrf.tenancy.common.sharedlib/          Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+12.2.1.3.0
+
+oracle.jrf.adfrt/12.2.1.3.0                       Core                N/A                 30772572            ADF BUNDLE PATCH 12.2.1.3.0(ID:200116.1114.S)
+
+oracle.java.jaxws/12.2.1.3.0                      Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.wls.jrf.tenancy.ee.only.sharedlib          Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+/12.2.1.3.0
+
+org.codehaus.woodstox/4.2.0.0.0                   Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.bi.publisher.jdev.common/12.2.1.3          Core                N/A                 27329720            OBI BUNDLE PATCH 12.2.1.3.180717
+.0
+
+oracle.javavm.jrf/12.2.0.1.0                      Core                N/A                 25423296            One-off
+                                                                      N/A                 25977056            One-off
+                                                                      N/A                 26045997            One-off
+
+oracle.wls.core.app.server/12.2.1.3.0             Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+                                                                      N/A                 30510407            One-off
+
+oracle.sysman.ssa.oms.plugin/13.4.1.0.0           Plugin              32567298            32436238            Oracle Enterprise Manager for Cloud 13c Release 4 Plug-in Update 11 (13.4.1.11) for Oracle Management Service
+
+oracle.wls.wlsportable.mod/12.2.1.3.0             Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.jrf.infra.common/12.2.1.3.0                Core                N/A                 28659321            One-off
+
+oracle.sysman.smf.oms.plugin/13.4.1.0.0           Plugin              32567298            31802539            Oracle Enterprise Manager for Storage Management 13c Release 4 Plug-in Update 7 (13.4.1.7) for Oracle Management Service
+
+oracle.webservices.jrf/12.2.1.3.0                 Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.org.bouncycastle/12.2.1.3.0                Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.jaxb.core/2.3.0.0.0                        Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.sysman.db.oms.plugin/13.4.1.0.0            Plugin              32567298            32436157            Oracle Enterprise Manager for Oracle Database 13c Release 4 Plug-in Update 11 (13.4.1.11) for Oracle Management Service
+
+oracle.bi.fndn/12.2.1.3.0                         Core                N/A                 27329720            OBI BUNDLE PATCH 12.2.1.3.180717
+
+oracle.wls.thirdparty.javax.json/12.2.1.          Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+3.0
+
+oracle.webservices.orawsdl/12.2.1.3.0             Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.wls.weblogic.sca/12.2.1.3.0                Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.wls.libraries/12.2.1.3.0                   Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+                                                                      N/A                 30465861            One-off
+
+oracle.java.xml.bind/2.3.0.0.0                    Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.sysman.emct.oms.plugin/13.4.1.0.0          Plugin              32567298            32436201            Oracle Enterprise Manager for Chargeback and Capacity Planning 13c Release 4 Plug-in Update 11 (13.4.1.11) for Oracle Management Service
+
+oracle.wls.security.core/12.2.1.3.0               Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.opss.core/12.2.1.3.0                       Core                N/A                 30146350            OPSS Bundle Patch 12.2.1.3.191015
+
+oracle.fmw.upgrade.fmwconfig/12.2.1.3.0           Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.webservices.wls/12.2.1.3.0                 Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.wls.shared.with.coh.standalone/12          Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+.2.1.3.0
+
+oracle.sysman.vi.oms.plugin/13.4.1.0.0            Plugin              32567298            32198970            Oracle Enterprise Manager for Oracle Virtual Infrastructure 13c Release 4 Plug-in Update 10 (13.4.1.10) for Oracle Management Service
+
+oracle.sysman.cfw.oms.plugin/13.4.1.0.0           Plugin              32567298            31812958            Oracle Enterprise Manager for Cloud Framework 13c Release 4 Plug-in Update 6 (13.4.1.6) for Oracle Management Service
+
+oracle.sysman.rcu/12.2.1.3.0                      Core                N/A                 30152128            One-off
+
+oracle.wls.admin.console.en/12.2.1.3.0            Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.sysman.vt.oms.plugin/13.4.1.0.0            Plugin              32567298            32198935            Oracle Enterprise Manager for Virtualization 13c Release 4 Plug-in Update 10 (13.4.1.10) for Oracle Management Service
+
+oracle.help.ohw.rcf/12.2.1.3.0                    Core                N/A                 30772572            ADF BUNDLE PATCH 12.2.1.3.0(ID:200116.1114.S)
+
+oracle.jrf.adfrt.javatools/12.2.1.3.0             Core                N/A                 30772572            ADF BUNDLE PATCH 12.2.1.3.0(ID:200116.1114.S)
+
+oracle.diagnostics.common/12.2.1.3.0              Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.ohs2/12.2.1.3.0                            Core                N/A                 30158713            OHS (NATIVE) BUNDLE PATCH 12.2.1.3.0(ID:190808.0523)
+                                                                      N/A                 30269564            One-off
+
+oracle.wls.common.cam.wlst/12.2.1.3.0             Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.wls.workshop.code.completion.supp          Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+ort/12.2.1.3.0
+
+oracle.sysman.emfa.oms.plugin/13.4.1.0.0          Plugin              32567298            32198853            Oracle Enterprise Manager for Fusion Applications 13c Release 4 Plug-in Update 10 (13.4.1.10) for Oracle Management Service
+
+oracle.sysman.csm.oms.plugin/13.4.1.0.0           Plugin              32567298            31889317            Oracle Enterprise Manager for Cloud Services Management 13c Release 4 Plug-in Update 7 (13.4.1.7) for Oracle Management Service
+
+oracle.wls.shared.with.inst/12.2.1.3.0            Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.wls.core.app.server.tier1nativeli          Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+b/12.2.1.3.0
+
+oracle.wls.admin.console.nonen/12.2.1.3.          Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+0
+
+oracle.jrf.toplink/12.2.1.3.0                     Core                N/A                 29878681            One-off
+
+oracle.wls.common.nodemanager/12.2.1.3.0          Core                N/A                 27570450            One-off
+                                                                      N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.help.ohw.share/12.2.1.3.0                  Core                N/A                 30772572            ADF BUNDLE PATCH 12.2.1.3.0(ID:200116.1114.S)
+
+oracle.webcenter.wccore/12.2.1.3.0                Core                N/A                 30387597            WebCenter Core Bundle Patch 12.2.1.3.0(ID:191002.2131.S)
+
+oracle.legacy_oc4j_xml_schemas/12.2.1.3.          Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+0
+
+oracle.sysman.am.oms.plugin/13.4.1.0.0            Plugin              32567298            32198861            Oracle Enterprise Manager for Zero Data Loss Recovery Appliance 13c Release 4 Plug-in Update 10 (13.4.1.10) for Oracle Management Service
+
+oracle.xdk.jrf.xmlparserv2/12.2.1.3.0             Core                N/A                 26626168            One-off
+
+oracle.wls.rcu/12.2.1.3.0                         Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.bi.publisher/12.2.1.3.0                    Core                N/A                 27329720            OBI BUNDLE PATCH 12.2.1.3.180717
+                                                                      N/A                 27580645            One-off
+
+oracle.sysman.top.oms/13.4.0.0.0                  Core                32567298            32436128            Oracle Enterprise Manager 13c Release 4 Platform Update 11 (13.4.0.11) for Oracle Management Service
+
+oracle.wls.security.core.sharedlib/12.2.          Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+1.3.0
+
+oracle.sysman.xa.oms.plugin/13.4.1.0.0            Plugin              32567298            32436229            Oracle Enterprise Manager for Exadata 13c Release 4 Plug-in Update 11 (13.4.1.11) for Oracle Management Service
+
+oracle.jrf.tenancy.se/12.2.1.3.0                  Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.apache.commons.collections.mod/3.          Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+2.0.0.2
+
+oracle.bi.cam.obijh/12.2.1.1.0                    Core                N/A                 27329720            OBI BUNDLE PATCH 12.2.1.3.180717
+
+oracle.jrf.adfrt.help/12.2.1.3.0                  Core                N/A                 30772572            ADF BUNDLE PATCH 12.2.1.3.0(ID:200116.1114.S)
+
+oracle.opss.wls/12.2.1.3.0                        Core                N/A                 30146350            OPSS Bundle Patch 12.2.1.3.191015
+
+oracle.jaxb.impl/2.3.0.0.0                        Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.fmwconfig.common.wls.shared.inter          Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+nal/12.2.1.3.0
+
+oracle.wls.shared.with.cam/12.2.1.3.0             Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.wls.shared.with.inst.sharedlib/12          Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+.2.1.3.0
+
+oracle.bi.publisher.clients/12.2.1.3.0            Core                N/A                 27329720            OBI BUNDLE PATCH 12.2.1.3.180717
+
+oracle.ldap.rsf/12.2.1.3.0                        Core                N/A                 29321695            OSS BUNDLE PATCH 12.2.1.3.190716
+
+oracle.jrf.tenancy/12.2.1.3.0                     Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.wls.jrf.tenancy.common/12.2.1.3.0          Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.fmwconfig.common.config.shared/12          Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+.2.1.3.0
+
+oracle.xdk.jrf.jaxp/12.2.1.3.0                    Core                N/A                 26626168            One-off
+
+oracle.wls.http.pubsub.server/12.2.1.3.0          Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.wls.inst.only/12.2.1.3.0                   Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.bi.tech.analysis.application/12.2          Core                N/A                 27329720            OBI BUNDLE PATCH 12.2.1.3.180717
+.1.3.0
+
+oracle.sysman.bda.oms.plugin/13.4.1.0.0           Plugin              32567298            32436193            Oracle Enterprise Manager for Big Data Appliance 13c Release 4 Plug-in Update 11 (13.4.1.11) for Oracle Management Service
+
+oracle.java.activation/12.2.1.3.0                 Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.jrf.infra.fmw.wls/12.2.1.3.0               Core                N/A                 28659321            One-off
+
+oracle.opss.jrf/12.2.1.3.0                        Core                N/A                 30146350            OPSS Bundle Patch 12.2.1.3.191015
+
+oracle.java.servlet/12.2.1.3.0                    Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.wls.evaluation.database/12.2.1.3.          Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+0
+
+oracle.apache.commons.lang.mod/2.6.0.0.2          Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.webservices.base/12.2.1.3.0                Core                N/A                 30386660            WLS PATCH SET UPDATE 12.2.1.3.0(ID:191004.0935)
+
+oracle.fmw.upgrade.ohs/12.2.1.3.0                 Core                N/A                 30158713            OHS (NATIVE) BUNDLE PATCH 12.2.1.3.0(ID:190808.0523)
+
+
+NOTE: N/A indicates that the subpatch mentioned in the Subpatches column was applied as a one-off patch and not as part of any system patch.
+
+OMSPatcher has saved inventory details for the above component at below location.
+"/u02/app/oracle/middleware134"
+
+For more details on installed patch(es), Please do "/u02/app/oracle/middleware134/OPatch/opatch lsinventory -details"
+
+OMSPatcher succeeded.
+[oracle@hostnameoem7603 alpoor_scripts]$
+oem7603 alpoor_scripts]$

@@ -1,0 +1,63 @@
+DEVCPY_DAILY_REFRESH.9
+CPY_ENV_REFRESH_JOB.2
+
+
+
+
+Copyright (c) 2021, Oracle. All rights reserved. Oracle Confidential.
+
+
+Click to add to Favorites		How to Move Jobs Between Two Different Enterprise Manager Cloud Control Systems (Doc ID 1637462.1)	To BottomTo Bottom	
+
+In this Document
+Goal
+Solution
+
+APPLIES TO:
+Enterprise Manager Base Platform - Version 12.1.0.3.0 and later
+Information in this document applies to any platform.
+GOAL
+Moving library jobs between Enterprise Manager (EM) 12.1.0.3 Cloud Control systems is described here.
+This same procedure applies to EM Cloud Control versions after 12.1.0.3, but the emcli verbs export_jobs and import_jobs are available in those versions.
+
+Note that this procedure has also been used to successfully move jobs from an EM 12c system to an EM 13c system.
+
+ 
+
+ 
+
+SOLUTION
+There is no specific EM CLI verb to import or export jobs between EM 12.1.0.3 Cloud Control servers, but, the following two verbs may be used to achieve that goal:
+
+- emcli describe_job >> to export a job
+- emcli create_job >> to import the exported job
+
+Procedure:
+
+From the Source EM 12.1.0.3 OMS:
+
+Suppose you would like to export a job named "abc", which is an OS job (for example, it only executes the following command >> ls -latr /tmp).
+If it is a library job, first submit it successfully. Once the job is successfully run export it as follows:
+
+$ cd <OMS_HOME>/bin
+$ ./emcli login -username=sysman -password=<sysman_password>
+$ ./emcli sync
+$ ./emcli describe_job -name="abc" > /tmp/abc.out
+
+Note that the name of the job must be as executed, so if "abc" is the name of the library job and "abc.1" is the name of the corresponding successfully executed job, use "abc.1" in the export action.
+
+Transfer the output file "/tmp/abc.out" to the destination OMS.
+
+ 
+
+
+From the Destination EM 12.1.0.3 OMS:
+
+Now, after you have successfully obtained the "/tmp/abc.out" file from the source OMS, you may import the same job, even with the same name, as follows:
+
+$ cd <OMS_HOME>/bin
+$ ./emcli login -username=sysman -password=<sysman_password>
+$ ./emcli sync
+$ ./emcli create_job -name="abc" -job_type=OSCommand -input_file="property_file:/tmp/abc.out"
+
+Check the 'Job Activity' page to verify that the job has been imported and run. Select the option to Copy to Library (any name can be given to it in this action), if desired.

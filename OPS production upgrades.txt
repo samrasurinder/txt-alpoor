@@ -1,0 +1,333 @@
+[root@hrvlprddb7602 ~]# /home/grid/asm_disk_map_to_device.sh
+The ASM disk: 'DATA01' mapped to '/dev/sdi1'  Totalsize=214.7 GB,
+The ASM disk: 'DATA02' mapped to '/dev/sdj1'  Totalsize=214.7 GB,
+The ASM disk: 'DATA03' mapped to '/dev/sdk1'  Totalsize=214.7 GB,
+The ASM disk: 'DRSHARE01' mapped to '/dev/sdo1'  Totalsize=549.8 GB,
+The ASM disk: 'FRA01' mapped to '/dev/sdc1'  Totalsize=214.7 GB,
+The ASM disk: 'FRA02' mapped to '/dev/sdd1'  Totalsize=214.7 GB,
+The ASM disk: 'FRA03' mapped to '/dev/sde1'  Totalsize=214.7 GB,
+The ASM disk: 'OCR_VOTE1' mapped to '/dev/sdl1'  Totalsize=53.7 GB,
+[root@hrvlprddb7602 ~]#
+
+
+
+dd if=/dev/zero of=/dev/sdl1 bs=4096 count=1
+
+
+[root@hrvlprddb7602 ~]# /u02/app/12.2.0/grid/perl/bin/perl /u02/app/12.2.0/grid/crs/install/roothas.pl -deconfig -force -verbose &
+[1] 17858
+[root@hrvlprddb7602 ~]# Using configuration parameter file: /u02/app/12.2.0/grid/crs/install/crsconfig_params
+The log of current session can be found at:
+  /u02/app/oracle/crsdata/hrvlprddb7602/crsconfig/hadeconfig.log
+2020/08/22 09:27:30 CLSRSC-332: CRS resources for listeners are still configured
+CRS-2791: Starting shutdown of Oracle High Availability Services-managed resources on 'hrvlprddb7602'
+CRS-2673: Attempting to stop 'ora.OPSSTBY_DATA.dg' on 'hrvlprddb7602'
+CRS-2673: Attempting to stop 'ora.OPSSTBY_FRA.dg' on 'hrvlprddb7602'
+CRS-2677: Stop of 'ora.OPSSTBY_FRA.dg' on 'hrvlprddb7602' succeeded
+CRS-2677: Stop of 'ora.OPSSTBY_DATA.dg' on 'hrvlprddb7602' succeeded
+CRS-2673: Attempting to stop 'ora.asm' on 'hrvlprddb7602'
+CRS-2677: Stop of 'ora.asm' on 'hrvlprddb7602' succeeded
+CRS-2673: Attempting to stop 'ora.evmd' on 'hrvlprddb7602'
+CRS-2677: Stop of 'ora.evmd' on 'hrvlprddb7602' succeeded
+CRS-2673: Attempting to stop 'ora.cssd' on 'hrvlprddb7602'
+CRS-2677: Stop of 'ora.cssd' on 'hrvlprddb7602' succeeded
+CRS-2793: Shutdown of Oracle High Availability Services-managed resources on 'hrvlprddb7602' has completed
+CRS-4133: Oracle High Availability Services has been stopped.
+2020/08/22 09:31:22 CLSRSC-337: Successfully deconfigured Oracle Restart stack
+
+[1]+  Done                    /u02/app/12.2.0/grid/perl/bin/perl /u02/app/12.2.0/grid/crs/install/roothas.pl -deconfig -force -verbose
+[root@hrvlprddb7602 ~]#
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[grid@hrvlprddb7602 grid]$ ./gridSetup.sh -silent -ignorePrereqFailure -responseFile /home/grid/gridsetup.rsp &
+[1] 4411
+[grid@hrvlprddb7602 grid]$ Launching Oracle Grid Infrastructure Setup Wizard...
+
+[WARNING] [INS-41812] OSDBA and OSASM are the same OS group.
+   CAUSE: The chosen values for OSDBA group and the chosen value for OSASM group are the same.
+   ACTION: Select an OS group that is unique for ASM administrators. The OSASM group should not be the same as the OS groups that grant privileges for Oracle ASM access, or for database administration.
+[WARNING] [INS-41874] Oracle ASM Administrator (OSASM) Group specified is same as the inventory group.
+   CAUSE: Operating system group oinstall specified for OSASM Group is same as the inventory group.
+   ACTION: It is not recommended to have OSASM group same as inventory group. Select any of the group other than the inventory group to avoid incorrect configuration.
+[WARNING] [INS-13014] Target environment does not meet some optional requirements.
+   CAUSE: Some of the optional prerequisites are not met. See logs for details. /u02/app/oraInventory/logs/GridSetupActions2020-08-22_09-38-29AM/gridSetupActions2020-08-22_09-38-29AM.log
+   ACTION: Identify the list of failed prerequisite checks from the log: /u02/app/oraInventory/logs/GridSetupActions2020-08-22_09-38-29AM/gridSetupActions2020-08-22_09-38-29AM.log. Then either from the log file or from installation manual find the appropriate configuration to meet the prerequisites and fix it manually.
+The response file for this session can be found at:
+ /u02/app/19.3.0/grid/install/response/grid_2020-08-22_09-38-29AM.rsp
+
+You can find the log of this install session at:
+ /u02/app/oraInventory/logs/GridSetupActions2020-08-22_09-38-29AM/gridSetupActions2020-08-22_09-38-29AM.log
+
+As a root user, execute the following script(s):
+        1. /u02/app/19.3.0/grid/root.sh
+
+Execute /u02/app/19.3.0/grid/root.sh on the following nodes:
+[hrvlprddb7602]
+
+
+
+Successfully Setup Software with warning(s).
+As install user, execute the following command to complete the configuration.
+        /u02/app/19.3.0/grid/gridSetup.sh -executeConfigTools -responseFile /home/grid/gridsetup.rsp [-silent]
+
+
+
+
+
+
+
+[root@hrvlprddb7602 GridSetupActions2020-08-22_09-38-29AM]# /u02/app/19.3.0/grid/root.sh
+Check /u02/app/19.3.0/grid/install/root_hrvlprddb7602.hr.state.sbu_2020-08-22_09-43-26-259068590.log for the output of root script
+[root@hrvlprddb7602 ~]# tail -f /u02/app/19.3.0/grid/install/root_hrvlprddb7602.hr.state.sbu_2020-08-22_09-43-26-259068590.log
+2020/08/22 09:43:49 CLSRSC-363: User ignored prerequisites during installation
+LOCAL ADD MODE
+Creating OCR keys for user 'grid', privgrp 'oinstall'..
+Operation successful.
+LOCAL ONLY MODE
+Successfully accumulated necessary OCR keys.
+Creating OCR keys for user 'root', privgrp 'root'..
+Operation successful.
+CRS-4664: Node hrvlprddb7602 successfully pinned.
+2020/08/22 09:43:59 CLSRSC-330: Adding Clusterware entries to file 'oracle-ohasd.service'
+
+hrvlprddb7602     2020/08/22 09:44:44     /u02/app/grid/crsdata/hrvlprddb7602/olr/backup_20200822_094444.olr     724960844
+2020/08/22 09:44:45 CLSRSC-327: Successfully configured Oracle Restart for a standalone server
+
+
+
+
+
+
+[grid@hrvlprddb7602 grid]$ /u02/app/19.3.0/grid/gridSetup.sh -executeConfigTools -responseFile /home/grid/gridsetup.rsp -silent &
+[1] 14419
+[grid@hrvlprddb7602 grid]$ Launching Oracle Grid Infrastructure Setup Wizard...
+
+You can find the logs of this session at:
+/u02/app/oraInventory/logs/GridSetupActions2020-08-22_09-45-58AM
+
+You can find the log of this install session at:
+ /u02/app/oraInventory/logs/UpdateNodeList2020-08-22_09-45-58AM.log
+Successfully Configured Software.
+ 
+
+
+
+
+[root@hrvlprddb7602 OPatch]# ./opatchauto apply /u02/software/19csoftware/
+30783556/                          gridsetup.rsp                      LINUX.X64_193000_grid_home(1).zip  p6880880_190000_Linux-x86-64.zip
+db_install.rsp                     LINUX.X64_193000_db_home(1).zip    p30783556_190000_Linux-x86-64.zip  PatchSearch.xml
+[root@hrvlprddb7602 OPatch]# ./opatchauto apply /u02/software/19csoftware/30783556/
+30805684/        30899722/        PatchSearch.xml  README.html
+[root@hrvlprddb7602 OPatch]# ./opatchauto apply /u02/software/19csoftware/30783556/30899722 -oh /u02/app/19.3.0/grid &
+[1] 21504
+[root@hrvlprddb7602 OPatch]#
+OPatchauto session is initiated at Sat Aug 22 10:15:51 2020
+
+System initialization log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchautodb/systemconfig2020-08-22_10-15-57AM.log.
+
+Session log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchauto/opatchauto2020-08-22_10-16-02AM.log
+The id for this session is 7YJ7
+
+Executing OPatch prereq operations to verify patch applicability on home /u02/app/19.3.0/grid
+Patch applicability verified successfully on home /u02/app/19.3.0/grid
+
+
+Bringing down CRS service on home /u02/app/19.3.0/grid
+Prepatch operation log file location: /u02/app/grid/crsdata/hrvlprddb7602/crsconfig/hapatch_2020-08-22_10-16-32AM.log
+CRS service brought down successfully on home /u02/app/19.3.0/grid
+
+
+Start applying binary patch on home /u02/app/19.3.0/grid
+
+
+
+[root@hrvlprddb7602 OPatch]# ./opatchauto apply /u02/software/19csoftware/30783556/
+30805684/        30899722/        PatchSearch.xml  README.html
+[root@hrvlprddb7602 OPatch]# ./opatchauto apply /u02/software/19csoftware/30783556/30805684 -oh /u02/app/19.3.0/grid &
+[1] 26497
+[root@hrvlprddb7602 OPatch]#
+OPatchauto session is initiated at Sat Aug 22 10:36:36 2020
+
+System initialization log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchautodb/systemconfig2020-08-22_10-36-40AM.log.
+
+Session log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchauto/opatchauto2020-08-22_10-36-45AM.log
+The id for this session is 2P8V
+
+Executing OPatch prereq operations to verify patch applicability on home /u02/app/19.3.0/grid
+Patch applicability verified successfully on home /u02/app/19.3.0/grid
+
+
+Bringing down CRS service on home /u02/app/19.3.0/grid
+
+
+
+
+
+
+
+SQL> show parameter log_archive_dest_2;
+
+NAME                                 TYPE        VALUE
+------------------------------------ ----------- ------------------------------
+log_archive_dest_2                   string      SERVICE=OPSSTBY ASYNC VALID_FO
+                                                 R=(ONLINE_LOGFILES,PRIMARY_ROL
+                                                 E) DB_UNIQUE_NAME=OPSSTBY
+log_archive_dest_20                  string
+log_archive_dest_21                  string
+log_archive_dest_22                  string
+log_archive_dest_23                  string
+log_archive_dest_24                  string
+log_archive_dest_25                  string
+log_archive_dest_26                  string
+log_archive_dest_27                  string
+
+NAME                                 TYPE        VALUE
+------------------------------------ ----------- ------------------------------
+log_archive_dest_28                  string
+log_archive_dest_29                  string
+SQL>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[root@hrvlprddb7601 ~]# /home/grid/asm_disk_map_to_device.sh
+The ASM disk: 'DATA01' mapped to '/dev/sdi1'  Totalsize=214.7 GB,
+The ASM disk: 'DATA02' mapped to '/dev/sdj1'  Totalsize=214.7 GB,
+The ASM disk: 'DATA03' mapped to '/dev/sdk1'  Totalsize=214.7 GB,
+The ASM disk: 'DATA04' mapped to '/dev/sdf1'  Totalsize=214.7 GB,
+The ASM disk: 'DATA05' mapped to '/dev/sdg1'  Totalsize=214.7 GB,
+The ASM disk: 'DRSHARE01' mapped to '/dev/sdo1'  Totalsize=549.8 GB,
+The ASM disk: 'FRA01' mapped to '/dev/sdc1'  Totalsize=214.7 GB,
+The ASM disk: 'FRA02' mapped to '/dev/sdd1'  Totalsize=214.7 GB,
+The ASM disk: 'FRA03' mapped to '/dev/sde1'  Totalsize=214.7 GB,
+The ASM disk: 'OCR_VOTE1' mapped to '/dev/sdl1'  Totalsize=53.7 GB,
+[root@hrvlprddb7601 ~]#
+
+dd if=/dev/zero of=/dev/sdl1 bs=4096 count=1
+
+[root@hrvlprddb7601 ~]# /u02/app/12.2.0/grid/perl/bin/perl /u02/app/12.2.0/grid/crs/install/roothas.pl -deconfig -force -verbose &
+[1] 27566
+[root@hrvlprddb7601 ~]# Using configuration parameter file: /u02/app/12.2.0/grid/crs/install/crsconfig_params
+The log of current session can be found at:
+  /u02/app/oracle/crsdata/hrvlprddb7601/crsconfig/hadeconfig.log
+2020/08/22 10:26:38 CLSRSC-332: CRS resources for listeners are still configured
+CRS-2791: Starting shutdown of Oracle High Availability Services-managed resources on 'hrvlprddb7601'
+CRS-2673: Attempting to stop 'ora.OPS_DATA.dg' on 'hrvlprddb7601'
+CRS-2677: Stop of 'ora.OPS_DATA.dg' on 'hrvlprddb7601' succeeded
+CRS-2673: Attempting to stop 'ora.evmd' on 'hrvlprddb7601'
+CRS-2673: Attempting to stop 'ora.DATA.dg' on 'hrvlprddb7601'
+CRS-2673: Attempting to stop 'ora.FRA.dg' on 'hrvlprddb7601'
+CRS-2673: Attempting to stop 'ora.OPS_FRA.dg' on 'hrvlprddb7601'
+CRS-2677: Stop of 'ora.DATA.dg' on 'hrvlprddb7601' succeeded
+CRS-2677: Stop of 'ora.OPS_FRA.dg' on 'hrvlprddb7601' succeeded
+CRS-2677: Stop of 'ora.FRA.dg' on 'hrvlprddb7601' succeeded
+CRS-2673: Attempting to stop 'ora.asm' on 'hrvlprddb7601'
+CRS-2677: Stop of 'ora.evmd' on 'hrvlprddb7601' succeeded
+CRS-2677: Stop of 'ora.asm' on 'hrvlprddb7601' succeeded
+CRS-2673: Attempting to stop 'ora.cssd' on 'hrvlprddb7601'
+CRS-2677: Stop of 'ora.cssd' on 'hrvlprddb7601' succeeded
+CRS-2793: Shutdown of Oracle High Availability Services-managed resources on 'hrvlprddb7601' has completed
+CRS-4133: Oracle High Availability Services has been stopped.
+timed out waiting for input: auto-logout
+[grid@hrvlprddb7601 ~]$ 2020/08/22 10:32:18 CLSRSC-337: Successfully deconfigured Oracle Restart stack
+
+
+
+
+[grid@hrvlprddb7601 grid]$ ./gridSetup.sh -silent -ignorePrereqFailure -responseFile /home/grid/gridsetup.rsp &
+[1] 13466
+[grid@hrvlprddb7601 grid]$ Launching Oracle Grid Infrastructure Setup Wizard...
+
+[WARNING] [INS-41812] OSDBA and OSASM are the same OS group.
+   CAUSE: The chosen values for OSDBA group and the chosen value for OSASM group are the same.
+   ACTION: Select an OS group that is unique for ASM administrators. The OSASM group should not be the same as the OS groups that grant privileges for Oracle ASM access, or for database administration.
+[WARNING] [INS-41874] Oracle ASM Administrator (OSASM) Group specified is same as the inventory group.
+   CAUSE: Operating system group oinstall specified for OSASM Group is same as the inventory group.
+   ACTION: It is not recommended to have OSASM group same as inventory group. Select any of the group other than the inventory group to avoid incorrect configuration.
+[WARNING] [INS-13014] Target environment does not meet some optional requirements.
+   CAUSE: Some of the optional prerequisites are not met. See logs for details. /u02/app/oraInventory/logs/GridSetupActions2020-08-22_10-37-45AM/gridSetupActions2020-08-22_10-37-45AM.log
+   ACTION: Identify the list of failed prerequisite checks from the log: /u02/app/oraInventory/logs/GridSetupActions2020-08-22_10-37-45AM/gridSetupActions2020-08-22_10-37-45AM.log. Then either from the log file or from installation manual find the appropriate configuration to meet the prerequisites and fix it manually.
+The response file for this session can be found at:
+ /u02/app/19.3.0/grid/install/response/grid_2020-08-22_10-37-45AM.rsp
+
+You can find the log of this install session at:
+ /u02/app/oraInventory/logs/GridSetupActions2020-08-22_10-37-45AM/gridSetupActions2020-08-22_10-37-45AM.log
+
+[grid@hrvlprddb7601 grid]$ jobs
+[1]+  Running                 ./gridSetup.sh -silent -ignorePrereqFailure -responseFile /home/grid/gridsetup.rsp &
+[grid@hrvlprddb7601 grid]$
+As a root user, execute the following script(s):
+        1. /u02/app/19.3.0/grid/root.sh
+
+Execute /u02/app/19.3.0/grid/root.sh on the following nodes:
+[hrvlprddb7601]
+
+
+
+Successfully Setup Software with warning(s).
+As install user, execute the following command to complete the configuration.
+        /u02/app/19.3.0/grid/gridSetup.sh -executeConfigTools -responseFile /home/grid/gridsetup.rsp [-silent]
+
+
+
+[root@hrvlprddb7601 locks]# /u02/app/19.3.0/grid/root.sh
+Check /u02/app/19.3.0/grid/install/root_hrvlprddb7601.hr.state.sbu_2020-08-22_10-40-29-271730158.log for the output of root script
+
+
+
+
+[grid@hrvlprddb7601 grid]$ /u02/app/19.3.0/grid/gridSetup.sh -executeConfigTools -responseFile /home/grid/gridsetup.rsp -silent &
+[1] 22899
+[grid@hrvlprddb7601 grid]$ Launching Oracle Grid Infrastructure Setup Wizard...
+
+You can find the logs of this session at:
+/u02/app/oraInventory/logs/GridSetupActions2020-08-22_10-42-40AM
+
+You can find the log of this install session at:
+ /u02/app/oraInventory/logs/UpdateNodeList2020-08-22_10-42-40AM.log
+

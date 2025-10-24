@@ -1,0 +1,25 @@
+04/17/2023 17:38:53 **** Importing Worklet: wklt_KC_LOAD_ERRORS ...
+    Replacing worklet: wklt_KC_LOAD_ERRORS
+Replacing session instance [s_m_KC_DAILY_LOAD_ERRORS_PRM_FILE]
+Replacing session instance [s_m_KC_DAILY_LOAD_EMAIL_SUCCESS]
+Replacing session instance [s_m_KC_DAILY_LOAD_EMAIL_FAILURE]
+Replacing session instance [s_m_KC_DAILY_LOAD_ERRORS_PRM_FILE1]
+Replacing session instance [s_m_KC_DAILY_LOAD_EMAIL_FAILURE1]
+Copying session instance [s_m_START_KC_TF_CLONE_FLAG]
+
+------------------------------------------------------------------------------
+04/17/2023 17:38:53 ** Saving... Repository etlut, Folder KC_DW_MAIN_KC_LOAD
+------------------------------------------------------------------------------
+Validating the flow semantics of Worklet wklt_KC_LOAD_ERRORS...
+...flow semantics validation completed with no errors.
+
+Validating tasks of Worklet wklt_KC_LOAD_ERRORS...
+...Worklet wklt_KC_LOAD_ERRORS tasks validation completed with no errors.
+
+Worklet wklt_KC_LOAD_ERRORS updated.
+------------------------------------------------------------------------------
+
+
+
+----- Completed importing selected Objects -----
+

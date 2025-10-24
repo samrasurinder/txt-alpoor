@@ -1,0 +1,36 @@
+Production Morning Checks:
+-------------------------
+
+
+Create a Master OEM Morning check job for following sub-tasks and verify output of each step to see any actions to be taken. This job will be scheduled to run at 5.00 AM daily and output will be ready by 6AM.
+AM DBA will verify output of each step to see any red flags and act upon it 
+
+
+1) Verify DB Connectivity
+Check 
+
+SQL script will be developed to loop thru following databases and verify connectivity. Check Output in OEM for any connectivity failures
+
+ARC
+CRM
+EODPRD
+HFKC
+HFKC
+HFKC
+HFPRD
+HROEMREP
+HRPRDREP
+HRPRDVCS
+OPS
+PRD
+PRD88R
+PRDPHR
+PRDREP
+PRDSES
+SNCPRD
+
+
+2) Check for Invalid Objects
+
+
+

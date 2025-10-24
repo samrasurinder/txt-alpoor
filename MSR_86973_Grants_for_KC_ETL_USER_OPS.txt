@@ -1,0 +1,46 @@
+SQL> SET SERVEROUTPUT ON
+SQL> 
+SQL> show user;
+USER is "SYS"
+SQL> 
+SQL> select * from global_name;
+
+GLOBAL_NAME                                                                     
+--------------------------------------------------------------------------------
+OPS.HR.STATE.SBU                                                                
+
+SQL> 
+SQL> select sysdate from dual;
+
+SYSDATE                                                                         
+---------                                                                       
+13-JUN-23                                                                       
+
+SQL> 
+SQL> Grant Select on sysadm.ps_posn_incumbent to KC_ETL_USER;
+
+Grant succeeded.
+
+SQL> Grant Select on sysadm.ps_op_company_vw to KC_ETL_USER;
+
+Grant succeeded.
+
+SQL> Grant Select on sysadm.ps_busunit_hr_vw to KC_ETL_USER;
+
+Grant succeeded.
+
+SQL> Grant Select on sysadm.ps_op_pos_acctg to KC_ETL_USER;
+
+Grant succeeded.
+
+SQL> Grant Select on sysadm.ps_location_tbl to KC_ETL_USER;
+
+Grant succeeded.
+
+SQL> COMMIT;
+
+Commit complete.
+
+SQL> SHOW ERRORS;
+No errors.
+SQL> SPOOL OFF;

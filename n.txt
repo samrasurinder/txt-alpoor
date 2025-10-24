@@ -1,0 +1,1 @@
+ /u02/app/oracle/scripts/refresh/KC_Deploy/Log/OPSTST1_KC_Deploy_Preserve_$(date +\%m\%d\%y).log

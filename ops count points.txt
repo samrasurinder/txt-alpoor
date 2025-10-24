@@ -1,0 +1,32 @@
+Alpoor,
+
+You will have to remount CIFS shares on all DB servers.
+
+Below is a list of OPS systems that have CIFS mounts. After the password for hrsvcprdlinux is changed tomorrow all CIFS mounts will have to be remounted. Log on to each server and su to root. Type “mount” if you see the CIFS shares mount as identified in /root/scripts/mountCIFS.sh then you will have to manually unmount the share(s). To unmount shares:
+
+umount SHARE
+
+i.e.
+
+umount  /ops/cfg/psft/pt/857/appserv/xmlp
+
+if for some reason you receive a message saying share is in use use the command below:
+
+umount –l /ops/cfg/psft/pt/857/appserv/xmlp         (the –l is a lower case L)
+
+After shares are unmounted run the mount script (/root/scripts/mountCIFS.sh) as root and provide password just as you do for DB servers.
+
+hrvlprdap7602
+hrvlprdap7601
+hrvlprdws7602
+hrvlprdws7601
+hrvlprddb7601
+hrvlprddb7602
+hrvlprddb7603
+
+
+If during the mount process you receive a permission denied error check with NetOps people and have them unlock the hrsvcprdlinux  account.
+
+Manuel / Ali can you verify all needed mounts are present and accessible after Alpoor remounts the shares?
+
+My mobile number is: 717-649-8425

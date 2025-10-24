@@ -1,0 +1,54 @@
+2.    Run the pre root script.
+
+If this is a GI Home, as the root user execute:
+
+# <GI_HOME>/crs/install/rootcrs.sh -prepatch
+If this is an Oracle Restart Home, as the root user execute:
+
+# <GI_HOME>/crs/install/roothas.sh -prepatch
+3.    Patch GI home.
+
+As the GI home owner execute:
+
+$ <GI_HOME>/OPatch/opatch apply -oh <GI_HOME> -local <UNZIPPED_PATCH_LOCATION>/%BUGNO%/%OCW TRACKING BUG%
+$GI_HOME/OPatch/opatch apply -oh $GI_HOME -local /u02/PSU/JAN2020/30463673/30501932/30585969
+
+$ <GI_HOME>/OPatch/opatch apply -oh <GI_HOME> -local <UNZIPPED_PATCH_LOCATION>/%BUGNO%/%ACFS TRACKING BUG%
+$GI_HOME/OPatch/opatch apply -oh $GI_HOME -local /u02/PSU/JAN2020/30463673/30501932/30586063
+
+$ <GI_HOME>/OPatch/opatch apply -oh <GI_HOME> -local <UNZIPPED_PATCH_LOCATION>/%BUGNO%/%DB WLM TRACKING BUG%
+$GI_HOME/OPatch/opatch apply -oh $GI_HOME -local /u02/PSU/JAN2020/30463673/30501932/26839277
+
+$ <GI_HOME>/OPatch/opatch apply -oh <GI_HOME> -local <UNZIPPED_PATCH_LOCATION>/%BUGNO%/%DB RU TRACKING BUG%
+$GI_HOME/OPatch/opatch apply -oh $GI_HOME -local /u02/PSU/JAN2020/30463673/30501932/30593149
+
+$ <GI_HOME>/OPatch/opatch apply -oh <GI_HOME> -local <UNZIPPED_PATCH_LOCATION>/%BUGNO%/%TOMCAT RU TRACKING BUG%  
+$GI_HOME/OPatch/opatch apply -oh $GI_HOME -local /u02/PSU/JAN2020/30463673/30501932/30591794
+
+4.    Patch DB home.
+
+As the database home owner execute:
+
+$ <UNZIPPED_PATCH_LOCATION>/%BUGNO%/%OCW TRACKING BUG%/custom/scripts/prepatch.sh -dbhome <ORACLE_HOME>
+/u02/PSU/JAN2020/30463673/30501932/30585969/custom/scripts/prepatch.sh -dbhome $ORACLE_HOME
+
+$ <ORACLE_HOME>/OPatch/opatch apply -oh <ORACLE_HOME> -local <UNZIPPED_PATCH_LOCATION>/%BUGNO%/%OCW TRACKING BUG%
+$ORACLE_HOME/OPatch/opatch apply -oh $ORACLE_HOME -local /u02/PSU/JAN2020/30463673/30501932/30585969
+
+$ <ORACLE_HOME>/OPatch/opatch apply -oh <ORACLE_HOME> -local <UNZIPPED_PATCH_LOCATION>/%BUGNO%/%DB RU TRACKING BUG%
+$ $ORACLE_HOME/OPatch/opatch apply -oh $ORACLE_HOME -local /u02/PSU/JAN2020/30463673/30501932/30593149
+
+$ <UNZIPPED_PATCH_LOCATION>/%BUGNO%/%OCW TRACKING BUG%/custom/scripts/postpatch.sh -dbhome <ORACLE_HOME> 
+/u02/PSU/JAN2020/30463673/30501932/30585969/custom/scripts/postpatch.sh -dbhome $ORACLE_HOME
+ 
+5.    Run the post script.
+
+As the root user execute:
+
+# $GI_HOME/rdbms/install/rootadd_rdbms.sh
+If this is a GI Home, as the root user execute:
+
+
+If this is an Oracle Restart Home, as the root user execute:
+
+# $GI_HOME/crs/install/roothas.sh -postpatch

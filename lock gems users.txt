@@ -1,0 +1,140 @@
+SQL> @me
+
+DATABASE_SCHEMA                                                                 
+--------------------------------------------------------------------------------
+PRD.HR.STATE.SBU (SYS)                                                          
+
+SQL> CREATE TABLE sysadm.psoprdefn_bkup AS SELECT * FROM sysadm.psoprdefn;
+
+Table created.
+
+SQL> CREATE TABLE sysadm.locked_oper AS SELECT * from sysadm.psoprdefn where ACCTLOCK = 1;
+
+Table created.
+
+SQL> SELECT * FROM sysadm.psoprdefn
+  2  MINUS
+  3  SELECT * FROM sysadm.psoprdefn_bkup ;
+
+no rows selected
+
+SQL> SELECT * FROM sysadm.psoprdefn where ACCTLOCK = 1
+  2  MINUS
+  3  SELECT * FROM sysadm.locked_oper ;
+
+no rows selected
+
+SQL> SELECT count(*) FROM sysadm.psoprdefn;
+
+  COUNT(*)                                                                      
+----------                                                                      
+     53881                                                                      
+
+SQL> SELECT count(*) FROM sysadm.psoprdefn_bkup;
+
+  COUNT(*)                                                                      
+----------                                                                      
+     53881                                                                      
+
+SQL> SELECT count(*) FROM sysadm.locked_oper;
+
+  COUNT(*)                                                                      
+----------                                                                      
+     19897                                                                      
+
+SQL> SELECT count(*) FROM sysadm.psoprdefn WHERE ACCTLOCK = 1;
+
+  COUNT(*)                                                                      
+----------                                                                      
+     19897                                                                      
+
+SQL> SELECT count(*) FROM sysadm.psoprdefn WHERE ACCTLOCK = 0;
+
+  COUNT(*)                                                                      
+----------                                                                      
+     33984                                                                      
+
+SQL> 
+SQL> UPDATE sysadm.psoprdefn SET ACCTLOCK = 1 WHERE OPRID NOT IN
+  2  ('PS'
+  3  ,'PSAPPS'
+  4  ,'PTWEBSERVER'
+  5  ,'PERIMBJA'
+  6  ,'PERIMSMC'
+  7  ,'HRSODACH'
+  8  ,'BATCHSOD'
+  9  ,'ZHRSDDDV'
+ 10  ,'PERADMPM'
+ 11  ,'PERADMRM'
+ 12  ,'HRRIMIGW'
+ 13  ,'PERADMJF'
+ 14  ,'HRRIMSLB'
+ 15  ,'HRRIMAES'
+ 16  ,'HRRIMCNN'
+ 17  ,'PERADMKB'
+ 18  ,'HRSODTAG'
+ 19  ,'HRSODEHB'
+ 20  ,'HRSODPEP'
+ 21  ,'HRSODDH'
+ 22  ,'HRSODDLB'
+ 23  ,'HRSODMTC'
+ 24  ,'HRSODSDW'
+ 25  ,'ZHRSODCMF')
+ 26  AND ACCTLOCK = 0;
+
+33960 rows updated.
+
+SQL> commit;
+
+Commit complete.
+
+SQL> SELECT count (*) FROM sysadm.psoprdefn WHERE ACCTLOCk = 1 ;
+
+  COUNT(*)                                                                      
+----------                                                                      
+     53857                                                                      
+
+SQL> SELECT oprid, oprdefndesc FROM sysadm.psoprdefn WHERE acctlock = 0;
+
+OPRID                          OPRDEFNDESC                                      
+------------------------------ ------------------------------                   
+BATCHSOD                       Batch processes by SOD                           
+PERADMRM                       WESTBROOK,ROGER                                  
+PSAPPS                                                                          
+PERADMKB                       BANKS,KIM R                                      
+PERADMPM                       MOORE,PAMELA B                                   
+PERIMBJA                       ASHFORD,BRENDA J                                 
+HRSODACH                       HEFLEY, ANDREA C                                 
+HRRIMSLB                       BUTLER-JENIFER, SHERRIE L                        
+PS                             Super User                                       
+PERIMSMC                       CONWAY,SUSAN M                                   
+HRRIMAES                       SMITH, ANDRE E                                   
+
+OPRID                          OPRDEFNDESC                                      
+------------------------------ ------------------------------                   
+ZHRSDDDV                       VANN,TOMMY NMN                                   
+PERADMJF                       FITCHETT,JASMINE N                               
+HRRIMCNN                       NEAL, CHERYL                                     
+PTWEBSERVER                                                                     
+HRSODEHB                       BUNDY,ERINN H.                                   
+HRSODTAG                       GRAHAM,TERRENCE A                                
+ZHRSODCMF                      FISHER,CHRISTOPHER M                             
+HRSODSDW                       WHEELER,SHERRI D                                 
+HRSODDH                        HICKSON,DANITA NMN                               
+HRSODDLB                       BROOKS,DESIREE L                                 
+HRSODMTC                       CARTER,MARCUS T                                  
+
+OPRID                          OPRDEFNDESC                                      
+------------------------------ ------------------------------                   
+HRSODPEP                       PARKER,PAMELA E                                  
+HRRIMIGW                       GARCIA WATKINS,INDIRA                            
+
+24 rows selected.
+
+SQL> @me
+
+DATABASE_SCHEMA                                                                 
+--------------------------------------------------------------------------------
+PRD.HR.STATE.SBU (SYS)                                                          
+
+SQL> spool off

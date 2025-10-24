@@ -1,0 +1,113 @@
+<?xml version="1.0" standalone="yes" ?>
+<!-- Copyright (c) 1999, 2014, Oracle and/or its affiliates.
+All rights reserved. -->
+<!-- Do not modify the contents of this file by hand. -->
+<INVENTORY>
+<VERSION_INFO>
+   <SAVED_WITH>12.1.0.2.0</SAVED_WITH>
+   <MINIMUM_VER>2.1.0.6.0</MINIMUM_VER>
+</VERSION_INFO>
+<HOME_LIST>
+<HOME NAME="OraWL12213Home" LOC="/ops/oracle/psft/pt/pt/bea" TYPE="O" IDX="1"/>
+<HOME NAME="OraTux1222Home" LOC="/ops/oracle/psft/pt/pt/bea/tuxedo" TYPE="O" IDX="2"/>
+<HOME NAME="OraClient12cHome" LOC="/ops/oracle/psft/pt/pt/oracle-client/12.1.0.2" TYPE="O" IDX="3"/>
+</HOME_LIST>
+<COMPOSITEHOME_LIST>
+</COMPOSITEHOME_LIST>
+</INVENTORY>
+
+
+
+[root@hrvltstap7601 admin]# find / -name oraInventory -print
+/ops/oracle/psft/pt/db/oraInventory
+[root@hrvltstap7601 admin]# cd /ops/oracle/psft/pt/db/oraInventory
+[root@hrvltstap7601 oraInventory]# ls -altrh
+total 8.0K
+-rwxrwx---. 1 oracle2 oinstall   70 Apr  5  2019 oraInst.loc
+drwxrwxr-x. 2 oracle2 oinstall   60 Apr  5  2019 ContentsXML
+drwxrwxr-x. 6 oracle2 oinstall   83 Apr  5  2019 .
+drwxrwxr-x. 5 oracle2 oinstall   93 Apr  5  2019 backup
+drwxrwxr-x. 2 oracle2 oinstall 4.0K May  2 12:25 logs
+drwxrwxr-x. 2 oracle2 oinstall   28 May  2 12:26 locks
+drwxrwxr-x. 3 root    root       46 Jul 13 15:01 ..
+[root@hrvltstap7601 oraInventory]# cd ContentsXML/
+[root@hrvltstap7601 ContentsXML]# ls -altrh
+total 12K
+drwxrwxr-x. 2 oracle2 oinstall  60 Apr  5  2019 .
+drwxrwxr-x. 6 oracle2 oinstall  83 Apr  5  2019 ..
+-rwxrwx---. 1 oracle2 oinstall 655 Apr  5  2019 inventory.xml
+-rw-rw----. 1 oracle2 oinstall 329 May  2 12:26 comps.xml
+-rw-rw----. 1 oracle2 oinstall 292 May  2 12:26 libs.xml
+[root@hrvltstap7601 ContentsXML]# vi inventory.xml
+[root@hrvltstap7601 ContentsXML]# pwd
+/ops/oracle/psft/pt/db/oraInventory/ContentsXML
+[root@hrvltstap7601 ContentsXML]#
+
+
+
+/ops/oracle/psft/pt/pt/oracle-client/19.3.0
+
+
+
+
+
+
+export ORACLE_BASE=/ops/oracle/psft/pt/pt/oracle-client
+export ORACLE_HOST=hrvltstap7601
+export ORACLE_HOME=/ops/oracle/psft/pt/pt/oracle-client/19.3.0
+export PATH=$ORACLE_HOME/bin:$PATH
+export ORA_INVENTORY=/ops/oracle/psft/pt/db/oraInventory
+./runInstaller -ignorePrereq -waitforcompletion -silent -responseFile /ops/oracle/psft/pt/pt/oracle-client/19.3.0/response/client_install.rsp
+
+[oracle2@hrvltstap7601 19.3.0]$ ./runInstaller -ignorePrereq -waitforcompletion -silent -responseFile /ops/oracle/psft/pt/pt/oracle-client/19.3.0/response/client_install.rsp
+Starting Oracle Universal Installer...
+
+Checking Temp space: must be greater than 415 MB.   Actual 8008 MB    Passed
+Checking swap space: must be greater than 150 MB.   Actual 1354 MB    Passed
+Preparing to launch Oracle Universal Installer from /tmp/OraInstall2020-07-13_04-52-37PM. Please wait ...[WARNING] [INS-32016] The selected Oracle home contains directories or files.
+   ACTION: To start with an empty Oracle home, either remove its contents or choose another location.
+[WARNING] [INS-13014] Target environment does not meet some optional requirements.
+   CAUSE: Some of the optional prerequisites are not met. See logs for details. /ops/oracle/psft/pt/db/oraInventory/logs/installActions2020-07-13_04-52-37PM.log
+   ACTION: Identify the list of failed prerequisite checks from the log: /ops/oracle/psft/pt/db/oraInventory/logs/installActions2020-07-13_04-52-37PM.log. Then either from the log file or from installation manual find the appropriate configuration to meet the prerequisites and fix it manually.
+The response file for this session can be found at:
+ /ops/oracle/psft/pt/pt/oracle-client/19.3.0/install/response/client_2020-07-13_04-52-37PM.rsp
+
+You can find the log of this install session at:
+ /ops/oracle/psft/pt/db/oraInventory/logs/installActions2020-07-13_04-52-37PM.log
+
+The installation of Oracle Client 19c was successful.
+Please check '/ops/oracle/psft/pt/db/oraInventory/logs/silentInstall2020-07-13_04-52-37PM.log' for more details.
+Successfully Setup Software with warning(s).
+[oracle2@hrvltstap7601 19.3.0]$
+[oracle2@hrvltstap7601 19.3.0]$
+
+
+./runInstaller -ignorePrereq -waitforcompletion -silent                        \
+    -responseFile ${ORACLE_HOME}/install/response/db_install.rsp               \
+    oracle.install.option=INSTALL_DB_SWONLY                                    \
+    ORACLE_HOSTNAME=${ORACLE_HOSTNAME}                                         \
+    UNIX_GROUP_NAME=oinstall                                                   \
+    INVENTORY_LOCATION=${ORA_INVENTORY}                                        \
+    SELECTED_LANGUAGES=en,en_GB                                                \
+    ORACLE_HOME=${ORACLE_HOME}                                                 \
+    ORACLE_BASE=${ORACLE_BASE}                                                 \
+    oracle.install.db.InstallEdition=EE                                        \
+    oracle.install.db.OSDBA_GROUP=dba                                          \
+    oracle.install.db.OSBACKUPDBA_GROUP=dba                                    \
+    oracle.install.db.OSDGDBA_GROUP=dba                                        \
+    oracle.install.db.OSKMDBA_GROUP=dba                                        \
+    oracle.install.db.OSRACDBA_GROUP=dba                                       \
+    SECURITY_UPDATES_VIA_MYORACLESUPPORT=false                                 \
+    DECLINE_SECURITY_UPDATES=true
+
+[oracle2@hrvlprdap7601 client]$ [WARNING] [INS-13014] Target environment does not meet some optional requirements.
+   CAUSE: Some of the optional prerequisites are not met. See logs for details. /ops/oracle/psft/pt/db/oraInventory/logs/installActions2020-08-19_03-14-37PM.log
+   ACTION: Identify the list of failed prerequisite checks from the log: /ops/oracle/psft/pt/db/oraInventory/logs/installActions2020-08-19_03-14-37PM.log. Then either from the log file or from installation manual find the appropriate configuration to meet the prerequisites and fix it manually.
+The response file for this session can be found at:
+ /ops/oracle/psft/pt/pt/oracle-client/19.3.0/install/response/client_2020-08-19_03-14-37PM.rsp
+
+You can find the log of this install session at:
+ /ops/oracle/psft/pt/db/oraInventory/logs/installActions2020-08-19_03-14-37PM.log
+The installation of Oracle Client 19c was successful.
+Please check '/ops/oracle/psft/pt/db/oraInventory/logs/silentInstall2020-08-19_03-14-37PM.log' for more details.
+Successfully Setup Software with warning(s).

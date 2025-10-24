@@ -1,0 +1,405 @@
+[grid@hrmdc1oel04 ~]$ olsnodes
+hrmdc1oel04
+hrmdc1oel05
+hrmdc1oel06
+[grid@hrmdc1oel04 ~]$
+
+
+
+[root@hrmdc1oel04 ~]# crsctl check cluster -all
+**************************************************************
+hrmdc1oel04:
+CRS-4537: Cluster Ready Services is online
+CRS-4529: Cluster Synchronization Services is online
+CRS-4533: Event Manager is online
+**************************************************************
+hrmdc1oel05:
+CRS-4537: Cluster Ready Services is online
+CRS-4529: Cluster Synchronization Services is online
+CRS-4533: Event Manager is online
+**************************************************************
+hrmdc1oel06:
+CRS-4537: Cluster Ready Services is online
+CRS-4529: Cluster Synchronization Services is online
+CRS-4533: Event Manager is online
+**************************************************************
+[root@hrmdc1oel04 ~]#
+
+
+
+[grid@hrmdc1oel04 ~]$ ifconfig
+eth0      Link encap:Ethernet  HWaddr 00:25:B5:00:00:2A
+          inet addr:10.65.204.32  Bcast:10.65.207.255  Mask:255.255.252.0
+          inet6 addr: fe80::225:b5ff:fe00:2a/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:120157585 errors:0 dropped:1782173 overruns:0 frame:0
+          TX packets:81234788 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:12176250813 (11.3 GiB)  TX bytes:6843282238 (6.3 GiB)
+
+eth1      Link encap:Ethernet  HWaddr 00:25:B5:00:00:2B
+          inet addr:10.65.34.32  Bcast:10.65.34.255  Mask:255.255.255.0
+          inet6 addr: fe80::225:b5ff:fe00:2b/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:473922137 errors:0 dropped:336450 overruns:0 frame:0
+          TX packets:12754115 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:219358905339 (204.2 GiB)  TX bytes:1019752179 (972.5 MiB)
+
+eth1:1    Link encap:Ethernet  HWaddr 00:25:B5:00:00:2B
+          inet addr:10.65.34.132  Bcast:10.65.34.255  Mask:255.255.255.0
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+
+eth1:2    Link encap:Ethernet  HWaddr 00:25:B5:00:00:2B
+          inet addr:10.65.34.106  Bcast:10.65.34.255  Mask:255.255.255.0
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+
+eth2      Link encap:Ethernet  HWaddr 00:25:B5:00:00:2C
+          inet addr:192.168.142.4  Bcast:192.168.142.15  Mask:255.255.255.240
+          inet6 addr: fe80::225:b5ff:fe00:2c/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:9000  Metric:1
+          RX packets:192321188 errors:0 dropped:320689 overruns:0 frame:0
+          TX packets:190314880 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:362661113480 (337.7 GiB)  TX bytes:349138844839 (325.1 GiB)
+
+eth2:1    Link encap:Ethernet  HWaddr 00:25:B5:00:00:2C
+          inet addr:169.254.31.135  Bcast:169.254.127.255  Mask:255.255.128.0
+          UP BROADCAST RUNNING MULTICAST  MTU:9000  Metric:1
+
+eth3      Link encap:Ethernet  HWaddr 00:25:B5:00:00:2D
+          inet addr:192.168.143.4  Bcast:192.168.143.15  Mask:255.255.255.240
+          inet6 addr: fe80::225:b5ff:fe00:2d/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:9000  Metric:1
+          RX packets:192178532 errors:0 dropped:320689 overruns:0 frame:0
+          TX packets:189906897 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:363050847666 (338.1 GiB)  TX bytes:349300792922 (325.3 GiB)
+
+eth3:1    Link encap:Ethernet  HWaddr 00:25:B5:00:00:2D
+          inet addr:169.254.216.169  Bcast:169.254.255.255  Mask:255.255.128.0
+          UP BROADCAST RUNNING MULTICAST  MTU:9000  Metric:1
+
+lo        Link encap:Local Loopback
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:16436  Metric:1
+          RX packets:56508069 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:56508069 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:56002769553 (52.1 GiB)  TX bytes:56002769553 (52.1 GiB)
+
+[grid@hrmdc1oel04 ~]$
+
+
+
+[grid@hrmdc1oel05 ~]$ ifconfig
+eth0      Link encap:Ethernet  HWaddr 00:25:B5:00:00:2E
+          inet addr:10.65.204.25  Bcast:10.65.207.255  Mask:255.255.252.0
+          inet6 addr: fe80::225:b5ff:fe00:2e/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:54470854 errors:0 dropped:1782214 overruns:0 frame:0
+          TX packets:32655728 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:6570528817 (6.1 GiB)  TX bytes:2716112183 (2.5 GiB)
+
+eth1      Link encap:Ethernet  HWaddr 00:25:B5:00:00:2F
+          inet addr:10.65.34.25  Bcast:10.65.34.255  Mask:255.255.255.0
+          inet6 addr: fe80::225:b5ff:fe00:2f/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:474751742 errors:0 dropped:330378 overruns:0 frame:0
+          TX packets:11825597 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:220593310098 (205.4 GiB)  TX bytes:955605185 (911.3 MiB)
+
+eth1:1    Link encap:Ethernet  HWaddr 00:25:B5:00:00:2F
+          inet addr:10.65.34.105  Bcast:10.65.34.255  Mask:255.255.255.0
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+
+eth1:6    Link encap:Ethernet  HWaddr 00:25:B5:00:00:2F
+          inet addr:10.65.34.125  Bcast:10.65.34.255  Mask:255.255.255.0
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+
+eth2      Link encap:Ethernet  HWaddr 00:25:B5:00:00:30
+          inet addr:192.168.142.5  Bcast:192.168.142.15  Mask:255.255.255.240
+          inet6 addr: fe80::225:b5ff:fe00:30/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:9000  Metric:1
+          RX packets:199483924 errors:0 dropped:320696 overruns:0 frame:0
+          TX packets:199805348 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:211154164260 (196.6 GiB)  TX bytes:220787439300 (205.6 GiB)
+
+eth2:1    Link encap:Ethernet  HWaddr 00:25:B5:00:00:30
+          inet addr:169.254.111.62  Bcast:169.254.127.255  Mask:255.255.128.0
+          UP BROADCAST RUNNING MULTICAST  MTU:9000  Metric:1
+
+eth3      Link encap:Ethernet  HWaddr 00:25:B5:00:00:31
+          inet addr:192.168.143.5  Bcast:192.168.143.15  Mask:255.255.255.240
+          inet6 addr: fe80::225:b5ff:fe00:31/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:9000  Metric:1
+          RX packets:199393133 errors:0 dropped:320704 overruns:0 frame:0
+          TX packets:199709955 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:213085786536 (198.4 GiB)  TX bytes:220894442738 (205.7 GiB)
+
+eth3:1    Link encap:Ethernet  HWaddr 00:25:B5:00:00:31
+          inet addr:169.254.146.80  Bcast:169.254.255.255  Mask:255.255.128.0
+          UP BROADCAST RUNNING MULTICAST  MTU:9000  Metric:1
+
+lo        Link encap:Local Loopback
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:57512465 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:57512465 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:55853173742 (52.0 GiB)  TX bytes:55853173742 (52.0 GiB)
+
+[grid@hrmdc1oel05 ~]$
+
+
+
+[grid@hrmdc1oel06 ~]$ ifconfig
+eth0      Link encap:Ethernet  HWaddr 00:25:B5:00:00:32
+          inet addr:10.65.204.33  Bcast:10.65.207.255  Mask:255.255.252.0
+          inet6 addr: fe80::225:b5ff:fe00:32/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:120628651 errors:3131 dropped:1782041 overruns:0 frame:3131
+          TX packets:80638793 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:12213463603 (11.3 GiB)  TX bytes:6807901941 (6.3 GiB)
+
+eth1      Link encap:Ethernet  HWaddr 00:25:B5:00:00:33
+          inet addr:10.65.34.33  Bcast:10.65.34.255  Mask:255.255.255.0
+          inet6 addr: fe80::225:b5ff:fe00:33/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:345343443 errors:0 dropped:330119 overruns:0 frame:0
+          TX packets:5932336 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:23855308535 (22.2 GiB)  TX bytes:540618164 (515.5 MiB)
+
+eth1:1    Link encap:Ethernet  HWaddr 00:25:B5:00:00:33
+          inet addr:10.65.34.133  Bcast:10.65.34.255  Mask:255.255.255.0
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+
+eth1:2    Link encap:Ethernet  HWaddr 00:25:B5:00:00:33
+          inet addr:10.65.34.104  Bcast:10.65.34.255  Mask:255.255.255.0
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+
+eth2      Link encap:Ethernet  HWaddr 00:25:B5:00:00:34
+          inet addr:192.168.142.6  Bcast:192.168.142.15  Mask:255.255.255.240
+          inet6 addr: fe80::225:b5ff:fe00:34/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:9000  Metric:1
+          RX packets:168747094 errors:4709 dropped:320686 overruns:0 frame:4709
+          TX packets:169462947 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:203269608869 (189.3 GiB)  TX bytes:204801257695 (190.7 GiB)
+
+eth2:1    Link encap:Ethernet  HWaddr 00:25:B5:00:00:34
+          inet addr:169.254.88.86  Bcast:169.254.127.255  Mask:255.255.128.0
+          UP BROADCAST RUNNING MULTICAST  MTU:9000  Metric:1
+
+eth3      Link encap:Ethernet  HWaddr 00:25:B5:00:00:35
+          inet addr:192.168.143.6  Bcast:192.168.143.15  Mask:255.255.255.240
+          inet6 addr: fe80::225:b5ff:fe00:35/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:9000  Metric:1
+          RX packets:168347430 errors:0 dropped:320687 overruns:0 frame:0
+          TX packets:169327366 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:203079354782 (189.1 GiB)  TX bytes:206663001485 (192.4 GiB)
+
+eth3:1    Link encap:Ethernet  HWaddr 00:25:B5:00:00:35
+          inet addr:169.254.152.201  Bcast:169.254.255.255  Mask:255.255.128.0
+          UP BROADCAST RUNNING MULTICAST  MTU:9000  Metric:1
+
+lo        Link encap:Local Loopback
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:16436  Metric:1
+          RX packets:57429964 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:57429964 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:55346238512 (51.5 GiB)  TX bytes:55346238512 (51.5 GiB)
+
+[grid@hrmdc1oel06 ~]$
+
+
+
+[grid@hrmdc1oel06 ~]$ cat /etc/hosts
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+
+10.65.34.23 hrmdc1oel01.hr.state.sbu hrmdc1oel01
+10.65.34.24 hrmdc1oel03.hr.state.sbu hrmdc1oel03
+10.65.34.25 hrmdc1oel05.hr.state.sbu hrmdc1oel05
+10.65.34.26 hrmdc1oel07.hr.state.sbu hrmdc1oel07
+10.65.34.27 hrmdc1oel09.hr.state.sbu hrmdc1oel09
+10.65.34.31 hrmdc1oel02.hr.state.sbu hrmdc1oel02
+10.65.34.32 hrmdc1oel04.hr.state.sbu hrmdc1oel04
+10.65.34.33 hrmdc1oel06.hr.state.sbu hrmdc1oel06
+10.65.34.34 hrmdc1oel08.hr.state.sbu hrmdc1oel08
+10.65.34.35 hrmdc1oel10.hr.state.sbu hrmdc1oel10
+
+10.65.204.23 hrmdc1oel01-sl.hr.state.sbu hrmdc1oel01-sl
+10.65.204.24 hrmdc1oel03-sl.hr.state.sbu hrmdc1oel03-sl
+10.65.204.25 hrmdc1oel05-sl.hr.state.sbu hrmdc1oel05-sl
+10.65.204.26 hrmdc1oel07-sl.hr.state.sbu hrmdc1oel07-sl
+10.65.204.27 hrmdc1oel09-sl.hr.state.sbu hrmdc1oel09-sl
+10.65.204.31 hrmdc1oel02-sl.hr.state.sbu hrmdc1oel02-sl
+10.65.204.32 hrmdc1oel04-sl.hr.state.sbu hrmdc1oel04-sl
+10.65.204.33 hrmdc1oel06-sl.hr.state.sbu hrmdc1oel06-sl
+10.65.204.34 hrmdc1oel08-sl.hr.state.sbu hrmdc1oel08-sl
+10.65.204.35 hrmdc1oel10-sl.hr.state.sbu hrmdc1oel10-sl
+
+10.65.34.123 hrmdc1oel01-vip.hr.state.sbu hrmdc1oel01-vip
+10.65.34.124 hrmdc1oel03-vip.hr.state.sbu hrmdc1oel03-vip
+10.65.34.125 hrmdc1oel05-vip.hr.state.sbu hrmdc1oel05-vip
+10.65.34.126 hrmdc1oel07-vip.hr.state.sbu hrmdc1oel07-vip
+10.65.34.127 hrmdc1oel09-vip.hr.state.sbu hrmdc1oel09-vip
+10.65.34.131 hrmdc1oel02-vip.hr.state.sbu hrmdc1oel02-vip
+10.65.34.132 hrmdc1oel04-vip.hr.state.sbu hrmdc1oel04-vip
+10.65.34.133 hrmdc1oel06-vip.hr.state.sbu hrmdc1oel06-vip
+10.65.34.134 hrmdc1oel08-vip.hr.state.sbu hrmdc1oel08-vip
+10.65.34.135 hrmdc1oel10-vip.hr.state.sbu hrmdc1oel10-vip
+
+192.168.142.4 hrmdc1oel04-priv1.hr.state.sbu hrmdc1oel04-priv1
+192.168.142.5 hrmdc1oel05-priv1.hr.state.sbu hrmdc1oel05-priv1
+192.168.142.6 hrmdc1oel06-priv1.hr.state.sbu hrmdc1oel06-priv1
+
+192.168.143.4 hrmdc1oel04-priv2.hr.state.sbu hrmdc1oel04-priv2
+192.168.143.5 hrmdc1oel05-priv2.hr.state.sbu hrmdc1oel05-priv2
+192.168.143.6 hrmdc1oel06-priv2.hr.state.sbu hrmdc1oel06-priv2
+
+[grid@hrmdc1oel06 ~]$
+
+
+
+[grid@hrmdc1oel04 ~]$ srvctl config scan
+SCAN name: hfmdc-scan, Network: 1/10.65.34.0/255.255.255.0/eth1
+SCAN VIP name: scan1, IP: /hfmdc-scan/10.65.34.104
+SCAN VIP name: scan2, IP: /hfmdc-scan/10.65.34.106
+SCAN VIP name: scan3, IP: /hfmdc-scan/10.65.34.105
+[grid@hrmdc1oel04 ~]$
+
+
+
+[grid@hrmdc1oel04 ~]$ crsctl stat res -t
+--------------------------------------------------------------------------------
+NAME           TARGET  STATE        SERVER                   STATE_DETAILS
+--------------------------------------------------------------------------------
+Local Resources
+--------------------------------------------------------------------------------
+ora.DATA.dg
+               ONLINE  OFFLINE      hrmdc1oel04
+               ONLINE  OFFLINE      hrmdc1oel05
+               ONLINE  OFFLINE      hrmdc1oel06
+ora.FRA.dg
+               ONLINE  OFFLINE      hrmdc1oel04
+               ONLINE  OFFLINE      hrmdc1oel05
+               ONLINE  OFFLINE      hrmdc1oel06
+ora.HFCRM_DATA.dg
+               OFFLINE OFFLINE      hrmdc1oel04
+               OFFLINE OFFLINE      hrmdc1oel05
+               OFFLINE OFFLINE      hrmdc1oel06
+ora.HFCRM_FRA.dg
+               OFFLINE OFFLINE      hrmdc1oel04
+               OFFLINE OFFLINE      hrmdc1oel05
+               OFFLINE OFFLINE      hrmdc1oel06
+ora.HFPRD_DATA.dg
+               ONLINE  ONLINE       hrmdc1oel04
+               ONLINE  ONLINE       hrmdc1oel05
+               ONLINE  ONLINE       hrmdc1oel06
+ora.HFPRD_FRA.dg
+               OFFLINE OFFLINE      hrmdc1oel04
+               OFFLINE OFFLINE      hrmdc1oel05
+               OFFLINE OFFLINE      hrmdc1oel06
+ora.LISTENER.lsnr
+               OFFLINE OFFLINE      hrmdc1oel04
+               ONLINE  ONLINE       hrmdc1oel05
+               OFFLINE OFFLINE      hrmdc1oel06
+ora.OCR_VOTE.dg
+               ONLINE  ONLINE       hrmdc1oel04
+               ONLINE  ONLINE       hrmdc1oel05
+               ONLINE  ONLINE       hrmdc1oel06
+ora.OPSSTBY_DATA.dg
+               OFFLINE OFFLINE      hrmdc1oel04
+               OFFLINE OFFLINE      hrmdc1oel05
+               OFFLINE OFFLINE      hrmdc1oel06
+ora.OPSSTBY_FRA.dg
+               OFFLINE OFFLINE      hrmdc1oel04
+               OFFLINE OFFLINE      hrmdc1oel05
+               OFFLINE OFFLINE      hrmdc1oel06
+ora.PRD_DATA.dg
+               OFFLINE OFFLINE      hrmdc1oel04
+               OFFLINE OFFLINE      hrmdc1oel05
+               OFFLINE OFFLINE      hrmdc1oel06
+ora.PRD_FRA.dg
+               OFFLINE OFFLINE      hrmdc1oel04
+               OFFLINE OFFLINE      hrmdc1oel05
+               OFFLINE OFFLINE      hrmdc1oel06
+ora.asm
+               ONLINE  ONLINE       hrmdc1oel04              Started
+               ONLINE  ONLINE       hrmdc1oel05              Started
+               ONLINE  ONLINE       hrmdc1oel06              Started
+ora.gsd
+               OFFLINE OFFLINE      hrmdc1oel04
+               OFFLINE OFFLINE      hrmdc1oel05
+               OFFLINE OFFLINE      hrmdc1oel06
+ora.net1.network
+               ONLINE  ONLINE       hrmdc1oel04
+               ONLINE  ONLINE       hrmdc1oel05
+               ONLINE  ONLINE       hrmdc1oel06
+ora.ons
+               ONLINE  ONLINE       hrmdc1oel04
+               ONLINE  ONLINE       hrmdc1oel05
+               ONLINE  ONLINE       hrmdc1oel06
+ora.registry.acfs
+               ONLINE  ONLINE       hrmdc1oel04
+               ONLINE  ONLINE       hrmdc1oel05
+               ONLINE  ONLINE       hrmdc1oel06
+--------------------------------------------------------------------------------
+Cluster Resources
+--------------------------------------------------------------------------------
+EMCagent
+      1        ONLINE  UNKNOWN      hrmdc1oel05
+ora.LISTENER_SCAN1.lsnr
+      1        ONLINE  ONLINE       hrmdc1oel06
+ora.LISTENER_SCAN2.lsnr
+      1        ONLINE  ONLINE       hrmdc1oel04
+ora.LISTENER_SCAN3.lsnr
+      1        ONLINE  ONLINE       hrmdc1oel05
+ora.cvu
+      1        ONLINE  ONLINE       hrmdc1oel05
+ora.hfcrm.db
+      1        OFFLINE OFFLINE
+      2        OFFLINE OFFLINE
+      3        OFFLINE OFFLINE
+ora.hfprd.db
+      1        OFFLINE OFFLINE
+      2        OFFLINE OFFLINE
+      3        OFFLINE OFFLINE
+ora.hrmdc1oel04.vip
+      1        ONLINE  ONLINE       hrmdc1oel04
+ora.hrmdc1oel05.vip
+      1        ONLINE  ONLINE       hrmdc1oel05
+ora.hrmdc1oel06.vip
+      1        ONLINE  ONLINE       hrmdc1oel06
+ora.oc4j
+      1        ONLINE  OFFLINE
+ora.opsstby.db
+      1        OFFLINE OFFLINE
+      2        OFFLINE OFFLINE
+      3        OFFLINE OFFLINE
+ora.scan1.vip
+      1        ONLINE  ONLINE       hrmdc1oel06
+ora.scan2.vip
+      1        ONLINE  ONLINE       hrmdc1oel04
+ora.scan3.vip
+      1        ONLINE  ONLINE       hrmdc1oel05
+ora.sncstby.db
+      1        OFFLINE OFFLINE
+      2        OFFLINE OFFLINE
+      3        OFFLINE OFFLINE
+[grid@hrmdc1oel04 ~]$
+
+

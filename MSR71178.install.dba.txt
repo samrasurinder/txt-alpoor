@@ -1,0 +1,11 @@
+-- Logon to FSBID in target environment and run this attachment
+
+fsbid3.sql
+
+-- Logon to ESRT_INTERFACE in target environment and run this attachment
+
+VW_ILMS_FSBID_ASG.SQL
+fsbid.sql
+MV_ILMS_EMP_ASG.SQL
+VW_ESB_FSBID_ASG.SQL
+REFRESH_ILMS_ASG.SQL

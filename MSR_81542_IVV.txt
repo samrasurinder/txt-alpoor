@@ -1,0 +1,41 @@
+SQL> SET FEEDBACK ON
+SQL> 
+SQL>         	SET TERMOUT ON
+SQL> 
+SQL> col database_schema format a40
+SQL> 
+SQL> 	select substr(global_name,1,30) || ' ('||user||')' database_schema from global_name;
+
+DATABASE_SCHEMA                                                                 
+----------------------------------------                                        
+IVV1.HR.STATE.SBU (SYS)                                                         
+
+1 row selected.
+
+SQL> 
+SQL> 
+SQL> 
+SQL> 
+SQL> !ls -altrh
+
+SQL> @MSR_81542_Script.sql
+
+DATABASE_SCHEMA                                                                 
+----------------------------------------                                        
+IVV1.HR.STATE.SBU (SYS)                                                         
+
+1 row selected.
+
+
+no rows selected
+
+
+2 rows updated.
+
+
+no rows selected
+
+
+Commit complete.
+
+SQL> spool off;

@@ -1,0 +1,23 @@
+[WARNING] The database instance 'TST43' from '/u02/app/oracle/product/19.3.0/db_1', in host'hrvltstdb22' is not running. SQL changes, if any,  will not be applied.
+To apply. the SQL changes, bring up the database instance and run the command manually from any one node (run as oracle).
+Refer to the readme to get the correct steps for applying the sql changes.
+
+[WARNING] The database instance 'KCASB3' from '/u02/app/oracle/product/19.3.0/db_1', in host'hrvltstdb22' is not running. SQL changes, if any,  will not be applied.
+To apply. the SQL changes, bring up the database instance and run the command manually from any one node (run as oracle).
+Refer to the readme to get the correct steps for applying the sql changes.
+
+[WARNING] The database instance 'TST43' from '/u02/app/oracle/product/19.3.0/db_1', in host'hrvltstdb22' is not running. SQL changes, if any,  will not be applied.
+To apply. the SQL changes, bring up the database instance and run the command manually from any one node (run as oracle).
+Refer to the readme to get the correct steps for applying the sql changes.
+
+[WARNING] The database instance 'KCASB3' from '/u02/app/oracle/product/19.3.0/db_1', in host'hrvltstdb22' is not running. SQL changes, if any,  will not be applied.
+To apply. the SQL changes, bring up the database instance and run the command manually from any one node (run as oracle).
+Refer to the readme to get the correct steps for applying the sql changes.
+
+[WARNING] The database instance 'KCUAT3' from '/u02/app/oracle/product/19.3.0/db_1', in host'hrvltstdb22' is not running. SQL changes, if any,  will not be applied.
+To apply. the SQL changes, bring up the database instance and run the command manually from any one node (run as oracle).
+Refer to the readme to get the correct steps for applying the sql changes.
+
+[WARNING] The database instance 'TST43' from '/u02/app/oracle/product/19.3.0/db_1', in host'hrvltstdb22' is not running. SQL changes, if any,  will not be applied.
+To apply. the SQL changes, bring up the database instance and run the command manually from any one node (run as oracle).
+Refer to the readme to get the correct steps for applying the sql changes.

@@ -1,0 +1,131 @@
+
+ COL OWNER FORMAT A20
+ COL OBJECT_NAME FORMAT A30
+ COL OBJECT_TYPE FORMAT A20
+ COL STATUS FORMAT A10
+ COL CREATED FORMAT A30
+ SET LINESIZE 150
+ SET PAGESIZE 100
+ alter session set nls_date_format = 'DD-MON-YYYY HH24:MI:SS';
+ select owner,OBJECT_NAME,object_type,created from dba_objects where object_type='TRIGGER' order by 1,2;
+
+
+Production(OPS)
+---------------
+SQL>
+OWNER                OBJECT_NAME                    OBJECT_TYPE          CREATED
+-------------------- ------------------------------ -------------------- ------------------------------
+GSMADMIN_INTERNAL    CAT_ROLLBACK_TRIGGER           TRIGGER              23-AUG-2019 22:47:24
+GSMADMIN_INTERNAL    DONE_TRIGGER                   TRIGGER              23-AUG-2019 22:47:24
+GSMADMIN_INTERNAL    GSMLOGOFF                      TRIGGER              23-AUG-2019 22:47:24
+GSMADMIN_INTERNAL    REQUEST_DELETE_TRIGGER         TRIGGER              23-AUG-2019 22:47:24
+GSMADMIN_INTERNAL    VNCR_INSERT                    TRIGGER              23-AUG-2019 22:46:09
+SYS                  AW_DROP_TRG                    TRIGGER              10-NOV-2014 11:50:55
+SYS                  AW_REN_TRG                     TRIGGER              10-NOV-2014 11:50:55
+SYS                  AW_TRUNC_TRG                   TRIGGER              10-NOV-2014 11:50:55
+SYS                  LOGMNRGGC_TRIGGER              TRIGGER              10-NOV-2014 11:49:11
+SYS                  SYSLSBY_EDS_DDL_TRIG           TRIGGER              23-AUG-2019 22:41:22
+SYS                  XDB_PI_TRIG                    TRIGGER              23-AUG-2019 22:46:29
+SYSADM               OP_PSOPRDEFN_TR                TRIGGER              25-AUG-2019 13:30:00
+SYSADM               OP_PSROLEUSER_TR               TRIGGER              16-NOV-2018 18:15:26
+SYSADM               PSUCURRENCY_CD_TBL             TRIGGER              15-SEP-2017 01:09:28
+SYSADM               PSUPSMPRTPREF                  TRIGGER              15-SEP-2017 01:09:28
+SYSADM               PSUPSTIMEZONEDEFN              TRIGGER              15-SEP-2017 01:09:28
+SYSADM               PSURT_RATE_TBL                 TRIGGER              15-SEP-2017 01:09:28
+SYSADM               PS_OP_MC_HDR_RMRK_TR           TRIGGER              16-MAY-2019 18:58:55
+SYSADM               PS_OP_MC_HDR_TR                TRIGGER              16-MAY-2019 18:58:55
+SYSADM               PS_OP_MC_LINES_TR              TRIGGER              16-AUG-2019 11:38:22
+SYSADM               PS_OP_MC_LN_RMRK_TR            TRIGGER              16-MAY-2019 18:58:55
+SYSTEM               SET_AFTER_LOGON_TRG            TRIGGER              09-DEC-2014 08:13:39
+XDB                  XDB$ACL$xd                     TRIGGER              23-AUG-2019 22:46:42
+XDB                  XDB$CONFIG$xd                  TRIGGER              23-AUG-2019 22:46:47
+XDB                  XDB$RESCONFIG$xd               TRIGGER              23-AUG-2019 22:46:43
+XDB                  XDB$STATS$xd                   TRIGGER              23-AUG-2019 22:46:46
+XDB                  XDBCONFIG_VALIDATE             TRIGGER              23-AUG-2019 22:46:47
+XDB                  XDB_PV_TRIG                    TRIGGER              23-AUG-2019 22:46:44
+XDB                  XDB_RV_TRIG                    TRIGGER              23-AUG-2019 22:46:36
+
+29 rows selected.
+
+
+SQL>
+
+
+
+OPSUAT.HR.STATE.SBU
+-------------------
+
+
+OWNER                OBJECT_NAME                    OBJECT_TYPE          CREATED
+-------------------- ------------------------------ -------------------- ------------------------------
+GSMADMIN_INTERNAL    CAT_ROLLBACK_TRIGGER           TRIGGER              12-AUG-2019 13:21:40
+GSMADMIN_INTERNAL    DONE_TRIGGER                   TRIGGER              12-AUG-2019 13:21:40
+GSMADMIN_INTERNAL    GSMLOGOFF                      TRIGGER              12-AUG-2019 13:21:40
+GSMADMIN_INTERNAL    REQUEST_DELETE_TRIGGER         TRIGGER              12-AUG-2019 13:21:40
+GSMADMIN_INTERNAL    VNCR_INSERT                    TRIGGER              12-AUG-2019 13:20:32
+SYS                  AW_DROP_TRG                    TRIGGER              10-NOV-2014 11:50:55
+SYS                  AW_REN_TRG                     TRIGGER              10-NOV-2014 11:50:55
+SYS                  AW_TRUNC_TRG                   TRIGGER              10-NOV-2014 11:50:55
+SYS                  LOGMNRGGC_TRIGGER              TRIGGER              10-NOV-2014 11:49:11
+SYS                  SYSLSBY_EDS_DDL_TRIG           TRIGGER              12-AUG-2019 13:15:48
+SYS                  XDB_PI_TRIG                    TRIGGER              12-AUG-2019 13:20:48
+SYSADM               OP_PSROLEUSER_TR               TRIGGER              16-NOV-2018 18:15:26
+SYSADM               PSUCURRENCY_CD_TBL             TRIGGER              15-SEP-2017 01:09:28
+SYSADM               PSUPSMPRTPREF                  TRIGGER              15-SEP-2017 01:09:28
+SYSADM               PSUPSTIMEZONEDEFN              TRIGGER              15-SEP-2017 01:09:28
+SYSADM               PSURT_RATE_TBL                 TRIGGER              15-SEP-2017 01:09:28
+SYSADM               PS_OP_MC_HDR_RMRK_TR           TRIGGER              16-MAY-2019 18:58:55
+SYSADM               PS_OP_MC_HDR_TR                TRIGGER              16-MAY-2019 18:58:55
+SYSADM               PS_OP_MC_LN_RMRK_TR            TRIGGER              16-MAY-2019 18:58:55
+SYSTEM               SET_AFTER_LOGON_TRG            TRIGGER              09-DEC-2014 08:13:39
+XDB                  XDB$ACL$xd                     TRIGGER              12-AUG-2019 13:21:01
+XDB                  XDB$CONFIG$xd                  TRIGGER              12-AUG-2019 13:21:05
+XDB                  XDB$RESCONFIG$xd               TRIGGER              12-AUG-2019 13:21:01
+XDB                  XDB$STATS$xd                   TRIGGER              12-AUG-2019 13:21:05
+XDB                  XDBCONFIG_VALIDATE             TRIGGER              12-AUG-2019 13:21:05
+XDB                  XDB_PV_TRIG                    TRIGGER              12-AUG-2019 13:21:02
+XDB                  XDB_RV_TRIG                    TRIGGER              12-AUG-2019 13:20:54
+
+27 rows selected.
+
+
+
+
+OPSASB.HR.STATE.SBU
+-------------------
+
+OWNER                OBJECT_NAME                    OBJECT_TYPE          CREATED
+-------------------- ------------------------------ -------------------- ------------------------------
+GSMADMIN_INTERNAL    CAT_ROLLBACK_TRIGGER           TRIGGER              16-JUL-2019 09:47:34
+GSMADMIN_INTERNAL    DONE_TRIGGER                   TRIGGER              16-JUL-2019 09:47:34
+GSMADMIN_INTERNAL    GSMLOGOFF                      TRIGGER              16-JUL-2019 09:47:34
+GSMADMIN_INTERNAL    REQUEST_DELETE_TRIGGER         TRIGGER              16-JUL-2019 09:47:34
+GSMADMIN_INTERNAL    VNCR_INSERT                    TRIGGER              16-JUL-2019 09:46:28
+SYS                  AW_DROP_TRG                    TRIGGER              10-NOV-2014 11:50:55
+SYS                  AW_REN_TRG                     TRIGGER              10-NOV-2014 11:50:55
+SYS                  AW_TRUNC_TRG                   TRIGGER              10-NOV-2014 11:50:55
+SYS                  LOGMNRGGC_TRIGGER              TRIGGER              10-NOV-2014 11:49:11
+SYS                  SYSLSBY_EDS_DDL_TRIG           TRIGGER              16-JUL-2019 09:41:47
+SYS                  XDB_PI_TRIG                    TRIGGER              16-JUL-2019 09:46:44
+SYSADM               OP_PSROLEUSER_TR               TRIGGER              16-NOV-2018 18:15:26
+SYSADM               PSUCURRENCY_CD_TBL             TRIGGER              15-SEP-2017 01:09:28
+SYSADM               PSUPSMPRTPREF                  TRIGGER              15-SEP-2017 01:09:28
+SYSADM               PSUPSTIMEZONEDEFN              TRIGGER              15-SEP-2017 01:09:28
+SYSADM               PSURT_RATE_TBL                 TRIGGER              15-SEP-2017 01:09:28
+SYSADM               PS_OP_MC_HDR_RMRK_TR           TRIGGER              16-MAY-2019 18:58:55
+SYSADM               PS_OP_MC_HDR_TR                TRIGGER              16-MAY-2019 18:58:55
+SYSADM               PS_OP_MC_LN_RMRK_TR            TRIGGER              16-MAY-2019 18:58:55
+SYSTEM               SET_AFTER_LOGON_TRG            TRIGGER              09-DEC-2014 08:13:39
+XDB                  XDB$ACL$xd                     TRIGGER              16-JUL-2019 09:46:57
+XDB                  XDB$CONFIG$xd                  TRIGGER              16-JUL-2019 09:47:01
+XDB                  XDB$RESCONFIG$xd               TRIGGER              16-JUL-2019 09:46:57
+XDB                  XDB$STATS$xd                   TRIGGER              16-JUL-2019 09:47:00
+XDB                  XDBCONFIG_VALIDATE             TRIGGER              16-JUL-2019 09:47:01
+XDB                  XDB_PV_TRIG                    TRIGGER              16-JUL-2019 09:46:58
+XDB                  XDB_RV_TRIG                    TRIGGER              16-JUL-2019 09:46:50
+
+27 rows selected.
+
+
+
+

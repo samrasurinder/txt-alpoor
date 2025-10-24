@@ -1,0 +1,72 @@
+As the Grid home user:
+
+% $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir /infshare/oracle/patches/OCTPSU/33182768/33192793
+
+% $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir /infshare/oracle/patches/OCTPSU/33182768/33208123
+
+% $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir /infshare/oracle/patches/OCTPSU/33182768/33208107
+
+% $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir /infshare/oracle/patches/OCTPSU/33182768/33239955
+
+% $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir /infshare/oracle/patches/OCTPSU/33182768/32585572
+
+
+For Oracle home, as home user:
+
+% $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir /infshare/oracle/patches/OCTPSU/33182768/33192793
+% $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir /infshare/oracle/patches/OCTPSU/33182768/33208123
+
+
+-------------------------------------------------------------------------------------------------------------------------------
+2.1.1.5 Run OPatch System Space Check
+Check if enough free space is available on the ORACLE_HOME filesystem for the patches to be applied as given below:
+
+For Grid Infrastructure home, as home user:
+
+Create file /tmp/patch_list_gihome.txt with the following content:
+
+% cat /tmp/patch_list_gihome.txt
+
+/infshare/oracle/patches/OCTPSU/33182768/33192793
+/infshare/oracle/patches/OCTPSU/33182768/33208123
+/infshare/oracle/patches/OCTPSU/33182768/33208107
+/infshare/oracle/patches/OCTPSU/33182768/33239955
+/infshare/oracle/patches/OCTPSU/33182768/32585572
+
+
+
+
+Run the OPatch command to check if enough free space is available in the Grid Infrastructure home:
+
+% $ORACLE_HOME/OPatch/opatch prereq CheckSystemSpace -phBaseFile /tmp/patch_list_gihome.txt
+For Oracle home, as home user:
+
+Create file /tmp/patch_list_dbhome.txt with the following content:
+
+% cat /tmp/patch_list_dbhome.txt
+/infshare/oracle/patches/OCTPSU/33182768/33192793
+/infshare/oracle/patches/OCTPSU/33182768/33208123
+Run OPatch command to check if enough free space is available in the Oracle home:
+
+% $ORACLE_HOME/OPatch/opatch prereq CheckSystemSpace -phBaseFile /tmp/patch_list_dbhome.txt
+
+-----------------------------------------------------------------------------------------------
+
+The following commands check for conflicts in both the 19c Grid home and the 19c DB homes.
+
+#GRID_HOME/OPatch/opatchauto apply /infshare/oracle/patches/OCTPSU/33182768 -analyze
+
+
+
+--------------------------------------------------------------------------------------------------------------
+
+Apply Patch:
+-----------
+
+
+Case 1: Oracle RAC, where the Grid home and the Oracle homes are not shared and Oracle ACFS file system is not configured
+As root user, execute the following command on each node of the cluster:
+
+# <GI_HOME>/OPatch/opatchauto apply /infshare/oracle/patches/OCTPSU/33182768
+
+

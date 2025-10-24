@@ -1,0 +1,43 @@
+OPSCPY1 High Availability Steps
+-----------------------------------
+
+Phase 1 : ( Implementation date on 2/19 10PM - will verify on 2/20 and 2/21)
+---------------------------------------------------------------------------
+
+Create 2 OPS databases OPSCPYA and OPSCPYB databases on HRVLCPYDB01 server.
+
+Nightly Refresh job (kicks off at 12 AM) refreshes one of these databases based on the created date of
+each database (select created from v$database).
+
+If Refresh job runs to its completion successfully, there will will be 2 databases
+running one with one day old data and one with the current data
+
+If Refresh job fails for some reason, there will be only one database running with 1 day old data.
+Failed DB refresh will then be refreshed during regular hours so 2 databases will be available for
+next nightly refresh
+
+Create a service name called ‘OPSCPY1’ and the service will be activated in one of these databases 
+at any time
+
+Peoplesoft apps will connect to database using service name ‘OPSCPY1’ so it’s completely transparent
+to them which database they are actually  connecting to under the hood
+
+Based on the nightly DB refresh outcome, Peoplesoft team will get an auto generated  email indicating 
+whether their apps are connecting to current data or 1 day old data.
+
+All these steps are completely automated using bash shell script on HRVLCPYDB01
+
+
+Phase 2 : ( Implementation date - TBD)
+--------------------------------------
+
+Currently there is crontab job on Application Server scheduled to run around 5AM which rehashes OPSCPY1 passwords
+since passwords gets reset after every refresh. Nightly DB refresh job completing before 2AM and users in overseas
+may not be able access OPSCPY till 5AM. 
+
+New logic will be incorporated in the currnet crontab job which will keep probing DB to check it refresh status.
+As soon as DB refresh completed, re-hash crontab job will be kicked off rather than waiting till 5AM. This way
+there will be very minimal downtime for users.
+
+
+

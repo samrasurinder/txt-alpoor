@@ -1,0 +1,27 @@
+logs: /infshare/oracle/scripts/refresh/log/OPSASB/build_driver_OPS.pre.MASTER
+
+/infshare/oracle/scripts/refresh/bin/build/OPS/build_driver_OPS.pre
+
+echo "Creating Refresh File Directories & Preserve All Grants"
+export ORACLE_SID=`ps -ef|grep pmon|grep ora_pmon_${to_db}|grep -v grep|awk '{print $8}'|cut -d_ -f3`
+sqlplus -s / as sysdba  <<EOF
+select name from v\$database;
+drop directory dp_rfrsh_dmp;
+create directory dp_rfrsh_dmp as '$builds_dir';
+drop directory dp_rfrsh_lg;
+create directory dp_rfrsh_lg as '$log';
+@$builds_dir/PRE_preserve_grants.sql
+exit
+EOF
+
+
+
+PRE_preserve_grants.sql
+
+DROP TABLE sysutil.dba_tab_privs_;
+DROP TABLE sysutil.dba_sys_privs_;
+DROP TABLE sysutil.dba_role_privs_;
+
+CREATE TABLE sysutil.dba_tab_privs_  AS SELECT * FROM dba_tab_privs;
+CREATE TABLE sysutil.dba_sys_privs_  AS SELECT * FROM dba_sys_privs;
+CREATE TABLE sysutil.dba_role_privs_ AS SELECT * FROM dba_role_privs;

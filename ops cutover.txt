@@ -1,0 +1,140 @@
+[oracle@hrvlprddb7602 ~]$ . oraenv
+ORACLE_SID = [oracle] ? OPSSTBY
+The Oracle base has been set to /u02/app/oracle
+[oracle@hrvlprddb7602 ~]$ sqlplus / as sysdba
+
+SQL*Plus: Release 19.0.0.0.0 - Production on Fri Dec 3 14:02:21 2021
+Version 19.11.0.0.0
+
+Copyright (c) 1982, 2020, Oracle.  All rights reserved.
+
+
+Connected to:
+Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production
+Version 19.11.0.0.0
+
+SQL> create pfile='/tmp/$ORACLE_SID.ora' from spfile;
+
+File created.
+
+SQL> show parameters log_archive_dest_state_2;
+
+NAME                                 TYPE        VALUE
+------------------------------------ ----------- ------------------------------
+log_archive_dest_state_2             string      enable
+log_archive_dest_state_20            string      enable
+log_archive_dest_state_21            string      enable
+log_archive_dest_state_22            string      enable
+log_archive_dest_state_23            string      enable
+log_archive_dest_state_24            string      enable
+log_archive_dest_state_25            string      enable
+log_archive_dest_state_26            string      enable
+log_archive_dest_state_27            string      enable
+log_archive_dest_state_28            string      enable
+log_archive_dest_state_29            string      enable
+SQL> alter database recover managed standby database cancel;
+
+Database altered.
+
+SQL> alter system set log_archive_dest_state_2=DEFER;
+
+System altered.
+
+SQL> show parameters log_archive_dest_state_2;
+
+NAME                                 TYPE        VALUE
+------------------------------------ ----------- ------------------------------
+log_archive_dest_state_2             string      DEFER
+log_archive_dest_state_20            string      enable
+log_archive_dest_state_21            string      enable
+log_archive_dest_state_22            string      enable
+log_archive_dest_state_23            string      enable
+log_archive_dest_state_24            string      enable
+log_archive_dest_state_25            string      enable
+log_archive_dest_state_26            string      enable
+log_archive_dest_state_27            string      enable
+log_archive_dest_state_28            string      enable
+log_archive_dest_state_29            string      enable
+SQL>
+
+
+
+on Primary
+----------
+
+
+
+[oracle@hrvlprddb7601 ~]$ . oraenv
+ORACLE_SID = [oracle] ? OPS
+The Oracle base has been set to /u02/app/oracle
+[oracle@hrvlprddb7601 ~]$ sqlplus / as sysdba
+
+SQL*Plus: Release 19.0.0.0.0 - Production on Fri Dec 3 14:00:31 2021
+Version 19.11.0.0.0
+
+Copyright (c) 1982, 2020, Oracle.  All rights reserved.
+
+
+Connected to:
+Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production
+Version 19.11.0.0.0
+
+SQL> create pfile='/tmp/$ORACLE_SID.ora' from spfile;
+
+File created.
+
+SQL> show parmaeters log_archive_dest_state_2;
+SP2-0158: unknown SHOW option "parmaeters"
+SP2-0735: unknown SHOW option beginning "log_archiv..."
+SQL>  show parameters  log_archive_dest_state_2;
+
+NAME                                 TYPE        VALUE
+------------------------------------ ----------- ------------------------------
+log_archive_dest_state_2             string      ENABLE
+log_archive_dest_state_20            string      enable
+log_archive_dest_state_21            string      enable
+log_archive_dest_state_22            string      enable
+log_archive_dest_state_23            string      enable
+log_archive_dest_state_24            string      enable
+log_archive_dest_state_25            string      enable
+log_archive_dest_state_26            string      enable
+log_archive_dest_state_27            string      enable
+log_archive_dest_state_28            string      enable
+log_archive_dest_state_29            string      enable
+SQL> ALTER SYSTEM SET log_archive_dest_state_2='DEFER' SCOPE=BOTH;
+
+System altered.
+
+SQL> show parameters  log_archive_dest_state_2;
+
+NAME                                 TYPE        VALUE
+------------------------------------ ----------- ------------------------------
+log_archive_dest_state_2             string      DEFER
+log_archive_dest_state_20            string      enable
+log_archive_dest_state_21            string      enable
+log_archive_dest_state_22            string      enable
+log_archive_dest_state_23            string      enable
+log_archive_dest_state_24            string      enable
+log_archive_dest_state_25            string      enable
+log_archive_dest_state_26            string      enable
+log_archive_dest_state_27            string      enable
+log_archive_dest_state_28            string      enable
+log_archive_dest_state_29            string      enable
+SQL>
+
+
+
+Enable the dataguard:
+On Primary DB:
+1. Enable the archive log transport:
+
+ALTER SYSTEM SET log_archive_dest_state_2='ENABLE' SCOPE=BOTH;
+
+On Standby DB:
+1. Start the recovery process with following command:
+
+ALTER DATABASE RECOVER MANAGED STANDBY DATABASE disconnect from session;
+
+2. Enable the log archive for switchover condition needed.
+
+ALTER SYSTEM SET log_archive_dest_state_2='ENABLE' SCOPE=BOTH;

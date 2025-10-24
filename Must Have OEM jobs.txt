@@ -1,0 +1,82 @@
+Must have
+
+Job Run: KC_TFCLONE 
+
+
+
+	Status		Succeeded
+		
+	Scheduled		Mar 1, 2019 4:00:00 AM EST
+		
+	Repeating		Weekly on Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday
+beginning Sep 18, 2017 4:00:00 AM
+Eastern Standard Time (GMT -5:00)
+		
+	Started		Mar 1, 2019 4:00:04 AM EST
+		
+	Ended		Mar 1, 2019 6:02:26 AM EST
+		
+	Elapsed Time		2 hours, 2 minutes, 22 seconds
+		
+	Type		Multi-Task
+	Owner		HROEM12CADMIN
+	Description		Job to Tfclone HFKC to KC1/2 based on JOB JOB_KC_TFCLONE in ARCrefresh KC1/2 depends on JOB JOB_KC_TFCLONE in ARC
+	Execution ID		82DF01BDBDF15531E0531068440AF73F
+
+
+===========================================================================
+
+Job Run: CPY_ENV_REFRESH_JOB 
+	Debug		Delete Run		Create Like		Edit		View Definition
+
+Summary
+	TIP 	The Suspend operation will prevent the job from running at its scheduled time. A suspended job can be resumed later.
+	TIP 	The stop operation will stop the scheduled job execution.
+Log ReportStopSuspend
+
+	Status		Scheduled
+		
+	Scheduled		Mar 5, 2019 12:01:00 AM EST
+		
+	Repeating		Weekly on Monday, Tuesday, Wednesday, Thursday, Friday
+beginning Sep 28, 2017 12:01:00 AM
+Eastern Standard Time (GMT -5:00)
+		
+	Started		
+		
+	Ended		
+		
+	Elapsed Time		
+
+
+
+==========================================================================
+
+
+Job Run: EODCPY_DAILY_REFRESH_JOB.12
+	Delete Run		Create Like		Edit		View Definition
+
+Summary
+Log Report
+
+	Status		Stopped
+		
+	Scheduled		Mar 1, 2019 12:01:00 AM EST
+		
+	Repeating		Weekly on Monday, Tuesday, Wednesday, Thursday, Friday
+beginning Sep 18, 2017 12:01:00 AM
+Eastern Standard Time (GMT -5:00)
+		
+	Started		Mar 1, 2019 7:11:36 AM EST
+		
+	Ended		Mar 1, 2019 8:48:01 AM EST
+		
+	Elapsed Time		1 hours, 36 minutes, 24 seconds
+		
+	Notification		Yes
+		
+	Type		Multi-Task
+	Owner		HROEM12CADMIN
+	Description		job is for refreshing sysadm schema in EODCPY database from EODPRD
+	Execution ID		82DFE9F3C6210288E0531368440AA15B
+

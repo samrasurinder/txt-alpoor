@@ -1,0 +1,40 @@
+Index Finding (see explain plans section below)
+--------------------------------------------------
+  The execution plan of this statement can be improved by creating one or more
+  indices.
+
+  Recommendation (estimated benefit: 67.39%)
+  ------------------------------------------
+  - Consider running the Access Advisor to improve the physical schema design
+    or creating the recommended index.
+    create index SYSADM.IDX$$_2A67E0004 on
+    SYSADM.PS_DEPT_TBL("EFF_STATUS","SETID","DEPTID","EFFDT");
+
+  - Consider running the Access Advisor to improve the physical schema design
+    or creating the recommended index.
+    create index SYSADM.IDX$$_2A67E0006 on
+    SYSADM.PS_OP_POSITION_DAT("AGENCY","POSITION_NBR","EFFDT");
+
+  - Consider running the Access Advisor to improve the physical schema design
+    or creating the recommended index.
+    create index SYSADM.IDX$$_2A67E0007 on
+    SYSADM.PS_NAMES("NAME_TYPE","EMPLID");
+
+  - Consider running the Access Advisor to improve the physical schema design
+    or creating the recommended index.
+    create index SYSADM.IDX$$_2A67E000B on SYSADM.PS_OP_TM_STG("EMPLID","OP_TM_PROCESSED","OP_TM_ASGN_ID","DEPTID","DEPTID2");
+
+  - Consider running the Access Advisor to improve the physical schema design
+    or creating the recommended index.
+    create index SYSADM.IDX$$_2A67E000F on SYSADM.PS_SJT_CLASS("SCRTY_KEY2","SCRTY_KEY1");
+
+
+execute dbms_sqltune.accept_sql_profile(task_name => 'staName41619',task_owner => 'ALPOOR', replace => TRUE);
+
+  Rationale
+  ---------
+    Creating the recommended indices significantly improves the execution plan
+    of this statement. However, it might be preferable to run "Access Advisor"
+    using a representative SQL workload as opposed to a single statement. This
+    will allow to get comprehensive index recommendations which takes into
+    account index maintenance overhead and additional space consumption.

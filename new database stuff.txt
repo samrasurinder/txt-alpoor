@@ -1,0 +1,87 @@
+/infshare/oracle/export/HRUATREP
+
+
+
+asmcmd cp +DATA/hrtstrep/datafile/system.3706.857399343                      +DATA/hruatrep/datafile/system.dbf
+asmcmd cp +DATA/hrtstrep/datafile/sysaux.3407.857399347                      +DATA/hruatrep/datafile/sysaux.dbf
+asmcmd cp +DATA/hrtstrep/datafile/undotbs1.3537.857399349                    +DATA/hruatrep/datafile/undotbs1.dbf
+asmcmd cp +DATA/hrtstrep/datafile/users.3577.857399349                       +DATA/hruatrep/datafile/users.dbf
+asmcmd cp +DATA/hrtstrep/datafile/undotbs2.3637.857402063                    +DATA/hruatrep/datafile/undotbs2.dbf
+asmcmd cp +DATA/hrtstrep/datafile/rep_informatica_prd.3722.857406277         +DATA/hruatrep/datafile/rep_informatica_prd.dbf
+asmcmd cp +DATA/hrtstrep/datafile/kc_busobj_data.3685.858437755              +DATA/hruatrep/datafile/kc_busobj_data.dbf
+
+
+
+
+
+racle@hrewoel10 HRUATREP]$ sqlplus / as sysdba
+
+SQL*Plus: Release 11.2.0.4.0 Production on Tue Apr 16 13:12:11 2019
+
+Copyright (c) 1982, 2013, Oracle.  All rights reserved.
+
+
+Connected to:
+Oracle Database 11g Enterprise Edition Release 11.2.0.4.0 - 64bit Production
+With the Partitioning, Real Application Clusters, Automatic Storage Management,
+Data Mining and Real Application Testing options
+
+SQL> archive log list
+Database log mode              Archive Mode
+Automatic archival             Enabled
+Archive destination            USE_DB_RECOVERY_FILE_DEST
+Oldest online log sequence     6127
+Next log sequence to archive   6129
+Current log sequence           6129
+SQL>
+
+
+
+SQL> archive log list;
+Database log mode              Archive Mode
+Automatic archival             Enabled
+Archive destination            USE_DB_RECOVERY_FILE_DEST
+Oldest online log sequence     6131
+Next log sequence to archive   6133
+Current log sequence           6133
+
+
+[oracle@hrewoel18 ~]$ sqlplus / as sysdba
+
+SQL*Plus: Release 11.2.0.4.0 Production on Tue Apr 16 13:13:17 2019
+
+Copyright (c) 1982, 2013, Oracle.  All rights reserved.
+
+
+Connected to:
+Oracle Database 11g Enterprise Edition Release 11.2.0.4.0 - 64bit Production
+With the Partitioning, Real Application Clusters, Automatic Storage Management,
+Data Mining and Real Application Testing options
+
+SQL> archvie log list
+SP2-0734: unknown command beginning "archvie lo..." - rest of line ignored.
+SQL> archive log list;
+Database log mode              Archive Mode
+Automatic archival             Enabled
+Archive destination            USE_DB_RECOVERY_FILE_DEST
+Oldest online log sequence     5513
+Next log sequence to archive   5515
+Current log sequence           5515
+SQL>
+
+
+SQL> archive log list;
+Database log mode              Archive Mode
+Automatic archival             Enabled
+Archive destination            USE_DB_RECOVERY_FILE_DEST
+Oldest online log sequence     5516
+Next log sequence to archive   5518
+Current log sequence           5518
+SQL>
+cp 
+
+
+
+
+
+ 

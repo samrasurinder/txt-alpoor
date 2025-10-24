@@ -1,0 +1,9 @@
+VMs
+
+hrvltstdb7601.hr.state.sbu
+hrvltstdb7602.hr.state.sbu
+hrvltstdb7603.hr.state.sbu
+
+hrvlcpydb7601.hr.state.sbu
+
+hrvlcpyap7601.hr.state.sbu 

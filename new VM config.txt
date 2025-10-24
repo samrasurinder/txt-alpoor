@@ -1,0 +1,112 @@
+
+
+
+Storage:
+-------
+
+9 raw devices each 214GB ( 3 DATA and 6 FRA ASM disks)
+
+1 raw device of 50GB ( CRS for statndalone ASM disk)
+
+One mount point /u02 - 100GB
+
+Swap/tmpfs                 100G  
+
+
+
+
+
+Machine Configuration
+----------------------
+Operating System	Oracle Linux Server release 6.10 or 7
+
+Memory Size(MB)	        64GB
+Address Length(bits)	64-bit
+Model Name	        x86_64
+CPU Implementation	Intel(R) Xeon(R) CPU E5-2680 v2 @ 2.80GHz
+CPU count               10
+
+
+
+
+
+
+SQL> select adg.name,ad.name,ad.GROUP_NUMBER,ad.DISK_NUMBER,ad.state,ad.total_mb,ad.os_mb,ad.free_mb from v$asm_disk ad,v$asm_diskgroup adg where ad.name like 'OPS%' and adg.group_number = ad.group_number
+  2  ;
+
+NAME                 NAME                 GROUP_NUMBER DISK_NUMBER STATE      TOTAL_MB      OS_MB    FREE_MB
+-------------------- -------------------- ------------ ----------- -------- ---------- ---------- ----------
+OPS_DATA             OPSDATA01                       8           0 NORMAL       204799     204799     173508
+OPS_DATA             OPSDATA02                       8           1 NORMAL       204799     204799     173509
+OPS_DATA             OPSDATA03                       8           2 NORMAL       204799     204799     173502
+OPS_FRA              OPSFRA01                        9           0 NORMAL       204799     204799     152819
+OPS_FRA              OPSFRA02                        9           1 NORMAL       204799     204799     152811
+OPS_FRA              OPSFRA03                        9           2 NORMAL       204799     204799     152814
+OPS_FRA              OPSFRA04                        9           3 NORMAL       204799     204799     152845
+OPS_FRA              OPSFRA05                        9           4 NORMAL       204799     204799     152848
+OPS_FRA              OPSFRA06                        9           5 NORMAL       204799     204799     152864
+
+9 rows selected.
+
+SQL>
+
+
+
+
+
+
+
+
+
+
+[grid@hrewoel06 ~]$ vi asmmap.ksh
+[grid@hrewoel06 ~]$ ./asmmap.ksh
+
+3 DATA disks each 214.8GB
+
+ASMLIB disk name : /dev/oracleasm/disks/OPSDATA01
+ASM_DISK name : OPSDATA01
+Physical disk device : /dev/emcpowerai1
+ASMLIB disk name : /dev/oracleasm/disks/OPSDATA02
+ASM_DISK name : OPSDATA02
+Physical disk device : /dev/emcpowerah1
+ASMLIB disk name : /dev/oracleasm/disks/OPSDATA03
+ASM_DISK name : OPSDATA03
+Physical disk device : /dev/emcpoweral1
+ASMLIB disk name : /dev/oracleasm/disks/OPSFRA01
+
+
+
+
+6 FRA disks each 214.8GB
+
+ASM_DISK name : OPSFRA01
+Physical disk device : /dev/emcpowerag1
+ASMLIB disk name : /dev/oracleasm/disks/OPSFRA02
+ASM_DISK name : OPSFRA02
+Physical disk device : /dev/emcpoweraf1
+ASMLIB disk name : /dev/oracleasm/disks/OPSFRA03
+ASM_DISK name : OPSFRA03
+Physical disk device : /dev/emcpowerae1
+ASMLIB disk name : /dev/oracleasm/disks/OPSFRA04
+ASM_DISK name : OPSFRA04
+Physical disk device : /dev/emcpowerad1
+ASMLIB disk name : /dev/oracleasm/disks/OPSFRA05
+ASM_DISK name : OPSFRA05
+Physical disk device : /dev/emcpowerac1
+ASMLIB disk name : /dev/oracleasm/disks/OPSFRA06
+ASM_DISK name : OPSFRA06
+Physical disk device : /dev/emcpoweraa1
+
+
+[grid@hrewoel06 ~]$ cd /dev/emcpowerai*
+-bash: cd: /dev/emcpowerai: Not a directory
+[grid@hrewoel06 ~]$ ls /dev/emcpowerai*
+/dev/emcpowerai  /dev/emcpowerai1
+[grid@hrewoel06 ~]$ ls -altrh /dev/emcpowerai1
+brw-rw----. 1 root disk 120, 545 Jan 29 12:53 /dev/emcpowerai1
+[grid@hrewoel06 ~]$
+
+
+
+fdisk -l /dev/emcpowerai | grep -m1 ^Disk | awk '{print $3 " " $4}'

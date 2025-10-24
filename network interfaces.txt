@@ -1,0 +1,40 @@
+
+
+
+
+
+Public interfaces
+------------------
+
+10.68.104.106 hrewoel06-vip.hr.state.sbu hrewoel06-vip
+10.68.104.107 hrewoel07-vip.hr.state.sbu hrewoel07-vip
+10.68.104.108 hrewoel08-vip.hr.state.sbu hrewoel08-vip
+
+10.68.104.6 hrewoel06.hr.state.sbu hrewoel06
+10.68.104.7 hrewoel07.hr.state.sbu hrewoel07
+10.68.104.8 hrewoel08.hr.state.sbu hrewoel08
+
+SCAN name: prd-scan, Network: 1/10.68.104.0/255.255.252.0/eth1.82
+SCAN VIP name: scan1, IP: /prd-scan/10.68.104.52
+SCAN VIP name: scan2, IP: /prd-scan/10.68.104.51
+SCAN VIP name: scan3, IP: /prd-scan/10.68.104.50
+
+
+Prinvate interface
+------------------
+
+192.168.101.1 hrewoel06-priv1.hr.state.sbu hrewoel06-priv1
+192.168.101.3 hrewoel07-priv1.hr.state.sbu hrewoel07-priv1
+192.168.101.5 hrewoel08-priv1.hr.state.sbu hrewoel08-priv1
+
+192.168.151.2 hrewoel06-priv2.hr.state.sbu hrewoel06-priv2
+192.168.151.4 hrewoel07-priv2.hr.state.sbu hrewoel07-priv2
+192.168.151.6 hrewoel08-priv2.hr.state.sbu hrewoel08-priv2
+
+192.168.187.6 hrewoel06-sl.hr.state.sbu hrewoel06-sl
+192.168.187.7 hrewoel07-sl.hr.state.sbu hrewoel07-sl
+192.168.187.8 hrewoel08-sl.hr.state.sbu hrewoel08-sl
+
+
+
+

@@ -1,0 +1,14 @@
+
+cd /u02/app/oracle/product/11.2.0.4/db_1
+cd OPatch
+./opatch version
+
+cd /u02/app/oracle/product/11.2.0.4/db_1
+mv OPatch OPatch_03222019
+cp /infshare/software/PSU/JAN2019/p6880880_112000_Linux-x86-64.zip .
+cd /u02/app/oracle/product/11.2.0.4/db_1
+unzip p6880880_112000_Linux-x86-64.zip
+cd OPatch
+./opatch version
+
+

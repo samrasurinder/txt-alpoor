@@ -1,0 +1,5 @@
+
+export REFRESH_DATE=`date +%m-%d-%Y`
+export SUFFIX=KCPRDTARGETSNAP`date +%m%d%y`
+export FLASH_ARRAY_HOST=10.68.104.245
+sudo su - pureoel -c "ssh pureoel@${FLASH_ARRAY_HOST} 'purevol snap --suffix ${SUFFIX} kcprd-hfprd_data-00 kcprd-hfprd_data-01 kcprd-hfprd_data-02 kcprd-hfprd_data-03 kcprd-hfprd_fra-00 kcprd-hfprd_fra-01 kcprd-hfprd_fra-02'"

@@ -1,0 +1,42 @@
+ASMCMD> cd archivelog
+ASMCMD> du *
+Used_MB      Mirror_used_MB
+ 186344              186344
+ASMCMD> ls
+2019_12_10/
+2019_12_11/
+2019_12_12/
+2019_12_13/
+2019_12_14/
+2019_12_15/
+2019_12_16/
+ASMCMD> du 2019_12_10
+Used_MB      Mirror_used_MB
+  14077               14077
+ASMCMD> du 2019_12_11/
+Used_MB      Mirror_used_MB
+  27001               27001
+ASMCMD> du 2019_12_13
+Used_MB      Mirror_used_MB
+  35692               35692
+ASMCMD> du 2019_12_14
+Used_MB      Mirror_used_MB
+  20735               20735
+ASMCMD> du 2019_12_15/
+Used_MB      Mirror_used_MB
+  20886               20886
+ASMCMD> du 2019_12_16/
+Used_MB      Mirror_used_MB
+  30291               30291
+ASMCMD> du 2019_12_12/
+Used_MB      Mirror_used_MB
+  37662               37662
+ASMCMD>
+ASMCMD> lsdg
+State    Type    Rebal  Sector  Logical_Sector  Block       AU  Total_MB  Free_MB  Req_mir_free_MB  Usable_file_MB  Offline_disks  Voting_files  Name
+MOUNTED  EXTERN  N         512             512   4096  1048576    409598    98418                0           98418              0             N  DATA/
+MOUNTED  EXTERN  N         512             512   4096  1048576    204799   177786                0          177786              0             N  FRA/
+MOUNTED  EXTERN  N         512             512   4096  1048576     51199    51136                0           51136              0             N  OCR_VOTE1/
+MOUNTED  EXTERN  N         512             512   4096  1048576    204799   103875                0          103875              0             N  OPS_DATA/
+MOUNTED  EXTERN  N         512             512   4096  1048576    409598    79211                0           79211              0             N  OPS_FRA/
+ASMCMD>

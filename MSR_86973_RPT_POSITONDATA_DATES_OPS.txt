@@ -1,0 +1,127 @@
+SQL> SET ECHO ON
+SQL> SET SERVEROUTPUT ON
+SQL> 
+SQL> show user;
+USER is "SYS"
+SQL> 
+SQL> select * from global_name;
+
+GLOBAL_NAME                                                                     
+--------------------------------------------------------------------------------
+OPS.HR.STATE.SBU                                                                
+
+SQL> 
+SQL> select sysdate from dual;
+
+SYSDATE                                                                         
+---------                                                                       
+13-JUN-23                                                                       
+
+SQL> 
+SQL> Create or replace Procedure KC_ETL_USER.rpt_PositionData_Dates (BeginDate IN Varchar2, EndDate IN Varchar2, p_result out SYS_REFCURSOR) As
+  2  Begin
+  3  open p_result for
+  4   SELECT a.location   "Location",
+  5  	 d.descr As "Descr",
+  6  	 a.business_unit "Unit",
+  7  	 e.descr "Descr",
+  8  	 a.position_nbr "Position",
+  9  	 b.op_working_title "Title",
+ 10  	 case when count(g.emplid) > 0 then
+ 11  	 RTRIM((SELECT
+ 12  		 sys.stragg(DISTINCT gg.emplid || ';')
+ 13  	     FROM
+ 14  		sysadm.ps_posn_incumbent  gg
+ 15  	     WHERE
+ 16  		 gg.position_nbr = a.position_nbr
+ 17  		 and  gg.effdt <=  TO_DATE(EndDate, 'DD-MM-YYYY hh24:mi:ss')
+ 18  	 ), ';')
+ 19  	 end "Employee ID",
+ 20  	 a.sal_admin_plan "Sal Plan",
+ 21  	 a.grade "Grade",
+ 22  	 b.agency "Agency",
+ 23  	 c.op_appropriation "Appropriation",
+ 24  	 f.descr "Descr",
+ 25  	 a.eff_status "Status",
+ 26  	 b.op_efm_ind "Eligible Family",
+ 27  	 COUNT(g.emplid) "Current Head Count"
+ 28  FROM sysadm.ps_position_data   a
+ 29  	 LEFT OUTER JOIN sysadm.ps_posn_incumbent  g ON a.position_nbr = g.position_nbr and g.effdt in (select effdt from sysadm.ps_posn_incumbent g_ed
+ 30  	     where g.position_nbr = g_ed.position_nbr
+ 31  	     and g_ed.effdt <=	TO_DATE(EndDate, 'DD-MM-YYYY hh24:mi:ss')),
+ 32  	 sysadm.ps_op_position_dat b,
+ 33  	 sysadm.ps_op_pos_acctg    c,
+ 34  	 sysadm.ps_location_tbl    d,
+ 35  	 sysadm.ps_busunit_hr_vw   e,
+ 36  	 sysadm.ps_op_company_vw   f
+ 37  WHERE
+ 38  	 ( a.effdt = (
+ 39  	     SELECT
+ 40  		 MAX(a_ed.effdt)
+ 41  	     FROM
+ 42  		 sysadm.ps_position_data a_ed
+ 43  	     WHERE
+ 44  		 a.position_nbr = a_ed.position_nbr
+ 45  		 AND a_ed.effdt <= TO_DATE(EndDate, 'DD-MM-YYYY hh24:mi:ss')
+ 46  	 )
+ 47  	   AND a.effdt BETWEEN TO_DATE(BeginDate, 'DD-MM-YYYY hh24:mi:ss') AND TO_DATE(EndDate, 'DD-MM-YYYY hh24:mi:ss')
+ 48  	   AND a.position_nbr = b.position_nbr
+ 49  	   AND b.effdt = a.effdt
+ 50  	   AND a.position_nbr = c.position_nbr
+ 51  	   AND c.effdt = a.effdt
+ 52  	   AND d.location = a.location
+ 53  	   AND d.effdt = (
+ 54  	     SELECT
+ 55  		 MAX(d_ed.effdt)
+ 56  	     FROM
+ 57  		 sysadm.PS_LOCATION_TBL d_ed
+ 58  	     WHERE
+ 59  		 d.setid = d_ed.setid
+ 60  		 AND d.location = d_ed.location
+ 61  		 AND d_ed.effdt <= TO_DATE(EndDate, 'DD-MM-YYYY hh24:mi:ss')
+ 62  	 )
+ 63  	   AND d.setid = a.business_unit
+ 64  	   AND e.business_unit = a.business_unit
+ 65  	   AND f.agency = b.agency
+ 66  	   AND ( c.op_appropriation LIKE '19%X5713000C'
+ 67  		 OR c.op_appropriation LIKE '19%X5713000D'
+ 68  		 OR c.op_appropriation LIKE '19%X5713000E'
+ 69  		 OR c.op_appropriation LIKE '19%X55150000'
+ 70  		 OR c.op_appropriation LIKE '19%X45190009'
+ 71  		 ))
+ 72  GROUP BY
+ 73  	 a.location,
+ 74  	 d.descr,
+ 75  	 a.business_unit,
+ 76  	 e.descr,
+ 77  	 a.position_nbr,
+ 78  	 b.op_working_title,
+ 79  	 a.sal_admin_plan,
+ 80  	 a.grade,
+ 81  	 b.agency,
+ 82  	 c.op_appropriation,
+ 83  	 f.descr,
+ 84  	 a.eff_status,
+ 85  	 b.op_efm_ind
+ 86  ORDER BY 3;
+ 87  
+ 88  End;
+ 89  /
+
+Procedure created.
+
+SQL> Grant EXECUTE ON KC_ETL_USER.rpt_positiondata_dates to kc_reports_user;
+
+Grant succeeded.
+
+SQL> COMMIT;
+
+Commit complete.
+
+SQL> /
+
+Commit complete.
+
+SQL> SHOW ERRORS;
+No errors.
+SQL> SPOOL OFF;

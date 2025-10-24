@@ -1,0 +1,54 @@
+select object_name  from dba_OBJECTS   where owner = 'SYSADM'  AND OBJECT_TYPE='VIEW'  
+minus
+
+
+select  distinct object_name,object_type  from track_upgrade.object_details   where owner = 'SYSADM'  AND OBJECT_TYPE='TABLE'  -- and logged = '15-JUL-21 05.05.38.097611000 PM -04:00' 
+minus
+select object_name,object_type  from dba_OBJECTS   where owner = 'SYSADM'  AND OBJECT_TYPE='TABLE'
+
+
+select *  from track_upgrade.object_details where object_name in ('PS_BEN_BI_BRN_SRCH',
+'PS_BEN_BI_CSB_SRCH',
+'PS_BEN_BI_CSP_SRCH',
+'PS_BEN_BI_SRCH_VW',
+'PS_CBR_BENEF_SRCH',
+'PS_CBR_FSA_SRCH',
+'PS_EMPL_BEN_SRCH',
+'PS_FSA_CLAIM_SRCH',
+'PS_FSA_HC_SRCH',
+'PS_FSA_HC_SRCH_CAN',
+'PS_FSA_PARTIC_SRCH',
+'PS_FSA_PAYMT_SRCH',
+'PS_FSA_RC_SRCH_CAN',
+'PS_GM_LAST_APPR_VW',
+'PS_GM_POSN_INIT_VW',
+'PS_GM_WRKFLOW_HIST')
+
+order by logged desc
+
+
+
+select *  from dba_objects where object_name in ('PS_BEN_BI_BRN_SRCH',
+'PS_BEN_BI_CSB_SRCH',
+'PS_BEN_BI_CSP_SRCH',
+'PS_BEN_BI_SRCH_VW',
+'PS_CBR_BENEF_SRCH',
+'PS_CBR_FSA_SRCH',
+'PS_EMPL_BEN_SRCH',
+'PS_FSA_CLAIM_SRCH',
+'PS_FSA_HC_SRCH',
+'PS_FSA_HC_SRCH_CAN',
+'PS_FSA_PARTIC_SRCH',
+'PS_FSA_PAYMT_SRCH',
+'PS_FSA_RC_SRCH_CAN',
+'PS_GM_LAST_APPR_VW',
+'PS_GM_POSN_INIT_VW',
+'PS_GM_WRKFLOW_HIST')
+
+
+SELECT * FROM SYSADM.PSRECFIELD_UPG
+
+ 
+
+
+

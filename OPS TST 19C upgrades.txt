@@ -1,0 +1,186 @@
+[root@hrvltstdb7601 ~]# blkid | grep oracleasm | sort
+/dev/sdc1: LABEL="FRA01" TYPE="oracleasm"
+/dev/sdd1: LABEL="FRA02" TYPE="oracleasm"
+/dev/sde1: LABEL="DATA00" TYPE="oracleasm"
+/dev/sdf1: LABEL="DATA05" TYPE="oracleasm"
+/dev/sdg1: LABEL="DATA06" TYPE="oracleasm"
+/dev/sdh1: LABEL="DATA07" TYPE="oracleasm"
+/dev/sdi1: LABEL="DATA01" TYPE="oracleasm"
+/dev/sdj1: LABEL="DATA02" TYPE="oracleasm"
+/dev/sdk1: LABEL="DATA03" TYPE="oracleasm"
+/dev/sdl1: LABEL="OCR_VOTE1" TYPE="oracleasm"
+/dev/sdm1: LABEL="DATA04" TYPE="oracleasm"
+/dev/sdo1: LABEL="DRSHARE01" TYPE="oracleasm"
+[root@hrvltstdb7601 ~]#
+
+GROUP_NUMBER NAME                           PATH
+------------ ------------------------------ --------------------------------------------------
+           0                                /dev/oracleasm/disks/DATA04
+           0                                /dev/oracleasm/disks/DRSHARE01
+           0                                /dev/oracleasm/disks/DATA07
+           0                                /dev/oracleasm/disks/DATA06
+           2 OCR_VOTE1_0000                 /dev/oracleasm/disks/OCR_VOTE1
+           
+           3 OPS_DATA_0004                  /dev/oracleasm/disks/DATA05
+           3 OPS_DATA_0000                  /dev/oracleasm/disks/DATA01
+           3 OPS_DATA_0001                  /dev/oracleasm/disks/DATA02
+           3 DATA00                         /dev/oracleasm/disks/DATA00
+           3 OPS_DATA_0002                  /dev/oracleasm/disks/DATA03
+           
+           4 OPS_FRA_0001                   /dev/oracleasm/disks/FRA02
+           4 OPS_FRA_0000                   /dev/oracleasm/disks/FRA01
+
+
+
+
+[grid@hrvltstdb7601 grid]$ ./gridSetup.sh -silent -ignorePrereqFailure -responseFile /home/grid/gridsetup.rsp &
+[1] 11986
+[grid@hrvltstdb7601 grid]$ Launching Oracle Grid Infrastructure Setup Wizard...
+
+[WARNING] [INS-41812] OSDBA and OSASM are the same OS group.
+   CAUSE: The chosen values for OSDBA group and the chosen value for OSASM group are the same.
+   ACTION: Select an OS group that is unique for ASM administrators. The OSASM group should not be the same as the OS groups that grant privileges for Oracle ASM access, or for database administration.
+[WARNING] [INS-41874] Oracle ASM Administrator (OSASM) Group specified is same as the inventory group.
+   CAUSE: Operating system group oinstall specified for OSASM Group is same as the inventory group.
+   ACTION: It is not recommended to have OSASM group same as inventory group. Select any of the group other than the inventory group to avoid incorrect configuration.
+[WARNING] [INS-13014] Target environment does not meet some optional requirements.
+   CAUSE: Some of the optional prerequisites are not met. See logs for details. /u02/app/oraInventory/logs/GridSetupActions2020-07-08_07-05-24PM/gridSetupActions2020-07-08_07-05-24PM.log
+   ACTION: Identify the list of failed prerequisite checks from the log: /u02/app/oraInventory/logs/GridSetupActions2020-07-08_07-05-24PM/gridSetupActions2020-07-08_07-05-24PM.log. Then either from the log file or from installation manual find the appropriate configuration to meet the prerequisites and fix it manually.
+The response file for this session can be found at:
+ /u02/app/19.3.0/grid/install/response/grid_2020-07-08_07-05-24PM.rsp
+
+You can find the log of this install session at:
+ /u02/app/oraInventory/logs/GridSetupActions2020-07-08_07-05-24PM/gridSetupActions2020-07-08_07-05-24PM.log
+
+
+
+
+[root@hrvltstdb7601 oraInventory]# /u02/app/oraInventory/orainstRoot.sh
+Changing permissions of /u02/app/oraInventory.
+Adding read,write permissions for group.
+Removing read,write,execute permissions for world.
+
+Changing groupname of /u02/app/oraInventory to oinstall.
+The execution of the script is complete.
+[root@hrvltstdb7601 oraInventory]# /u02/app/19.3.0/grid/root.sh
+Check /u02/app/19.3.0/grid/install/root_hrvltstdb7601.hr.state.sbu_2020-07-08_19-13-52-121417059.log for the output of root script
+
+[grid@hrvltstdb7601 ~]$ /u02/app/19.3.0/grid/gridSetup.sh -executeConfigTools -responseFile /home/grid/gridsetup.rsp -silent
+Launching Oracle Grid Infrastructure Setup Wizard...
+
+You can find the logs of this session at:
+/u02/app/oraInventory/logs/GridSetupActions2020-07-08_07-16-57PM
+
+
+12 rows selected.
+
+SQL>
+
+
+
+SQL> select group_number,name from v$asm_diskgroup;
+
+GROUP_NUMBER NAME
+------------ ------------------------------
+           0 DRSHARE
+           2 OCR_VOTE1
+           3 OPS_DATA
+           4 OPS_FRA
+
+SQL>
+
+[oracle@hrvltstdb7601 ~]$ ps -ef | grep pmon
+oracle    8102     1  0 Jul02 ?        00:00:49 ora_pmon_OPSUAT
+grid     16559     1  0 May02 ?        00:07:05 asm_pmon_+ASM
+oracle   16911     1  0 May02 ?        00:07:48 ora_pmon_OPSIVV1
+oracle   16924     1  0 May02 ?        00:07:46 ora_pmon_OPSSTG2
+oracle   16930     1  0 May02 ?        00:07:34 ora_pmon_OPSSTG3
+oracle   16946     1  0 May02 ?        00:08:26 ora_pmon_OPSTST2
+oracle   16972     1  0 May02 ?        00:08:48 ora_pmon_RMANCTLG
+oracle   17162     1  0 May02 ?        00:08:07 ora_pmon_OPSTST1
+oracle   24817     1  0 Jul02 ?        00:00:47 ora_pmon_OPSASB
+oracle   30228 30173  0 17:48 pts/0    00:00:00 grep --color=auto pmon
+[oracle@hrvltstdb7601 ~]$ . oraenv
+
+
+
+ srvctl stop database -d OPSUAT &
+ srvctl stop database -d OPSIVV1 &
+ srvctl stop database -d OPSSTG2 &
+ srvctl stop database -d OPSSTG3 &
+ srvctl stop database -d OPSTST2 &
+ srvctl stop database -d RMANCTLG &
+ srvctl stop database -d OPSTST1 &
+ srvctl stop database -d OPSASB &
+
+
+
+srvctl start database -d OPSUAT &
+ srvctl start database -d OPSIVV1 &
+ srvctl start database -d OPSSTG2 &
+ srvctl start database -d OPSSTG3 &
+ srvctl start database -d OPSTST2 &
+ srvctl start database -d RMANCTLG &
+ srvctl start database -d OPSTST1 &
+ srvctl start database -d OPSASB &
+
+
+
+
+
+ [root@hrvltstdb7601 ~]# /u02/app/12.2.0/grid/perl/bin/perl /u02/app/12.2.0/grid/crs/install/roothas.pl -deconfig -force -verbose
+Using configuration parameter file: /u02/app/12.2.0/grid/crs/install/crsconfig_params
+The log of current session can be found at:
+  /u02/app/oracle/crsdata/hrvltstdb7601/crsconfig/hadeconfig.log
+2020/07/08 18:47:56 CLSRSC-332: CRS resources for listeners are still configured
+CRS-2791: Starting shutdown of Oracle High Availability Services-managed resources on 'hrvltstdb7601'
+CRS-2673: Attempting to stop 'ora.DRSHARE.dg' on 'hrvltstdb7601'
+CRS-2673: Attempting to stop 'ora.opsasb.db' on 'hrvltstdb7601'
+CRS-2673: Attempting to stop 'ora.opsivv1.db' on 'hrvltstdb7601'
+CRS-2673: Attempting to stop 'ora.opsstg2.db' on 'hrvltstdb7601'
+CRS-2673: Attempting to stop 'ora.opsstg3.db' on 'hrvltstdb7601'
+CRS-2673: Attempting to stop 'ora.opstst1.db' on 'hrvltstdb7601'
+CRS-2673: Attempting to stop 'ora.opstst2.db' on 'hrvltstdb7601'
+CRS-2673: Attempting to stop 'ora.opsuat.db' on 'hrvltstdb7601'
+CRS-2673: Attempting to stop 'ora.rmanctlg.db' on 'hrvltstdb7601'
+CRS-2677: Stop of 'ora.DRSHARE.dg' on 'hrvltstdb7601' succeeded
+CRS-2677: Stop of 'ora.opsasb.db' on 'hrvltstdb7601' succeeded
+CRS-2677: Stop of 'ora.opsstg2.db' on 'hrvltstdb7601' succeeded
+CRS-2677: Stop of 'ora.opsivv1.db' on 'hrvltstdb7601' succeeded
+CRS-2677: Stop of 'ora.opsstg3.db' on 'hrvltstdb7601' succeeded
+CRS-2677: Stop of 'ora.opstst1.db' on 'hrvltstdb7601' succeeded
+CRS-2677: Stop of 'ora.opsuat.db' on 'hrvltstdb7601' succeeded
+CRS-2677: Stop of 'ora.rmanctlg.db' on 'hrvltstdb7601' succeeded
+CRS-2677: Stop of 'ora.opstst2.db' on 'hrvltstdb7601' succeeded
+CRS-2673: Attempting to stop 'ora.OPS_DATA.dg' on 'hrvltstdb7601'
+CRS-2673: Attempting to stop 'ora.OPS_FRA.dg' on 'hrvltstdb7601'
+CRS-2677: Stop of 'ora.OPS_DATA.dg' on 'hrvltstdb7601' succeeded
+CRS-2677: Stop of 'ora.OPS_FRA.dg' on 'hrvltstdb7601' succeeded
+CRS-2673: Attempting to stop 'ora.evmd' on 'hrvltstdb7601'
+CRS-2673: Attempting to stop 'ora.OCR_VOTE1.dg' on 'hrvltstdb7601'
+CRS-2677: Stop of 'ora.OCR_VOTE1.dg' on 'hrvltstdb7601' succeeded
+CRS-2673: Attempting to stop 'ora.asm' on 'hrvltstdb7601'
+CRS-2677: Stop of 'ora.evmd' on 'hrvltstdb7601' succeeded
+CRS-2677: Stop of 'ora.asm' on 'hrvltstdb7601' succeeded
+CRS-2673: Attempting to stop 'ora.cssd' on 'hrvltstdb7601'
+CRS-2677: Stop of 'ora.cssd' on 'hrvltstdb7601' succeeded
+CRS-2793: Shutdown of Oracle High Availability Services-managed resources on 'hrvltstdb7601' has completed
+CRS-4133: Oracle High Availability Services has been stopped.
+
+
+
+/u02/app/19.3.0/grid/OPatch/opatchauto apply /u02/software/PSU/APR2020/30783556/30899722 -oh /u02/app/19.3.0/grid
+
+
+
+[root@hrvltstdb7601 30783556]# /u02/app/19.3.0/grid/OPatch/opatchauto apply /u02/software/PSU/APR2020/30783556/30899722 -oh /u02/app/19.3.0/grid &
+[1] 28290
+[root@hrvltstdb7601 30783556]#
+OPatchauto session is initiated at Wed Jul  8 19:47:09 2020
+
+System initialization log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchautodb/systemconfig2020-07-08_07-47-14PM.log.
+
+Session log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchauto/opatchauto2020-07-08_07-47-20PM.log
+The id for this session is ML4C
+
+/u02/app/oracle/product/19.3.0/db_1/OPatch/opatchauto apply /u02/software/PSU/APR2020/30783556/30899722 -oh /u02/app/oracle/product/19.3.0/db_1 &

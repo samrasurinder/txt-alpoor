@@ -1,0 +1,181 @@
+alter user "ANONYMOUS" identified by values '                ';
+alter user "APPQOSSYS" identified by values '519D632B7EE7F63A';
+alter user "AUDSYS" identified by values 'C51DC001FEFFBF40';
+alter user "BALLS" identified by values '8F413A1EFE856963';
+alter user "BARTELLL" identified by values '26645EEC980EC1B2';
+alter user "DBSFWUSER" identified by values '77C12F06B3D2240D';
+alter user "DBSNMP" identified by values '7BD50A2D433AAF09';
+alter user "DIP" identified by values 'CE4A36B8E06CA59C';
+alter user "DS_DBSCAN_USER" identified by values 'F8E875FAA1942E4D';
+alter user "EAPS" identified by values '9BFD5EFDE93AA16C';
+alter user "GGSYS" identified by values '199A3E6C31B037F3';
+alter user "GSMADMIN_INTERNAL" identified by values '690AA9F8CC62CC2E';
+alter user "GSMCATUSER" identified by values '0F6108F5BBC60C1F';
+alter user "GSMUSER" identified by values '56D6F489B0F97093';
+alter user "HAASAP" identified by values '14EAC56A870C3ECB';
+alter user "HRPSINS" identified by values '43DAAC37283139F3';
+alter user "HSUS" identified by values '5F91DB4BE2A592A1';
+alter user "LEEWW" identified by values 'C0071A89AC92A22C';
+alter user "LIY" identified by values '1FE135694DA601DC';
+alter user "LLEWELLYNS" identified by values 'E05E73D7D0E4AA16';
+alter user "MOKRUSHINVV" identified by values 'D382F0CE2F8BD2EA';
+alter user "NIDAMARTIKM" identified by values '1D433395E0D7B99D';
+alter user "ORACLE_OCM" identified by values '5A2E026A9157958C';
+alter user "OUTLN" identified by values '4A3BA55E08595C81';
+alter user "PEOPLE" identified by values '613459773123B38A';
+alter user "PS" identified by values 'D85419940B8ADB27';
+alter user "PSAPPS" identified by values 'C66325EC119E6C69';
+alter user "REDDYRD" identified by values '3D60F075F9DDB5FE';
+alter user "REMOTE_SCHEDULER_AGENT" identified by values '';
+alter user "RICEKD" identified by values '7C8730264F044CCA';
+alter user "SURERR" identified by values '639D25A1946971AD';
+alter user "SYS" identified by values 'A56794396EC6E548';
+alter user "SYS$UMF" identified by values '5B32D5C26FFB0A01';
+alter user "SYSADM" identified by values '107A44307DD81782';
+alter user "SYSBACKUP" identified by values '23AA48ACB42ADCF9';
+alter user "SYSDG" identified by values '6C6198D0644CF9B4';
+alter user "SYSKM" identified by values 'F2DCB573DBFEDD9E';
+alter user "SYSRAC" identified by values '4589A72410020CE8';
+alter user "SYSSTNBY" identified by values 'D11A174C365A0614';
+alter user "SYSTEM" identified by values '30E25EBA8FB3DFA4';
+alter user "SYSUTIL" identified by values '508C70D0CD061364';
+alter user "TEMPORARY_USER" identified by values '4EC87073F166C2FB';
+alter user "XDB" identified by values 'FD6C945857807E3C';
+alter user "ZOLLERMJ" identified by values '7BE7B19FD6CF2861';
+alter user "BALLS" account unlock ;
+alter user "BARTELLL" account unlock ;
+alter user "HAASAP" account unlock ;
+alter user "HSUS" account unlock ;
+alter user "LEEWW" account unlock ;
+alter user "LIY" account unlock ;
+alter user "LLEWELLYNS" account unlock ;
+alter user "NIDAMARTIKM" account unlock ;
+alter user "REDDYRD" account unlock ;
+alter user "RICEKD" account unlock ;
+alter user "SURERR" account unlock ;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+create user "BALLS" Profile "HR_PROFILE_USER" identified by values '8F413A1EFE856963' DEFAULT TABLESPACE USERS TEMPORARY TABLESPACE TEMP ACCOUNT UNLOCK;
+create user "BARTELLL" Profile "HR_PROFILE_USER" identified by values '26645EEC980EC1B2' DEFAULT TABLESPACE USERS TEMPORARY TABLESPACE TEMP ACCOUNT UNLOCK;
+create user "DS_DBSCAN_USER" Profile "HR_PROFILE" identified by values 'F8E875FAA1942E4D' DEFAULT TABLESPACE USERS TEMPORARY TABLESPACE TEMP ACCOUNT UNLOCK;
+create user "EAPS" Profile "HR_PROFILE" identified by values '9BFD5EFDE93AA16C' DEFAULT TABLESPACE USERS TEMPORARY TABLESPACE TEMP ACCOUNT UNLOCK;
+create user "HAASAP" Profile "HR_PROFILE_USER" identified by values '14EAC56A870C3ECB' DEFAULT TABLESPACE USERS TEMPORARY TABLESPACE TEMP ACCOUNT UNLOCK;
+create user "HSUS" Profile "HR_PROFILE_USER" identified by values '5F91DB4BE2A592A1' DEFAULT TABLESPACE USERS TEMPORARY TABLESPACE TEMP ACCOUNT UNLOCK;
+create user "LEEWW" Profile "HR_PROFILE_USER" identified by values 'C0071A89AC92A22C' DEFAULT TABLESPACE USERS TEMPORARY TABLESPACE TEMP ACCOUNT UNLOCK;
+create user "LIY" Profile "HR_PROFILE_USER" identified by values '1FE135694DA601DC' DEFAULT TABLESPACE USERS TEMPORARY TABLESPACE TEMP ACCOUNT UNLOCK;
+create user "LLEWELLYNS" Profile "HR_PROFILE_USER" identified by values 'E05E73D7D0E4AA16' DEFAULT TABLESPACE USERS TEMPORARY TABLESPACE TEMP ACCOUNT UNLOCK;
+create user "NIDAMARTIKM" Profile "HR_PROFILE_USER" identified by values '1D433395E0D7B99D' DEFAULT TABLESPACE USERS TEMPORARY TABLESPACE TEMP ACCOUNT UNLOCK;
+create user "REDDYRD" Profile "HR_PROFILE_USER" identified by values '3D60F075F9DDB5FE' DEFAULT TABLESPACE USERS TEMPORARY TABLESPACE TEMP ACCOUNT UNLOCK;
+create user "RICEKD" Profile "HR_PROFILE_USER" identified by values '7C8730264F044CCA' DEFAULT TABLESPACE USERS TEMPORARY TABLESPACE TEMP ACCOUNT UNLOCK;
+create user "SURERR" Profile "HR_PROFILE_USER" identified by values '639D25A1946971AD' DEFAULT TABLESPACE USERS TEMPORARY TABLESPACE TEMP ACCOUNT UNLOCK;
+
+
+
+GRANT CREATE SESSION TO "BALLS" ;
+GRANT CREATE SESSION TO "BARTELLL" ;
+GRANT CREATE SESSION TO "DS_DBSCAN_USER" ;
+GRANT CREATE SESSION TO "EAPS" ;
+GRANT CREATE SESSION TO "HAASAP" ;
+GRANT CREATE SESSION TO "HSUS" ;
+GRANT CREATE SESSION TO "LEEWW" ;
+GRANT CREATE SESSION TO "LIY" ;
+GRANT CREATE SESSION TO "LLEWELLYNS" ;
+GRANT CREATE SESSION TO "NIDAMARTIKM" ;
+GRANT CREATE SESSION TO "REDDYRD" ;
+GRANT CREATE SESSION TO "RICEKD" ;
+GRANT CREATE SESSION TO "SURERR" ;
+
+
+
+
+GRANT HREXREADONLY TO "BALLS" ;
+GRANT HREXREADONLY TO "BARTELLL" ;
+GRANT HREXREADONLY TO "DS_DBSCAN_USER" ;
+GRANT HREXREADONLY TO "EAPS" ;
+GRANT HREXREADONLY TO "HAASAP" ;
+GRANT HREXREADONLY TO "HSUS" ;
+GRANT HREXREADONLY TO "LEEWW" ;
+GRANT HREXREADONLY TO "LIY" ;
+GRANT HREXREADONLY TO "LLEWELLYNS" ;
+GRANT HREXREADONLY TO "NIDAMARTIKM" ;
+GRANT HREXREADONLY TO "REDDYRD" ;
+GRANT HREXREADONLY TO "RICEKD" ;
+GRANT HREXREADONLY TO "SURERR" ;
+
+
+
+
+update sysadm.psoprdefn set ENCRYPTED=1,PTOPERPSWDV2='{3}4L7TyUqhkbH1RRyksVL0p47JXoRomgGg2Bkdvzqru10=',operpswd='{1}F10jj4W1VLXoWHYzL9GE8NWF8Uk=',OPERPSWDSALT='DdwaQHGR7lvgc1q3jQj+
+OA==',LASTPSWDCHANGE = sysdate+60 where oprid='PSADM';
+update sysadm.psoprdefn set ENCRYPTED=1,PTOPERPSWDV2='{3}9F+1umbzEHNLsfKjmEZqljAuG6zw58huM8iVaLFgOGM=',operpswd='{1}xf3A07dpSypXhYlMXUDFWv4lyOY=',OPERPSWDSALT='bnv9+/0Xsi1gnZQ5m0rUQw==',LASTPSWDCHANGE = sysdate+60 where oprid='HREXOPSSRV';
+update sysadm.psoprdefn set ENCRYPTED=1,PTOPERPSWDV2='{3}M8kmpAo7l/0R8T2UTW7c14sgn02l9ctefCgGZnNM3ac=',operpswd='{1}eIvh6qAapGOLX/TWoIoSrEPOfPQ=',OPERPSWDSALT='iuJg7z5pc3VzXr8J1c6VXw==',LASTPSWDCHANGE = sysdate+60 where oprid='PHRMGR';
+update sysadm.psoprdefn set ENCRYPTED=1,PTOPERPSWDV2='{3}xgROMbG0OuVvXm6i1iApz6bxbktTQhF5wu6/k0mR07I=',operpswd='{1}8hem9WIfuhznQrkfgzc/cBdYlFE=',OPERPSWDSALT='3989QjdfGE0usgrNHTTz
+qQ==',LASTPSWDCHANGE = sysdate+60 where oprid='PSEM';
+update sysadm.psoprdefn set ENCRYPTED=1,PTOPERPSWDV2='{3}es1te9DYoIh/hTCt3feat5qfycVdPax64DH4ODn4W+A=',operpswd='{1}2UzxYwf7qUEJ0nwAbSpeBdKwY2g=',OPERPSWDSALT='WvgAiF15bNms60kbwsGUmw==',LASTPSWDCHANGE = sysdate+60 where oprid='PTWEBSERVER';
+commit;
+
+
+insert into temporary_user.refresh_db_links_tab values ('PUBLIC','EAPS.HR.STATE.SBU',(select dbms_metadata.get_ddl('DB_LINK','EAPS.HR.STATE.SBU','PUBLIC') from dual));
+insert into temporary_user.refresh_db_links_tab values ('SYSADM','EAPS.HR.STATE.SBU',(select dbms_metadata.get_ddl('DB_LINK','EAPS.HR.STATE.SBU','SYSADM') from dual));
+
+
+
+
+
+
+
+
+
+
+
+
+
+@/u02/app/oracle/scripts/refresh/POST_REFRESH_STEPS/POST_OPSCPY1_cr_user_spool.sql;
+@/u02/app/oracle/scripts/refresh/POST_REFRESH_STEPS/POST_OPSCPY1_grant_connect_spool.sql;
+@/u02/app/oracle/scripts/refresh/POST_REFRESH_STEPS/POST_OPSCPY1_grant_sysadm_spool.sql;
+@/u02/app/oracle/scripts/refresh/POST_REFRESH_STEPS/POST_OPSCPY1_alter_pwd_spool.sql;
+@/u02/app/oracle/scripts/refresh/POST_REFRESH_STEPS/POST_OPSCPY1_PS_SchemaPwd_spool.sql;
+
+
+#/u02/app/oracle/scripts/refresh/PRE_REFRESH_STEPS/step1_PRE_REFRESH.bash
+#/u02/app/oracle/scripts/refresh/PRE_REFRESH_STEPS/step2_PRE_REFRESH.bash
+#/u02/app/oracle/scripts/refresh/PRE_REFRESH_STEPS/step2a_PRE_REFRESH.bash
+#/u02/app/oracle/scripts/refresh/PRE_REFRESH_STEPS/step3_PRE_REFRESH.bash
+#/u02/app/oracle/scripts/refresh/PRE_REFRESH_STEPS/step4_PRE_REFRESH.bash
+#/u02/app/oracle/scripts/refresh/PRE_REFRESH_STEPS/step5_PRE_REFRESH.bash
+#/u02/app/oracle/scripts/refresh/PRE_REFRESH_STEPS/step6_PRE_REFRESH.bash
+#/u02/app/oracle/scripts/refresh/PRE_REFRESH_STEPS/step7_PRE_REFRESH.bash
+#/u02/app/oracle/scripts/refresh/PRE_REFRESH_STEPS/step8_PRE_REFRESH.bash
+#/u02/app/oracle/scripts/refresh/PRE_REFRESH_STEPS/step9_PRE_REFRESH.bash
+#/u02/app/oracle/scripts/refresh/PRE_REFRESH_STEPS/step10_PRE_REFRESH.bash
+
+
+
+
+
+
+
+
+
+
+
+

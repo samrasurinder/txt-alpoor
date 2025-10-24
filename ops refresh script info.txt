@@ -1,0 +1,103 @@
+/bin/bash /infshare/oracle/scripts/dba/delete_drshare_backup.bash on hrewoel13.hr.state.sbu
+/infshare/oracle/scripts/backup/RMAN_BACKUP_FOR_REFRESH_DRSHARE.bash OPSSTBY   on hrewoel13.hr.state.sbu
+/bin/bash /infshare/oracle/scripts/dba/dismount_asm_diskgroup.bash on hrewoel13.hr.state.sbu on hrewoel13.hr.state.sbu
+/bin/bash /infshare/oracle/scripts/dba/mount_asm_diskgroup.bash on hrewoel29.hr.state.sbu
+
+	
+/infshare/oracle/scripts/refresh/bin/db_refresh_BACKUP.bash OPSCPY1 hrewoel29.hr.state.sbu
+
+
+
+
+
+[oracle@hrewoel13 ~]$ grep infshare /infshare/oracle/scripts/backup/RMAN_BACKUP_FOR_REFRESH_DRSHARE.bash
+test ! -d /infshare/oracle/logs/${DB_NAME} && mkdir -p /infshare/oracle/logs/${DB_NAME}
+#test ! -d /infshare/oracle/backup/${DB_NAME} && mkdir -p /infshare/oracle/backup/${DB_NAME}
+#test ! -d /infshare/oracle/backup/${DB_NAME}/backupset && mkdir -p /infshare/oracle/backup/${DB_NAME}/backupset
+#cd /infshare/oracle/backup/${DB_NAME}/backupset
+cd /infshare/oracle/logs/${DB_NAME}
+#cd /infshare/oracle/logs/${DB_NAME}
+cd /infshare/oracle/logs/${DB_NAME}
+#cd /infshare/oracle/backup/${DB_NAME}/backupset
+
+
+on hrvlprddb7602
+----------------
+/infshare/oracle/scripts/dba   ---> /u02/app/oracle/scripts/dba
+/infshare/oracle/scripts/backup ----> /u02/app/oracle/scripts/backup
+/infshare/oracle/logs ---------> /u02/app/oracle/scripts/logs
+
+
+
+
+/infshare/oracle/scripts/backup/RMAN_BACKUP_FOR_REFRESH_DRSHARE.bash OPSSTBY
+
+
+
+hrvlprddb7602
+-------------
+
+
+/bin/bash /infshare/oracle/scripts/dba/mount_asm_diskgroup.bash
+
+ /bin/bash /infshare/oracle/scripts/dba/delete_drshare_backup.bash
+/infshare/oracle/scripts/backup/RMAN_BACKUP_FOR_REFRESH_DRSHARE.bash OPSSTBY
+/bin/bash /infshare/oracle/scripts/dba/dismount_asm_diskgroup.bash
+
+
+
+/infshare/oracle/scripts/backup/RMAN_BACKUP_FOR_REFRESH_DRSHARE.bash OPSSTBY
+
+
+
+
+
+on hrvlcpydb7601.hr.state.sbu
+
+/bin/bash /infshare/oracle/scripts/dba/mount_asm_diskgroup.bash on hrewoel29.hr.state.sbu
+
+
+/infshare/oracle/scripts/refresh/bin/db_refresh_BACKUP.bash OPSCPY1  on hrewoel29.hr.state.sbu
+
+
+Pre refresh:
+1) /infshare/oracle/scripts/refresh/bin/build/OPS/build_driver_OPS.pre
+2) /infshare/oracle/scripts/refresh/bin/build/OPS
+
+/infshare/oracle/scripts/refresh/bin/build/OPS/PRE_preserve_pwd.bash
+
+
+
+
+
+
+
+
+
+
+
+# PRESERVE ALL ACCOUNTS TO BE RESTORED AFTER POST REFRESH
+/bin/bash PRE_preserve_pwd.bash ${to_db}
+echo "################################## Completed: *** Preserved Users Accounts Password(s) ##########################*"
+
+# PRESERVE PEOPLESOFT SCHEMAS PASSWORDS
+/bin/bash PRE_PS_SchemaPwd.bash ${to_db}
+echo "################################## Completed: *** Preserved PS Schemas Password(s) ###############################"
+
+# PRESERVE All DB Links
+/bin/bash PRE_OPS_All_dblinks.bash ${to_db}
+
+
+
+
+function PRE_REFRESH() {
+# Check if pre refresh script exist?!
+if [ ! -f $builds_dir/build_driver_${ENV}.pre ] && [ "$run_pre" == "Y" ] ; then
+   echo "`date`" |tee -i  $log/check_files_ifexist.log
+   echo "*** ERROR: No pre refresh scripts found!!" |tee -a -i   $log/check_files_ifexist.log
+   echo "*** ERROR: $builds_dir/build_driver_${ENV}.pre" |tee -a -i   $log/check_files_ifexist.log
+   send_mail "No_PRE_build_driver"
+   cat $log/check_files_ifexist.log
+   exit 1
+fi
+

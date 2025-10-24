@@ -1,0 +1,42 @@
+SQL> SET SERVEROUTPUT ON
+SQL> select * from global_name;
+
+GLOBAL_NAME                                                                     
+--------------------------------------------------------------------------------
+TST1.HR.STATE.SBU                                                               
+
+SQL> 
+SQL> select sysdate from dual;
+
+SYSDATE                                                                         
+---------                                                                       
+13-SEP-22                                                                       
+
+SQL> 
+SQL> ALTER TABLE ESRT.FSI_EMPLOYEE ADD
+  2  (
+  3  	 DOB	     DATE,
+  4  	 EMAIL	     VARCHAR(80),
+  5  	 ALT_EMAIL   VARCHAR(80)
+  6  );
+
+Table altered.
+
+SQL> 
+SQL> ALTER TABLE ESRT.FSIPEOPLEXREF ADD
+  2  (
+  3  	 DOB	     DATE,
+  4  	 EMAIL	     VARCHAR(80),
+  5  	 ALT_EMAIL   VARCHAR(80)
+  6  );
+
+Table altered.
+
+SQL> COMMIT;
+
+Commit complete.
+
+SQL> 
+SQL> SHOW ERRORS
+No errors.
+SQL> SPOOL OFF

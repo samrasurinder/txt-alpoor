@@ -1,0 +1,302 @@
+[grid@dbserverdb10 ~]$ pwd
+/home/grid
+[grid@dbserverdb10 ~]$ . oraenv
+ORACLE_SID = [grid] ? +ASM1
+The Oracle base has been set to /u02/app/grid
+[grid@dbserverdb10 ~]$ ps -ef | grep lsnr
+grid     17652     1  0 Oct19 ?        00:02:49 /u02/app/19.3.0/grid/bin/tnslsnr ASMNET1LSNR_ASM -no_crs_notify -inherit
+grid     27041     1  0 Oct20 ?        00:00:34 /u02/app/19.3.0/grid/bin/tnslsnr LISTENER -no_crs_notify -inherit
+grid     27140     1  0 Oct20 ?        00:00:19 /u02/app/19.3.0/grid/bin/tnslsnr LISTENER_SCAN2 -no_crs_notify -inherit
+grid     27158     1  0 Oct20 ?        00:00:18 /u02/app/19.3.0/grid/bin/tnslsnr LISTENER_SCAN3 -no_crs_notify -inherit
+grid     31401 26599  0 10:10 pts/0    00:00:00 grep --color=auto lsnr
+[grid@dbserverdb10 ~]$ lsnrctl status
+
+LSNRCTL for Linux: Version 19.0.0.0.0 - Production on 25-OCT-2022 10:10:22
+
+Copyright (c) 1991, 2022, Oracle.  All rights reserved.
+
+Connecting to (DESCRIPTION=(ADDRESS=(PROTOCOL=IPC)(KEY=LISTENER)))
+STATUS of the LISTENER
+------------------------
+Alias                     LISTENER
+Version                   TNSLSNR for Linux: Version 19.0.0.0.0 - Production
+Start Date                20-OCT-2022 08:41:24
+Uptime                    5 days 1 hr. 28 min. 57 sec
+Trace Level               off
+Security                  ON: Local OS Authentication
+SNMP                      OFF
+Listener Parameter File   /u02/app/19.3.0/grid/network/admin/listener.ora
+Listener Log File         /u02/app/grid/diag/tnslsnr/dbserverdb10/listener/alert/log.xml
+Listening Endpoints Summary...
+  (DESCRIPTION=(ADDRESS=(PROTOCOL=ipc)(KEY=LISTENER)))
+  (DESCRIPTION=(ADDRESS=(PROTOCOL=tcps)(HOST=xx.yy.26.194)(PORT=2483)))
+  (DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=xx.yy.26.194)(PORT=1521)))
+Services Summary...
+Service "+ASM" has 1 instance(s).
+  Instance "+ASM1", status READY, has 1 handler(s) for this service...
+Service "+ASM_DATA" has 1 instance(s).
+  Instance "+ASM1", status READY, has 1 handler(s) for this service...
+Service "VMRACDB.xxx.yyy" has 1 instance(s).
+  Instance "VMRACDB1", status READY, has 1 handler(s) for this service...
+Service "VMRACDBXDB.xxx.yyy" has 1 instance(s).
+  Instance "VMRACDB1", status READY, has 1 handler(s) for this service...
+The command completed successfully
+
+[grid@dbserverdb10 ~]$ lsnrctl status LISTENER_SCAN2
+
+LSNRCTL for Linux: Version 19.0.0.0.0 - Production on 25-OCT-2022 10:10:55
+
+Copyright (c) 1991, 2022, Oracle.  All rights reserved.
+
+Connecting to (DESCRIPTION=(ADDRESS=(PROTOCOL=IPC)(KEY=LISTENER_SCAN2)))
+STATUS of the LISTENER
+------------------------
+Alias                     LISTENER_SCAN2
+Version                   TNSLSNR for Linux: Version 19.0.0.0.0 - Production
+Start Date                20-OCT-2022 08:41:32
+Uptime                    5 days 1 hr. 29 min. 22 sec
+Trace Level               off
+Security                  ON: Local OS Authentication
+SNMP                      OFF
+Listener Parameter File   /u02/app/19.3.0/grid/network/admin/listener.ora
+Listener Log File         /u02/app/grid/diag/tnslsnr/dbserverdb10/listener_scan2/alert/log.xml
+Listening Endpoints Summary...
+  (DESCRIPTION=(ADDRESS=(PROTOCOL=ipc)(KEY=LISTENER_SCAN2)))
+  (DESCRIPTION=(ADDRESS=(PROTOCOL=tcps)(HOST=xx.yy.26.248)(PORT=2483)))
+  (DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=xx.yy.26.248)(PORT=1526)))
+Services Summary...
+Service "VMRACDB.xxx.yyy" has 2 instance(s).
+  Instance "VMRACDB1", status READY, has 2 handler(s) for this service...
+  Instance "VMRACDB2", status READY, has 2 handler(s) for this service...
+Service "VMRACDBXDB.xxx.yyy" has 2 instance(s).
+  Instance "VMRACDB1", status READY, has 1 handler(s) for this service...
+  Instance "VMRACDB2", status READY, has 1 handler(s) for this service...
+The command completed successfully
+[grid@dbserverdb10 ~]$ lsnrctl status LISTENER_SCAN3
+
+LSNRCTL for Linux: Version 19.0.0.0.0 - Production on 25-OCT-2022 10:11:02
+
+Copyright (c) 1991, 2022, Oracle.  All rights reserved.
+
+Connecting to (DESCRIPTION=(ADDRESS=(PROTOCOL=IPC)(KEY=LISTENER_SCAN3)))
+STATUS of the LISTENER
+------------------------
+Alias                     LISTENER_SCAN3
+Version                   TNSLSNR for Linux: Version 19.0.0.0.0 - Production
+Start Date                20-OCT-2022 08:41:34
+Uptime                    5 days 1 hr. 29 min. 28 sec
+Trace Level               off
+Security                  ON: Local OS Authentication
+SNMP                      OFF
+Listener Parameter File   /u02/app/19.3.0/grid/network/admin/listener.ora
+Listener Log File         /u02/app/grid/diag/tnslsnr/dbserverdb10/listener_scan3/alert/log.xml
+Listening Endpoints Summary...
+  (DESCRIPTION=(ADDRESS=(PROTOCOL=ipc)(KEY=LISTENER_SCAN3)))
+  (DESCRIPTION=(ADDRESS=(PROTOCOL=tcps)(HOST=xx.yy.26.247)(PORT=2483)))
+  (DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=xx.yy.26.247)(PORT=1526)))
+Services Summary...
+Service "VMRACDB.xxx.yyy" has 2 instance(s).
+  Instance "VMRACDB1", status READY, has 2 handler(s) for this service...
+  Instance "VMRACDB2", status READY, has 2 handler(s) for this service...
+Service "VMRACDBXDB.xxx.yyy" has 2 instance(s).
+  Instance "VMRACDB1", status READY, has 1 handler(s) for this service...
+  Instance "VMRACDB2", status READY, has 1 handler(s) for this service...
+The command completed successfully
+[grid@dbserverdb10 ~]$ ssh dbserverdb11
+######################################################################################
+######################################################################################
+##                                                                                  ##
+##   You are accessing a U.S. Government information system, includes any of:       ##
+##       (1) this computer                                                          ##
+##       (2) this computer network                                                  ##
+##       (3) all computers connected to this network                                ##
+##       (4) all devices and storage media attached to this network or,             ##
+##           to a computer on this network.                                         ##
+##                                                                                  ##
+##  This information system is provided for U.S. Government-authorized use only.    ##
+##  Unauthorized or improper use of this system may result in disciplinary action,  ##
+##  as well as civil and criminal penalties.                                        ##
+##                                                                                  ##
+##  By using this information system, you understand and consent to the following:  ##
+##    1.You have no reasonable expectation of privacy regarding any communications  ##
+##      or data transiting or stored on this information system.                    ##
+##    2.At any time, and for any lawful government purpose, the government may      ##
+##      monitor, intercept, and search and seize any communication or data          ##
+##      transiting, or stored on this information system.                           ##
+##    3.Any communications or data transiting or stored on this information system  ##
+##      may be disclosed or used for any lawful government purpose.                 ##
+##    4.Nothing herein consents to the search or seizure of a privately-owned       ##
+##      computer or other privately owned communications device, or the contents    ##
+##      thereof, that is in the system user's home.                                 ##
+##                                                                                  ##
+######################################################################################
+######################################################################################
+
+Last login: Tue Oct 25 10:08:31 EDT 2022
+Last login: Tue Oct 25 10:11:28 2022 from dbserverdb10.xxx.yyy
+
+[grid@dbserverdb11 ~]$ ps -ef | grep lsnr
+grid       7471   7162  0 10:11 pts/0    00:00:00 grep --color=auto lsnr
+grid      65382      1  0 Oct22 ?        00:00:19 /u02/app/19.3.0/grid/bin/tnslsnr LISTENER -no_crs_notify -inherit
+grid      65465      1  0 Oct22 ?        00:01:32 /u02/app/19.3.0/grid/bin/tnslsnr ASMNET1LSNR_ASM -no_crs_notify -inherit
+grid      65477      1  0 Oct22 ?        00:00:12 /u02/app/19.3.0/grid/bin/tnslsnr LISTENER_SCAN1 -no_crs_notify -inherit
+[grid@dbserverdb11 ~]$ . oraenv
+ORACLE_SID = [grid] ? +ASM2
+The Oracle base has been set to /u02/app/grid
+[grid@dbserverdb11 ~]$ lsrnctl status
+bash: lsrnctl: command not found...
+[grid@dbserverdb11 ~]$ lsnrctl status
+
+LSNRCTL for Linux: Version 19.0.0.0.0 - Production on 25-OCT-2022 10:12:21
+
+Copyright (c) 1991, 2022, Oracle.  All rights reserved.
+
+Connecting to (DESCRIPTION=(ADDRESS=(PROTOCOL=IPC)(KEY=LISTENER)))
+STATUS of the LISTENER
+------------------------
+Alias                     LISTENER
+Version                   TNSLSNR for Linux: Version 19.0.0.0.0 - Production
+Start Date                22-OCT-2022 12:07:15
+Uptime                    2 days 22 hr. 5 min. 6 sec
+Trace Level               off
+Security                  ON: Local OS Authentication
+SNMP                      OFF
+Listener Parameter File   /u02/app/19.3.0/grid/network/admin/listener.ora
+Listener Log File         /u02/app/grid/diag/tnslsnr/dbserverdb11/listener/alert/log.xml
+Listening Endpoints Summary...
+  (DESCRIPTION=(ADDRESS=(PROTOCOL=ipc)(KEY=LISTENER)))
+  (DESCRIPTION=(ADDRESS=(PROTOCOL=tcps)(HOST=xx.yy.26.195)(PORT=2483)))
+  (DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=xx.yy.26.195)(PORT=1521)))
+Services Summary...
+Service "+ASM" has 1 instance(s).
+  Instance "+ASM2", status READY, has 1 handler(s) for this service...
+Service "+ASM_DATA" has 1 instance(s).
+  Instance "+ASM2", status READY, has 1 handler(s) for this service...
+Service "VMRACDB.xxx.yyy" has 1 instance(s).
+  Instance "VMRACDB2", status READY, has 1 handler(s) for this service...
+Service "VMRACDBXDB.xxx.yyy" has 1 instance(s).
+  Instance "VMRACDB2", status READY, has 1 handler(s) for this service...
+The command completed successfully
+[grid@dbserverdb11 ~]$ lsnrctl status LISTENER_SCAN1
+
+LSNRCTL for Linux: Version 19.0.0.0.0 - Production on 25-OCT-2022 10:12:35
+
+Copyright (c) 1991, 2022, Oracle.  All rights reserved.
+
+Connecting to (DESCRIPTION=(ADDRESS=(PROTOCOL=IPC)(KEY=LISTENER_SCAN1)))
+STATUS of the LISTENER
+------------------------
+Alias                     LISTENER_SCAN1
+Version                   TNSLSNR for Linux: Version 19.0.0.0.0 - Production
+Start Date                22-OCT-2022 12:07:17
+Uptime                    2 days 22 hr. 5 min. 17 sec
+Trace Level               off
+Security                  ON: Local OS Authentication
+SNMP                      OFF
+Listener Parameter File   /u02/app/19.3.0/grid/network/admin/listener.ora
+Listener Log File         /u02/app/grid/diag/tnslsnr/dbserverdb11/listener_scan1/alert/log.xml
+Listening Endpoints Summary...
+  (DESCRIPTION=(ADDRESS=(PROTOCOL=ipc)(KEY=LISTENER_SCAN1)))
+  (DESCRIPTION=(ADDRESS=(PROTOCOL=tcps)(HOST=xx.yy.26.246)(PORT=2483)))
+  (DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=xx.yy.26.246)(PORT=1526)))
+Services Summary...
+Service "VMRACDB.xxx.yyy" has 2 instance(s).
+  Instance "VMRACDB1", status READY, has 2 handler(s) for this service...
+  Instance "VMRACDB2", status READY, has 2 handler(s) for this service...
+Service "VMRACDBXDB.xxx.yyy" has 2 instance(s).
+  Instance "VMRACDB1", status READY, has 1 handler(s) for this service...
+  Instance "VMRACDB2", status READY, has 1 handler(s) for this service...
+The command completed successfully
+[grid@dbserverdb11 ~]$
+
+
+
+
+
+
+[oracle@dbserverdb10 ~]$ . oraenv
+ORACLE_SID = [oracle] ? VMRACDB1
+The Oracle base has been set to /u02/app/oracle
+[oracle@dbserverdb10 ~]$ sqlplus / as sysdba
+
+SQL*Plus: Release 19.0.0.0.0 - Production on Tue Oct 25 10:16:03 2022
+Version 19.15.0.0.0
+
+Copyright (c) 1982, 2022, Oracle.  All rights reserved.
+
+
+Connected to:
+Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production
+Version 19.15.0.0.0
+
+SQL> show parameters listener
+
+NAME                                 TYPE        VALUE
+------------------------------------ ----------- ------------------------------
+forward_listener                     string
+listener_networks                    string
+local_listener                       string       (ADDRESS=(PROTOCOL=TCP)(HOST=
+                                                 xx.yy.26.194)(PORT=1521)), (AD
+                                                 DRESS=(PROTOCOL=TCPS)(HOST=10.
+                                                 68.26.194)(PORT=2483))
+remote_listener                      string       sand2-ew-scan:1526
+SQL>
+[oracle@dbserverdb10 ~]$ ssh dbserverdb11
+######################################################################################
+######################################################################################
+##                                                                                  ##
+##   You are accessing a U.S. Government information system, includes any of:       ##
+##       (1) this computer                                                          ##
+##       (2) this computer network                                                  ##
+##       (3) all computers connected to this network                                ##
+##       (4) all devices and storage media attached to this network or,             ##
+##           to a computer on this network.                                         ##
+##                                                                                  ##
+##  This information system is provided for U.S. Government-authorized use only.    ##
+##  Unauthorized or improper use of this system may result in disciplinary action,  ##
+##  as well as civil and criminal penalties.                                        ##
+##                                                                                  ##
+##  By using this information system, you understand and consent to the following:  ##
+##    1.You have no reasonable expectation of privacy regarding any communications  ##
+##      or data transiting or stored on this information system.                    ##
+##    2.At any time, and for any lawful government purpose, the government may      ##
+##      monitor, intercept, and search and seize any communication or data          ##
+##      transiting, or stored on this information system.                           ##
+##    3.Any communications or data transiting or stored on this information system  ##
+##      may be disclosed or used for any lawful government purpose.                 ##
+##    4.Nothing herein consents to the search or seizure of a privately-owned       ##
+##      computer or other privately owned communications device, or the contents    ##
+##      thereof, that is in the system user's home.                                 ##
+##                                                                                  ##
+######################################################################################
+######################################################################################
+
+Last login: Tue Oct 25 10:08:34 EDT 2022
+Last login: Tue Oct 25 10:16:53 2022 from dbserverdb10.xxx.yyy
+[oracle@dbserverdb11 ~]$ . oraenv
+ORACLE_SID = [oracle] ? VMRACDB2
+The Oracle base has been set to /u02/app/oracle
+[oracle@dbserverdb11 ~]$ sqlplus / as sysdba
+
+SQL*Plus: Release 19.0.0.0.0 - Production on Tue Oct 25 10:17:20 2022
+Version 19.15.0.0.0
+
+Copyright (c) 1982, 2022, Oracle.  All rights reserved.
+
+
+Connected to:
+Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production
+Version 19.15.0.0.0
+
+SQL> show parameters listener
+
+NAME                                 TYPE        VALUE
+------------------------------------ ----------- ------------------------------
+forward_listener                     string
+listener_networks                    string
+local_listener                       string       (ADDRESS=(PROTOCOL=TCP)(HOST=
+                                                 xx.yy.26.195)(PORT=1521)), (AD
+                                                 DRESS=(PROTOCOL=TCPS)(HOST=10.
+                                                 68.26.195)(PORT=2483))
+remote_listener                      string       sand2-ew-scan:1526
+SQL>

@@ -1,0 +1,94 @@
+SQL> SET FEEDBACK ON
+SQL> 
+SQL>         	SET TERMOUT ON
+SQL> 
+SQL> col database_schema format a40
+SQL> 
+SQL> 	select substr(global_name,1,30) || ' ('||user||')' database_schema from global_name;
+
+DATABASE_SCHEMA                                                                 
+----------------------------------------                                        
+PRD.HR.STATE.SBU (SYS)                                                          
+
+1 row selected.
+
+SQL> 
+SQL> 
+SQL> 
+SQL> @MSR_81542_Script.sql
+
+DATABASE_SCHEMA                                                                 
+----------------------------------------                                        
+PRD.HR.STATE.SBU (SYS)                                                          
+
+1 row selected.
+
+
+CAND_SEQ_NUM SSN       LAST_NAME                 FIRST_NAME                     
+------------ --------- ------------------------- -------------------------      
+PGM_NAME                                                                        
+--------------------------------------------------------------------------------
+PI_NAME                                                                         
+--------------------------------------------------------------------------------
+APPLICATI CONDITION REGISTER_ REGISTER_ ADJ_REGIS                               
+--------- --------- --------- --------- ---------                               
+      446987 533920379 Majidi                    Nona                           
+Junior Officer Program - Diplomacy Fellows Program                              
+2014 Fiscal Year                                                                
+29-AUG-14 18-MAY-15 19-MAY-16 19-NOV-17 19-NOV-17                               
+                                                                                
+
+CAND_SEQ_NUM SSN       LAST_NAME                 FIRST_NAME                     
+------------ --------- ------------------------- -------------------------      
+PGM_NAME                                                                        
+--------------------------------------------------------------------------------
+PI_NAME                                                                         
+--------------------------------------------------------------------------------
+APPLICATI CONDITION REGISTER_ REGISTER_ ADJ_REGIS                               
+--------- --------- --------- --------- ---------                               
+      477606 533920379 Majidi                    Nona                           
+Junior Officer Program - Diplomacy Fellows Program                              
+2015 Fiscal Year                                                                
+28-AUG-15 08-JAN-16 19-MAY-16 19-NOV-17 19-NOV-17                               
+                                                                                
+
+2 rows selected.
+
+
+2 rows updated.
+
+
+CAND_SEQ_NUM SSN       LAST_NAME                 FIRST_NAME                     
+------------ --------- ------------------------- -------------------------      
+PGM_NAME                                                                        
+--------------------------------------------------------------------------------
+PI_NAME                                                                         
+--------------------------------------------------------------------------------
+APPLICATI CONDITION REGISTER_ REGISTER_ ADJ_REGIS                               
+--------- --------- --------- --------- ---------                               
+      446987 533920379 Majidi                    Nona                           
+Junior Officer Program - Diplomacy Fellows Program                              
+2014 Fiscal Year                                                                
+29-AUG-14 18-MAY-15 05-AUG-22 05-FEB-24 05-FEB-24                               
+                                                                                
+
+CAND_SEQ_NUM SSN       LAST_NAME                 FIRST_NAME                     
+------------ --------- ------------------------- -------------------------      
+PGM_NAME                                                                        
+--------------------------------------------------------------------------------
+PI_NAME                                                                         
+--------------------------------------------------------------------------------
+APPLICATI CONDITION REGISTER_ REGISTER_ ADJ_REGIS                               
+--------- --------- --------- --------- ---------                               
+      477606 533920379 Majidi                    Nona                           
+Junior Officer Program - Diplomacy Fellows Program                              
+2015 Fiscal Year                                                                
+28-AUG-15 08-JAN-16 05-AUG-22 05-FEB-24 05-FEB-24                               
+                                                                                
+
+2 rows selected.
+
+
+Commit complete.
+
+SQL> spool off;

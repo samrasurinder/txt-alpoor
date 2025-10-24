@@ -1,0 +1,93 @@
+
+
+
+
+
+
+
+
+Before:
+------
+
+
+Login to hrewoel06
+
+execute following script as oracle user:
+
+/infshare/oracle/scripts/dba/expdp_IPMS_INTERFACE_PRD.bash
+
+Above script will create a dump file in following folder
+/infshare/oracle/export/PRD/IPMS_INTERFACE_*.dmp file
+
+
+
+
+
+sqlplus sys@prd as sysdba ( from your workstation)
+
+spool before_deploy.log
+
+set echo on
+col owner format a40
+col OBJECT_NAME format a60
+col OBJECT_TYPE format a30
+set linesize 160
+set pagesize 100
+
+select * from global_name;
+select count(*) from dba_invalid_objects;
+
+select owner,object_name,object_type from dba_invalid_objects order by owner,object_name,object_name;
+
+spool off;
+
+
+*****************************
+
+
+Then Deploy MSR
+
+
+*****************************
+
+
+
+After:
+------
+
+sqlplus sys@prd as sysdba   ( from your workstation)
+
+After:
+
+
+spool after_deploy.log
+
+@?/rdbms/admin/utlrp.sql
+
+EXEC DBMS_UTILITY.compile_schema(schema => 'IPMS_INTERFACE', compile_all => false);
+
+set echo on
+col owner format a40
+col OBJECT_NAME format a60
+col OBJECT_TYPE format a30
+set linesize 160
+set pagesize 100
+
+select * from global_name;
+select count(*) from dba_invalid_objects;
+
+select owner,object_name,object_type from dba_invalid_objects order by owner,object_name,object_name;
+
+spool off
+
+
+
+
+
+
+
+
+Compare invalid objects before and after
+
+
+

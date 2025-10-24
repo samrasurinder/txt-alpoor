@@ -1,0 +1,19 @@
+declare
+cmd varchar2(400);
+sname varchar2(400);
+begin
+cmd := 'create  index SYSADM.IDX$$_1F5710009 on SYSADM.PS_JOB("EMPL_RCD","EFFDT","EMPLID")';
+EXECUTE IMMEDIATE cmd;
+cmd := 'create  index SYSADM.IDX$$_1F5710004 on SYSADM.PS_POSITION_DATA("POSITION_NBR","EFFDT")';
+EXECUTE IMMEDIATE cmd;
+cmd := 'create  index SYSADM.IDX$$_1F571000A on SYSADM.PS_JOB("EMPL_RCD","LASTUPDDTTM","EMPLID")';
+EXECUTE IMMEDIATE cmd;
+cmd := 'create  index SYSADM.IDX$$_1F5710010 on SYSADM.PS_JOB("GRADE","POSITION_NBR")';
+EXECUTE IMMEDIATE cmd;
+cmd := 'create  index SYSADM.IDX$$_1F5710011 on SYSADM.PS_POSITION_DATA("POSITION_NBR","GRADE")';
+EXECUTE IMMEDIATE cmd;
+
+END;
+
+	 
+sname := dbms_sqltune.accept_sql_profile(task_name => 'TASK_128369', object_id => 1);

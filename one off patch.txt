@@ -1,0 +1,24 @@
+[root@hrvlcpydb25 OPatch]# ./opatchauto apply /infshare/oracle/patches/32847378/32847378/ -oh /u02/app/19.3.0/grid &
+[1] 702
+[root@hrvlcpydb25 OPatch]#
+OPatchauto session is initiated at Fri Jun  4 12:37:14 2021
+
+System initialization log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchautodb/systemconfig2021-06-04_12-37-17PM.log.
+
+Session log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchauto/opatchauto2021-06-04_12-37-30PM.log
+The id for this session is ZDLN
+
+Executing OPatch prereq operations to verify patch applicability on home /u02/app/19.3.0/grid
+Patch applicability verified successfully on home /u02/app/19.3.0/grid
+
+
+Executing patch validation checks on home /u02/app/19.3.0/grid
+Patch validation checks successfully completed on home /u02/app/19.3.0/grid
+
+
+Performing prepatch operations on CRS - bringing down CRS service on home /u02/app/19.3.0/grid
+Prepatch operation log file location: /u02/app/grid/crsdata/hrvlcpydb25/crsconfig/crs_prepatch_apply_inplace_hrvlcpydb25_2021-06-04_12-38-02AM.log
+CRS service brought down successfully on home /u02/app/19.3.0/grid
+
+
+Start applying binary patch on home /u02/app/19.3.0/grid

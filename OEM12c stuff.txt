@@ -1,0 +1,83 @@
+select  Job_name,job_owner,scheduled_time,status from MGMT$JOB_EXECUTION_HISTORY  where job_name like '%KC%' and status in ('Error', 'Failed')  order by job_name,start_time desc
+
+
+select  * from MGMT$JOB_EXECUTION_HISTORY  where job_name like 'KC%' order by start_time  
+
+
+select * from sysman.mgmt_job_purge_policies
+
+
+
+15.2.4 How to Modify the Retention Period of Job History
+Enterprise Manager Cloud Control has a default purge policy which removes all finished job details which are older than 30 days. This section provides details for modifying this default purge policy.
+
+The actual purging of completed job history is implemented via a DBMS_SCHEDULER job that runs once a day in the repository database. When the job runs, it looks for finished jobs that are 'n' number of days older than the current time (value of sysdate in the repository database) and deletes these jobs. The value of 'n' is, by default, set to 30 days.
+
+The default purge policy cannot be modified via the Enterprise Manager console, but it can be changed using SQL*Plus.
+
+To modify this purge policy, follow these steps:
+
+Log in to the repository database as the SYSMAN user, via SQL*Plus.
+
+Check the current values for the purge policies using the following command:
+
+SQL> select * from mgmt_job_purge_policies;
+
+POLICY_NAME                      TIME_FRAME
+-------------------------------- ----------
+SYSPURGE_POLICY                          30
+REFRESHFROMMETALINKPURGEPOLICY            7
+FIXINVENTORYPURGEPOLICY                   7
+OPATCHPATCHUPDATE_PAPURGEPOLICY           7
+The purge policy responsible for the job deletion is called SYSPURGE_POLICY. As seen above, the default value is set to 30 days.
+
+To change the time period, you must drop and recreate the policy with a different time frame:
+
+SQL> execute MGMT_JOBS.drop_purge_policy('SYSPURGE_POLICY');
+
+PL/SQL procedure successfully completed.
+
+SQL> execute MGMT_JOBS.register_purge_policy('SYSPURGE_POLICY', 60, null);
+
+PL/SQL procedure successfully completed.
+
+SQL> COMMIT;
+
+Commit complete.
+
+SQL> select * from mgmt_job_purge_policies;
+
+POLICY_NAME                      TIME_FRAME
+-------------------------------- ---------- 
+SYSPURGE_POLICY                          60
+....
+
+The above commands increase the retention period to 60 days. The time frame can also be reduced below 30 days, depending on the requirement.
+
+You can check when the purge job will be executed next. The actual time that the purge runs is set to 5 AM repository time and can be verified using these steps:
+
+Login to the Repository database using the SYSMAN account.
+
+Execute the following command:
+
+SQL> select job_name,
+            to_char(last_start_date, 'DD-MON-YY HH24:MI:SS') last_run,
+            to_char(next_run_date,   'DD-MON-YY HH24:MI:SS') next_run
+from all_scheduler_jobs
+where job_name ='EM_JOB_PURGE_POLICIES';
+ 
+JOB_NAME              LAST_RUN           NEXT_RUN
+--------------------- ------------------ ------------------
+EM_JOB_PURGE_POLICIES                    07-SEP-11 05:00:00
+
+The schedule can also be verified from the Enterprise Manager console by following these steps:
+
+From the Setup menu, select Management Service, then select Repository.
+
+Click the Repository Operations tab.
+
+Find the Next Scheduled Run and Last Scheduled Run information for Job Purge in the list.
+
+Please note that the time of the next scheduled execution of the Job Purge does not represent the cutoff time for the retention period; the cutoff time is determined by the purge policy at the time the Job Purge runs.
+
+15.2.5 DBMS_SCHEDULER Troubleshooting

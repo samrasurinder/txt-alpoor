@@ -1,0 +1,148 @@
+SQL> 
+SQL> set pagesize 1000
+SQL> set linesize 200
+SQL> col host_name format a30
+SQL> col comp_name format a36
+SQL> col version format a14
+SQL> col status format a10
+SQL> col action_time format a30
+SQL> col action format a20
+SQL> col comments format a45
+SQL> col owner format a12
+SQL> col object_name format a35
+SQL> col object_type format a20
+SQL> col name format a35
+SQL> col index_name format a25
+SQL> col schema_url format a60
+SQL> col user format a12
+SQL> 
+SQL> -- Status of database components
+SQL> 
+SQL> select comp_name, version, status
+  2  from dba_registry
+  3  order by status, comp_name;
+
+COMP_NAME                            VERSION        STATUS                                                                                                                                              
+------------------------------------ -------------- ----------                                                                                                                                          
+Oracle Real Application Clusters     19.0.0.0.0     OPTION OFF                                                                                                                                          
+Oracle Database Catalog Views        19.0.0.0.0     VALID                                                                                                                                               
+Oracle Database Packages and Types   19.0.0.0.0     VALID                                                                                                                                               
+Oracle XML Database                  19.0.0.0.0     VALID                                                                                                                                               
+
+SQL> 
+SQL> -- Registry history
+SQL> 
+SQL> select action_time, action, version, comments
+  2  from registry$history
+  3  order by 1 desc;
+
+ACTION_TIME                    ACTION               VERSION        COMMENTS                                                                                                                             
+------------------------------ -------------------- -------------- ---------------------------------------------                                                                                        
+                               BOOTSTRAP            19             RDBMS_19.15.0.0.0DBRU_LINUX.X64_220330                                                                                               
+                               BOOTSTRAP            12.2.0.1       RDBMS_12.2.0.1.0DBAPR2020RU_LINUX.X64_200327                                                                                         
+23-JUL-22 08.20.09.226091 AM   RU_APPLY             19.0.0.0.0     Patch applied from 19.14.0.0.0 to 19.15.0.0.0                                                                                        
+                                                                   : Release_Update - 220331125408                                                                                                      
+                                                                                                                                                                                                        
+26-FEB-22 12.03.42.814093 PM   RU_APPLY             19.0.0.0.0     Patch applied from 19.13.0.0.0 to 19.14.0.0.0                                                                                        
+                                                                   : Release_Update - 211225122123                                                                                                      
+                                                                                                                                                                                                        
+09-JAN-22 01.15.33.829590 PM   RU_APPLY             19.0.0.0.0     Patch applied from 19.11.0.0.0 to 19.13.0.0.0                                                                                        
+                                                                   : Release_Update - 211004165050                                                                                                      
+                                                                                                                                                                                                        
+05-JUN-21 11.57.56.099088 AM   RU_APPLY             19.0.0.0.0     Patch applied from 19.10.0.0.0 to 19.11.0.0.0                                                                                        
+                                                                   : Release_Update - 210413004009                                                                                                      
+                                                                                                                                                                                                        
+30-MAR-21 08.10.33.992811 PM   RU_APPLY             19.0.0.0.0     Patch applied from 19.9.0.0.0 to 19.10.0.0.0:                                                                                        
+                                                                    Release_Update - 210108185017                                                                                                       
+                                                                                                                                                                                                        
+12-DEC-20 05.06.20.038737 PM   RU_APPLY             19.0.0.0.0     Patch applied from 19.8.0.0.0 to 19.9.0.0.0:                                                                                         
+                                                                   Release_Update - 200930183249                                                                                                        
+                                                                                                                                                                                                        
+19-SEP-20 11.33.55.256794 AM   RU_APPLY             19.0.0.0.0     Patch applied from 19.7.0.0.0 to 19.8.0.0.0:                                                                                         
+                                                                   Release_Update - 200703031501                                                                                                        
+                                                                                                                                                                                                        
+22-AUG-20 03.09.06.665192 PM   UPGRADE              19.0.0.0.0     Upgraded from 12.2.0.1.0 to 19.7.0.0.0                                                                                               
+22-AUG-20 03.07.43.718523 PM   RU_APPLY             19.0.0.0.0     Patch applied on 19.7.0.0.0: Release_Update -                                                                                        
+                                                                    200404035018                                                                                                                        
+                                                                                                                                                                                                        
+23-AUG-19 10.53.17.436791 PM   UPGRADE              12.2.0.1.0     Upgraded from 11.2.0.4.0                                                                                                             
+23-AUG-19 10.50.02.355451 PM   VIEW INVALIDATE                     view invalidation                                                                                                                    
+22-JUN-19 11.27.26.541340 AM   APPLY                11.2.0.4       PSU 11.2.0.4.190416                                                                                                                  
+23-MAR-19 12.57.06.254859 AM   APPLY                11.2.0.4       PSU 11.2.0.4.190115                                                                                                                  
+27-JUL-18 08.11.14.613420 PM   APPLY                11.2.0.4       PSU 11.2.0.4.180717                                                                                                                  
+30-JUN-18 08.37.35.283241 AM   APPLY                11.2.0.4       PSU 11.2.0.4.180417                                                                                                                  
+10-FEB-18 03.00.17.226588 AM   APPLY                11.2.0.4       PSU 11.2.0.4.180116                                                                                                                  
+10-DEC-17 01.23.53.682317 PM   APPLY                11.2.0.4       PSU 11.2.0.4.171017                                                                                                                  
+30-JUN-17 10.35.20.809726 PM   APPLY                11.2.0.4       PSU 11.2.0.4.170418                                                                                                                  
+02-DEC-16 11.32.28.543334 PM   APPLY                11.2.0.4       PSU 11.2.0.4.161018                                                                                                                  
+12-AUG-16 08.24.00.039096 PM   APPLY                11.2.0.4       PSU 11.2.0.4.160719                                                                                                                  
+09-MAY-16 09.14.37.129592 AM   APPLY                11.2.0.4       PSU 11.2.0.4.160419                                                                                                                  
+07-MAR-16 01.23.14.141350 PM   APPLY                11.2.0.4       PSU 11.2.0.4.160119                                                                                                                  
+09-NOV-15 08.03.21.750199 PM   APPLY                11.2.0.4       PSU 11.2.0.4.8                                                                                                                       
+29-MAY-15 08.42.08.755665 PM   APPLY                11.2.0.4       PSU 11.2.0.4.6                                                                                                                       
+
+26 rows selected.
+
+SQL> 
+SQL> -- Invalid objects
+SQL> 
+SQL> select owner, object_name, object_type, status
+  2  from dba_objects
+  3  where status = 'INVALID'
+  4  and owner in ('SYS', 'XDB','SYSTEM')
+  5  order by owner, object_name;
+
+no rows selected
+
+SQL> 
+SQL> -- Object errors
+SQL> 
+SQL> select owner, name, type, text
+  2  from dba_errors
+  3  where owner in ('SYS', 'XDB','SYSTEM')
+  4  order by owner, name;
+
+no rows selected
+
+SQL> 
+SQL> Select owner, segment_name, segment_type, partition_name,tablespace_name
+  2  From dba_extents
+  3  Where relative_fno = 1
+  4  And 1258747 between block_id and (block_id+blocks-1);
+
+OWNER        SEGMENT_NAME                                                                                                                     SEGMENT_TYPE                                              
+------------ -------------------------------------------------------------------------------------------------------------------------------- ------------------                                        
+PARTITION_NAME                                                                                                                   TABLESPACE_NAME                                                        
+-------------------------------------------------------------------------------------------------------------------------------- ------------------------------                                         
+SYS          OPTSTAT_SNAPSHOT$                                                                                                                TABLE                                                     
+                                                                                                                                 SYSTEM                                                                 
+                                                                                                                                                                                                        
+
+SQL> 
+SQL> select owner, object_name, object_type, status
+  2  from dba_objects
+  3  where object_id in (824396, 824397, 486, 487, 507, 508)
+  4  order by owner, object_name;
+
+OWNER        OBJECT_NAME                         OBJECT_TYPE          STATUS                                                                                                                            
+------------ ----------------------------------- -------------------- ----------                                                                                                                        
+SYS          I_MON_MODS_ALL$_OBJ                 INDEX                VALID                                                                                                                             
+SYS          I_OPTSTAT_SNAPSHOT$                 INDEX                VALID                                                                                                                             
+SYS          I_USER_PREFS$                       INDEX                VALID                                                                                                                             
+SYS          MON_MODS_ALL$                       TABLE                VALID                                                                                                                             
+SYS          OPTSTAT_SNAPSHOT$                   TABLE                VALID                                                                                                                             
+SYS          OPTSTAT_USER_PREFS$                 TABLE                VALID                                                                                                                             
+
+6 rows selected.
+
+SQL> 
+SQL> analyze table SYS.OPTSTAT_SNAPSHOT$ validate structure cascade online;
+analyze table SYS.OPTSTAT_SNAPSHOT$ validate structure cascade online
+*
+ERROR at line 1:
+ORA-01499: table/index cross reference failure - see trace file 
+
+
+SQL> 
+SQL> 
+SQL> spool off;

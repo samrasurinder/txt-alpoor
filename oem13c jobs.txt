@@ -1,0 +1,8 @@
+[oracle@hrewlinfoms01 ~]$ cd /u02/app/oracle/middleware/oms/bin/
+[oracle@hrewlinfoms01 bin]$ ./emcli login -username=sysman -password=Testing
+Error: Login failed
+[oracle@hrewlinfoms01 bin]$ ./emcli login -username=sysman -password=PRDXMriebF82\$4K
+Login successful
+[oracle@hrewlinfoms01 bin]$ pwd
+/u02/app/oracle/middleware/oms/bin
+[oracle@hrewlinfoms01 bin]$

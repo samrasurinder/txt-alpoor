@@ -1,0 +1,233 @@
+Central Inventory : /u02/app/oraInventory
+   from           : /u02/app/oracle/agent13c/agent_13.4.0.0.0/oraInst.loc
+OPatch version    : 13.9.4.2.2
+OUI version       : 13.9.4.0.0
+Log file location : /u02/app/oracle/agent13c/agent_13.4.0.0.0/cfgtoollogs/opatch/opatch2021-08-23_13-02-50PM_1.log
+
+
+OPatch detects the Middleware Home as "/u02/app/oracle/agent13c"
+
+Lsinventory Output file location : /u02/app/oracle/agent13c/agent_13.4.0.0.0/cfgtoollogs/opatch/lsinv/lsinventory2021-08-23_13-02-50PM.txt
+
+--------------------------------------------------------------------------------
+Local Machine Information::
+Hostname: hostname.washdc.state.sbu
+ARU platform id: 226
+ARU platform description:: Linux_AMD64
+
+
+Please Use command "$ORACLE_HOME/oui/bin/viewInventory.sh|cmd"
+to list products in this home.
+
+Interim patches (4) :
+
+Patch  32567228     : applied on Sat Jul 24 12:18:46 EDT 2021
+Unique Patch ID:  24125637
+Patch description:  "Oracle Enterprise Manager 13c Release 4 Platform Update 11 (13.4.0.11) for Oracle Management Agent"
+   Created on 21 Apr 2021, 22:59:03 hrs PST8PDT
+   Bugs fixed:
+     32567228, 32662050, 32490658, 32071460, 32318090, 32435949, 31302882
+     32418498, 32063179, 32363833, 32335662, 31624966, 32293020, 32341041
+     32313751, 31183579, 32198303, 32195818, 31850574, 32192677, 31865198
+     31136094, 32003451, 32099224, 31096144, 30387593, 32030350, 20487958
+     31112439, 31958263, 31657257, 31882409, 31542357, 31497783, 31781000
+     31883701, 31737502, 31244753, 31761061, 25721123, 31718499, 30948078
+     31750443, 31697053, 31318356, 31544641, 30819397, 31537769, 29419153
+     31445234, 23623501, 31450302, 30982287, 29882043, 31458991, 31389861
+     31270875, 30781548, 31217370, 31221735, 31169476, 30945078, 29697332
+     30810862, 30725115, 31140436, 30704470, 30640754, 31114912, 30436725
+     29675331, 30765967, 30419621, 30850532, 30109746, 30800421, 30254113
+     30954887, 30673736, 30845247, 30554482, 30787141, 30787199, 30591926
+   Files Touched:
+     emCloudSDK.jar --> ORACLE_HOME//sysman/jlib/emCloudSDK.jar
+     emOCIFetchlet.jar --> ORACLE_HOME//jlib/emOCIFetchlet.jar
+     em-sicore-utils-pojo.jar --> ORACLE_HOME//jlib/em-sicore-utils-pojo.jar
+     agentDeploy.sh --> ORACLE_HOME//sysman/install/agentDeploy.sh
+     agentDeploy.bat --> ORACLE_HOME//sysman/install/agentDeploy.bat
+     OH_OUI.pm --> ORACLE_HOME//sysman/admin/scripts/OH_OUI.pm
+     kspliceInfo.sh --> ORACLE_HOME//sysman/admin/scripts/kspliceInfo.sh
+     kspliceUserSpaceTable.sh --> ORACLE_HOME//sysman/admin/scripts/kspliceUserSpaceTable.sh
+     emagentSDKImpl-intg.jar --> ORACLE_HOME//sysman/jlib/emagentSDKImpl-intg.jar
+     gcagent_core.jar --> ORACLE_HOME//jlib/gcagent_core.jar
+     emConfigInstall.jar --> ORACLE_HOME//jlib/emConfigInstall.jar
+     fproxy.jar --> ORACLE_HOME//jlib/fproxy.jar
+     gcagent_client.jar --> ORACLE_HOME//jlib/gcagent_client.jar
+     examan.jar --> ORACLE_HOME//jlib/examan.jar
+     agentLib.jar --> ORACLE_HOME//jlib/agentLib.jar
+     emagentSDK-intg.jar --> ORACLE_HOME//sysman/jlib/emagentSDK-intg.jar
+     em-sicore-target-pojo.jar --> ORACLE_HOME//jlib/em-sicore-target-pojo.jar
+     OH_ParseCompsXml.pm --> ORACLE_HOME//sysman/admin/scripts/OH_ParseCompsXml.pm
+     semd_common.pl --> ORACLE_HOME//sysman/admin/scripts/semd_common.pl
+     host.xml --> ORACLE_HOME//sysman/admin/default_collection/host.xml
+     host.xml --> ORACLE_HOME//sysman/admin/metadata/host.xml
+     host_os_dynamic_properties.xmlp --> ORACLE_HOME//sysman/admin/metadata/host_os_dynamic_properties.xmlp
+     legacy_properties.xmlp --> ORACLE_HOME//sysman/admin/metadata/legacy_properties.xmlp
+     getHostHardwareType.pl --> ORACLE_HOME//sysman/admin/scripts/getHostHardwareType.pl
+     hostLegacyProps.pm --> ORACLE_HOME//sysman/admin/scripts/hostLegacyProps.pm
+     hostdynprops.pl --> ORACLE_HOME//sysman/admin/scripts/hostdynprops.pl
+     osconfig.pl --> ORACLE_HOME//sysman/admin/scripts/osconfig.pl
+     em_common.jar --> ORACLE_HOME//sysman/jlib/em_common.jar
+     filesystems.pl --> ORACLE_HOME//sysman/admin/scripts/filesystems.pl
+     bcprov-jdk15on-162.jar --> ORACLE_HOME//jlib/bcprov-jdk15on-162.jar
+     bcpkix-jdk15on-162.jar --> ORACLE_HOME//jlib/bcpkix-jdk15on-162.jar
+     OH_Date.pm --> ORACLE_HOME//sysman/admin/scripts/OH_Date.pm
+     gcagent_emdctl.jar --> ORACLE_HOME//jlib/gcagent_emdctl.jar
+     hostSunOS.xmlp --> ORACLE_HOME//sysman/admin/metadata/hostSunOS.xmlp
+     emagentSDK.jar --> ORACLE_HOME//sysman/jlib/emagentSDK.jar
+     agentLib.xml --> ORACLE_HOME//sysman/admin/agentLib.xml
+     JobUtil.pm --> ORACLE_HOME//sysman/admin/scripts/jobutil/JobUtil.pm
+     runSQLScript.pl --> ORACLE_HOME//sysman/admin/scripts/jobutil/runSQLScript.pl
+     networking_dl_metrics_collections.xmlp --> ORACLE_HOME//sysman/admin/default_collection/common/networking_dl_metrics_collections.xmlp
+     networking_ifc_metrics_collections.xmlp --> ORACLE_HOME//sysman/admin/default_collection/common/networking_ifc_metrics_collections.xmlp
+     compliance_result_collections.xmlp --> ORACLE_HOME//sysman/admin/default_collection/compliance_result_collections.xmlp
+     compliance_result_metric.xmlp --> ORACLE_HOME//sysman/admin/metadata/compliance_result_metric.xmlp
+     complianceResultMetrics.sh --> ORACLE_HOME//sysman/admin/scripts/complianceResultMetrics.sh
+     hostAIX.xmlp --> ORACLE_HOME//sysman/admin/metadata/hostAIX.xmlp
+     hostHP-UX.xmlp --> ORACLE_HOME//sysman/admin/metadata/hostHP-UX.xmlp
+     hostLinux.xmlp --> ORACLE_HOME//sysman/admin/metadata/hostLinux.xmlp
+     hostWindows.xmlp --> ORACLE_HOME//sysman/admin/metadata/hostWindows.xmlp
+     ws_fetchlets.jar --> ORACLE_HOME//jlib/ws_fetchlets.jar
+     emWsSDK.jar --> ORACLE_HOME//sysman/jlib/emWsSDK.jar
+     ecmFileUtils.pl --> ORACLE_HOME//sysman/admin/scripts/ccs/ecmFileUtils.pl
+     oracle_emd.xml --> ORACLE_HOME//sysman/admin/default_collection/oracle_emd.xml
+     oracle_emd.xml --> ORACLE_HOME//sysman/admin/metadata/oracle_emd.xml
+     emdiag_checks_sdk.jar --> ORACLE_HOME//sysman/jlib/emdiag_checks_sdk.jar
+     emagentSDKImpl.jar --> ORACLE_HOME//sysman/jlib/emagentSDKImpl.jar
+     dbx-sql-masking-0.0.5.jar --> ORACLE_HOME//jlib/dbx-sql-masking-0.0.5.jar
+     opencsv-5.2.jar --> ORACLE_HOME//jlib/opencsv-5.2.jar
+     commons-lang3-3.9.jar --> ORACLE_HOME//jlib/commons-lang3-3.9.jar
+     commons-text-1.8.jar --> ORACLE_HOME//jlib/commons-text-1.8.jar
+     commons-logging-1.2.jar --> ORACLE_HOME//jlib/commons-logging-1.2.jar
+     commons-collections-3.2.2.jar --> ORACLE_HOME//jlib/commons-collections-3.2.2.jar
+     commons-collections4-4.4.jar --> ORACLE_HOME//jlib/commons-collections4-4.4.jar
+     jackson-core-2.11.1.jar --> ORACLE_HOME//jlib/jackson-core-2.11.1.jar
+     jackson-annotations-2.11.1.jar --> ORACLE_HOME//jlib/jackson-annotations-2.11.1.jar
+     jackson-databind-2.11.1.jar --> ORACLE_HOME//jlib/jackson-databind-2.11.1.jar
+     antlr4-runtime-4.7.2.jar --> ORACLE_HOME//jlib/antlr4-runtime-4.7.2.jar
+     xmlparserv2.jar --> ORACLE_HOME//jlib/xmlparserv2.jar
+     agentEnv.lst --> ORACLE_HOME//sysman/admin/agentEnv.lst
+     host_networking_ifc_metrics_collections.xmlp --> ORACLE_HOME//sysman/admin/default_collection/host_networking_ifc_metrics_collections.xmlp
+     networking_ifc_metrics.xmlp --> ORACLE_HOME//sysman/admin/metadata/networking_ifc_metrics.xmlp
+     TargetMetadata.xsd --> ORACLE_HOME//xsds/TargetMetadata.xsd
+   Patch Location in Inventory:
+     /u02/app/oracle/agent13c/agent_13.4.0.0.0/inventory/oneoffs/32567228
+   Patch Location in Storage area:
+     /u02/app/oracle/agent13c/agent_13.4.0.0.0/.patch_storage/32567228_Apr_21_2021_22_59_03
+
+Patch  31840839     : applied on Sat Jul 24 12:18:43 EDT 2021
+Unique Patch ID:  23798842
+   Created on 6 Sep 2020, 21:18:27 hrs PST8PDT
+   Bugs fixed:
+     31840839
+   Files Touched:
+     /oracle/net/aso/a.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/net/aso/b.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/net/aso/c.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/net/aso/d.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/net/aso/e.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/net/aso/f.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/net/aso/g.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/net/aso/h.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/net/aso/i.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/net/aso/j.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/net/aso/k.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/net/aso/l.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/net/aso/m.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/net/aso/n.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/net/aso/o.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/net/aso/p.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/net/aso/q.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/net/aso/r.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/net/aso/s.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/net/aso/t.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/net/aso/u.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/net/aso/v.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/net/aso/w.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/net/aso/x.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/net/ano/Ano.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/net/ano/AnoComm.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/net/ano/AnoNetInputStream.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/net/ano/AnoNetOutputStream.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/net/ano/AnoServices.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/net/ano/AuthenticationService.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/net/ano/CryptoDataPacket.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/net/ano/DataIntegrityService.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/net/ano/EncryptionService.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/net/ano/Service.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/net/ano/SupervisorService.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/net/ano/a.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+   Patch Location in Inventory:
+     /u02/app/oracle/agent13c/agent_13.4.0.0.0/inventory/oneoffs/31840839
+   Patch Location in Storage area:
+     /u02/app/oracle/agent13c/agent_13.4.0.0.0/.patch_storage/31840839_Sep_6_2020_21_18_27
+
+Patch  30989011     : applied on Sat Jul 24 12:18:41 EDT 2021
+Unique Patch ID:  23429327
+   Created on 8 Mar 2020, 01:07:27 hrs PST8PDT
+   Bugs fixed:
+     30989011
+   Files Touched:
+     /oracle/ucp/util/UCPTimerManagerImpl.class --> ORACLE_HOME/ucp/lib/ucp.jar
+     /oracle/ucp/util/UCPTimerManagerImpl$1.class --> ORACLE_HOME/ucp/lib/ucp.jar
+     /oracle/ucp/common/Clock.class --> ORACLE_HOME/ucp/lib/ucp.jar
+     /oracle/ucp/common/Clock$1.class --> ORACLE_HOME/ucp/lib/ucp.jar
+   Patch Location in Inventory:
+     /u02/app/oracle/agent13c/agent_13.4.0.0.0/inventory/oneoffs/30989011
+   Patch Location in Storage area:
+     /u02/app/oracle/agent13c/agent_13.4.0.0.0/.patch_storage/30989011_Mar_8_2020_01_07_27
+
+Patch  29812738     : applied on Mon Jun 21 21:01:45 EDT 2021
+Unique Patch ID:  -1558519023
+   Created on 22 May 2019, 02:57:03 hrs PST8PDT
+   Bugs fixed:
+     20141119, 27548560, 19030178, 24011099, 25423296, 21344996, 19154304
+   Files Touched:
+     /oracle/jdbc/OracleConnection$CommitOption.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/jdbc/OracleConnection$DatabaseShutdownMode.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/jdbc/OracleConnection$DatabaseStartupMode.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/jdbc/OracleConnection.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/jdbc/driver/OracleConnection.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/jdbc/driver/NTFAQRegistration.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/jdbc/driver/NTFConnection.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/jdbc/driver/NTFListener.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/jdbc/driver/NTFManager.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/jdbc/driver/PhysicalConnection$1.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/jdbc/driver/PhysicalConnection$2.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/jdbc/driver/PhysicalConnection$3.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/jdbc/driver/PhysicalConnection$4.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/jdbc/driver/PhysicalConnection$BufferCacheStore.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/jdbc/driver/PhysicalConnection$DrcpState.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/jdbc/driver/PhysicalConnection.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/jdbc/driver/T4CConnection$1.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/jdbc/driver/T4CConnection$2.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/jdbc/driver/T4CConnection$3.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/jdbc/driver/T4CConnection$ReplayMode.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/jdbc/driver/T4CConnection.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/net/ns/NSProtocol.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/net/ns/NSProtocolNIO.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/net/ns/NSProtocolStream.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/net/ns/SQLnetDef.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/net/nt/ConnOption.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/net/nt/ConnStrategy.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/net/nt/CustomSSLSocketFactory.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/net/nt/MQLNTAdapter$1.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/net/nt/MQLNTAdapter.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/net/nt/NTAdapter$NetworkAdapterType.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/net/nt/NTAdapter.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/net/nt/SSLSocketChannel.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/net/nt/SdpNTAdapter.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/net/nt/TcpNTAdapter.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/net/nt/TcpsConfigure.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/net/nt/TcpsNTAdapter.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+     /oracle/net/resolver/AddrResolution.class --> ORACLE_HOME/jdbc/lib/ojdbc7.jar
+   Patch Location in Inventory:
+     /u02/app/oracle/agent13c/agent_13.4.0.0.0/inventory/oneoffs/29812738
+   Patch Location in Storage area:
+     /u02/app/oracle/agent13c/agent_13.4.0.0.0/.patch_storage/29812738_May_22_2019_02_57_03
+
+
+
+--------------------------------------------------------------------------------
+
+OPatch succeeded.
+[oracle@hostname OPatch]$

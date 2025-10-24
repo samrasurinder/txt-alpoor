@@ -1,0 +1,294 @@
+
+
+ops 
+
++OPS_DATA/OPS/DATAFILE/waapp.324.1015762153
++OPS_FRA/OPS/ARCHIVELOG/2019_08_08/thread_1_seq_1.268.1015764349
+
+
+opsstby
+
++OPSSTBY_DATA/opsstby/datafile/system.292.954062963
++OPSSTBY_FRA/opsstby/archivelog/2019_08_19/thread_1_seq_102443.13920.1016683013
+
+
+
+
+DATA01
+DATA02
+DATA03
+FRA01
+FRA02
+FRA03
+OCR_VOTE1
+
+
+
+select name,COMPATIBILITY,DATABASE_COMPATIBILITY from  v$asm_diskgroup;SQL> SQL> SQL> SQL>
+
+NAME                           COMPATIBILITY                  DATABASE_COMPATIBILITY
+------------------------------ ------------------------------ ------------------------------
+DATA                           12.2.0.0.0                     12.2.0.0.0
+FRA                            12.2.0.0.0                     12.2.0.0.0
+OCR_VOTE1                      12.2.0.1.0                     12.2.0.0.0
+OPS_DATA                       12.2.0.0.0                     12.2.0.0.0
+OPS_FRA                        12.2.0.0.0                     12.2.0.0.0
+
+
+
+
+SQL> SELECT GROUP#, BYTES/1024/1024 MB FROM V$LOG;
+
+    GROUP#         MB
+---------- ----------
+         1        270
+         2        270
+         3        270
+
+SQL>
+
+
+
+ALTER DATABASE ADD STANDBY LOGFILE THREAD 1 '+OPS_FRA' SIZE 270M ;
+ALTER DATABASE ADD STANDBY LOGFILE THREAD 1 '+OPS_FRA' SIZE 270M ;
+ALTER DATABASE ADD STANDBY LOGFILE THREAD 1 '+OPS_FRA' SIZE 270M ;
+ALTER DATABASE ADD STANDBY LOGFILE THREAD 1 '+OPS_FRA' SIZE 270M ;
+SELECT GROUP#,THREAD#,SEQUENCE#,ARCHIVED,STATUS FROM V$STANDBY_LOG;
+
+
+
+SQL> ALTER SYSTEM SET LOG_ARCHIVE_CONFIG='DG_CONFIG=(OPS,OPSSTBY)' scope=BOTH;
+
+System altered.
+
+SQL> ALTER SYSTEM SET LOG_ARCHIVE_DEST_2= 'SERVICE=OPSSTBY ASYNC VALID_FOR=(ONLINE_LOGFILES,PRIMARY_ROLE) DB_UNIQUE_NAME=OPSSTBY' scope=BOTH;
+
+System altered.
+
+SQL>
+
+SQL> ALTER SYSTEM SET ARCHIVE_LAG_TARGET=1800 scope=BOTH;
+
+System altered.
+
+SQL>
+
+SQL> show parameter REMOTE_LOGIN_PASSWORDFILE;
+
+NAME                                 TYPE        VALUE
+------------------------------------ ----------- ------------------------------
+remote_login_passwordfile            string      EXCLUSIVE
+SQL>
+
+
+
+
+SQL> alter system set FAL_SERVER ='OPSSTBY' scope=BOTH;
+
+System altered.
+
+SQL>
+
+
+
+SQL> alter system set STANDBY_FILE_MANAGEMENT='AUTO' scope=BOTH;
+
+System altered
+
+
+SELECT NAME, VALUE FROM V$PARAMETER WHERE upper(VALUE) LIKE upper('%/ops/%');
+
+SQL> col name format a40
+SQL> col value format a40
+SQL> set linesize 150
+SQL> /
+
+NAME                                     VALUE
+---------------------------------------- ----------------------------------------
+spfile                                   +OPS_DATA/ops/parameterfile/spfile.397.1
+                                         015777553
+
+control_files                            +OPS_DATA/OPS/CONTROLFILE/current.257.10
+                                         15761791, +OPS_FRA/OPS/CONTROLFILE/curre
+                                         nt.257.1015761791
+
+core_dump_dest                           /u02/app/oracle/diag/rdbms/ops/OPS/cdump
+audit_file_dest                          /u02/app/oracle/admin/OPS/adump
+_diag_adr_trace_dest                     /u02/app/oracle/diag/rdbms/ops/OPS/trace
+
+SQL>
+
+SQL> show parameter CONTROL_FILE_RECORD_KEEP_TIME;
+
+NAME                                 TYPE        VALUE
+------------------------------------ ----------- ------------------------------
+control_file_record_keep_time        integer     7
+SQL> alter system set CONTROL_FILE_RECORD_KEEP_TIME=30 scope=BOTH;
+
+System altered.
+
+SQL>
+
+
+cd /u02/app/oracle/product/12.0.2/db_1/dbs
+
+[oracle@hrvlprddb7601 dbs]$ cd /u02/app/oracle/product/12.0.2/db_1/dbs
+[oracle@hrvlprddb7601 dbs]$ orapwd FILE=orapw$ORACLE_SID ENTRIES=30
+
+Enter password for SYS:
+[oracle@hrvlprddb7601 dbs]$ ls -altrh orapw*
+-rw-r-----. 1 oracle oinstall 6.0K Aug 19 09:56 orapwOPS
+[oracle@hrvlprddb7601 dbs]$
+
+orapwd FILE=orapw$ORACLE_SID ENTRIES=30
+
+
+
+
+
+
+
++OPS_DATA/ops/parameterfile/spfile.397.1015777553
+
++OPS_DATA/ops/spfileops.ora
+
+
+
+SQL> alter diskgroup OPS_DATA add alias '+OPS_DATA/ops/spfileops.ora' for '+OPS_DATA/ops/parameterfile/spfile.397.1015777553';
+
+Diskgroup altered.
+
+SQL>
+
+
+
+
+SID_LIST_LISTENER=
+(SID_LIST=
+(SID_DESC=
+(GLOBAL_DBNAME=OPSSTBY.hr.state.sbu)
+(SID_NAME=OPSSTBY)
+(ORACLE_HOME=/u02/app/oracle/product/12.0.2/db_1)
+)
+)
+
+
+
+mkdir -p /u02/app/oracle/admin/OPSSTBY/adump
+
+
+
+
+
+#!/bin/sh
+
+export ORACLE_SID=OPSSTBY
+export ORACLE_HOME=/u02/app/oracle/product/12.0.2/db_1
+export PATH=$ORACLE_HOME/bin:$PATH
+export TNS_ADMIN=$ORACLE_HOME/network/admin
+
+INST=`hostname`
+TODAY=`date +%d%b`
+BACKUP_DIR=/home/oracle/alpoor_scripts
+LOG_DIR=/home/oracle/alpoor_scripts
+LOGFILE=$LOG_DIR/rman_dataguard_${ORACLE_SID}_${TODAY}.log
+$ORACLE_HOME/bin/rman <<EOF > ${LOG_DIR}/rman_dataguard_${ORACLE_SID}_${TODAY}.log
+connect target sys/PRDB8zhQ#oV2oJ4@OPS;
+connect target sys/PRDB8zhQ#oV2oJ4@OPSSTBY;
+run {
+allocate channel prmy1 type disk;
+allocate channel prmy2 type disk;
+allocate auxiliary channel stby1 type disk;
+DUPLICATE TARGET DATABASE FOR STANDBY FROM ACTIVE DATABASE
+SPFILE
+set 'db_unique_name'='OPSSTBY'
+set control_files='+OPSSTBY_DATA'
+set db_create_file_dest='+OPSSTBY_DATA'
+set db_create_online_log_dest_1='+OPSSTBY_FRA'
+set db_create_online_log_dest_2='+OPSSTBY_DATA'
+set db_recovery_file_dest='+OPSSTBY_FRA'
+set DB_RECOVERY_FILE_DEST_SIZE='10G'
+set audit_file_dest='/u01/app/oracle/admin/OPSSTBY/adump'
+set core_dump_dest='/u01/app/oracle/admin/OPSSTBY/cdump'
+nofilenamecheck;
+}
+EOF
+
+
+
+
+
+ALTER SYSTEM SET FAL_SERVER=OPS;
+ALTER SYSTEM SET FAL_CLIENT=ORSSTBY;
+ALTER SYSTEM SET LOG_ARCHIVE_CONFIG='DG_CONFIG=(OPS,OPSSTBY)';
+ALTER SYSTEM SET STANDBY_FILE_MANAGEMENT=AUTO;
+ALTER SYSTEM SET LOG_ARCHIVE_DEST_2='SERVICE=OPS ASYNC DB_UNIQUE_NAME=OPS VALID_FOR=(ONLINE_LOGFILE,PRIMARY_ROLE)' scope=both;
+
+
+
+ALTER DATABASE RECOVER MANAGED STANDBY DATABASE DISCONNECT;
+
+
+col FIRST_TIME format a25
+col NEXT_TIME format a25
+col filename format a50
+set linesize 200
+set pagesize 100
+alter session set nls_date_format = 'DD-MON-YYYY HH24:MI:SS';
+select * from (SELECT SEQUENCE#, APPLIED, FIRST_TIME, NEXT_TIME,
+replace( NAME ,'+OPS_FRA/OPSSTBY/archivelog/','') FILENAME
+FROM V$ARCHIVED_LOG ORDER BY SEQUENCE# desc) where rownum <10;
+
+
+
+col FIRST_TIME format a25
+col NEXT_TIME format a25
+col filename format a50
+set linesize 200
+set pagesize 100
+alter session set nls_date_format = 'DD-MON-YYYY HH24:MI:SS';
+select * from (SELECT SEQUENCE#, APPLIED, FIRST_TIME, NEXT_TIME,
+replace( NAME ,'+OPS_FRA/OPSSTBY/archivelog/','') FILENAME
+FROM V\$ARCHIVED_LOG ORDER BY SEQUENCE# desc) where rownum <10;
+
+SELECT PROCESS, STATUS, THREAD#, SEQUENCE#, BLOCK#, BLOCKS FROM V$MANAGED_STANDBY;
+
+
+srvctl add database -db OPSSTBY -instance OPSSTBY -oraclehome $ORACLE_HOME -startoption MOUNT -stopoption IMMEDIATE -policy AUTOMATIC -role physical_standby -spfile $ORACLE_HOME/dbs/spfileOPSSTBY.ora
+
+
+srvctl start database -d OPSSTBY
+srvctl status database -d OPSSTBY
+
+
+
+
+set echo on;
+select 'Checking Wallet Status' from dual;
+Select wrl_parameter,status from v\$encryption_wallet;
+select 'Checking dataguard status' from dual;
+SELECT PROCESS, STATUS, THREAD#, SEQUENCE#, BLOCK#, BLOCKS FROM V\$MANAGED_STANDBY;
+select 'Checking ArchieveLog Applied Status' from dual;
+col FIRST_TIME format a25
+col NEXT_TIME format a25
+col filename format a50
+set linesize 200
+set pagesize 100
+alter session set nls_date_format = 'DD-MON-YYYY HH24:MI:SS';
+select * from (SELECT SEQUENCE#, APPLIED, FIRST_TIME, NEXT_TIME,
+replace( NAME ,'+OPS_FRA/OPSSTBY/archivelog/','') FILENAME
+FROM V\$ARCHIVED_LOG ORDER BY SEQUENCE# desc) where rownum <10;
+select 'Enabling Managed Recovery' from dual;
+ALTER DATABASE RECOVER MANAGED STANDBY DATABASE DISCONNECT;
+select 'Checking dataguard status' from dual;
+SELECT PROCESS, STATUS, THREAD#, SEQUENCE#, BLOCK#, BLOCKS FROM V\$MANAGED_STANDBY;
+select 'Checking ArchieveLog Applied Status' from dual;
+col FIRST_TIME format a25
+col NEXT_TIME format a25
+col filename format a50
+set linesize 200
+set pagesize 100
+alter session set nls_date_format = 'DD-MON-YYYY HH24:MI:SS';
+select * from (SELECT SEQUENCE#, APPLIED, FIRST_TIME, NEXT_TIME,
+replace( NAME ,'+OPS_FRA/OPSSTBY/archivelog/','') FILENAME
+FROM V\$ARCHIVED_LOG ORDER BY SEQUENCE# desc) where rownum <10;

@@ -1,0 +1,443 @@
+Checks
+
+hrewwtstap2000
+hrewwtstws2000
+
+hrewwtstap2003
+hrewwtstws2003
+
+
+HRPRDREP infread PRDI13rK$xqdAY6
+
+SPCOUNTs tab
+------------
+Login into hfkc SYSTEM PRDTO2Ycw$8Ovs9
+
+execute following:
+select count(1) from 
+(SELECT
+  postn.GEO_DISTRIBUTION,
+  CONCAT(Position_Org.ORG_CD,CONCAT('   -   ',Position_Org.GM_DESCRSHORT)),
+  CONCAT(Position_Org.ORG_CD,CONCAT('   -   ',Position_Org.DESCR50)),
+  CONCAT(postn.PAY_PLAN,CONCAT('/',postn.GRADE)),
+  decode(postn.PAY_PLAN, 'FP','FS','FO','FS',postn.PAY_PLAN)||'/'||postn.GRADE,
+  decode(rtrim(postn.lang1_cd),NULL,' ',postn.LANG1_CD||'   '||postn.LANG1_SPEAK||'/'||postn.LANG1_READ),
+  decode(rtrim(postn.lang2_cd),NULL,' ',postn.LANG2_CD||'   '||postn.LANG2_SPEAK||'/'||postn.LANG2_READ),
+  postn.DESCR,
+  decode(postn.PAY_PLAN, 'FP','FS','FO','FS',postn.PAY_PLAN),
+  postn.GRADE,
+  postn.REG_TEMP,
+  postn.FLSA_STATUS,
+  postn.GVT_WORK_SCHED,
+  postn.MANAGER_LEVEL,
+  decode(postn.GVT_POSN_SENS_CD, '1','NS','2','NCS','3','CS','4','SS'),
+  postn.STAFF_PTRN_SEQ,
+  postn.POSITION_NBR,
+  postn.SKILL_CD1,
+  postn.SKILL_CD2,
+  decode(substr(postn.PAY_PLAN,1,1),'F',NULL,postn.GVT_OCC_SERIES),
+  postn.LANG1_CD,
+  postn.LANG1_SPEAK,
+  postn.LANG1_READ,
+  postn.GM_ALLOT,
+  CONCAT(decode(STAFF_PTRN_ERRORS_SSN.SSN, NULL,NULL,'E'),decode(STAFF_PTRN_ERRORS_POSN.POSITION_NBR,NULL,NULL,'P')),
+  'Incumbent',
+  employee.NAME,
+  employee.EMPLID,
+  decode(employee.PAY_PLAN, 'FP','FS','FO','FS',employee.PAY_PLAN),
+  employee.GRADE,
+  employee.TED_DT,
+  DEPARTMENT_per_pend.ORG_CD,
+  employee.DOS_TEN_CD,
+  employee.SKILL_CD1,
+  ' ',
+  PERSON_PENDING_to.BEGIN_DT,
+  decode(rtrim(DEPARTMENT_per_pend.ORG_CD),NULL,' ','TO - '||DEPARTMENT_per_pend.ORG_CD),
+  employee.PAR_NTE_DT,
+  ' ',
+  postn.REPORTS_TO,
+  DW.SECTION.SECTION_CODE,
+  DW.SECTION.DESCR,
+  REPORT_NAME.NAME,
+  REPORT_POSTN.pay_plan,
+  REPORT_POSTN.REG_TEMP,
+  postn.JOBCODE
+FROM
+  DW.CRNT_POSTN  postn,
+  DW.DEPARTMENT  Position_Org,
+  dw.STAFF_PTRN_ERRORS_POSN,
+  dw.STAFF_PTRN_ERRORS_SSN,
+  DW.DEPARTMENT  DEPARTMENT_per_pend,
+  DW.PERSON_PENDING  PERSON_PENDING_to,
+  DW.SECTION,
+  DW.CRNT_POSTN  REPORT_POSTN,
+  DW.REG_TEMP,
+  DW.CRNT_PRSN  PERSON_pos_pend,
+  DW.CRNT_POSTN  POSITION_per_pend,
+  DW.PERSON_PENDING,
+  DW.CRNT_PRSN  employee,
+  DW.CRNT_PRSN  REPORT_NAME
+WHERE
+  ( postn.DEPARTMENT_KEY=Position_Org.DEPARTMENT_KEY(+)  )
+  AND  ( postn.REG_TEMP=DW.REG_TEMP.REG_TEMP_CODE(+)  )
+  AND  ( PERSON_pos_pend.CURRENT_IND(+)='Y'  )
+  AND  ( postn.SECTION_KEY=DW.SECTION.SECTION_KEY(+)  )
+  AND  ( DW.PERSON_PENDING.POSITION_CURRENT_KEY(+)=postn.POSITION_CURRENT_KEY  )
+  AND  ( PERSON_pos_pend.PERSON_CURRENT_KEY(+)=DW.PERSON_PENDING.PERSON_CURRENT_KEY  )
+  AND  ( DW.PERSON_PENDING.STATUS_CD(+)='AP'  )
+  AND  ( employee.CURRENT_IND(+)='Y'  )
+  AND  ( postn.CURRENT_IND(+)='Y'  )
+  AND  ( employee.PERSON_CURRENT_KEY=PERSON_PENDING_to.PERSON_CURRENT_KEY(+)  )
+  AND  ( PERSON_PENDING_to.POSITION_CURRENT_KEY=POSITION_per_pend.POSITION_CURRENT_KEY(+)  )
+  AND  ( PERSON_PENDING_to.STATUS_CD(+)='AP'  )
+  AND  ( POSITION_per_pend.CURRENT_IND(+)='Y'  )
+  AND  ( POSITION_per_pend.DEPARTMENT_KEY=DEPARTMENT_per_pend.DEPARTMENT_KEY(+)  )
+  AND  ( DW.PERSON_PENDING.PERSON_CURRENT_KEY(+) is not null  )
+  AND  ( PERSON_PENDING_to.POSITION_CURRENT_KEY(+) is not null  )
+  AND  ( employee.PERSON_TYPE(+)='Employee'  )
+  AND  ( employee.SSN=STAFF_PTRN_ERRORS_SSN.SSN(+)  )
+  AND  ( STAFF_PTRN_ERRORS_POSN.POSITION_NBR(+)=postn.POSITION_NBR  )
+  AND  ( employee.REPORT_FLAG(+) = 'Y'  )
+  AND  ( postn.REPORT_FLAG(+) = 'Y'  )
+  AND  ( PERSON_pos_pend.PERSON_TYPE(+)='Employee'  )
+  AND  ( REPORT_NAME.CURRENT_IND(+)='Y'  )
+  AND  ( REPORT_NAME.PERSON_TYPE(+)='Employee'   )
+  AND  ( REPORT_NAME.REPORT_FLAG(+) = 'Y'  )
+  AND  ( REPORT_NAME.POSITION_CURRENT_KEY(+) = REPORT_POSTN.POSITION_CURRENT_KEY  )
+  AND  ( postn.REPORTS_TO=REPORT_POSTN.POSITION_NBR(+)  )
+  AND  ( employee.POSITION_CURRENT_KEY(+)=postn.POSITION_CURRENT_KEY  )
+  AND  (
+  postn.GEO_DISTRIBUTION  IN  ('Domestic', 'Overseas')
+  AND  ( NOT  (
+  postn.FILLED_UNFILLED  =  'Open'
+  AND  PERSON_pos_pend.EMPLID  IS NULL  
+  AND  DW.REG_TEMP.REG_TEMP_CODE  =  'X'
+  )  )
+  AND  (PERSON_PENDING_to.ASGNMT_SEQ  =  -1
+  OR   PERSON_PENDING_to.ASGNMT_SEQ  IS NULL  )
+  )
+UNION  
+(
+SELECT
+  postn.GEO_DISTRIBUTION,
+  CONCAT(Position_Org.ORG_CD,CONCAT('   -   ',Position_Org.GM_DESCRSHORT)),
+  CONCAT(Position_Org.ORG_CD,CONCAT('   -   ',Position_Org.DESCR50)),
+  CONCAT(postn.PAY_PLAN,CONCAT('/',postn.GRADE)),
+  decode(postn.PAY_PLAN, 'FP','FS','FO','FS',postn.PAY_PLAN)||'/'||postn.GRADE,
+  decode(rtrim(postn.lang1_cd),NULL,' ',postn.LANG1_CD||'   '||postn.LANG1_SPEAK||'/'||postn.LANG1_READ),
+  decode(rtrim(postn.lang2_cd),NULL,' ',postn.LANG2_CD||'   '||postn.LANG2_SPEAK||'/'||postn.LANG2_READ),
+  postn.DESCR,
+  decode(postn.PAY_PLAN, 'FP','FS','FO','FS',postn.PAY_PLAN),
+  postn.GRADE,
+  postn.REG_TEMP,
+  postn.FLSA_STATUS,
+  postn.GVT_WORK_SCHED,
+  postn.MANAGER_LEVEL,
+  decode(postn.GVT_POSN_SENS_CD, '1','NS','2','NCS','3','CS','4','SS'),
+  postn.STAFF_PTRN_SEQ,
+  postn.POSITION_NBR,
+  postn.SKILL_CD1,
+  postn.SKILL_CD2,
+  decode(substr(postn.PAY_PLAN,1,1),'F',NULL,postn.GVT_OCC_SERIES),
+  postn.LANG1_CD,
+  postn.LANG1_SPEAK,
+  postn.LANG1_READ,
+  postn.GM_ALLOT,
+  ' ',
+  'Pending',
+  PERSON_pos_pend.NAME,
+  PERSON_pos_pend.EMPLID,
+  decode(Employee_Step_Pending.PAY_PLAN, 'FP','FS','FO','FS',Employee_Step_Pending.PAY_PLAN),
+  Employee_Step_Pending.GRADE,
+  PERSON_pos_pend.TOUR_END_DT,
+  DEPARTMENT_pos_pend.ORG_CD,
+  Emp_Pend_TENURE.DOS_TEN_CD,
+  Emp_Pend_SKILL_CD.SKILL_CD,
+  ' ',
+  DW.PERSON_PENDING.BEGIN_DT,
+  decode(rtrim(DEPARTMENT_pos_pend.ORG_CD),NULL,' ','FR -'||DEPARTMENT_pos_pend.ORG_CD),
+  PERSON_pos_pend.PAR_NTE_DT,
+  ' *  *  ',
+  postn.REPORTS_TO,
+  DW.SECTION.SECTION_CODE,
+  DW.SECTION.DESCR,
+  REPORT_NAME.NAME,
+  REPORT_POSTN.pay_plan,
+  REPORT_POSTN.REG_TEMP,
+  postn.JOBCODE
+FROM
+  DW.CRNT_POSTN  postn,
+  DW.DEPARTMENT  Position_Org,
+  DW.CRNT_PRSN  PERSON_pos_pend,
+  DW.STEP  Employee_Step_Pending,
+  DW.DEPARTMENT  DEPARTMENT_pos_pend,
+  DW.TENURE  Emp_Pend_TENURE,
+  DW.SKILL_CD  Emp_Pend_SKILL_CD,
+  DW.PERSON_PENDING,
+  DW.SECTION,
+  DW.CRNT_POSTN  REPORT_POSTN,
+  DW.REG_TEMP,
+  DW.PERSON_PENDING  PERSON_PENDING_to,
+  DW.CRNT_POSTN  POSITION_pos_pend,
+  DW.CRNT_PRSN  REPORT_NAME,
+  DW.CRNT_PRSN  employee
+WHERE
+  ( postn.DEPARTMENT_KEY=Position_Org.DEPARTMENT_KEY(+)  )
+  AND  ( postn.REG_TEMP=DW.REG_TEMP.REG_TEMP_CODE(+)  )
+  AND  ( PERSON_pos_pend.CURRENT_IND(+)='Y'  )
+  AND  ( PERSON_pos_pend.STEP_KEY=Employee_Step_Pending.STEP_KEY(+)  )
+  AND  ( postn.SECTION_KEY=DW.SECTION.SECTION_KEY(+)  )
+  AND  ( DW.PERSON_PENDING.POSITION_CURRENT_KEY(+)=postn.POSITION_CURRENT_KEY  )
+  AND  ( PERSON_pos_pend.PERSON_CURRENT_KEY(+)=DW.PERSON_PENDING.PERSON_CURRENT_KEY  )
+  AND  ( DW.PERSON_PENDING.STATUS_CD(+)='AP'  )
+  AND  ( POSITION_pos_pend.CURRENT_IND(+)='Y'  )
+  AND  ( PERSON_pos_pend.POSITION_CURRENT_KEY=POSITION_pos_pend.POSITION_CURRENT_KEY(+)  )
+  AND  ( POSITION_pos_pend.DEPARTMENT_KEY=DEPARTMENT_pos_pend.DEPARTMENT_KEY(+)  )
+  AND  ( employee.CURRENT_IND(+)='Y'  )
+  AND  ( postn.CURRENT_IND(+)='Y'  )
+  AND  ( employee.PERSON_CURRENT_KEY=PERSON_PENDING_to.PERSON_CURRENT_KEY(+)  )
+  AND  ( PERSON_PENDING_to.STATUS_CD(+)='AP'  )
+  AND  ( Emp_Pend_SKILL_CD.SKILL_CD_KEY(+)=PERSON_pos_pend.SKILL_CD1_KEY  )
+  AND  ( DW.PERSON_PENDING.PERSON_CURRENT_KEY(+) is not null  )
+  AND  ( Emp_Pend_TENURE.TENURE_KEY(+)=PERSON_pos_pend.TENURE_KEY  )
+  AND  ( PERSON_PENDING_to.POSITION_CURRENT_KEY(+) is not null  )
+  AND  ( employee.PERSON_TYPE(+)='Employee'  )
+  AND  ( employee.REPORT_FLAG(+) = 'Y'  )
+  AND  ( postn.REPORT_FLAG(+) = 'Y'  )
+  AND  ( PERSON_pos_pend.PERSON_TYPE(+)='Employee'  )
+  AND  ( REPORT_NAME.CURRENT_IND(+)='Y'  )
+  AND  ( REPORT_NAME.PERSON_TYPE(+)='Employee'   )
+  AND  ( REPORT_NAME.REPORT_FLAG(+) = 'Y'  )
+  AND  ( REPORT_NAME.POSITION_CURRENT_KEY(+) = REPORT_POSTN.POSITION_CURRENT_KEY  )
+  AND  ( postn.REPORTS_TO=REPORT_POSTN.POSITION_NBR(+)  )
+  AND  ( employee.POSITION_CURRENT_KEY(+)=postn.POSITION_CURRENT_KEY  )
+  AND  (
+  postn.GEO_DISTRIBUTION  IN  ('Domestic', 'Overseas')
+  AND  ( NOT  (
+  postn.FILLED_UNFILLED  =  'Open'
+  AND  PERSON_pos_pend.EMPLID  IS NULL  
+  AND  DW.REG_TEMP.REG_TEMP_CODE  =  'X'
+  )  )
+  AND  (PERSON_PENDING_to.ASGNMT_SEQ  =  -1
+  OR   PERSON_PENDING_to.ASGNMT_SEQ  IS NULL  )
+  AND  PERSON_pos_pend.EMPLID  IS NOT NULL  
+  )
+UNION  
+SELECT
+  postn.GEO_DISTRIBUTION,
+  CONCAT(Position_Org.ORG_CD,CONCAT('   -   ',Position_Org.GM_DESCRSHORT)),
+  CONCAT(Position_Org.ORG_CD,CONCAT('   -   ',Position_Org.DESCR50)),
+  CONCAT(postn.PAY_PLAN,CONCAT('/',postn.GRADE)),
+  decode(postn.PAY_PLAN, 'FP','FS','FO','FS',postn.PAY_PLAN)||'/'||postn.GRADE,
+  decode(rtrim(postn.lang1_cd),NULL,' ',postn.LANG1_CD||'   '||postn.LANG1_SPEAK||'/'||postn.LANG1_READ),
+  decode(rtrim(postn.lang2_cd),NULL,' ',postn.LANG2_CD||'   '||postn.LANG2_SPEAK||'/'||postn.LANG2_READ),
+  postn.DESCR,
+  decode(postn.PAY_PLAN, 'FP','FS','FO','FS',postn.PAY_PLAN),
+  postn.GRADE,
+  postn.REG_TEMP,
+  postn.FLSA_STATUS,
+  postn.GVT_WORK_SCHED,
+  postn.MANAGER_LEVEL,
+  decode(postn.GVT_POSN_SENS_CD, '1','NS','2','NCS','3','CS','4','SS'),
+  postn.STAFF_PTRN_SEQ,
+  postn.POSITION_NBR,
+  postn.SKILL_CD1,
+  postn.SKILL_CD2,
+  decode(substr(postn.PAY_PLAN,1,1),'F',NULL,postn.GVT_OCC_SERIES),
+  postn.LANG1_CD,
+  postn.LANG1_SPEAK,
+  postn.LANG1_READ,
+  postn.GM_ALLOT,
+  CONCAT(decode(STAFF_PTRN_ERRORS_SSN.SSN, NULL,NULL,'E'),decode(STAFF_PTRN_ERRORS_POSN.POSITION_NBR,NULL,NULL,'P')),
+  'Incumbent Detail',
+  DETAIL_CRNT_PRSN.NAME,
+  DETAIL_CRNT_PRSN.EMPLID,
+  DETAIL_CRNT_PRSN.PAY_PLAN,
+  DETAIL_CRNT_PRSN. GRADE,
+  DETAIL_CRNT_PRSN.TED_DT,
+  DEPARTMENT_per_pend.ORG_CD,
+  DETAIL_CRNT_PRSN.DOS_TEN_CD,
+  Detail_Emp_Skill_CD1.SKILL_CD,
+  ' ',
+   DETAIL_PERSON_PENDING_to.BEGIN_DT,
+   decode(rtrim(Detail_DEPARTMENT_per_pend.ORG_CD),NULL,'DET ','TO - '||Detail_DEPARTMENT_per_pend.ORG_CD),
+  DETAIL_CRNT_PRSN.gvt_detail_expires_DT,
+  ' *  *  * ',
+  postn.REPORTS_TO,
+  DW.SECTION.SECTION_CODE,
+  DW.SECTION.DESCR,
+  REPORT_NAME.NAME,
+  REPORT_POSTN.pay_plan,
+  REPORT_POSTN.REG_TEMP,
+  postn.JOBCODE
+FROM
+  DW.CRNT_POSTN  postn,
+  DW.DEPARTMENT  Position_Org,
+  dw.STAFF_PTRN_ERRORS_POSN,
+  dw.STAFF_PTRN_ERRORS_SSN,
+  DW.DEPARTMENT  DEPARTMENT_per_pend,
+  DW.SKILL_CD  Detail_Emp_Skill_CD1,
+  DW.PERSON_PENDING  DETAIL_PERSON_PENDING_to,
+  DW.DEPARTMENT  Detail_DEPARTMENT_per_pend,
+  DW.SECTION,
+  DW.CRNT_POSTN  REPORT_POSTN,
+  DW.REG_TEMP,
+  DW.CRNT_PRSN  PERSON_pos_pend,
+  DW.PERSON_PENDING  PERSON_PENDING_to,
+  DW.CRNT_POSTN  POSITION_per_pend,
+  DW.CRNT_POSTN  Detail_POSITION_per_pend,
+  DW.PERSON_PENDING,
+  DW.CRNT_PRSN  DETAIL_CRNT_PRSN,
+  DW.CRNT_PRSN  employee,
+  DW.CRNT_PRSN  REPORT_NAME
+WHERE
+  ( postn.DEPARTMENT_KEY=Position_Org.DEPARTMENT_KEY(+)  )
+  AND  ( postn.REG_TEMP=DW.REG_TEMP.REG_TEMP_CODE(+)  )
+  AND  ( PERSON_pos_pend.CURRENT_IND(+)='Y'  )
+  AND  ( postn.SECTION_KEY=DW.SECTION.SECTION_KEY(+)  )
+  AND  ( DW.PERSON_PENDING.POSITION_CURRENT_KEY(+)=postn.POSITION_CURRENT_KEY  )
+  AND  ( PERSON_pos_pend.PERSON_CURRENT_KEY(+)=DW.PERSON_PENDING.PERSON_CURRENT_KEY  )
+  AND  ( DW.PERSON_PENDING.STATUS_CD(+)='AP'  )
+  AND  ( employee.CURRENT_IND(+)='Y'  )
+  AND  ( postn.CURRENT_IND(+)='Y'  )
+  AND  ( employee.PERSON_CURRENT_KEY=PERSON_PENDING_to.PERSON_CURRENT_KEY(+)  )
+  AND  ( PERSON_PENDING_to.POSITION_CURRENT_KEY=POSITION_per_pend.POSITION_CURRENT_KEY(+)  )
+  AND  ( PERSON_PENDING_to.STATUS_CD(+)='AP'  )
+  AND  ( POSITION_per_pend.CURRENT_IND(+)='Y'  )
+  AND  ( POSITION_per_pend.DEPARTMENT_KEY=DEPARTMENT_per_pend.DEPARTMENT_KEY(+)  )
+  AND  ( DW.PERSON_PENDING.PERSON_CURRENT_KEY(+) is not null  )
+  AND  ( PERSON_PENDING_to.POSITION_CURRENT_KEY(+) is not null  )
+  AND  ( employee.PERSON_TYPE(+)='Employee'  )
+  AND  ( employee.SSN=STAFF_PTRN_ERRORS_SSN.SSN(+)  )
+  AND  ( STAFF_PTRN_ERRORS_POSN.POSITION_NBR(+)=postn.POSITION_NBR  )
+  AND  ( employee.REPORT_FLAG(+) = 'Y'  )
+  AND  ( postn.REPORT_FLAG(+) = 'Y'  )
+  AND  ( PERSON_pos_pend.PERSON_TYPE(+)='Employee'  )
+  AND  ( postn.POSITION_NBR=DETAIL_CRNT_PRSN.GVT_DETL_POSN_NBR(+)  )
+  AND  ( DETAIL_CRNT_PRSN.SKILL_CD1_KEY=Detail_Emp_Skill_CD1.SKILL_CD_KEY(+)  )
+  AND  ( DETAIL_CRNT_PRSN.PERSON_CURRENT_KEY=DETAIL_PERSON_PENDING_to.PERSON_CURRENT_KEY(+)  )
+  AND  ( DETAIL_PERSON_PENDING_to.STATUS_CD(+)='AP'  )
+  AND  ( DETAIL_PERSON_PENDING_to.POSITION_CURRENT_KEY(+) is not null  )
+  AND  ( Detail_POSITION_per_pend.CURRENT_IND(+)='Y'  )
+  AND  ( DETAIL_PERSON_PENDING_to.POSITION_CURRENT_KEY=Detail_POSITION_per_pend.POSITION_CURRENT_KEY(+)  )
+  AND  ( Detail_POSITION_per_pend.DEPARTMENT_KEY=Detail_DEPARTMENT_per_pend.DEPARTMENT_KEY(+)  )
+  AND  ( DETAIL_CRNT_PRSN.CURRENT_IND(+)='Y'  )
+  AND  ( DETAIL_CRNT_PRSN.REPORT_FLAG(+) = 'Y'  )
+  AND  ( REPORT_NAME.CURRENT_IND(+)='Y'  )
+  AND  ( REPORT_NAME.PERSON_TYPE(+)='Employee'   )
+  AND  ( REPORT_NAME.REPORT_FLAG(+) = 'Y'  )
+  AND  ( REPORT_NAME.POSITION_CURRENT_KEY(+) = REPORT_POSTN.POSITION_CURRENT_KEY  )
+  AND  ( postn.REPORTS_TO=REPORT_POSTN.POSITION_NBR(+)  )
+  AND  ( employee.POSITION_CURRENT_KEY(+)=postn.POSITION_CURRENT_KEY  )
+  AND  (
+  postn.GEO_DISTRIBUTION  IN  ('Domestic', 'Overseas')
+  AND  ( NOT  (
+  postn.FILLED_UNFILLED  =  'Open'
+  AND  PERSON_pos_pend.EMPLID  IS NULL  
+  AND  DW.REG_TEMP.REG_TEMP_CODE  =  'X'
+  )  )
+  AND  (PERSON_PENDING_to.ASGNMT_SEQ  =  -1
+  OR   PERSON_PENDING_to.ASGNMT_SEQ  IS NULL  )
+  AND  DETAIL_CRNT_PRSN.EMPLID  IS NOT NULL  
+  AND  DETAIL_CRNT_PRSN.ACTIVE_IND  =  'A'
+  )
+)
+)
+UNION
+select count(1) from 
+(
+SELECT
+  count(distinct(employee.PERSON_CURRENT_KEY)),
+  Position_Org.LEVEL_4_ORG,
+  Position_Org.BUREAU,
+  DW.REG_TEMP.DESCR,
+  Position_WORK_SCHEDULE.FULL_PART,
+  count(distinct(postn.POSITION_NBR)),
+  CONCAT(Position_Org.ORG_CD,CONCAT('   -   ',Position_Org.DESCR50)),
+  Position_Org.GM_DESCRSHORT
+FROM
+  DW.DEPARTMENT  Position_Org,
+  DW.CRNT_POSTN  postn,
+  DW.REG_TEMP,
+  DW.WORK_SCHEDULE  Position_WORK_SCHEDULE,
+  DW.CRNT_PRSN  employee
+WHERE
+  ( postn.DEPARTMENT_KEY=Position_Org.DEPARTMENT_KEY(+)  )
+  AND  ( postn.REG_TEMP=DW.REG_TEMP.REG_TEMP_CODE(+)  )
+  AND  ( postn.WORK_SCHEDULE_KEY=Position_WORK_SCHEDULE.WORK_SCHEDULE_KEY(+)  )
+  AND  ( employee.CURRENT_IND(+)='Y'  )
+  AND  ( postn.CURRENT_IND(+)='Y'  )
+  AND  ( employee.PERSON_TYPE(+)='Employee'  )
+  AND  ( employee.REPORT_FLAG(+) = 'Y'  )
+  AND  ( postn.REPORT_FLAG(+) = 'Y'  )
+  AND  ( employee.POSITION_CURRENT_KEY(+)=postn.POSITION_CURRENT_KEY  )
+  AND  (
+  postn.GEO_DISTRIBUTION  IN  ('Domestic', 'Overseas')
+  )
+GROUP BY
+  Position_Org.LEVEL_4_ORG, 
+  Position_Org.BUREAU, 
+  DW.REG_TEMP.DESCR, 
+  Position_WORK_SCHEDULE.FULL_PART, 
+  CONCAT(Position_Org.ORG_CD,CONCAT('   -   ',Position_Org.DESCR50)), 
+  Position_Org.GM_DESCRSHORT
+);
+
+
+
+Login to hreewprdap1041
+
+tnsping kc  --> check host and service name kc-scan (kc2)
+
+check ARC database (system PRDLd$07g8chZTU)
+
+SQL> select * from test_user1.kc_refresh;
+
+BO_ KC_ OK_ LAST_UPDA
+--- --- --- ---------
+KC2 KC1 YES 01-APR-19
+
+1 row selected.
+
+This shows it's currently poining to KC2 ( results from tnsping kc and query resulsts BO_SOURCE should match) 
+
+
+
+Now Time to switch pointer to KC1 (hf-scan)
+
+swith tnsnames on hreewprdap1041 and hrvwprdap1642 ( 62bit) both 32 bit and 64 bit 
+
+
+Now connect to ARC database:
+
+update test_user1.kc_refresh
+set BO_SOURCE = 'KC2'; 
+
+update test_user1.kc_refresh
+set KC_REFRESH = 'KC1'; 
+
+SQL> select * from test_user1.kc_refresh;
+
+BO_ KC_ OK_ LAST_UPDA
+--- --- --- ---------
+KC1 KC2 YES 02-APR-19
+
+1 row selected.
+
+SQL>
+
+
+\\hreewprdap1041\d$\oracle\product\11.2.0.4\client_64bits\network\admin
+\\hreewprdap1041\d$\oracle\product\11.2.0.4\client_32bits\network\admin
+
+\\hrvwprdap1642\d$
+\\hrvwprdap1642\d$\oracle\product\12.2\client64\network 
+
+
+\\hrewwnonprdfs01\u$\HRKC_dev_Move2DEV\DAILY LOAD 
+
+Now check business objects url 
+
+https://hrkc.hr.state.sbu/BOE/BI
+
+\\hrinffp1001\Output\Production\prd\PCSTravel\cfms

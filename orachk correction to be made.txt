@@ -1,0 +1,35 @@
+WARNING	Patch Check	Oracle patch 29259068 is not applied on RDBMS_HOME	All Homes	
+View
+WARNING	Patch Check	Oracle patch 26749785 is not applied on RDBMS_HOME	All Homes	
+View
+WARNING	Patch Check	Oracle patch 29867728 is not applied on RDBMS_HOME	All Homes	
+View
+WARNING	Patch Check	Oracle patch 31031240 is not applied on RDBMS_HOME	All Homes	
+View
+WARNING	Patch Check	Oracle patch 29423227 is not applied on RDBMS_HOME	All Homes	
+View
+
+
+
+SQL> alter system set "_cursor_obsolete_threshold"=1024 scope=spfile sid='*';
+
+WARNING	OS Check	NTP is not running with correct setting
+
+
+WARNING	OS Check	SELinux is being Enforced.
+
+
+
+
+Status on hrvltstdb20:
+WARNING => OCR and OCR backup locations are the same path
+
+DATA FROM HRVLTSTDB20 - OCR AND OCR BACKUP LOCATION 
+
+
+
+
+
+
+WARNING	OS Check	Shell limit hard nofile for GI is NOT configured according to recommendation
+

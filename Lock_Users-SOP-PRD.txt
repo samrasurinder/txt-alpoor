@@ -1,0 +1,123 @@
+set lines 200
+set TERMOUT ON
+set FEEDBACK ON
+col database_schema format a40
+
+select substr(global_name,1,30) || ' ('||user||')' database_schema from global_name;
+
+
+* Back up the sysadm.psoprdefn table in PRD
+
+CREATE TABLE sysadm.psoprdefn_bkup_20210930 AS SELECT * FROM sysadm.psoprdefn;
+
+* Create a temp table sysadm.locked_oper with locked users only.
+
+CREATE TABLE sysadm.locked_oper_20210930 AS SELECT * from sysadm.psoprdefn where ACCTLOCK = 1;
+
+---------------------------------------------------------------------
+
+* Compare the tables
+
+SELECT count(*) FROM sysadm.psoprdefn
+MINUS   
+SELECT count(*) FROM sysadm.psoprdefn_bkup_20210930;
+
+SELECT count(*) FROM sysadm.psoprdefn where ACCTLOCK = 1  
+MINUS   
+SELECT count(*) FROM sysadm.locked_oper_20210930;
+
+---------------------------------------------------------------------
+
+SELECT count(*) FROM sysadm.psoprdefn;
+SELECT count(*) FROM sysadm.psoprdefn_bkup_20210930;
+SELECT count(*) FROM sysadm.locked_oper_20210930;
+SELECT count(*) FROM sysadm.psoprdefn where ACCTLOCK = 1;
+SELECT count(*) FROM sysadm.psoprdefn where ACCTLOCK = 0;
+
+---------------------------------------------------------------------
+
+#### This list was updated with ESSR 76463 ####
+
+PS 
+PSAPPS 
+PTWEBSERVER 
+PERIMBJA – Brenda J. Ashford 
+PERIMSMC – Susan M. Conway 
+HRSODACH – Andrea C. Hefley 
+HRSODDDT - Douglas D Townsend 
+BATCHSOD - Batch processed by SOD   
+ZHRSDDDV - Douny (Tommy) Vann 
+PERADMRM – Roger Westbrook 
+HRRIMIGW – Indira Garcia Watkins 
+PERADMJF - Jasmine Fitchett 
+HRRIMSLB – Sherrie L. Butler-Jenifer 
+HRRIMAES – Andre E. Smith 
+HRRIMCNN – Cheryl Neal 
+PERADMKB – Kim R. Banks 
+HRSODPEP – Pamela E Parker 
+HRSODDH - Danita Hickson 
+HRSODDLB - Desiree Brooks 
+HRSODMTC - Marcus Carter 
+HRSODSDW - Sherri Wheeler 
+ZHRSODCMF – Christopher M. Fisher
+
+set lines 200
+set pages 2000
+select OPRID,ACCTLOCK from sysadm.psoprdefn WHERE OPRID IN (
+'PS',
+'PSAPPS',
+'PTWEBSERVER',
+'PERIMBJA',
+'PERIMSMC',
+'HRSODACH',
+'HRSODDDT',
+'BATCHSOD',
+'ZHRSDDDV',
+'PERADMRM',
+'HRRIMIGW',
+'PERADMJF',
+'HRRIMSLB',
+'HRRIMAES',
+'HRRIMCNN',
+'PERADMKB',
+'HRSODPEP',
+'HRSODDH',
+'HRSODDLB',
+'HRSODMTC',
+'HRSODSDW',
+'ZHRSODCMF');
+
+UPDATE sysadm.psoprdefn SET ACCTLOCK = 1 WHERE OPRID NOT IN 
+(
+'PS',
+'PSAPPS',
+'PTWEBSERVER',
+'PERIMBJA',
+'PERIMSMC',
+'HRSODACH',
+'HRSODDDT',
+'BATCHSOD',
+'ZHRSDDDV',
+'PERADMRM',
+'HRRIMIGW',
+'PERADMJF',
+'HRRIMSLB',
+'HRRIMAES',
+'HRRIMCNN',
+'PERADMKB',
+'HRSODPEP',
+'HRSODDH',
+'HRSODDLB',
+'HRSODMTC',
+'HRSODSDW',
+'ZHRSODCMF')
+AND ACCTLOCK = 0;
+COMMIT;
+
+
+SELECT count (*) FROM sysadm.psoprdefn WHERE ACCTLOCk = 1;
+
+SELECT count(oprid|| oprdefndesc) FROM sysadm.psoprdefn WHERE acctlock = 0;
+
+
+-----------------------------------------------------------------------------------------

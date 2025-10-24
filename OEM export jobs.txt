@@ -1,0 +1,7 @@
+[oracle@hrvlprdoem7603 bin]$ ./emcli login -username=HROEM13CADMIN -password=PRDGo1nHRm0o\$U4
+Login successful
+[oracle@hrvlprdoem7603 bin]$ ./emcli sync
+Synchronized successfully
+[oracle@hrvlprdoem7603 bin]$ pwd
+/u02/app/oracle/middleware/bin
+[oracle@hrvlprdoem7603 bin]$

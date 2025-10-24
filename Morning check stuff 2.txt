@@ -1,0 +1,318 @@
+
+
+
+
+
+create database link DB_LINK_REETA_UAT connect to SECREF identified by "TSTS$S0b9ui0GkR" using 'CPY1';
+create database link EOD connect TO sysadm identified by "R$JJ1do8" using 'EODCPY';
+CREATE DATABASE LINK REETA_DB_LINK CONNECT TO REETA IDENTIFIED BY "TSTBpF6dS$47bPh" USING 'UAT';
+create database link EOPF_PRD.WASHDC.STATE.SBU connect to eopf identified by "TSTP4M5qpyNmD7$" USING 'cpy1';
+
+
+
+
+Real 2 IPMS CPY environment refresh status
+==============================================================
+
+This  eamil goes to:
+HR-EX-SOD ; HR-EX-SDD ; HR-EX-ESD 
+HR-EX-ESD-OAB 
+
+Subject:
+IPMS CPY environment refresh status
+
+CPY1                        - Completed and VANND acct created
+CRMCPY                      - Completed and VANND acct created
+EODCPY                      - Completed and VANND acct created 
+DEVCPY                      - Completed 
+OPSCPY1                     - Completed 
+Overseas CPY                - Completed 
+NSDD38                      - Completed
+
+* These two  are performed by SQL Server dba
+- Search for the subject "IPMS CPY environment refresh status" in inbox to verify if Jeff or Abe has completed
+	- Overseas CPY 
+	- NSDD38                
+- You can reply to this email.
+
+-------------------------------------------------------------------------------------------------
+
+=================================================================================================
+*** Potential Issues To WATCH For ***
+- If the CPY_ENV_REFRESH_JOB is hung, there is a good chance that it was not un mounted from the test cluster.
+- In this case you will need to:
+	- Ensure the infshre is not  mounted on any node in the test cluster.
+	- Comment the infshare entry in the /etc/fstab file and reboot the server.
+	- Get authorization then reboot 29 & 30 one at a time.
+
+=================================================================================================
+
+* OPSCPY1 Post Refresh Steps:
+
+- Ensure that below tasks complete:
+	- Task: OPSCPY1_DB_REFRESH
+	- Task: RESTART_OPSCPY1_DOMAINS
+
+- Login as SYSADM@OPSCPY1
+SQL>
+CREATE  DATABASE LINK EAPS
+CONNECT TO HRORACPYSECREF IDENTIFIED BY passwd
+USING 'CPY_EAPS';
+
+- HRORACPYSECREF fround in TEST PMU under TRAINING environment.
+
+SQL>
+select sysdate from dual@eaps;
+
+- Email Manuel or other PS admin that refresh  has completed and link ready for valdation.
+Recipeints: Corona, Manuel A <CoronaMA@state.gov>; Reynon, Jerold J <ReynonJJ@state.gov> ; Khan, Ali <KhanA9@state.gov>
+HR-EX-ESD-OAB
+Subject: Morning check OPSCPY DBLink
+Message:
+Good morning,
+
+OPSCPY database is ready.
+Please verify the PS application is ready.
+
+Thanks,
+
+-------------------------------------------------------------------------------------------------
+
+=================================================================================================
+
+* CPY1 Post Refresh Steps:
+
+- Check job CPY_ENV_REFRESH_JOB runs at 12:01am from OEM
+- If CPY1 and crmcpy refresh are successfully,
+
+conn SYS@CPY1/passwd
+
+--drop PUBLIC DATABASE LINK GEMS_CRM_LINK;
+CREATE PUBLIC DATABASE LINK GEMS_CRM_LINK
+CONNECT TO SYSADM IDENTIFIED By passwd
+USING 'CRMCPY';
+select * from global_name@GEMS_CRM_LINK;
+
+-------------------------------------------------------------
+
+conn sysadm@cpy1/passwd
+select instance_name from gv$instance@eod;
+--will return eodcpy
+
+-------------------------------------------------------------
+
+* Login to:
+	- hreewphrap01
+	- hrewwtstws2000
+	- hrewwtstap2000
+
+* From hrewwtstws2000
+- Stop the cpy1-PIA service
+
+* From hrewwtstap2000
+- CMD as Administrator
+- cd D:\HR91\appserv
+- Issue psadmin
+- 1 Choose Aplication Server
+- 1 Administer Domain
+- 1 CPY1
+- 2 Domain shutdown menu
+- 1 Normal shutdown
+
+- Quit back to the maine menue and selet the Process Scheduler
+
+- 2 Process Scheduler
+- 1 Administer Domain
+- 1 CPY1
+- 2 Domain Shutdown menue
+- 1 Normal Shutdown
+
+* From hrewwtstap2000
+- Navigate to the \\hrewwtstws2000\HR91\webserv\cpy1\applications\peoplesoft\PORTAL.war\cpy1\cache directory 
+- Issue  ctrl all and SHIFT delete
+
+* From hreewphrap01
+- Move all files from \\hrewwtstap2000\D$\HR91\user\CPY\SQR to  \\hrewwtstap2000\D$\HR91\user\CPY\SQR\archive\
+- Copy SQR directory FILES from \\hreewprdap2010\d$\HR91\user\PRD\SQR to \\hrewwtstap2000\D$\HR91\user\CPY\SQR
+
+
+* From hrewwtstws2000
+- Navigate to \\hrewwtstap2000\HR91\appserv\prcs\CPY1\CACHE\CACHE
+- Issue ctrl all and SHIFT delete
+
+* From hrewwtstap2000
+- Once all the AppServer Processes are shutdown & cache purged
+- Boot Scheduler process *** 7 processes started
+- Boot Application server *** 13 processes started 
+
+* From hrewwtstws2000
+- Start the cpy1-PIA service
+
+* Temp Walk Around for HRSVCTSTLDAP service account issue:
+
+- Run the latest encode_then_decode_ldap.sql
+
+- File location can be found in the below location:
+
+\\hrewwnonprdfs01\OracleTeam\IPMS_Maintenance_scripts\Scripts\DBAs\archv\<Most_Recent_Date>_TST
+
+* Verify that HR Online is available:
+
+https://hrtstws1014.washdc.state.sbu/cpy/hronline/
+
+-------------------------------------------------------------------------------------------------
+
+=================================================================================================
+
+* CRMCPY Post Refresh Steps:
+
+Login to:
+	- hrewwtstws2003
+	- hrewwtstap2003
+
+* From hrewwtstws2003
+- Stop the crmcpy-PIA service.
+
+* From hrewwtstap2003
+Open cmd as administator
+- Navigate to D: share
+- D:\CRM91\appserv
+- Issue psadmin
+- 1 Choose Aplication Server
+- 1 Administer Domain
+- 2 CRMCPY
+- 2 Domain shutdown menu
+- 1 Normal shutdown
+
+- Quit back to the maine menue and select the Process Scheduler
+
+- 2 Process Scheduler
+- 1 Administer Domain
+- 2 CRMCPY
+- 2 Domain Shutdown menue
+- 1 Normal Shutdown
+
+* From hrewwtstap2003 
+- Navigate to the \\hrewwtstws2003\CRM91\webserv\crmcpy\applications\peoplesoft\PORTAL.war\crmcpy\cache directory
+- Issue ctrl all and SHIFT delete
+
+* From hrewwtstws2003
+- Navigate to the \\hrewwtstap2003\CRM91\appserv\prcs\CRMCPY\CACHE\CACHE directory
+- Issue ctrl all and SHIFT delete
+
+* From hrewwtstap2003
+- Once all the AppServer Processes are shutdown & cache purged
+- Boot Scheduler process *** 7 processes started
+- Boot Application server *** 13 processes started 
+
+* From hrewwtstws2003
+- Start the crmcpy-PIA service
+
+
+* If everything has gone smoothly, now is usually a good time to send CPY1 & CRMCPY email
+
+Recipeints: Corona, Manuel A <CoronaMA@state.gov>; Reynon, Jerold J <ReynonJJ@state.gov> ; Khan, Ali <KhanA9@state.gov>
+HR-EX-ESD-OAB
+Subject: Morning check CPY Refresh
+Message:
+CPY1 & CRMCPY are  ready for post refresh verification.
+
+Thanks,
+
+-------------------------------------------------------------------------------------------------
+
+=================================================================================================
+
+* EODCPY Post Refresh Steps:
+
+Login to:
+	- hrewwtstws2004
+	- hrewwtstap2004
+
+* From hrewwtstws2004
+- Stop the eodcpy-PIA service.
+
+* From hrewwtstap2004
+- Open CMD as administator
+- Navigate to D: share
+- D:\EOD\appserv
+ Issue psadmin
+- 1 Choose Aplication Server
+- 1 Administer Domain
+- 2 EODCPY
+- 2 Domain shutdown menu
+- 1 Normal shutdown
+
+- Quit back to the maine menue and select the Process Scheduler
+
+- 2 Process Scheduler
+- 1 Administer Domain
+- 2 EODCPY
+- 2 Domain Shutdown menue
+- 1 Normal Shutdown
+
+* From hrewwtstap2004
+- Navigate to the \\hrewwtstws2004\EOD\webserv\eodcpy\applications\peoplesoft\PORTAL.war\eodcpy\cache directory
+- Issue ctrl all and SHIFT delete
+
+* From hrewwtstws2004
+- Navigate to the \\hrewwtstap2004\EOD\appserv\prcs\EODCPY\CACHE\CACHE directory
+- Issue ctrl all and SHIFT delete
+
+* From hrewwtstap2004
+- Once all the AppServer Processes are shutdown & cache purged
+- Boot Scheduler process *** 7 processes started
+- Boot Application server *** 13 processes started 
+- Start the PIA Services on the WebServer hrewwtstws2004
+
+* From hrewwtstws2004
+- Start the eodcpy-PIA service
+
+- Reply to the email string with
+- Message:
+EODCY is ready for post refresh verification.
+
+-------------------------------------------------------------------------------------------------
+
+* To create VANND user 
+- Navigate to the PS directory you plced on you C: drive:
+	* C:\Temp\PeopleSoftWebSite
+
+- Login the EODCPY portal as OABADMIN user found in test PMU.
+-------------------------------------------------------------------------------------------------
+
+* Once you have performed the post verification steps for CPY1, CRMCPY, OPSCPY and EODCPY
+- Send the below email to PSAdmins for verification
+
+PS team,
+
+
+CPY1, CRMCPY, OPSCPY and EODCPY are  ready for post refresh verification.
+
+1.Bounced the app servers, Process Schedulers and cleared the CACHE on the following servers.
+
+Env            App Servers               Web Servers
+CPY1           hrewwtstap2000            hrewwtstws2000
+CRMCPY         hrewwtstap2003            hrewwtstws2003 
+EODCPY         hrewwtstap2004            hrewwtstws2004  
+
+2.	Refreshed the Landing Page.  
+3.	Copy the SQR files for CPY1.
+
+-------------------------------------------------------------------------------------------------
+
+Morning check CPY Refresh
+
+PS team,
+
+CPY1, CRMCPY, OPSCPY and EODCPY refreshes have completed. 
+Database links have been created.
+
+Thanks,
+
+
+=================================================================================================
+
+* DEVCPY
+
+- Currently no post refresh steps.

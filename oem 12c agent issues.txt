@@ -1,0 +1,250 @@
+
+
+
+Issue #1 ( on Friday night): OEM agents didn't start up on hrewoel06/hrewoel07/hrewoel08
+-----------------------------------------------------------------------------------
+
+I looked at logs in the following folder. It made me believe that not enough JVM heap, so I bumped up "agentJavaDefines=-Xmx269M -XX:MaxPermSize=96M"
+to 512M in "/u02/app/oracle/agent12c/agent_inst/sysman/config/emd.properties file. It didn't come up even after bumping up JVM heap. So, I started poking
+around support website, got an indirect hint that clear cache files in "/u02/app/oracle/agent12c/agent_inst/sysman/emd/state" folder and issue
+"emctl clearstate agent"  command and  after that agent started just fine. This is very odd issue which I've never seen before so it took a while to 
+figure it out
+  
+
+/u02/app/oracle/agent12c/agent_inst/sysman/log
+----------------------------------------------
+
+Agent is going down due to an OutOfMemoryError
+----- Sat Jul 27 00:42:16 2019::40621::Checking status of EMAgent : 310 -----
+----- Sat Jul 27 00:42:16 2019::40621::EMAgent exited at Sat Jul 27 00:42:16 2019 with return value 57. -----
+----- Sat Jul 27 00:42:16 2019::40621::EMAgent will be restarted because of an Out of Memory Exception. -----
+----- Sat Jul 27 00:42:16 2019::40621::writeAbnormalExitTimestampToAgntStmp: exitCause=OOM : restartRequired=1 -----
+----- Sat Jul 27 00:42:16 2019::40621::Restarting EMAgent. -----
+----- Sat Jul 27 00:42:16 2019::40621::Auto tuning the agent at time Sat Jul 27 00:42:16 2019 -----
+inMemoryLoggingSize=7340032
+_SchedulePersistTimer=30
+MaxThreads=10
+agentJavaDefines=-Xmx269M -XX:MaxPermSize=96M
+
+
+Moved files in the following folder to some temp folder
+
+/u02/app/oracle/agent12c/agent_inst/sysman/emd/state
+
+drwxr-----.  2 oracle oinstall 4.0K Sep 15  2017 inbox
+drwxr-----.  3 oracle oinstall 4.0K Sep 15  2017 storage
+drwxr-----.  5 oracle oinstall 4.0K Sep 15  2017 recvlet_state
+drwxr-----.  2 oracle oinstall 4.0K Sep 15  2017 oracleHomeFirstConfig
+drwxr-----.  2 oracle oinstall 4.0K Sep 15  2017 adr
+drwxr-----.  9 oracle oinstall 4.0K Sep 15  2017 rac_database
+drwxr-----. 10 oracle oinstall 4.0K Sep 16  2017 fetchlet_state
+drwxr-----. 15 oracle oinstall 4.0K Sep 16  2017 statemgmt
+drwxr-----.  2 oracle oinstall 4.0K Sep 20  2017 mcePersist
+drwxr-----. 16 oracle oinstall 4.0K Nov 22  2017 .
+drwxr-----. 12 oracle oinstall 4.0K Nov 22  2017 configstate
+-rw-r-----.  1 oracle oinstall   10 Mar 23 05:20 83184656E362E3D7E734B92186D27136_failedLogin.log
+-rw-r-----.  1 oracle oinstall   10 Mar 23 05:29 FF812694A01B3F2F5C18E207A0BF0637_failedLogin.log
+-rw-r-----.  1 oracle oinstall   10 Jul 13 01:31 CA4A9BB1CAEFD2DC9279407DA5870046_failedLogin.log
+-rw-r-----.  1 oracle oinstall   10 Jul 26 15:37 93984FF426EF972301A906CFE02EF740_failedLogin.log
+-rw-r-----.  1 oracle oinstall   10 Jul 26 15:39 9385CAA0737E8FD3AA558343AAE7DF5D_failedLogin.log
+-rw-r-----.  1 oracle oinstall   10 Jul 26 16:12 CD154FE0A183B2498978304CEDC18D11_failedLogin.log
+drwxr-----.  3 oracle oinstall 4.0K Jul 26 19:00 has
+-rw-r-----.  1 oracle oinstall   38 Jul 27 00:42 808BAA0F72A3EAE293B3A99E994D7B16.alerthrewoel06.log
+drwxr-----. 12 oracle oinstall  12K Jul 28 10:30 ..
+drwxr-----.  2 oracle oinstall 4.0K Jul 29 00:42 configLogs
+-rw-r-----.  1 oracle oinstall   10 Jul 29 04:49 5472176C745BCCAF78F13DAC320194D6_failedLogin.log
+drwxr-----.  2 oracle oinstall 4.0K Jul 29 08:59 severityTraceRecords
+drwxr-----.  2 oracle oinstall 4.0K Jul 29 10:42 persistSchedules
+-rw-r-----.  1 oracle oinstall    9 Jul 29 10:42 3FAF63C109AED423D424545A5A677C83_lsnr_log_size.log
+-rw-r-----.  1 oracle oinstall   15 Jul 29 11:07 78C3D65ADDF28FFE9E44AF64A9B4A3E5.alerthrewoel06.log
+
+
+
+
+Issue #2 ( on Friday) : HFKC databases didn't start on both KC1 and KC2 clusters ( no issue with source HFKC database) 
+------------------------------------------------------------------------------------------------------------------------
+
+Reason: SPFILE was pointing to two different files in SRVCTL configuration and ORACLE_HOME/dbs/init.ora file. So, when database
+was started with SRVCTL, it's picking up old SPFILE which has SGA_MAX value smallar than SGA_TARGET. We synched up both SRVCTL configuration
+and init.ora file so that they both point to same file and after that DBs came up just fine. 
+
+
+[oracle@hrewoel16 ~]$ srvctl config database -d HFKC
+Database unique name: HFKC
+Database name:
+Oracle home: /u02/app/oracle/product/11.2.0.4/db_1
+Oracle user: oracle
+Spfile: +HFKC_DATA/HFKC/PARAMETERFILE/spfile.454.773081615
+Domain: HR.STATE.SBU
+Start options: open
+Stop options: immediate
+Database role: PRIMARY
+Management policy: AUTOMATIC
+Server pools: HFKC
+Database instances: HFKC1,HFKC2
+Disk Groups: HFKC_DATA,HFKC_FRA
+Mount point paths:
+Services:
+Type: RAC
+Database is administrator managed
+[oracle@hrewoel16 ~]$
+
+
+[oracle@hrewoel16 dbs]$ pwd
+/u02/app/oracle/product/11.2.0.4/db_1/dbs
+[oracle@hrewoel16 dbs]$ cat initHFKC1.ORA
+cat: initHFKC1.ORA: No such file or directory
+[oracle@hrewoel16 dbs]$ cat initHFKC1.ora
+SPFILE='+HFKC_DATA/HFKC/PARAMETERFILE/spfile.454.773081615'             # line added by Agent
+[oracle@hrewoel16 dbs]$
+
+
+Issue #3 ( on Sunday, Surinder noticed on Sunday) : KC2 HFKC databases didn't start up after tfclone refresh ( 3rd step in informatica load process)
+------------------------------------------------------------------------------------------------------------------------------------------------
+
+tfclone process failed to start database after cloning due to missing spfile in diskgroup( not sure why spfile was missing after dismounting diskgroup
+and mounting it after clone process). tfclone process ran fine this morning. I will take a deep dive look into script and see if it has anything to do
+with script. 
+
+Script was invoked from host: "hrewoel16.hr.state.sbu"
+
+Instance HFKC1 is running on node hrewoel16
+Instance HFKC2 is running on node hrewoel19
+
+Database unique name: HFKC
+Database name: 
+Oracle home: /u02/app/oracle/product/11.2.0.4/db_1
+Oracle user: oracle
+Spfile: +hfkc_data/hfkc/PARAMETERFILE/spfile.410.1014811079
+Domain: HR.STATE.SBU
+Start options: open
+Stop options: immediate
+Database role: PRIMARY
+Management policy: AUTOMATIC
+Server pools: HFKC
+Database instances: HFKC1,HFKC2
+Disk Groups: HFKC_DATA,HFKC_FRA
+Mount point paths: 
+Services: 
+Type: RAC
+Database is administrator managed
+
+
+
+
+Starting Database: HFKC .. 
+
+PRCR-1079 : Failed to start resource ora.hfkc.db
+CRS-5017: The resource action "ora.hfkc.db start" encountered the following error: 
+ORA-01078: failure in processing system parameters
+ORA-01565: error in identifying file '+hfkc_data/hfkc/PARAMETERFILE/spfile.410.1014811079'
+ORA-17503: ksfdopn:10 Failed to open file +hfkc_data/hfkc/PARAMETERFILE/spfile.410.1014811079
+ORA-15056: additional error message
+ORA-15173: entry 'spfile.410.1014811079' does not exist in directory 'parameterfile'
+ORA-06512: at line 4
+. For details refer to "(:CLSN00107:)" in "/u02/app/11.2.0.4/grid/log/hrewoel16/agent/crsd/oraagent_oracle//oraagent_oracle.log".
+
+CRS-5017: The resource action "ora.hfkc.db start" encountered the following error: 
+ORA-01078: failure in processing system parameters
+ORA-01565: error in identifying file '+hfkc_data/hfkc/PARAMETERFILE/spfile.410.1014811079'
+ORA-17503: ksfdopn:10 Failed to open file +hfkc_data/hfkc/PARAMETERFILE/spfile.410.1014811079
+ORA-15056: additional error message
+ORA-15173: entry 'spfile.410.1014811079' does not exist in directory 'parameterfile'
+ORA-06512: at line 4
+. For details refer to "(:CLSN00107:)" in "/u02/app/11.2.0.4/grid/log/hrewoel19/agent/crsd/oraagent_oracle//oraagent_oracle.log".
+
+
+
+
+
+Issue #4 ( on Thursday) : PRDPHR restores:
+-----------------------------------------
+
+PRDPHR production database resotre took liitle over than 2 hours eventhough I allocated 4 channels. Apparently, all datafiles are  
+backed up to single backuppiece and only one channel was doing all the work where as other channels were inactive. 
+
+
+
+
+[oracle@hrewoel06 alpoor_scripts]$ cat  restore_prdphr1.bash
+#!/bin/sh
+
+export ORACLE_SID=PRDPHR1
+export ORACLE_HOME=/u02/app/oracle/product/11.2.0.4/db_1
+export PATH=$ORACLE_HOME/bin:$PATH
+export TNS_ADMIN=$ORACLE_HOME/network/admin
+
+INST=`hostname`
+TODAY=`date +%d%b`
+BACKUP_DIR=/home/oracle/alpoor_scripts
+LOG_DIR=/home/oracle/alpoor_scripts
+LOGFILE=$LOG_DIR/rman_restore_${ORACLE_SID}_${TODAY}.log
+$ORACLE_HOME/bin/rman <<EOF > ${LOG_DIR}/rman_restore_${ORACLE_SID}_${TODAY}.log
+connect target /
+run {
+allocate channel c1 type DISK;
+allocate channel c2 type DISK;
+allocate channel c3 type DISK;
+allocate channel c4 type DISK;
+set newname for datafile 1 to '+OPS_DATA';
+
+
+
+BS Key  Type LV Size
+------- ---- -- ----------
+28442969 Full    34.75G
+  List of Datafiles in backup set 28442969
+  File LV Type Ckp SCN    Ckp Time  Name
+  ---- -- ---- ---------- --------- ----
+  1       Full 3782506517100 21-JUL-19 +DATA/prdphr/datafile/system.275.954758993
+  2       Full 3782506517100 21-JUL-19 +DATA/prdphr/datafile/sysaux.274.954758991
+  3       Full 3782506517100 21-JUL-19 +DATA/prdphr/datafile/undotbs1.277.954758995
+  4       Full 3782506517100 21-JUL-19 +DATA/prdphr/datafile/users.292.954759001
+  5       Full 3782506517100 21-JUL-19 +DATA/prdphr/datafile/undotbs2.287.954758995
+  6       Full 3782506517100 21-JUL-19 +DATA/prdphr/datafile/psdefault.295.954759017
+  7       Full 3782506517100 21-JUL-19 +DATA/prdphr/datafile/psimage.273.954758985
+  8       Full 3782506517100 21-JUL-19 +DATA/prdphr/datafile/psimgr.298.954759035
+  9       Full 3782506517100 21-JUL-19 +DATA/prdphr/datafile/psindex.276.954758993
+  10      Full 3782506517100 21-JUL-19 +DATA/prdphr/datafile/pswork.285.954758995
+  11      Full 3782506517100 21-JUL-19 +DATA/prdphr/datafile/ptamsg.288.954758997
+  12      Full 3782506517100 21-JUL-19 +DATA/prdphr/datafile/ptapp.297.954759033
+  13      Full 3782506517100 21-JUL-19 +DATA/prdphr/datafile/ptappe.289.954758997
+  14      Full 3782506517100 21-JUL-19 +DATA/prdphr/datafile/ptaudit.279.954758995
+  15      Full 3782506517100 21-JUL-19 +DATA/prdphr/datafile/ptcmstar.280.954758995
+  16      Full 3782506517100 21-JUL-19 +DATA/prdphr/datafile/ptlock.290.954758999
+  17      Full 3782506517100 21-JUL-19 +DATA/prdphr/datafile/ptprc.284.954758995
+  18      Full 3782506517100 21-JUL-19 +DATA/prdphr/datafile/ptprjwk.281.954758995
+  19      Full 3782506517100 21-JUL-19 +DATA/prdphr/datafile/ptrpts.282.954758995
+  20      Full 3782506517100 21-JUL-19 +DATA/prdphr/datafile/pttbl.272.954758985
+  21      Full 3782506517100 21-JUL-19 +DATA/prdphr/datafile/pttlrg.296.954759021
+  22      Full 3782506517100 21-JUL-19 +DATA/prdphr/datafile/pttree.291.954759001
+  23      Full 3782506517100 21-JUL-19 +DATA/prdphr/datafile/ptwork.278.954758995
+  24      Full 3782506517100 21-JUL-19 +DATA/prdphr/datafile/ptamsg.286.954758995
+  25      Full 3782506517100 21-JUL-19 +DATA/prdphr/datafile/psimage2.283.954758995
+  26      Full 3782506517100 21-JUL-19 +DATA/prdphr/datafile/psmatvw.293.954759003
+  27      Full 3782506517100 21-JUL-19 +DATA/prdphr/datafile/psimage.294.954759009
+  28      Full 3782506517100 21-JUL-19 +DATA/prdphr/datafile/psimage.310.986807797
+  29      Full 3782506517100 21-JUL-19 +DATA/prdphr/datafile/psimage.314.1010225713
+  30      Full 3782506517100 21-JUL-19 +DATA/prdphr/datafile/psimage.313.1013502017
+  31      Full 3782506517100 21-JUL-19 +DATA/prdphr/datafile/system2.dbf
+  32      Full 3782506517100 21-JUL-19 +DATA/prdphr/datafile/pttbl.312.1013502239
+
+  Backup Set Copy #1 of backup set 28442969
+  Device Type Elapsed Time Completion Time Compressed Tag
+  ----------- ------------ --------------- ---------- ---
+  DISK        03:12:37     21-JUL-19       YES        PRDPHR_WEEKLY_FULL
+
+    List of Backup Pieces for backup set 28442969 Copy #1
+    BP Key  Pc# Status      Piece Name
+    ------- --- ----------- ----------
+    28442980 1   AVAILABLE   +FRA/prdphr/backupset/2019_07_21/nnndf0_prdphr_weekly_full_0.687.1014189001
+
+
+
+
+
+
+
+
+
+

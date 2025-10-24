@@ -1,0 +1,21 @@
+/u02/app/oracle/scripts/19cupgrades
+
+/u02/app/oracle/product/19.3.0/db_1/jdk/bin/java -jar /u02/app/oracle/product/19.3.0/db_1/rdbms/admin/preupgrade.jar TERMINAL TEXT > /u02/app/oracle/scripts/19cupgrades/$ORACLE_SID/preupgrade.log
+
+exec dbms_audit_mgmt.clean_audit_trail(audit_trail_type=>dbms_audit_mgmt.audit_trail_unified,use_last_arch_timestamp=>TRUE);
+
+
+create restore point ESSR_68204 guarantee flashback database
+
+select DB_NAME,to_char(start_time,'DD-MON HH24:MI') StartTime,
+    to_char(end_time,'DD-MON HH24:MI') EndTime,
+    (end_time-start_time)*1440 RunMin,
+    input_bytes/1048576 Read_MB, output_bytes/1048576 Write_MB, input_type, status
+    from rc_rman_backup_job_details
+    where start_time > sysdate-32 AND INPUT_TYPE = 'DB FULL'
+   order by start_time DESC
+
+
+/u02/app/oracle/scripts/19cupgrades/OPSASB/upgrade19c.bash
+
+alter system set control_files='+ops_Data/opsuat/controlfile/current.945.1048081025','+ops_Fra/opsuat/controlfile/current.999.1048081047'

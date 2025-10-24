@@ -1,0 +1,119 @@
+[root@hrvlprddb7601 ~]# blkid
+/dev/sdc1: LABEL="FRA01" TYPE="oracleasm"
+/dev/sdi1: LABEL="DATA01" TYPE="oracleasm"
+/dev/sdd1: LABEL="FRA02" TYPE="oracleasm"
+/dev/sdb1: UUID="0NWKdk-rvWr-5rdg-Arpm-BPfE-H0YE-Gni0UT" TYPE="LVM2_member"
+/dev/sdb2: UUID="sndvui-AkJ4-n8Gn-uwRW-w2AE-6Tq8-JHKape" TYPE="LVM2_member"
+/dev/sde1: LABEL="FRA03" TYPE="oracleasm"
+/dev/sdk1: LABEL="DATA03" TYPE="oracleasm"
+/dev/sdl1: LABEL="OCR_VOTE1" TYPE="oracleasm"
+/dev/sdj1: LABEL="DATA02" TYPE="oracleasm"
+/dev/sda1: UUID="492875b4-68cb-4a3e-a56d-b12097944fca" TYPE="xfs"
+/dev/sda2: UUID="bXU5wD-ySG0-iU7U-s4pv-Icx1-7WBo-ujlsfp" TYPE="LVM2_member"
+/dev/sda3: UUID="0SOwbk-cT7b-lEI4-X46J-6l2P-vR0t-PuoVPH" TYPE="LVM2_member"
+/dev/sdn1: UUID="3390e885-67d3-4f76-a06c-7951845ee619" TYPE="xfs"
+/dev/sdo1: LABEL="DRSHARE01" TYPE="oracleasm"
+/dev/mapper/basevg-root: UUID="ea475411-b99b-4f0b-91b7-501603c4877e" TYPE="xfs"
+/dev/mapper/basevg-swap: UUID="19f93685-64b3-41e7-8ced-35e54fe8c86d" TYPE="swap"
+/dev/mapper/basevg-usr: UUID="cbe42892-cb69-426a-9870-4a21fc6d4e7d" TYPE="xfs"
+/dev/mapper/basevg-home: UUID="799339aa-8ac3-44a9-9cfb-098c92420083" TYPE="xfs"
+/dev/mapper/basevg-var: UUID="915a0d40-c143-4cf9-a55e-a93c67be6d2f" TYPE="xfs"
+/dev/mapper/basevg-tmp: UUID="7bc1345c-36f6-4289-ac9e-e1242deabfa5" TYPE="xfs"
+/dev/mapper/basevg-var_log: UUID="72c738b1-59f1-4a9a-9b73-14c7e1adaf7b" TYPE="xfs"
+/dev/mapper/basevg-var_log_audit: UUID="ab52a7d1-c222-487e-b92b-7dd86fa38164" TYPE="xfs"
+[root@hrvlprddb7601 ~]#
+
+
+[root@hrvlprddb7601 ~]# lsblk
+NAME                     MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sdf                        8:80   0  200G  0 disk
+sdo                        8:224  0  512G  0 disk
+ââsdo1                     8:225  0  512G  0 part
+sdd                        8:48   0  200G  0 disk
+ââsdd1                     8:49   0  200G  0 part
+sdm                        8:192  0  100G  0 disk
+sdb                        8:16   0  100G  0 disk
+ââsdb2                     8:18   0 37.4G  0 part
+ââsdb1                     8:17   0 62.6G  0 part
+  ââbasevg-swap          252:1    0  3.7G  0 lvm  [SWAP]
+  ââbasevg-var           252:4    0 23.3G  0 lvm  /var
+  ââbasevg-usr           252:2    0 18.6G  0 lvm  /usr
+  ââbasevg-home          252:3    0 18.6G  0 lvm  /home
+sdk                        8:160  0  200G  0 disk
+ââsdk1                     8:161  0  200G  0 part
+sdi                        8:128  0  200G  0 disk
+ââsdi1                     8:129  0  200G  0 part
+sr0                       11:0    1 1024M  0 rom
+sdg                        8:96   0  200G  0 disk
+sde                        8:64   0  200G  0 disk
+ââsde1                     8:65   0  200G  0 part
+sdn                        8:208  0  100G  0 disk
+ââsdn1                     8:209  0  100G  0 part /u02
+sdc                        8:32   0  200G  0 disk
+ââsdc1                     8:33   0  200G  0 part
+sdl                        8:176  0   50G  0 disk
+ââsdl1                     8:177  0   50G  0 part
+sda                        8:0    0  100G  0 disk
+ââsda2                     8:2    0 62.1G  0 part
+â ââbasevg-swap          252:1    0  3.7G  0 lvm  [SWAP]
+â ââbasevg-var_log       252:6    0  4.7G  0 lvm  /var/log
+â ââbasevg-root          252:0    0 46.5G  0 lvm  /
+â ââbasevg-tmp           252:5    0  9.3G  0 lvm  /tmp
+ââsda3                     8:3    0 37.4G  0 part
+â ââbasevg-var_log_audit 252:7    0    5G  0 lvm  /var/log/audit
+ââsda1                     8:1    0  512M  0 part /boot
+sdj                        8:144  0  200G  0 disk
+ââsdj1                     8:145  0  200G  0 part
+sdh                        8:112  0  200G  0 disk
+[root@hrvlprddb7601 ~]#
+
+
+
+sdf                        8:80   0  200G  0 disk
+sdg                        8:96   0  200G  0 disk
+sdh                        8:112  0  200G  0 disk
+
+
+SQL> exit
+Disconnected from Oracle Database 12c Enterprise Edition Release 12.2.0.1.0 - 64bit Production
+[grid@hrvlprddb7601 ~]$ asmcmd lsdg
+State    Type    Rebal  Sector  Logical_Sector  Block       AU  Total_MB  Free_MB  Req_mir_free_MB  Usable_file_MB  Offline_disks  Voting_files  Name
+MOUNTED  EXTERN  N         512             512   4096  1048576    409598    76947                0           76947              0             N  DATA/
+MOUNTED  EXTERN  N         512             512   4096  1048576    204799   197636                0          197636              0             N  FRA/
+MOUNTED  EXTERN  N         512             512   4096  1048576     51199    51136                0           51136              0             N  OCR_VOTE1/
+MOUNTED  EXTERN  N         512             512   4096  1048576    204799    33087                0           33087              0             N  OPS_DATA/
+MOUNTED  EXTERN  N         512             512   4096  1048576    409598   274654                0          274654              0             N  OPS_FRA/
+
+SQL> select group_number,name from v$asm_diskgroup;
+
+GROUP_NUMBER NAME
+------------ ------------------------------
+           0 DRSHARE
+           1 DATA
+           2 FRA
+           3 OCR_VOTE1
+           4 OPS_DATA
+           5 OPS_FRA
+
+6 rows selected.
+
+SQL>
+
+SQL> col path format a40
+SQL> /
+
+NAME                           PATH
+------------------------------ ----------------------------------------
+                               /dev/oracleasm/disks/DRSHARE01
+OPS_DATA_0000                  /dev/oracleasm/disks/DATA02
+OCR_VOTE1_0000                 /dev/oracleasm/disks/OCR_VOTE1
+DATA_0001                      /dev/oracleasm/disks/DATA03
+OPS_FRA_0001                   /dev/oracleasm/disks/FRA03
+OPS_FRA_0000                   /dev/oracleasm/disks/FRA02
+DATA_0000                      /dev/oracleasm/disks/DATA01
+FRA_0000                       /dev/oracleasm/disks/FRA01
+
+8 rows selected.
+
+SQL>
+

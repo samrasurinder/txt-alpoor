@@ -1,0 +1,115 @@
+
+
+
+
+
+/u02/app/oracle/scripts/refresh/POST_REFRESH_STEPS/post_refresh_1_restore_grants_users_pwd.bash ${ORACLE_SID}
+/u02/app/oracle/scripts/refresh/POST_REFRESH_STEPS/post_refresh_2_impdp_dblinks.bash            ${ORACLE_SID}
+/u02/app/oracle/scripts/refresh/POST_REFRESH_STEPS/post_refresh_3_impdp_pstables.bash           ${ORACLE_SID}
+/u02/app/oracle/scripts/refresh/POST_REFRESH_STEPS/post_refresh_4_sysadm_grants.bash            ${ORACLE_SID}
+
+
+
+
+post_refresh_1_restore_grants_users_pwd.bash
+----------------------------------------------
+#!/bin/bash
+
+export ORACLE_SID=${1}
+export ORACLE_HOME=/u02/app/oracle/product/19.3.0/db_2
+export PATH=$ORACLE_HOME/bin:$PATH
+export TNS_ADMIN=$ORACLE_HOME/network/admin
+export REFRESH_DATE=`date +"%Y_%m_%d"`
+
+sqlplus -s / as sysdba  <<EOF
+spool /u02/app/oracle/scripts/refresh/log/${ORACLE_SID}_POST_REFRESH_${REFRESH_DATE}.log append
+set echo on
+select name from v\$database;
+ALTER TABLESPACE temp ADD TEMPFILE '+OPSCPY_DATA' SIZE 500M REUSE AUTOEXTEND ON NEXT 100M MAXSIZE UNLIMITED;
+ALTER TABLESPACE pstemp ADD TEMPFILE '+OPSCPY_DATA' SIZE 500M REUSE AUTOEXTEND ON NEXT 100M MAXSIZE UNLIMITED;
+alter system set db_recovery_file_dest_size=600G scope=spfile sid='*';
+create or replace directory dp_rfrsh_dmp as '/u02/app/oracle/exports/${ORACLE_SID}';
+create or replace directory dp_rfrsh_lg as '/u02/app/oracle/exports/${ORACLE_SID}';
+@/u02/app/oracle/scripts/refresh/POST_REFRESH_STEPS/POST_${ORACLE_SID}_cr_user_spool.sql;
+@/u02/app/oracle/scripts/refresh/POST_REFRESH_STEPS/POST_${ORACLE_SID}_grant_connect_spool.sql;
+@/u02/app/oracle/scripts/refresh/POST_REFRESH_STEPS/POST_${ORACLE_SID}_grant_sysadm_spool.sql;
+@/u02/app/oracle/scripts/refresh/POST_REFRESH_STEPS/POST_${ORACLE_SID}_alter_pwd_spool.sql;
+@/u02/app/oracle/scripts/refresh/POST_REFRESH_STEPS/POST_${ORACLE_SID}_PS_SchemaPwd_spool.sql;
+@/u02/app/oracle/scripts/refresh/POST_REFRESH_STEPS/POST_restore_grants.sql;
+@/u02/app/oracle/scripts/refresh/POST_REFRESH_STEPS/init${ORACLE_SID}_REFRESH.ora;
+grant select on sysadm.PSSTATUS to hrpsins;
+grant select on sysadm.PSOPRDEFN to hrpsins;
+grant select on sysadm.PSACCESSPRFL to hrpsins;
+grant select on sysadm.PSACCESSPROFILE to hrpsins;
+GRANT SELECT ON SYSADM.PSAPMSGDOMSTAT TO HREXREADONLY;
+GRANT SELECT ON SYSADM.PSAPMSGDOMSTAT TO ROLE_RO;
+grant Select on sysadm.PSSTATUS to hrpsins;
+grant select on sysadm.PSOPRDEFN to hrpsins;
+grant select on sysadm.PSACCESSPRFL to hrpsins;
+delete from sysadm.PSSERVERSTAT where SERVERNAME = 'PSUNX2';
+update sysadm.psuseremail set emailid = 'OPSRefreshEmail@state.gov' where oprid not in ('PSADM','PTWEBSERVER','PSEM','PHRMGR','PSSTNDBY');
+update sysadm.psoprdefn set emailid = 'OPSRefreshEmail@state.gov' where oprid not in ('PSADM','PTWEBSERVER','PSEM','PHRMGR','PSSTNDBY');
+update sysadm.ps_rolexlatopr set emailid = 'OPSRefreshEmail@state.gov' where oprid not in ('PSADM','PTWEBSERVER','PSEM','PHRMGR','PSSTNDBY');
+update sysadm.ps_email_addresses set email_addr = 'OPSRefreshEmail@state.gov';
+commit;
+
+spool off
+exit;
+EOF
+
+
+post_refresh_2_impdp_dblinks.bash
+---------------------------------
+
+#!/bin/sh
+
+export ORACLE_SID=${1}
+export ORACLE_HOME=/u02/app/oracle/product/19.3.0/db_2
+export PATH=$ORACLE_HOME/bin:$PATH
+export TNS_ADMIN=$ORACLE_HOME/network/admin
+export REFRESH_DATE=`date +"%Y_%m_%d"`
+
+impdp \"/ as sysdba\" dumpfile=dp_rfrsh_dmp:expdp_PRE_${ORACLE_SID}_preserve_All_dblinks.dmp logfile=dp_rfrsh_lg:impdp_POST_${ORACLE_SID}_preserve_All_dblinks.log table_exists_action=Truncate
+~
+~
+
+
+
+
+post_refresh_3_impdp_pstables.bash
+----------------------------------
+
+#!/bin/sh
+
+export ORACLE_SID=${1}
+export ORACLE_HOME=/u02/app/oracle/product/19.3.0/db_2
+export PATH=$ORACLE_HOME/bin:$PATH
+export TNS_ADMIN=$ORACLE_HOME/network/admin
+export REFRESH_DATE=`date +"%Y_%m_%d"`
+
+impdp \"/ as sysdba\" dumpfile=dp_rfrsh_dmp:expdp_PRE_${ORACLE_SID}_SYSADM_PS_Tables.dmp logfile=dp_rfrsh_lg:impdp_POST_${ORACLE_SID}_SYSADM_PS_Tables.log table_exists_action=Truncate
+~
+
+
+post_refresh_4_sysadm_grants.bash
+---------------------------------
+
+#!/bin/sh
+
+export ORACLE_SID=${1}
+export ORACLE_HOME=/u02/app/oracle/product/19.3.0/db_1
+export PATH=$ORACLE_HOME/bin:$PATH
+export TNS_ADMIN=$ORACLE_HOME/network/admin
+export REFRESH_DATE=`date +"%Y_%m_%d"`
+
+sqlplus -s / as sysdba  <<EOF
+
+BEGIN
+    FOR t IN (SELECT owner,object_name FROM dba_objects where owner = 'SYSADM' and object_type in ('VIEW','TABLE'))
+    LOOP
+        EXECUTE IMMEDIATE 'GRANT SELECT ON ' ||  t.owner  || '.' || t.object_name || ' TO HREXREADONLY';
+    END LOOP;
+END;
+/
+exit;
+EOF

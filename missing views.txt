@@ -1,0 +1,23 @@
+CREATE VIEW PS_GM_FUR_EMAIL_VW (NAME, POSITION_NBR, DESCR, DEPTID, 
+ EMAILID, EMAILTYPE, GM_FS_OR_CS, DATE_PROCESSED, DATE_ACKNOWLEDGE) AS
+ SELECT EMPNAMES.NAME_PSFORMAT , 
+        "PositionNumber" ,
+         B.DESCR ,
+        "OrganizationCode" ,
+        "Email" ,
+        "Type" ,
+        "ServiceType" , 
+        "SENT_DT" ,
+        "AcknowledgeDate"
+ FROM FURLOUGH_EMPLOYEE@EAPS EAPS ,
+      SYSADM.PS_POSITION_DATA B ,
+      SYSADM.PS_PERSON_NAME EMPNAMES ,
+      EMAIL_QUEUE@EAPS EMAIL
+ WHERE "PositionNumber" = B.POSITION_NBR AND
+       "EmployeeID"     = EMPNAMES.EMPLID AND 
+       "EmailID2"       = "EMAIL_QUEUE_ID" AND
+       "EmailID2" IS NOT NULL AND
+       B.EFFDT = ( SELECT MAX (B1.EFFDT) FROM
+                      PS_POSITION_DATA B1 WHERE B1.POSITION_NBR = B.POSITION_NBR AND
+                      B1.EFFDT <= SYSDATE)
+/

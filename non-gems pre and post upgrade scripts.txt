@@ -1,0 +1,31 @@
+build_driver_DEV.pre
+
+export ORACLE_SID=`ps -ef|grep pmon|grep ora_pmon_${to_db}|grep -v grep|awk '{print $8}'|cut -d_ -f3`
+sqlplus  / as sysdba <<EOF
+drop directory dp_rfrsh_dmp;
+create directory dp_rfrsh_dmp as '$builds_dir';
+drop directory dp_rfrsh_lg;
+create directory dp_rfrsh_lg as '$log';
+@$builds_dir/PRE_preserve_grants.sql
+-- @$builds_dir/PRE_DEV_dSECREF_USER_ROLE.sql --> not needed per essr 45534
+exit
+EOF
+
+# PRESERVE ALL ACCOUNT AND THEIR PASSWORDS TO RESTORE BACK IN POST REFRESH
+/bin/bash PRE_preserve_pwd.bash ${to_db}
+# PRESERVE PEOPLESOFT SCHEMAS PASSWORDS
+/bin/bash PRE_PS_SchemaPwd.bash ${to_db}
+# PRESERVE BMA DBLINKS
+#/bin/bash PRE_DEV_BMA_dblinks.bash ${to_db}
+# PRESERVE ALL DBLINKS
+/bin/bash PRE_DEV_All_dblinks.bash ${to_db}
+###########
+
+
+expdp \"/ as sysdba\" Tables=sysutil.dba_tab_privs_,sysutil.dba_sys_privs_,sysutil.dba_role_privs_ dumpfile=dp_rfrsh_dmp:expdp_PRE_${to_db}_preserve_grants.dmp  logfile=dp_rfrsh_lg:expdp_PRE_${to_db}_preserve_grants.log REUSE_DUMPFILES=Y
+
+################## PRESERVE REQUIRED SCHEMAS ##############################
+expdp \"/ as sysdba\"  schemas=${schema_adhoc_lst},${schema_special_lst} dumpfile=dp_rfrsh_dmp:expdp_PRE_${to_db}_INF_SCHEMAS.dmp logfile=dp_rfrsh_lg:expdp_PRE_${to_db}_INF_SCHEMAS.log REUSE_DUMPFILES=Y CLUSTER=N
+# THE INFL SCHEMAS PRESERVE APPLIES ONLY TO DEV1 DATABASE
+# This to preserve PeopleSoft Tables and Data
+expdp \"/ as sysdba\" tables=SYSADM.psaccessprfl,SYSADM.PSNODEURITEXT,sysadm.PSWEBPROFNVP,SYSADM.PS_SERVERCLASS,SYSADM.PS_SERVERDEFN,SYSADM.PS_SERVERDEFN_LNG,SYSADM.PS_SERVERNOTIFY,SYSADM.PS_SERVERMESSAGE,SYSADM.PS_SERVEROPRTN,SYSADM.PS_SERVERCATEGORY,SYSADM.PS_CDM_DIST_NODE,SYSADM.PSGATEWAY,SYSADM.psnodeconprop,SYSADM.psurldefn,SYSADM.pswebprofile,sysadm.psren,sysadm.psmcfrenurlid,sysadm.psrenclus_owner,sysadm.psrencluster,sysadm.psibfailover,PS.PSDBOWNER,SYSADM.PSMSGNODEDEFN,SYSADM.PSNODEDEFNLANG,SYSADM.PSIBGATEWAYURLS,SYSADM.PSIBLBURLS,SYSADM.PSIBRTNGDEFN,SYSADM.PSIBRTNGSUBDEFN,SYSADM.PSRTNGDFNCONPRP,SYSADM.PSRTNGDFNPARM,SYSADM.PS_GM_EDEO_CONFIG,SYSADM.PS_SM_BP_USR_CTGRY dumpfile=dp_rfrsh_dmp:expdp_PRE_${to_db}_SYSADM_PS_Tables.dmp logfile=dp_rfrsh_lg:expdp_PRE_${to_db}_SYSADM_PS_Tables.log REUSE_DUMPFILES=Y

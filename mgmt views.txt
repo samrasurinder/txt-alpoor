@@ -1,0 +1,2 @@
+SELECT HOST_NAME,STATUS,FIRST_CHANGE_SCN,SEQUENCE_NUM,THREAD_NUM,COLLECTION_TIMESTAMP FROM MGMT$DB_REDOLOGS
+where host_name in ('hrewoel06.hr.state.sbu','hrewoel13.hr.state.sbu') order by host_name;

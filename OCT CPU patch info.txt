@@ -1,0 +1,399 @@
+[oracle@hrvltrndb23 OPatch]$ ./opatch rollback -id 31602782
+Oracle Interim Patch Installer version 12.2.0.1.28
+Copyright (c) 2021, Oracle Corporation.  All rights reserved.
+
+
+Oracle Home       : /u02/app/oracle/product/19.3.0/db_1
+Central Inventory : /u02/app/oraInventory
+   from           : /u02/app/oracle/product/19.3.0/db_1/oraInst.loc
+OPatch version    : 12.2.0.1.28
+OUI version       : 12.2.0.7.0
+Log file location : /u02/app/oracle/product/19.3.0/db_1/cfgtoollogs/opatch/opatch2021-12-15_10-07-15AM_1.log
+
+
+Patches will be rolled back in the following order:
+   31602782
+The following patch(es) will be rolled back: 31602782
+
+Please shutdown Oracle instances running out of this ORACLE_HOME on the local system.
+(Oracle Home = '/u02/app/oracle/product/19.3.0/db_1')
+
+
+Is the local system ready for patching? [y|n]
+y
+User Responded with: Y
+
+Rolling back patch 31602782...
+
+RollbackSession rolling back interim patch '31602782' from OH '/u02/app/oracle/product/19.3.0/db_1'
+
+Patching component oracle.rdbms, 19.0.0.0.0...
+RollbackSession removing interim patch '31602782' from inventory
+Log file location: /u02/app/oracle/product/19.3.0/db_1/cfgtoollogs/opatch/opatch2021-12-15_10-07-15AM_1.log
+
+OPatch succeeded.
+[oracle@hrvltrndb23 OPatch]$ ./opatch rollback -id 31143146
+Oracle Interim Patch Installer version 12.2.0.1.28
+Copyright (c) 2021, Oracle Corporation.  All rights reserved.
+
+
+Oracle Home       : /u02/app/oracle/product/19.3.0/db_1
+Central Inventory : /u02/app/oraInventory
+   from           : /u02/app/oracle/product/19.3.0/db_1/oraInst.loc
+OPatch version    : 12.2.0.1.28
+OUI version       : 12.2.0.7.0
+Log file location : /u02/app/oracle/product/19.3.0/db_1/cfgtoollogs/opatch/opatch2021-12-15_10-08-50AM_1.log
+
+
+Patches will be rolled back in the following order:
+   31143146
+The following patch(es) will be rolled back: 31143146
+
+Please shutdown Oracle instances running out of this ORACLE_HOME on the local system.
+(Oracle Home = '/u02/app/oracle/product/19.3.0/db_1')
+
+
+Is the local system ready for patching? [y|n]
+y
+User Responded with: Y
+
+Rolling back patch 31143146...
+
+RollbackSession rolling back interim patch '31143146' from OH '/u02/app/oracle/product/19.3.0/db_1'
+
+Patching component oracle.rdbms, 19.0.0.0.0...
+RollbackSession removing interim patch '31143146' from inventory
+Log file location: /u02/app/oracle/product/19.3.0/db_1/cfgtoollogs/opatch/opatch2021-12-15_10-08-50AM_1.log
+
+OPatch succeeded.
+[oracle@hrvltrndb23 OPatch]$
+
+
+
+./opatch rollback -id 32847378
+
+
+
+[root@hrvltrndb23 OPatch]# ./opatchauto apply /infshare/oracle/patches/OCTPSU/33248471/33182768 -analyze
+
+OPatchauto session is initiated at Wed Dec 15 10:35:51 2021
+
+System initialization log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchautodb/systemconfig2021-12-15_10-36-10AM.log.
+
+Session log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchauto/opatchauto2021-12-15_10-37-53AM.log
+The id for this session is RC44
+
+Executing OPatch prereq operations to verify patch applicability on home /u02/app/oracle/product/19.3.0/db_1
+
+Executing OPatch prereq operations to verify patch applicability on home /u02/app/19.3.0/grid
+Patch applicability verified successfully on home /u02/app/oracle/product/19.3.0/db_1
+
+Patch applicability verified successfully on home /u02/app/19.3.0/grid
+
+
+Executing patch validation checks on home /u02/app/19.3.0/grid
+Patch validation checks successfully completed on home /u02/app/19.3.0/grid
+
+
+Executing patch validation checks on home /u02/app/oracle/product/19.3.0/db_1
+Patch validation checks successfully completed on home /u02/app/oracle/product/19.3.0/db_1
+
+
+Verifying SQL patch applicability on home /u02/app/oracle/product/19.3.0/db_1
+SQL patch applicability verified successfully on home /u02/app/oracle/product/19.3.0/db_1
+
+OPatchAuto successful.
+
+--------------------------------Summary--------------------------------
+
+Analysis for applying patches has failed:
+
+Host:hrvltrndb23
+RAC Home:/u02/app/oracle/product/19.3.0/db_1
+Version:19.0.0.0.0
+
+
+==Following patches were SKIPPED:
+
+Patch: /infshare/oracle/patches/OCTPSU/33248471/33182768/33208107
+Reason: This patch is not applicable to this specified target type - "rac_database"
+
+Patch: /infshare/oracle/patches/OCTPSU/33248471/33182768/32585572
+Reason: This patch is not applicable to this specified target type - "rac_database"
+
+Patch: /infshare/oracle/patches/OCTPSU/33248471/33182768/33239955
+Reason: This patch is not applicable to this specified target type - "rac_database"
+
+
+==Following patches were SUCCESSFULLY analyzed to be applied:
+
+Patch: /infshare/oracle/patches/OCTPSU/33248471/33182768/33208123
+Log: /u02/app/oracle/product/19.3.0/db_1/cfgtoollogs/opatchauto/core/opatch/opatch2021-12-15_10-38-15AM_1.log
+
+Patch: /infshare/oracle/patches/OCTPSU/33248471/33182768/33192793
+Log: /u02/app/oracle/product/19.3.0/db_1/cfgtoollogs/opatchauto/core/opatch/opatch2021-12-15_10-38-15AM_1.log
+
+
+Host:hrvltrndb23
+CRS Home:/u02/app/19.3.0/grid
+Version:19.0.0.0.0
+Analysis for patches has failed.
+
+
+==Following patches FAILED in analysis for apply:
+
+Patch: /infshare/oracle/patches/OCTPSU/33248471/33182768/33208123
+Log: /u02/app/19.3.0/grid/cfgtoollogs/opatchauto/core/opatch/opatch2021-12-15_10-38-15AM_1.log
+Reason: Failed during Analysis: CheckConflictAgainstOracleHome Failed, [ Prerequisite Status: FAILED, Prerequisite output:
+Summary of Conflict Analysis:
+
+Patches that can be applied now without any conflicts are :
+33192793, 33208107, 33239955
+
+Following patches have conflicts. Please contact Oracle Support and get the merged patch of the patches :
+32847378, 33208123
+
+Following patches are not required, as they are subset of the patches in Oracle Home or subset of the patches in the given list :
+3258 ...
+
+
+==Following patches were SKIPPED:
+
+Patch: /infshare/oracle/patches/OCTPSU/33248471/33182768/32585572
+Log: /u02/app/19.3.0/grid/cfgtoollogs/opatchauto/core/opatch/opatch2021-12-15_10-38-15AM_1.log
+Reason: /infshare/oracle/patches/OCTPSU/33248471/33182768/32585572 is not required to be applied to oracle home /u02/app/19.3.0/grid
+
+
+==Following patches were SUCCESSFULLY analyzed to be applied:
+
+Patch: /infshare/oracle/patches/OCTPSU/33248471/33182768/33208107
+Log: /u02/app/19.3.0/grid/cfgtoollogs/opatchauto/core/opatch/opatch2021-12-15_10-38-15AM_1.log
+
+Patch: /infshare/oracle/patches/OCTPSU/33248471/33182768/33239955
+Log: /u02/app/19.3.0/grid/cfgtoollogs/opatchauto/core/opatch/opatch2021-12-15_10-38-15AM_1.log
+
+Patch: /infshare/oracle/patches/OCTPSU/33248471/33182768/33192793
+Log: /u02/app/19.3.0/grid/cfgtoollogs/opatchauto/core/opatch/opatch2021-12-15_10-38-15AM_1.log
+
+
+OPATCHAUTO-72053: Analysis for the patches failed.
+OPATCHAUTO-72053: Command execution failed.
+OPATCHAUTO-72053: Please check the summary for more details.
+
+OPatchauto session completed at Wed Dec 15 10:40:07 2021
+Time taken to complete the session 4 minutes, 17 seconds
+[root@hrvltrndb23 OPatch]#
+
+
+
+
+[root@hrvltrndb23 ~]# . oraenv
+ORACLE_SID = [+ASM1] ?
+The Oracle base remains unchanged with value /u02/app/grid
+[root@hrvltrndb23 ~]# cd $ORACLE_HOME
+[root@hrvltrndb23 grid]# cd OPatch
+[root@hrvltrndb23 OPatch]# ./opatchauto apply /infshare/oracle/patches/OCTPSU/33248471/33182768 &
+[1] 19062
+[root@hrvltrndb23 OPatch]#
+OPatchauto session is initiated at Wed Dec 15 11:01:55 2021
+
+System initialization log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchautodb/systemconfig2021-12-15_11-02-04AM.log.
+
+Session log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchauto/opatchauto2021-12-15_11-03-51AM.log
+The id for this session is RE4K
+
+
+
+[root@hrvltrndb23 OPatch]# ./opatchauto rollback /infshare/oracle/patches/32847378
+
+OPatchauto session is initiated at Wed Dec 15 11:34:10 2021
+
+System initialization log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchautodb/systemconfig2021-12-15_11-34-11AM.log.
+
+Session log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchauto/opatchauto2021-12-15_11-34-43AM.log
+The id for this session is 75MH
+
+
+
+
+[root@hrvltrndb23 OPatch]# ././opatchauto apply /infshare/oracle/patches/OCTPSU/33248471/33182768 &
+[1] 15115
+[root@hrvltrndb23 OPatch]#
+OPatchauto session is initiated at Wed Dec 15 11:51:31 2021
+
+System initialization log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchautodb/systemconfig2021-12-15_11-51-35AM.log.
+
+Session log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchauto/opatchauto2021-12-15_11-52-04AM.log
+The id for this session is SKE6
+
+
+
+
+
+[root@hrvltrndb23 OPatch]# ./opatchauto apply /infshare/oracle/patches/OCTPSU/33248471/33192694 &
+[1] 14029
+[root@hrvltrndb23 OPatch]#
+OPatchauto session is initiated at Wed Dec 15 12:31:29 2021
+
+System initialization log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchautodb/systemconfig2021-12-15_12-31-36PM.log.
+
+Session log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchauto/opatchauto2021-12-15_12-33-20PM.log
+The id for this session is L5RI
+
+Executing OPatch prereq operations to verify patch applicability on home /u02/app/oracle/product/19.3.0/db_1
+
+Executing OPatch prereq operations to verify patch applicability on home /u02/app/19.3.0/grid
+
+
+[root@hrvltrndb24 OPatch]# ./opatchauto rollback /infshare/oracle/patches/32847378
+
+OPatchauto session is initiated at Wed Dec 15 13:32:14 2021
+
+System initialization log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchautodb/systemconfig2021-12-15_01-32-15PM.log.
+
+Session log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchauto/opatchauto2021-12-15_01-34-09PM.log
+The id for this session is DL33
+
+
+
+[root@hrvltrndb24 OPatch]# ./opatchauto apply /infshare/oracle/patches/OCTPSU/33248471/33182768 &
+[1] 89406
+[root@hrvltrndb24 OPatch]#
+OPatchauto session is initiated at Wed Dec 15 13:52:39 2021
+
+System initialization log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchautodb/systemconfig2021-12-15_01-53-07PM.log.
+
+Session log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchauto/opatchauto2021-12-15_01-54-59PM.log
+The id for this session is 5VMA
+
+Executing OPatch prereq operations to verify patch applicability on home /u02/app/oracle/product/19.3.0/db_1
+
+Executing OPatch prereq operations to verify patch applicability on home /u02/app/19.3.0/grid
+Patch applicability verified successfully on home /u02/app/oracle/product/19.3.0/db_1
+
+Patch applicability verified successfully on home /u02/app/19.3.0/grid
+
+
+Executing patch validation checks on home /u02/app/19.3.0/grid
+Patch validation checks successfully completed on home /u02/app/19.3.0/grid
+
+
+Executing patch validation checks on home /u02/app/oracle/product/19.3.0/db_1
+Patch validation checks successfully completed on home /u02/app/oracle/product/19.3.0/db_1
+
+
+Verifying SQL patch applicability on home /u02/app/oracle/product/19.3.0/db_1
+SQL patch applicability verified successfully on home /u02/app/oracle/product/19.3.0/db_1
+
+
+Preparing to bring down database service on home /u02/app/oracle/product/19.3.0/db_1
+Successfully prepared home /u02/app/oracle/product/19.3.0/db_1 to bring down database service
+
+
+Performing prepatch operations on CRS - bringing down CRS service on home /u02/app/19.3.0/grid
+Prepatch operation log file location: /u02/app/grid/crsdata/hrvltrndb24/crsconfig/crs_prepatch_apply_inplace_hrvltrndb24_2021-12-15_01-57-46PM.log
+CRS service brought down successfully on home /u02/app/19.3.0/grid
+
+
+Performing prepatch operation on home /u02/app/oracle/product/19.3.0/db_1
+Perpatch operation completed successfully on home /u02/app/oracle/product/19.3.0/db_1
+
+
+Start applying binary patch on home /u02/app/oracle/product/19.3.0/db_1
+
+
+
+
+
+[oracle@hrvltrndb24 33192694]$ $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -ph ./
+Oracle Interim Patch Installer version 12.2.0.1.28
+Copyright (c) 2021, Oracle Corporation.  All rights reserved.
+
+PREREQ session
+
+Oracle Home       : /u02/app/oracle/product/19.3.0/db_1
+Central Inventory : /u02/app/oraInventory
+   from           : /u02/app/oracle/product/19.3.0/db_1/oraInst.loc
+OPatch version    : 12.2.0.1.28
+OUI version       : 12.2.0.7.0
+Log file location : /u02/app/oracle/product/19.3.0/db_1/cfgtoollogs/opatch/opatch2021-12-15_14-44-45PM_1.log
+
+Invoking prereq "checkconflictagainstohwithdetail"
+
+Prereq "checkConflictAgainstOHWithDetail" passed.
+
+OPatch succeeded.
+[oracle@hrvltrndb24 33192694]$ $ORACLE_HOME/OPatch/opatch apply
+Oracle Interim Patch Installer version 12.2.0.1.28
+Copyright (c) 2021, Oracle Corporation.  All rights reserved.
+
+
+Oracle Home       : /u02/app/oracle/product/19.3.0/db_1
+Central Inventory : /u02/app/oraInventory
+   from           : /u02/app/oracle/product/19.3.0/db_1/oraInst.loc
+OPatch version    : 12.2.0.1.28
+OUI version       : 12.2.0.7.0
+Log file location : /u02/app/oracle/product/19.3.0/db_1/cfgtoollogs/opatch/opatch2021-12-15_14-45-45PM_1.log
+
+Verifying environment and performing prerequisite checks...
+OPatch continues with these patches:   33192694
+
+Do you want to proceed? [y|n]
+y
+User Responded with: Y
+All checks passed.
+
+Please shutdown Oracle instances running out of this ORACLE_HOME on the local system.
+(Oracle Home = '/u02/app/oracle/product/19.3.0/db_1')
+
+
+Is the local system ready for patching? [y|n]
+y
+User Responded with: Y
+Backing up files...
+Applying interim patch '33192694' to OH '/u02/app/oracle/product/19.3.0/db_1'
+
+Patching component oracle.javavm.server, 19.0.0.0.0...
+
+Patching component oracle.javavm.server.core, 19.0.0.0.0...
+
+Patching component oracle.rdbms.dbscripts, 19.0.0.0.0...
+
+Patching component oracle.rdbms, 19.0.0.0.0...
+
+Patching component oracle.javavm.client, 19.0.0.0.0...
+Make failed to invoke "/usr/bin/make -f ins_rdbms.mk javavm_refresh ORACLE_HOME=/u02/app/oracle/product/19.3.0/db_1 OPATCH_SESSION=apply"....'make: perl: Command not found
+make: *** [javavm_refresh] Error 127
+'
+
+The following make actions have failed :
+
+Re-link fails on target "javavm_refresh".
+
+
+Do you want to proceed? [y|n]
+n
+User Responded with: N
+
+Restoring "/u02/app/oracle/product/19.3.0/db_1" to the state prior to running NApply...
+Checking if OPatch needs to invoke 'make' to restore some binaries...
+Make failed to invoke "/usr/bin/make -f ins_rdbms.mk javavm_refresh ORACLE_HOME=/u02/app/oracle/product/19.3.0/db_1 OPATCH_SESSION=apply"....'make: perl: Command not found
+make: *** [javavm_refresh] Error 127
+'
+
+--------------------------------------------------------------------------------
+Failed to run make commands. Please contact Oracle Support.
+OPatch failed to restore OH '/u02/app/oracle/product/19.3.0/db_1'. Consult OPatch document to restore the home manually before proceeding.
+
+NApply was not able to restore the home.  Please invoke the following scripts:
+  - restore.[sh,bat]
+  - make.txt (Unix only)
+to restore the ORACLE_HOME.  They are located under
+"/u02/app/oracle/product/19.3.0/db_1/.patch_storage/NApply/2021-12-15_14-45-45PM"
+
+UtilSession failed: Re-link fails on target "javavm_refresh".
+
+Log file location: /u02/app/oracle/product/19.3.0/db_1/cfgtoollogs/opatch/opatch2021-12-15_14-45-45PM_1.log
+
+OPatch failed with error code 73
+[oracle@hrvltrndb24 33192694]$

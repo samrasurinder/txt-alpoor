@@ -1,0 +1,70 @@
+Combo OJVM Release Update 19.10.0.0.210119 and GI Release Update 19.10.0.0.210119 Patch 32126842
+------------------------------------------------------------------------------------------------
+
+Pre-Requisites ( Can be done ahead of the time) : 
+------------------------------------------------
+
+Step 1 :Staging Patch binaries 
+
+Source : \\hrewwnonprdfs01\Output\19c
+
+Files: AHF-LINUX_v20.4.0.zip,
+       p6880880_190000_Linux-x86-64.zip,
+       p32126842_190000_Linux-x86-64.zip,
+       purgeLogs_1.65.zip
+
+Copy above files into a flash drive and then stage them into each PRAS linux DB server in the following
+directory on each server
+
+Do following steps on each PRAS server as a oracle user
+
+1) Create a folder called PSU in /tmp folder, if it's not there.
+
+2) Copy all zip files into /tmp/PSU folder
+
+3) cd /tmp/PSU
+   unzip p32126842_190000_Linux-x86-64.zip
+
+Verify the structure of the contents of the Combo Patch. The top-level directory contains this README document and some sub-directories in the following layout:
+
+32126842 
+|
+|- README.txt 
+| 
+|- README.html 
+|
+|- 32226239/
+|      --README.html
+|      -- <other files and directories>
+|
+|- 32067171/
+|      --README.html
+|      -- <other files and directories>
+
+
+
+
+
+
+Step 2): on each server (as a oracle user)
+
+cd /u02/app/oracle/product/19.3.0/db_1
+mv Opatch Opatch-OLD
+unzip /tmp/PSU/p6880880_190000_Linux-x86-64.zip
+cd OPatch
+./opatch version
+
+
+Step 3): on each server (as a root)
+
+cd /u02/app/19.3.0/grid
+mv OPatch OPatch-OLD
+unzip /tmp/PSU/p6880880_190000_Linux-x86-64.zip
+chown -R grid:oinstall OPatch ( *********************Make sure you're /u02/app/19.3.0/grid folder ******************)
+cd OPatch
+./opatch version
+
+
+
+
+
