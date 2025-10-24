@@ -1,0 +1,100 @@
+#!/bin/bash
+set -x
+export ORACLE_SID=GRBASB
+export ORACLE_BASE=/u02/app/oracle
+export ORACLE_HOME=/u02/app/oracle/product/19.3.0/db_1
+export LD_LIBRARY_PATH=/u02/app/oracle/product/19.3.0/db_1/lib
+export PATH=$PATH:$ORACLE_HOME/bin
+
+cd /u02/app/oracle/scripts/refresh
+
+/u02/app/oracle/scripts/refresh/step1_preserve_schema_pwd.bash ${ORACLE_SID}
+
+echo srvctl stop database -d $ORACLE_SID -force -verbose
+srvctl stop database -d $ORACLE_SID -force -verbose
+
+echo srvctl remove database -d $ORACLE_SID -force -noprompt -verbose
+srvctl remove database -d $ORACLE_SID -force -noprompt -verbose
+
+
+echo srvctl add database -d $ORACLE_SID -o $ORACLE_HOME -verbose
+srvctl add database -d $ORACLE_SID -o $ORACLE_HOME -verbose
+
+echo srvctl start database -d $ORACLE_SID  -verbose
+srvctl start database -d $ORACLE_SID  -verbose
+
+echo srvctl status database -d $ORACLE_SID -verbose
+srvctl status database -d $ORACLE_SID -verbose
+
+
+$ORACLE_HOME/bin/sqlplus -s "/ as sysdba" << EOF
+drop user ERETIREMENT cascade;
+drop user GRBINSTALLUSER cascade;
+drop user GRB_FRAMEWORK_2 cascade;
+drop user GRB_SERVICE_USER cascade;
+drop user GRB_WEB_USER_2 cascade;
+drop user GRB_ASSIST_2 cascade;
+exit;
+EOF
+
+$ORACLE_HOME/bin/impdp parfile=grbrefresh_ASB.par
+
+$ORACLE_HOME/bin/sqlplus -s "/ as sysdba" << EOF
+UPDATE GRB_FRAMEWORK_2.license SET test_override_email_address = 'hrret-ebis@state.gov' WHERE id = 1;
+UPDATE GRB_FRAMEWORK_2.LICENSE SET IDENTITY_PROVIDER = 'https://hrtst.hr.state.sbu/asb/eRetirement/IdentityProvider/' WHERE ID = 1;
+UPDATE GRB_FRAMEWORK_2.FRAMEWORK_USERS SET EMAIL_ADDRESS = 'hrret-ebis@state.gov' WHERE USER_NAME = 'grbretirementcases';
+UPDATE GRB_FRAMEWORK_2.FRAMEWORK_USERS SET EMAIL_ADDRESS = 'hrret-ebis@state.gov' WHERE USER_NAME = 'grbretirementrequests';
+@/u02/app/oracle/scripts/refresh/POST_REFRESH_STEPS/POST_${ORACLE_SID}_alter_pwd_spool.sql;
+@/u02/app/oracle/scripts/refresh/POST_REFRESH_STEPS/POST_${ORACLE_SID}_grb_priv_spool.sql;
+commit;
+exit;
+EOF
+
+
+
+#!/bin/bash
+
+export ORACLE_SID=$1
+export ORACLE_HOME=/u02/app/oracle/product/19.3.0/db_1
+export PATH=$ORACLE_HOME/bin:$PATH
+export TNS_ADMIN=$ORACLE_HOME/network/admin
+export REFRESH_DATE=`date +"%Y_%m_%d"`
+
+sqlplus -s / as sysdba  <<EOF
+spool /u02/app/oracle/scripts/refresh/logs/step1_preserve_schema_pwd_${REFRESH_DATE}.log
+select name from v\$database;
+set pagesize 0
+set feedback off
+set verify off
+set echo off
+set termout off
+spool /u02/app/oracle/scripts/refresh/POST_REFRESH_STEPS/POST_${ORACLE_SID}_alter_pwd_spool.sql
+select 'alter user "'||username||'" identified by values '''||extract(xmltype(dbms_metadata.get_xml('USER',username)),'//USER_T/PASSWORD/text()').getStringVal()||''';'  old_password from  dba_users where username like '%GRB%' order by username;
+select 'alter user "'||username||'" account unlock ;' from dba_users where profile='HR_PROFILE_USER' order by username;
+spool off
+
+set line 120
+set head off
+set echo off
+set feed off
+set pagesize 9999
+
+select * from global_name;
+
+spool /u02/app/oracle/scripts/refresh/POST_REFRESH_STEPS/POST_${ORACLE_SID}_grb_priv_spool.sql
+select 'grant '||PRIVILEGE||' to '||GRANTEE||';' from dba_sys_privs
+where grantee in ('GRBINSTALLUSER','GRB_FRAMEWORK_2','GRB_SERVICE_USER','GRB_WEB_USER_2','GRB_ASSIST_2','HOEFTWE','GRB_ASSIST_2_S','GRB_FRAMEWORK_2_S','GRB_WEB_USER_2_S') order by 1;
+
+
+select 'grant '||PRIVILEGE||' on '||OWNER||'.'||TABLE_NAME||' to '||GRANTEE||';'
+from  dba_tab_privs where grantee in ('GRBINSTALLUSER','GRB_FRAMEWORK_2','GRB_SERVICE_USER','GRB_WEB_USER_2','GRB_ASSIST_2','HOEFTWE','GRB_ASSIST_2_S','GRB_FRAMEWORK_2_S','GRB_WEB_USER_2_S') order by 1;
+spool off
+
+spool off
+exit;
+EOF
+
+
+
+
+

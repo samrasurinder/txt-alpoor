@@ -1,0 +1,63 @@
+
+KC2.HR.STATE.SBU
+
+job_queue_processes                  integer     10
+
+------------------------------------------
+
+HROEMREP
+
+job_queue_processes                  integer     20
+
+------------------------------------------
+
+HRPRDREP.HR.STATE.SBU
+
+job_queue_processes                  integer     10
+
+------------------------------------------
+
+PRDREP.HR.STATE.SBU
+
+job_queue_processes                  integer     10
+
+------------------------------------------
+
+ARC.HR.STATE.SBU
+
+job_queue_processes                  integer     10
+
+------------------------------------------
+
+HFKC.HR.STATE.SBU
+
+job_queue_processes                  integer     10
+
+------------------------------------------
+
+PRD.HR.STATE.SBU
+
+job_queue_processes                  integer     10
+
+------------------------------------------
+
+OPS.HR.STATE.SBU
+
+job_queue_processes                  integer     10
+
+------------------------------------------
+
+GRBPRD.HR.STATE.SBU
+
+job_queue_processes                  integer     10
+
+------------------------------------------
+
+------------------------------------------
+
+TNTMPPRD.HR.STATE.SBU
+
+job_queue_processes                  integer     0
+
+------------------------------------------
+

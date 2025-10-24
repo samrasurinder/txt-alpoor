@@ -1,0 +1,207 @@
+[?5/?12/?2020 5:25 PM]  Wright, Corynthion:  
+areddy@10.68.104.91 PRD
+areddy@10.68.104.92
+
+areddy@10.68.26.91    CPY
+areddy@10.68.26.92 
+
+dd if=/dev/zero of=/dev/oracleasm/disks/DATA01 bs=4096 count=1
+dd if=/dev/zero of=/dev/oracleasm/disks/FRA01 bs=4096 count=1
+
+[root@hrvlcpydb7606 ~]# /home/grid/asm_disk_map_to_device.sh
+The ASM disk: 'DATA01' mapped to '/dev/sdd1'  Totalsize=107.4 GB,
+The ASM disk: 'FRA01' mapped to '/dev/sde1'  Totalsize=107.4 GB,
+
+
+oracleasm createdisk PRD_DATA01 /dev/sdd1
+oracleasm createdisk PRD_FRA01 /dev/sde1
+
+
+/u02/app/19.3.0/grid/perl/bin/perl /u02/app/19.3.0/grid/crs/install/roothas.pl -deconfig -force -verbose
+/u02/app/19.3.0/grid/perl/bin/perl /u02/app/19.3.0/grid/crs/install/roothas.pl -verbose
+
+create diskgroup prd_data
+EXTERNAL REDUNDANCY
+disk '/dev/oracleasm/disks/PRD_DATA01';
+
+Diskgroup created.
+
+create diskgroup PRD_FRA
+ EXTERNAL REDUNDANCY
+ disk '/dev/oracleasm/disks/PRD_FRA01';
+
+
+alter diskgroup PRD_DATA set attribute 'compatible.asm' = '19.3';
+alter diskgroup PRD_FRA set attribute 'compatible.asm' = '19.3';
+alter diskgroup PRD_DATA set attribute 'compatible.rdbms' = '19.3';
+alter diskgroup PRD_FRA set attribute 'compatible.rdbms' = '19.3';
+ 
+
+col name format a30
+col COMPATIBILITY format a30
+col DATABASE_COMPATIBILITY format a30
+set linesize 150
+select name,COMPATIBILITY,DATABASE_COMPATIBILITY from  v$asm_diskgroup;
+
+ALTER SYSTEM SET ENCRYPTION WALLET OPEN IDENTIFIED BY Testing123#Testing123#;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[root@hrvlprddb7606 ~]# /u02/app/19.3.0/grid/perl/bin/perl /u02/app/19.3.0/grid/                                                                                                                   crs/install/roothas.pl -deconfig -force -verbose
+Using configuration parameter file: /u02/app/19.3.0/grid/crs/install/crsconfig_p                                                                                                                   arams
+2020-05-12 20:59:15:   mkpath (/u02/app/19.3.0/crsdata/hrvlprddb7606/crsconfig)
+2020-05-12 20:59:15: Setting owner (grid:54322) and group (oinstall:54321) on fi                                                                                                                   le /u02/app/19.3.0/crsdata/hrvlprddb7606/crsconfig
+2020-05-12 20:59:15: Setting permissions (0775) on file/dir /u02/app/19.3.0/crsd                                                                                                                   ata/hrvlprddb7606/crsconfig
+2020-05-12 20:59:15: Setting owner (grid:54322) and group (oinstall:54321) on fi                                                                                                                   le /u02/app/19.3.0/crsdata
+2020-05-12 20:59:15: Setting permissions (0775) on file/dir /u02/app/19.3.0/crsd                                                                                                                   ata
+2020-05-12 20:59:15: Setting owner (grid:54322) and group (oinstall:54321) on fi                                                                                                                   le /u02/app/19.3.0/crsdata/hrvlprddb7606
+2020-05-12 20:59:15: Setting permissions (0775) on file/dir /u02/app/19.3.0/crsd                                                                                                                   ata/hrvlprddb7606
+The log of current session can be found at:
+  /u02/app/19.3.0/crsdata/hrvlprddb7606/crsconfig/hadeconfig.log
+PRCR-1070 : Failed to check if resource ora.asm is registered
+CRS-5168 : unable to communicate with ohasd
+2020/05/12 20:59:39 CLSRSC-180: An error occurred while executing the command '/u02/app/19.3.0/grid/bin/srvctl remove asm -force'
+PRCR-1070 : Failed to check if resource ora.ons is registered
+CRS-5168 : unable to communicate with ohasd
+2020/05/12 20:59:40 CLSRSC-180: An error occurred while executing the command '/u02/app/19.3.0/grid/bin/srvctl config ons'
+CLSU-00107: operating system function: opendir; failed with error data: 2; at location: scrsearch1
+CLSU-00101: operating system error message: No such file or directory
+CLSU-00104: additional error information: cant open scr home dir scls_scr_getval
+CRS-4639: Could not contact Oracle High Availability Services
+CRS-4000: Command Stop failed, or completed with errors.
+2020/05/12 21:00:02 CLSRSC-337: Successfully deconfigured Oracle Restart stack
+[root@hrvlprddb7606 ~]#
+
+
+
+
+[root@hrvlcpydb7607 ~]# /u02/app/19.3.0/grid/perl/bin/perl /u02/app/19.3.0/grid/crs/install/roothas.pl -deconfig -force -verbose
+Using configuration parameter file: /u02/app/19.3.0/grid/crs/install/crsconfig_params
+2020-05-12 22:41:39:   mkpath (/u02/app/19.3.0/crsdata/hrvlcpydb7607/crsconfig)
+2020-05-12 22:41:39: Setting owner (grid:54322) and group (oinstall:54321) on file /u02/app/19.3.0/crsdata/hrvlcpydb7607/crsconfig
+2020-05-12 22:41:39: Setting permissions (0775) on file/dir /u02/app/19.3.0/crsdata/hrvlcpydb7607/crsconfig
+2020-05-12 22:41:39: Setting owner (grid:54322) and group (oinstall:54321) on file /u02/app/19.3.0/crsdata
+2020-05-12 22:41:39: Setting permissions (0775) on file/dir /u02/app/19.3.0/crsdata
+2020-05-12 22:41:39: Setting owner (grid:54322) and group (oinstall:54321) on file /u02/app/19.3.0/crsdata/hrvlcpydb7607
+2020-05-12 22:41:39: Setting permissions (0775) on file/dir /u02/app/19.3.0/crsdata/hrvlcpydb7607
+The log of current session can be found at:
+  /u02/app/19.3.0/crsdata/hrvlcpydb7607/crsconfig/hadeconfig.log
+PRCR-1070 : Failed to check if resource ora.asm is registered
+CRS-5168 : unable to communicate with ohasd
+2020/05/12 22:41:56 CLSRSC-180: An error occurred while executing the command '/u02/app/19.3.0/grid/bin/srvctl remove asm -force'
+PRCR-1070 : Failed to check if resource ora.ons is registered
+CRS-5168 : unable to communicate with ohasd
+2020/05/12 22:41:56 CLSRSC-180: An error occurred while executing the command '/u02/app/19.3.0/grid/bin/srvctl config ons'
+CLSU-00107: operating system function: opendir; failed with error data: 2; at location: scrsearch1
+CLSU-00101: operating system error message: No such file or directory
+CLSU-00104: additional error information: cant open scr home dir scls_scr_getval
+CRS-4639: Could not contact Oracle High Availability Services
+CRS-4000: Command Stop failed, or completed with errors.
+2020/05/12 22:42:12 CLSRSC-337: Successfully deconfigured Oracle Restart stack
+[root@hrvlcpydb7607 ~]#
+
+
+
+
+[root@hrvlcpydb7607 dbs]# /u02/app/19.3.0/grid/perl/bin/perl /u02/app/19.3.0/grid/crs/install/roothas.pl -verbose
+Using configuration parameter file: /u02/app/19.3.0/grid/crs/install/crsconfig_params
+The log of current session can be found at:
+  /u02/app/19.3.0/crsdata/hrvlcpydb7607/crsconfig/roothas_2020-05-12_10-44-11PM.log
+2020/05/12 22:44:14 CLSRSC-363: User ignored prerequisites during installation
+Oracle Clusterware infrastructure error in OCRCONFIG (OS PID 52635): CLSD/ADR initialization failed with return value -1
+1: clskec:has:CLSU:910 4 args[clsdAdr_CLSK_err][mod=clsdadr.c][loc=(:CLSD00050:)][msg=2020-05-12 22:44:17.678 (:CLSD00050:) dbgc_init_all failed with return code 49802.     Detected in function clsdAdrInit at line number 1828. ]
+2: clskec:has:CLSU:910 4 args[clsdAdrInit_CLSK_err][mod=clsdadr.c][loc=(:CLSD00281:)][msg=clsdAdrInit: Additional diagnostic data returned by the ADR component for dbgc_init_all failure:
+ DIA-49802: missing read, write, or execute permission on specified ADR home directory [/u02/app/19.3.0/diag/crs/hrvlcpydb7607/crs/log]
+DIA-49801: actual permissions [rwxrwx---], expected minimum permissions [rwxrwxrwx] for effective user [grid]
+DIA-48188: user missing read, write, or exec permission on specified directory
+Linux-x86_64 Error: 13: Permission denied
+Additional information: 2
+Additional information: 511
+Additional information: 16888
+([all diagnostic data retrieved from ADR])]
+
+Oracle Clusterware infrastructure error in CLSCFG (OS PID 52662): CLSD/ADR initialization failed with return value -1
+1: clskec:has:CLSU:910 4 args[clsdAdr_CLSK_err][mod=clsdadr.c][loc=(:CLSD00050:)][msg=2020-05-12 22:44:18.008 (:CLSD00050:) dbgc_init_all failed with return code 49802.     Detected in function clsdAdrInit at line number 1828. ]
+2: clskec:has:CLSU:910 4 args[clsdAdrInit_CLSK_err][mod=clsdadr.c][loc=(:CLSD00281:)][msg=clsdAdrInit: Additional diagnostic data returned by the ADR component for dbgc_init_all failure:
+ DIA-49802: missing read, write, or execute permission on specified ADR home directory [/u02/app/19.3.0/diag/crs/hrvlcpydb7607/crs/log]
+DIA-49801: actual permissions [rwxrwx---], expected minimum permissions [rwxrwxrwx] for effective user [grid]
+DIA-48188: user missing read, write, or exec permission on specified directory
+Linux-x86_64 Error: 13: Permission denied
+Additional information: 2
+Additional information: 511
+Additional information: 16888
+([all diagnostic data retrieved from ADR])]
+
+LOCAL ADD MODE
+Creating OCR keys for user 'grid', privgrp 'oinstall'..
+Operation successful.
+Oracle Clusterware infrastructure error in CLSCFG (OS PID 52662): Fatal signal 11 has occurred in program clscfg thread 4084886784; nested signal count is 1
+Oracle Clusterware infrastructure error in CLSCFG (OS PID 52662): Fatal signal 11 has occurred in program clscfg thread 4084886784; nested signal count is 2
+Aborted
+Failed to create keys in the OLR, rc = 134, Message:
+
+
+2020/05/12 22:44:19 CLSRSC-188: Failed to create keys in Oracle Local Registry
+Died at /u02/app/19.3.0/grid/crs/install/oraolr.pm line 628.
+
+
+
+
+[root@hrvlcpydb7607 hrvlcpydb7607]# pwd
+/u02/app/19.3.0/diag/crs/hrvlcpydb7607
+[root@hrvlcpydb7607 hrvlcpydb7607]#
+
+
+[root@hrvlcpydb7607 hrvlcpydb7607]# chown -R grid:oinstall crs
+[root@hrvlcpydb7607 hrvlcpydb7607]# chmod -R 777  crs
+
+
+CREATE PROFILE "HR_PROFILE"
+LIMIT
+    COMPOSITE_LIMIT 5000000
+    SESSIONS_PER_USER UNLIMITED
+    CPU_PER_SESSION UNLIMITED
+    CPU_PER_CALL 3000
+    LOGICAL_READS_PER_SESSION DEFAULT
+    LOGICAL_READS_PER_CALL 1000
+    IDLE_TIME DEFAULT
+    CONNECT_TIME 45
+    PRIVATE_SGA 15360
+    FAILED_LOGIN_ATTEMPTS 3
+    PASSWORD_LIFE_TIME UNLIMITED
+    PASSWORD_REUSE_TIME UNLIMITED
+    PASSWORD_REUSE_MAX UNLIMITED
+    PASSWORD_VERIFY_FUNCTION NULL
+    PASSWORD_LOCK_TIME DEFAULT
+    PASSWORD_GRACE_TIME 0
+
+CREATE PROFILE "HR_PROFILE_USER"
+LIMIT
+    COMPOSITE_LIMIT DEFAULT
+    SESSIONS_PER_USER 20
+    CPU_PER_SESSION DEFAULT
+    CPU_PER_CALL DEFAULT
+    LOGICAL_READS_PER_SESSION DEFAULT
+    LOGICAL_READS_PER_CALL DEFAULT
+    IDLE_TIME DEFAULT
+    CONNECT_TIME DEFAULT
+    PRIVATE_SGA DEFAULT
+    FAILED_LOGIN_ATTEMPTS 3
+    PASSWORD_LIFE_TIME UNLIMITED
+    PASSWORD_REUSE_TIME UNLIMITED
+    PASSWORD_REUSE_MAX UNLIMITED
+    PASSWORD_VERIFY_FUNCTION NULL
+    PASSWORD_LOCK_TIME DEFAULT
+    PASSWORD_GRACE_TIME 0

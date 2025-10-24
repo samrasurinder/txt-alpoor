@@ -1,0 +1,62 @@
+SQL> set pages 100
+SQL> /
+
+SQL> select owner,db_link,username,host from dba_db_links order by 1;
+
+OWNER                          DB_LINK                                  USERNAME                                 HOST
+------------------------------ ---------------------------------------- ---------------------------------------- --------------------------------------------------
+BMA                            SND_SRC_LNK.HR.STATE.SBU                 DW                                       KCPRD
+BMA                            KC_SRC_LNK.HR.STATE.SBU                  DW                                       KCPRD
+BMA                            KC2_LNK.HR.STATE.SBU                     BMA                                      KC2
+CFMS_STAR                      KC_SRC_LNK.HR.STATE.SBU                  DW                                       KCPRD
+DW                             SND_SRC_LNK.HR.STATE.SBU                 DW                                       KCPRD
+DW                             KC_SRC_LNK                               SYSADM                                   KCPRD
+DW                             KC_SRC_LNK.HR.STATE.SBU                  DW                                       KCPRD
+DWETL                          KC_SRC_LNK.HR.STATE.SBU                  DW                                       KCPRD
+EPERF                          KC_SRC_LNK.HR.STATE.SBU                  DW                                       KCPRD
+ER                             KC_SRC_LNK.HR.STATE.SBU                  DW                                       KCPRD
+ETRAVEL                        KC_SRC_LNK.HR.STATE.SBU                  DW                                       KCPRD
+PATS_STAR                      KC_SRC_LNK.HR.STATE.SBU                  DW                                       KCPRD
+PUBLIC                         KC_LIVE_SRC_LNK.HR.STATE.SBU             DW                                       PRD
+PUBLIC                         HFKC_LNK.HR.STATE.SBU                    REPORTS_USER                             HFKC
+REPORTS_USER                   HR_REP_SRC_LNK.HR.STATE.SBU              INFREAD                                  hrprdrep
+SYS                            KC2_SYS_LNK.HR.STATE.SBU                 SYSTEM                                   kc2
+SYS                            SYS_HUB.HR.STATE.SBU                                                              HFKC
+WEBAPP                         KC_SRC_LNK.HR.STATE.SBU                  DW                                       KCPRD
+WEBAPP                         KC_ARCH_LNK.HR.STATE.SBU                 KC_WEBAPP_ARCH                           ARC
+WEBSTAGE                       KC_SRC_LNK.HR.STATE.SBU                  DW                                       KCPRD
+
+20 rows selected.
+
+SQL>
+
+
+
+11g Production:
+----------
+
+OWNER                          DB_LINK                                  USERNAME                                 HOST
+------------------------------ ---------------------------------------- ---------------------------------------- ----------------------------------------
+BMA                            SND_SRC_LNK.HR.STATE.SBU                 DW                                       KCPRD
+BMA                            KC2_LNK.HR.STATE.SBU                     BMA                                      KC2
+BMA                            KC_SRC_LNK.HR.STATE.SBU                  DW                                       KCPRD
+CFMS_STAR                      KC_SRC_LNK.HR.STATE.SBU                  DW                                       KCPRD
+DW                             KC_SRC_LNK                               SYSADM                                   KCPRD
+DW                             KC_SRC_LNK.HR.STATE.SBU                  DW                                       KCPRD
+DW                             SND_SRC_LNK.HR.STATE.SBU                 DW                                       KCPRD
+DWETL                          KC_SRC_LNK.HR.STATE.SBU                  DW                                       KCPRD
+EPERF                          KC_SRC_LNK.HR.STATE.SBU                  DW                                       KCPRD
+ER                             KC_SRC_LNK.HR.STATE.SBU                  DW                                       KCPRD
+ETRAVEL                        KC_SRC_LNK.HR.STATE.SBU                  DW                                       KCPRD
+PATS_STAR                      KC_SRC_LNK.HR.STATE.SBU                  DW                                       KCPRD
+PUBLIC                         KC_LIVE_SRC_LNK.HR.STATE.SBU             DW                                       PRD
+PUBLIC                         HFKC_LNK.HR.STATE.SBU                    REPORTS_USER                             HFKC
+REPORTS_USER                   HR_REP_SRC_LNK.HR.STATE.SBU              INFREAD                                  hrprdrep
+SYS                            KC2_SYS_LNK.HR.STATE.SBU                 SYSTEM                                   kc2
+WEBAPP                         KC_ARCH_LNK.HR.STATE.SBU                 KC_WEBAPP_ARCH                           ARC
+WEBAPP                         KC_SRC_LNK.HR.STATE.SBU                  DW                                       KCPRD
+WEBSTAGE                       KC_SRC_LNK.HR.STATE.SBU                  DW                                       KCPRD
+
+19 rows selected.
+
+SQL>

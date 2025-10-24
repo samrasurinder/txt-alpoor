@@ -1,0 +1,310 @@
+On Primary:
+
+Step 1) Enable the archiving mode in the primary database
+
+SELECT LOG_MODE FROM V$DATABASE ;
+ALTER SYSTEM SET LOG_ARCHIVE_DEST_1 = 'LOCATION=USE_DB_RECOVERY_FILE_DEST' scope=BOTH;
+SHUTDOWN IMMEDIATE
+STARTUP MOUNT
+ALTER DATABASE ARCHIVELOG;
+ALTER DATABASE OPEN;
+ALTER SYSTEM SWITCH LOGFILE;
+SELECT NAME FROM V$ARCHIVED_LOG;
+
+
+
+Step 2) Enable forced logging option in the database.
+
+SELECT FORCE_LOGGING FROM V$DATABASE;
+ALTER DATABASE FORCE LOGGING;
+SELECT FORCE_LOGGING FROM V$DATABASE;
+
+
+STep 3) Configure Standby Redo Log files. Those files will be used after switchover or failover.
+
+Determine the appropriate number of standby redo log file groups:
+
+SELECT GROUP#, BYTES/1024/1024 MB FROM V$LOG;
+SQL> SELECT GROUP#, BYTES/1024/1024 MB FROM V$LOG;
+
+    GROUP#         MB
+---------- ----------
+         1        200
+         2        200
+         3        200
+
+SQL>
+
+SELECT THREAD#, INSTANCE FROM V$THREAD ;
+
+   THREAD# NSTANCE
+--------------------------------------------------------------------------------
+         1 GRBCPY
+
+
+Thus, number of standby redo log required is: (3+1)*1=4
+
+ALTER DATABASE ADD STANDBY LOGFILE THREAD 1 '+FRA' SIZE 200M ;
+ALTER DATABASE ADD STANDBY LOGFILE THREAD 1 '+FRA' SIZE 200M ;
+ALTER DATABASE ADD STANDBY LOGFILE THREAD 1 '+FRA' SIZE 200M ;
+ALTER DATABASE ADD STANDBY LOGFILE THREAD 1 '+FRA' SIZE 200M ;
+
+
+SELECT GROUP#,THREAD#,SEQUENCE#,ARCHIVED,STATUS FROM V$STANDBY_LOG;
+SQL> SELECT GROUP#,THREAD#,SEQUENCE#,ARCHIVED,STATUS FROM V$STANDBY_LOG;
+
+    GROUP#    THREAD#  SEQUENCE# ARC STATUS
+---------- ---------- ---------- --- ----------
+         4          1          0 YES UNASSIGNED
+         5          1          0 YES UNASSIGNED
+         6          1          0 YES UNASSIGNED
+         7          1          0 YES UNASSIGNED
+
+SQL>
+
+
+Step 4. Set Primary Database Initialization Parameters.
+
+show parameter DB_UNIQUE_NAME
+ALTER SYSTEM SET LOG_ARCHIVE_CONFIG='DG_CONFIG=(GRBCPY,GRBCPYSB)' scope=BOTH;
+ALTER SYSTEM SET LOG_ARCHIVE_DEST_2= 'SERVICE=GRBCPYSB ASYNC VALID_FOR=(ONLINE_LOGFILES,PRIMARY_ROLE) DB_UNIQUE_NAME=GRBCPYSB' scope=BOTH;
+# (optional) to force the primary db to switch logfile after specific time of inactivity
+ALTER SYSTEM SET ARCHIVE_LAG_TARGET=1800 scope=BOTH;
+
+
+
+SQL> show parameter DB_UNIQUE_NAME;
+
+NAME                                 TYPE        VALUE
+------------------------------------ ----------- ------------------------------
+db_unique_name                       string      GRBCPY
+SQL> ALTER SYSTEM SET LOG_ARCHIVE_CONFIG='DG_CONFIG=(GRBCPY,GRBCPYSB)' scope=BOTH;
+ALTER SYSTEM SET LOG_ARCHIVE_DEST_2= 'SERVICE=GRBCPYSB ASYNC VALID_FOR=(ONLINE_LOGFILES,PRIMARY_ROLE) DB_UNIQUE_NAME=GRBCPYSB' scope=BOTH;
+System altered.
+
+SQL>
+
+System altered.
+
+SQL>
+
+
+# should be EXCLUSIVE
+show parameter REMOTE_LOGIN_PASSWORDFILE
+# FAL = fetch archive log
+show parameter FAL_SERVER ;
+alter system set FAL_SERVER ='GRBCPYSB' scope=BOTH;
+# No need to set DB_FILE_NAME_CONVERT, as the standby system has the same directory structure
+# it is also ignored if OMF is enabled
+SQL> SHOW PARAMETER DB_FILE_NAME_CONVERT
+show parameter STANDBY_FILE_MANAGEMENT
+alter system set STANDBY_FILE_MANAGEMENT='AUTO' scope=BOTH;
+# Get list of directory-dependent parameters and create the directories in the standby server:
+SELECT NAME, VALUE FROM V$PARAMETER WHERE upper(VALUE) LIKE upper('%/grbcpy/%');
+
+SQL>
+SQL> SELECT NAME, VALUE FROM V$PARAMETER WHERE upper(VALUE) LIKE upper('%/grbcpy/%');
+
+NAME
+--------------------------------------------------------------------------------
+VALUE
+--------------------------------------------------------------------------------
+control_files
++DATA/GRBCPY/CONTROLFILE/current.257.1040243831, +FRA/GRBCPY/CONTROLFILE/current
+.257.1040243831
+
+core_dump_dest
+/u02/app/oracle/diag/rdbms/grbcpy/GRBCPY/cdump
+
+audit_file_dest
+/u02/app/oracle/admin/GRBCPY/adump
+
+NAME
+--------------------------------------------------------------------------------
+VALUE
+--------------------------------------------------------------------------------
+
+_diag_adr_trace_dest
+/u02/app/oracle/diag/rdbms/grbcpy/GRBCPY/trace
+
+
+SQL>
+
+
+
+
+Step 5) Enable Flashback Database 
+alter system set DB_FLASHBACK_RETENTION_TARGET =2880 scope=BOTH;
+ALTER DATABASE FLASHBACK ON;
+
+
+
+Step 6). Set CONTROL_FILE_RECORD_KEEP_TIME parameter.
+show parameter CONTROL_FILE_RECORD_KEEP_TIME
+alter system set CONTROL_FILE_RECORD_KEEP_TIME=30 scope=BOTH;
+
+Step 7)  Create a password file, if there isn’t one.
+
+ls /u02/app/oracle/product/19.3.0/db_1/dbs/orapwGRBCPY
+
+
+
+8. Configure the tnsnames.ora file.
+
+
+GRBCPY =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = hrvlcpydb7606.hr.state.sbu)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = GRBCPY.hr.state.sbu)
+    )
+  )
+
+
+GRBCPY_STBY =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = hrvlcpydb7607.hr.state.sbu)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = GRBCPY_STBY.hr.state.sbu)
+    )
+      (UR=A)
+  )
+
+
+
+
+
+Prepare the Standby System
+
+
+
+
+
+
+LISTENER =
+  (DESCRIPTION_LIST =
+    (DESCRIPTION =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = hrvlcpydb7607.hr.state.sbu)(PORT = 1521))
+      (ADDRESS = (PROTOCOL = IPC)(KEY = EXTPROC1521))
+    )
+  )
+
+
+SID_LIST_LISTENER=
+   (SID_LIST=
+        (SID_DESC=
+          (GLOBAL_DBNAME=GRBCPY_STBY.hr.state.sbu)
+          (SID_NAME=GRBCPY_STBY)
+          (ORACLE_HOME=/u02/app/19.3.0/grid)
+        )
+      )
+
+
+ENABLE_GLOBAL_DYNAMIC_ENDPOINT_LISTENER=ON # line added by Agent
+VALID_NODE_CHECKING_REGISTRATION_LISTENER=SUBNET # line added by Agent
+
+
+
+[grid@hrvlcpydb7607 admin]$ srvctl stop listener
+[grid@hrvlcpydb7607 admin]$ srvctl start listener
+[grid@hrvlcpydb7607 admin]$ lsnrctl status
+
+LSNRCTL for Linux: Version 19.0.0.0.0 - Production on 03-JUN-2020 11:46:06
+
+Copyright (c) 1991, 2019, Oracle.  All rights reserved.
+
+Connecting to (DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=hrvlcpydb7607.hr.state.sbu)(PORT=1521)))
+STATUS of the LISTENER
+------------------------
+Alias                     LISTENER
+Version                   TNSLSNR for Linux: Version 19.0.0.0.0 - Production
+Start Date                03-JUN-2020 11:46:00
+Uptime                    0 days 0 hr. 0 min. 5 sec
+Trace Level               off
+Security                  ON: Local OS Authentication
+SNMP                      OFF
+Listener Parameter File   /u02/app/19.3.0/grid/network/admin/listener.ora
+Listener Log File         /u02/app/19.3.0/diag/tnslsnr/hrvlcpydb7607/listener/alert/log.xml
+Listening Endpoints Summary...
+  (DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=hrvlcpydb7607.hr.state.sbu)(PORT=1521)))
+  (DESCRIPTION=(ADDRESS=(PROTOCOL=ipc)(KEY=EXTPROC1521)))
+Services Summary...
+Service "GRBCPY_STBY.hr.state.sbu" has 1 instance(s).
+  Instance "GRBCPY_STBY", status UNKNOWN, has 1 handler(s) for this service...
+The command completed successfully
+[grid@hrvlcpydb7607 admin]$
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+srvctl add database -db GRBPRDSB -instance GRBPRDSB -oraclehome /u02/app/oracle/product/19.3.0/db_1 -startoption MOUNT -stopoption IMMEDIATE -policy AUTOMATIC -role physical_standby -spfile /u02/app/oracle/product/19.3.0/db_1/dbs/spfileGRBPRDSB.ora
+
+
+
+srvctl add database -db GRBPRDSB -instance GRBPRDSB -oraclehome /u02/app/oracle/product/19.3.0/db_1 -startoption MOUNT -stopoption IMMEDIATE -policy AUTOMATI
+
+
+3. Verify the instance is running fine.
+sqlplus / as sysdba
+SELECT NAME FROM V$DATAFILE;
+SELECT GROUP#,THREAD#,SEQUENCE#,ARCHIVED,STATUS FROM V$STANDBY_LOG;
+# you will notice the SRL members got multiplexed:
+SELECT TYPE, count(*) FROM V$LOGFILE GROUP BY TYPE;
+
+
+
+4. Remove the multiplexed copy of each SRL group on the standby.
+COLUMN MEMBER FORMAT A50
+SELECT GROUP#, MEMBER FROM V$LOGFILE WHERE TYPE='STANDBY' ORDER BY 1,2;
+# drop all the members in DATA diskgroup:
+ALTER DATABASE DROP STANDBY LOGFILE MEMBER '+DATA/ORADB_S2/ONLINELOG/group_5.2xxx;
+
+
+5. Set the necessary initialization parameters for the Standby database.
+ALTER SYSTEM SET FAL_SERVER=GRBCPY;
+ALTER SYSTEM SET FAL_CLIENT=GRBCPYSB;
+ALTER SYSTEM SET LOG_ARCHIVE_CONFIG='DG_CONFIG=(GRBCPY,GRBCPYSB)';
+ALTER SYSTEM SET STANDBY_FILE_MANAGEMENT=AUTO;
+ALTER SYSTEM SET LOG_ARCHIVE_DEST_2='SERVICE=GRBCPY ASYNC DB_UNIQUE_NAME=GRBCPY VALID_FOR=(ONLINE_LOGFILE,PRIMARY_ROLE)' scope=both;
+
+
+
+6. Start the Apply process in the Standby database.
+ALTER DATABASE RECOVER MANAGED STANDBY DATABASE DISCONNECT;
+
+7. Verify Data Guard configuration.
+On the standby:
+SELECT SEQUENCE#, APPLIED, FIRST_TIME, NEXT_TIME,
+replace( NAME ,'+FRA/GRBPRDSB/archivelog/','') FILENAME
+FROM V$ARCHIVED_LOG ORDER BY SEQUENCE#;
+
+
+
+
+
+8.4 Register the standby database in the Oracle Restart:
+sqlplus / as sysdba
+shutdown immediate
+exit
+srvctl add database -db GRBCPYSB -instance GRBCPYSB -oraclehome /u02/app/oracle/product/19.3.0/db_1 -startoption MOUNT -stopoption IMMEDIATE -policy AUTOMATIC -role physical_standby -spfile /u02/app/oracle/product/19.3.0/db_1/dbs/spfileGRBCPYSB.ora
+srvctl start database -d ORADB_S2
+srvctl status database -d ORADB_S2
+
+
+/u02/app/oracle/product/19.3.0/db_1/dbs/spfileGRBCPYSB.ora

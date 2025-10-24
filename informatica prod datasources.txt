@@ -1,0 +1,98 @@
+D:\Informatica\10.1.1>pmrep connect -r etlup -d domain_hrprd -n Administrator  -x Inf0bigbossadmin
+
+Informatica(r) PMREP, version [10.1.1], build [1394.1118], Windows 64-bit
+Copyright (c) 1993-2016 Informatica LLC. All Rights Reserved.
+See patents at https://www.informatica.com/legal/patents.html.
+
+
+Invoked at Sat Jul 13 10:03:19 2019
+
+Connected to repository etlup in domain_hrprd as user Administrator
+connect completed successfully.
+
+Completed at Sat Jul 13 10:03:24 2019
+
+D:\Informatica\10.1.1>pmrep ListConnections
+
+Informatica(r) PMREP, version [10.1.1], build [1394.1118], Windows 64-bit
+Copyright (c) 1993-2016 Informatica LLC. All Rights Reserved.
+See patents at https://www.informatica.com/legal/patents.html.
+
+
+Invoked at Sat Jul 13 10:03:46 2019
+
+ACRSSource,relational
+BMA,relational
+BMA_SOURCE,relational
+Business_Objects_Security,relational
+CFMS_STAR,relational
+CRMSource,relational
+Cable,relational
+EBISII,relational
+ERETIRE,relational
+ER_KC,relational
+EVT,relational
+Etravel,relational
+Fisher_Dev2,relational
+GADTRK,relational
+HRCC,relational
+INFD_MR,relational
+INFP_MR,relational
+INFP_REP,relational
+INFREAD_REP,relational
+KCSource,relational
+KCSource_LIVE,relational
+KC_ACRS,relational
+KC_DW,relational
+KC_EAPS,relational
+PATS_STAR,relational
+Promotion,relational
+REETA,relational
+REPORTS_USER,relational
+RNET,relational
+RNET_EPPLUS,relational
+Scorecard,relational
+Secref,relational
+WAREHOUSE,relational
+WAREHOUSE_STAGE,relational
+WEBAPP_MART,relational
+WEBSTAGE,relational
+WEB_STAGE,relational
+asrt,relational
+bmts,relational
+ePerformance,relational
+eTravel_Stage,relational
+esrt,relational
+fsbid,relational
+EAPS,relational
+PASSGDB,relational
+PRAS_RMA,relational
+WEB_OPERATION,relational
+campus7_hruser,relational
+campus7ehri3_hruser,relational
+onyx,ftp
+ListConnections completed successfully.
+
+Completed at Sat Jul 13 10:03:56 2019
+
+D:\Informatica\10.1.1>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

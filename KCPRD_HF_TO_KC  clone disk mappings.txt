@@ -1,0 +1,34 @@
+
+Source (HF2-EW-SCAN) - 3-Node-RAC - hrewoel45,hrewoel46,hrewoel47
+-----------------------------------------------------------------
+
+
+[root@hrewoel45 ~]# asmcmd afd_lslbl | grep CLONE
+CLONE_DISK_01                         /dev/dm-6
+CLONE_DISK_02                         /dev/dm-8
+CLONE_DISK_03                         /dev/dm-10
+CLONE_DISK_04                         /dev/dm-5
+CLONE_DISK_05                         /dev/dm-1
+CLONE_DISK_06                         /dev/dm-3
+CLONE_DISK_07                         /dev/dm-0
+[root@hrewoel45 ~]#
+
+
+
+
+
+
+
+
+
+Target (KC2-EW-SCAN) - Nodes hrewoel48 and hrewoel49
+----------------------------------------------------
+CLONE_DISK_01                         /dev/dm-26
+CLONE_DISK_02                         /dev/dm-3
+CLONE_DISK_03                         /dev/dm-9
+CLONE_DISK_04                         /dev/dm-5
+CLONE_DISK_05                         /dev/dm-1
+CLONE_DISK_06                         /dev/dm-13
+CLONE_DISK_07                         /dev/dm-2
+
+

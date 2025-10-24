@@ -1,0 +1,34 @@
+
+Source : 42/43/44 (PRD-CLUSTER) HFKC
+------------------------------------
+CLONE_DISK_08               ENABLED   /dev/mapper/3624a9370de43cdedeaf7426600057469 (Pure Label:HFKC_DATA_01)
+CLONE_DISK_09               ENABLED   /dev/mapper/3624a9370de43cdedeaf7426600057471 (Pure Label:HFKC_DATA_02)
+CLONE_DISK_10               ENABLED   /dev/mapper/3624a9370de43cdedeaf7426600057453 (Pure Label:HFKC_DATA_03)
+CLONE_DISK_11               ENABLED   /dev/mapper/3624a9370de43cdedeaf7426600057457 (Pure Label:HFKC_FRA_01)
+
+
+
+
+Target : 45/46/47 (HF-CLUSTER) known as KC1  
+-------------------------------------------
+
+CLONE_DISK_08           ENABLED   /dev/mapper/3624a9370de43cdedeaf742660011a34c (Pure Label:KC1_DATA_01)
+CLONE_DISK_09           ENABLED   /dev/mapper/3624a9370de43cdedeaf742660011a34b (Pure Label:KC1_DATA_02)
+CLONE_DISK_10           ENABLED   /dev/mapper/3624a9370de43cdedeaf742660011a34e (Pure Label:KC1_DATA_03)
+CLONE_DISK_11           ENABLED   /dev/mapper/3624a9370de43cdedeaf742660011a34d (Pure Label:KC1_FRA_01)
+       
+
+
+Target : 48/49 (KC-CLUSTER) known as KC2  
+-------------------------------------------------
+
+CLONE_DISK_08           ENABLED   /dev/mapper/3624a9370de43cdedeaf7426600057496 (Pure Label:KC2_DATA_01)
+CLONE_DISK_09           ENABLED   /dev/mapper/3624a9370de43cdedeaf742660005748d (Pure Label:KC2_DATA_02)
+CLONE_DISK_10           ENABLED   /dev/mapper/3624a9370de43cdedeaf7426600057495 (Pure Label:KC2_DATA_03)
+CLONE_DISK_11           ENABLED   /dev/mapper/3624a9370de43cdedeaf742660005748c (Pure Label:KC2_FRA_01)
+
+
+
+
+
+

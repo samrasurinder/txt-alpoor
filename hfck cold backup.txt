@@ -1,0 +1,20 @@
+
+
+
+In Prod
+
+Take a Bakcup of HFKC
+Take a Backup of informatica repo schema INFP in  HRPRDREP
+
+
+
+
+\\hrinffp1001\InfaPRD\infa_shared\Backup
+
+
+
+
+
+
++drshare/57485
+

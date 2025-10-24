@@ -1,0 +1,94 @@
+/* Drop temporary objects. Mapping does not fail if they do not exist */
+begin PRC_DROP_TABLE('X')\;end\;;
+begin PRC_DROP_TABLE('Y')\;end\;;
+begin PRC_DROP_PACKAGE('PIVOT_PACKAGE')\;end\;;
+begin PRC_DROP_TYPE('PIVOT_TABLE')\;end\;;
+begin PRC_DROP_TYPE('PIVOT_ROW')\;end\;;
+
+COMMIT;
+
+CREATE OR REPLACE TYPE DW.PIVOT_ROW AS OBJECT (x NUMBER);
+
+CREATE OR REPLACE TYPE DW.PIVOT_TABLE AS TABLE OF pivot_row;
+
+CREATE OR REPLACE PACKAGE DW.PIVOT_PACKAGE AS FUNCTION pivot (num_rows IN NUMBER) RETURN pivot_table PARALLEL_ENABLE PIPELINED; END;
+
+CREATE OR REPLACE PACKAGE BODY DW.PIVOT_PACKAGE AS FUNCTION pivot (num_rows IN NUMBER) RETURN pivot_table PARALLEL_ENABLE PIPELINED IS outrow pivot_row := pivot_row (0); BEGIN FOR x IN 0..num_rows LOOP outrow.x := x;  PIPE ROW(outrow); END LOOP; RETURN; END; END;
+
+commit;
+
+CREATE GLOBAL TEMPORARY TABLE dw.x ( person_trend_date DATE ) ON COMMIT PRESERVE ROWS CACHE;
+
+CREATE GLOBAL TEMPORARY TABLE dw.y (
+  person_key           NUMBER(10),
+  effseq               NUMBER(10),
+  effdt_and_effseq_num NUMBER,
+  emplid               VARCHAR2(11),
+  empl_rcd#            NUMBER(10),
+  effdt                DATE,
+  wip_status           VARCHAR2(3),
+  process_dt           DATE,
+  empl_status          VARCHAR2(1)
+) ON COMMIT PRESERVE ROWS CACHE;
+
+CREATE INDEX dw.xie_y_key1 ON dw.y( effdt_and_effseq_num, emplid, empl_rcd# ) UNRECOVERABLE;
+CREATE INDEX dw.xie_y_key2 ON dw.y( emplid, empl_rcd#, effdt_and_effseq_num ) UNRECOVERABLE;
+
+/********************************************************************************************************************************
+     X is TIME_PERIOD table.
+********************************************************************************************************************************/
+  INSERT INTO dw.x
+       SELECT person_trend_date
+         FROM ( SELECT LAST_DAY( TO_DATE(
+                       TRIM( TO_CHAR( m, '00' ) ) || '/01/' || TRIM( TO_CHAR( y, '0000' ) )
+                       , 'MM/DD/YYYY' ) ) Person_Trend_Date
+                  FROM ( SELECT 1+ x     m FROM TABLE(dw.pivot_package.pivot( 11 )) ) m,
+                       ( SELECT 1999 + x y FROM TABLE(dw.pivot_package.pivot( TO_NUMBER( TO_CHAR( SYSDATE, 'YYYY' ) ) - 1999 )) ) y
+              )
+        WHERE person_trend_date <= SYSDATE;
+
+COMMIT;
+
+ANALYZE TABLE dw.x COMPUTE STATISTICS;
+
+/********************************************************************************************************************************
+    Y is PERSON_TEMP table.
+********************************************************************************************************************************/
+INSERT INTO dw.y
+  select Person_Key, Effseq, to_number(to_char(EFFDT,'YYYYMMDD')||to_char(effseq)) as Effdt_and_Effseq_num,
+  Emplid, Empl_RCD#, Effdt, WIP_Status, Process_Dt, Empl_Status
+  from dw.PERSON
+  ORDER BY Emplid, Empl_RCD#, Effdt, WIP_Status, Process_Dt;
+
+ANALYZE TABLE dw.y COMPUTE STATISTICS;
+
+COMMIT;
+
+TRUNCATE TABLE DW.PERSON_TREND;
+COMMIT;
+
+--INSERT INTO DW.PERSON_TREND
+create take dw,oper   as
+       SELECT NULL,
+              p1.person_key,
+              d.person_trend_date,
+              p1.effseq
+      FROM dw.x d,
+           dw.y P1
+      WHERE P1.Effdt_and_Effseq_num IN
+              (SELECT MAX (Effdt_and_Effseq_num)
+                    FROM dw.y LOWER_PERSON
+                    WHERE P1.emplid                = LOWER_PERSON.emplid
+                    AND   P1.empl_rcd#             = LOWER_PERSON.empl_rcd#
+                    AND   LOWER_PERSON.EFFDT      <= d.Person_Trend_Date
+                    AND   LOWER_PERSON.WIP_STATUS IN ('COR', 'HR')
+                    AND   LOWER_PERSON.PROCESS_DT <= d.Person_Trend_Date
+                   )
+        AND empl_status IN ('A', 'U', 'L');
+
+COMMIT;
+
+TRUNCATE TABLE DW.X;
+TRUNCATE TABLE DW.Y;
+
+COMMIT;

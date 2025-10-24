@@ -1,0 +1,94 @@
+#!/bin/bash
+# Howie Jiang -- jiang@pythian.com -- June 14th 2017
+#
+# Find the alert.log and listener.log of the running instances and listeners
+#
+
+#
+# find the alert.log
+#
+OUT="oracle_asm_log"
+(for I in `\ps -ef | egrep "(asm)_pmon_" | awk '{print $NF}' | sed 's/.*pmon_//'`
+do
+	DB=`echo ${I} | sed s/'[1-9]$//'`
+
+	. oraenv <<< ${I} 	> /dev/null 2>&1
+
+	sqlplus -S / as sysdba << END_SQL 
+	set lines 200   ;
+	set head off    ;
+	set feed off    ;
+	select replace(value,'cdump','trace') || '/alert_${ORACLE_SID}.log' from v\$parameter where name in ('core_dump_dest') ;
+END_SQL
+
+done) | grep -v "^$" | awk -F, '{ printf $1 " "}' >> $OUT
+echo " " >> ${OUT}
+cat << !			>> ${OUT}
+{	
+	daily
+	rotate 15
+	compress
+	copytruncate
+	delaycompress
+	create 0640 oracle dba
+	notifempty
+}
+!
+
+OUT="oracle_rdbms_log"		
+(for I in `\ps -ef | egrep "(ora)_pmon_" | awk '{print $NF}' | sed 's/.*pmon_//'`
+do
+	DB=`echo ${I}`
+
+	. oraenv <<< ${DB} 	> /dev/null 2>&1
+    export ORACLE_SID=${I}
+	
+	sqlplus -S / as sysdba << END_SQL 
+	set lines 200   ;
+	set head off    ;
+	set feed off    ;
+	select value || '/alert_${ORACLE_SID}.log ' from v\$parameter where name in ('background_dump_dest') ;
+END_SQL
+done) | grep -v "^$" | awk -F, '{ printf $1 " " }' >> $OUT
+echo " " >> ${OUT}
+cat << !			>> ${OUT}
+{	
+	daily
+	rotate 15
+	compress
+	copytruncate
+	delaycompress
+	create 0640 oracle dba
+	notifempty
+}
+!
+#
+# find the listeners log
+#
+
+# We need to have the CRS env to check the listeners
+. oraenv <<< `\ps -ef | grep asm_pmon | grep -v grep | sed s'/^.*_//g'` > /dev/null 2>&1
+
+OUT="oracle_listener_log"
+
+for L in `\ps -ef | grep tnslsnr | grep -v grep | sed s'/-.*$//g' | awk '{print $NF}'`
+do
+	LSRN_LOG=`lsnrctl status ${L} | grep "Listener Log File" | awk '{print $NF}' | sed s/'alert.*$/trace\//'``echo ${L} | tr '[:upper:]' '[:lower:]'`".log"
+	echo $LSRN_LOG    >>  ${OUT}
+done
+	cat << !			>> ${OUT}
+{	
+	daily
+	rotate 15
+	compress
+	copytruncate
+	delaycompress
+	create 0640 oracle dba
+	notifempty
+}
+!
+	
+#***********************************************************************************************#
+#				E N D      O F      S O U R C E					#
+#***********************************************************************************************#
+

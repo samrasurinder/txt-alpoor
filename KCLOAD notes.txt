@@ -1,0 +1,10 @@
+
+KCPRD flag check:
+------------------
+Searching For: /hrinffp1001/Output/Production/KC_Refresh_Flag/KC_NIGHTLY_LOAD_COMPLETE
+Searching For: /hrinffp1001/Output/Production/KC_Refresh_Flag/KC_WEEKLY_LOAD_COMPLETE
+Searching For: /hrinffp1001/Output/Production/KC_Refresh_Flag/KC_MONTHLY_LOAD_COMPLETE
+
+/hrinffp1001/Output/Production/KC_Refresh_Flag/KC_NIGHTLY_LOAD_COMPLETE .. Found OK
+/hrinffp1001/Output/Production/KC_Refresh_Flag/KC_WEEKLY_LOAD_COMPLETE  .. Found OK
+/hrinffp1001/Output/Production/KC_Refresh_Flag/KC_MONTHLY_LOAD_COMPLETE .. Found OK

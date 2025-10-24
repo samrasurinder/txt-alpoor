@@ -1,0 +1,46 @@
+
+
+https://rdweb.wvd.azure.us/arm/webclient/index.html  - Azure virtual desktop
+
+
+alter session set tracefile_identifier = SLOW_INSERT;
+alter session set events = '10046 trace name context forever, level 8';
+
+then run your query and your insert, then end/disconnect the session
+
+
+Pl do the following checks. Sorry man I forgot that.
+HR Online Testing
+======================================================
+https://hrtst.hr.state.sbu/cpy/hronline/main.cfm
+https://hrivv.hr.state.sbu/ivv1/hronline/main.cfm
+https://hrtst.hr.state.sbu/tst1/hronline/main.cfm
+https://hrtst.hr.state.sbu/tst2/hronline/main.cfm
+https://hrtst.hr.state.sbu/tst3/hronline/main.cfm
+https://hrtst.hr.state.sbu/tst4/hronline/main.cfm
+https://hrtst.hr.state.sbu/tst5/hronline/main.cfm
+https://hrtst.hr.state.sbu/uat/hronline/main.cfm
+https://hrtst.hr.state.sbu/asb/hronline/main.cfm
+https://hrtst.hr.state.sbu/devcpy/hronline
+
+https://hrweb.hr.state.sbu/prd/hronline
+
+
+CREATE PROFILE "TEMP"
+LIMIT
+    COMPOSITE_LIMIT UNLIMITED
+    SESSIONS_PER_USER UNLIMITED
+    CPU_PER_SESSION UNLIMITED
+    CPU_PER_CALL UNLIMITED
+    LOGICAL_READS_PER_SESSION UNLIMITED
+    LOGICAL_READS_PER_CALL UNLIMITED
+    IDLE_TIME UNLIMITED
+    CONNECT_TIME UNLIMITED
+    PRIVATE_SGA UNLIMITED
+    FAILED_LOGIN_ATTEMPTS UNLIMITED
+    PASSWORD_LIFE_TIME UNLIMITED
+    PASSWORD_REUSE_TIME UNLIMITED
+    PASSWORD_REUSE_MAX UNLIMITED
+    PASSWORD_VERIFY_FUNCTION NULL
+    PASSWORD_LOCK_TIME UNLIMITED
+    PASSWORD_GRACE_TIME UNLIMITED

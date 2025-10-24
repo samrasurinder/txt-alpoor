@@ -1,0 +1,26 @@
+KCPRD_TFCLONE_JOB: ( runs from Targe host hrewoel16.hr.state.sbu)  ( source is hrewoel13.hr.state.sbu)
+------------------------------------------------------------------------------------------------------
+
+Driver Script : /infshare/oracle/scripts/tfclone/bin/KCPRD_tfclone.bash  ( this is what kicked off from OEM)
+
+Following scripts are invoked from above driver script:
+
+[oracle@hrewoel16 ~]$ grep bash /infshare/oracle/scripts/tfclone/bin/KCPRD_tfclone.bash
+#!/bin/bash
+sudo su - grid -c '/infshare/oracle/scripts/tfclone/bin/KCPRD_tfclone_stop.bash' |tee ${TFCLONE_LOG_DIR}/KCPRD_tfclone_stop.log
+sudo su - -c '/infshare/oracle/scripts/tfclone/bin/HFPRD_clone_ee_KCPRD.bash' |tee ${TFCLONE_LOG_DIR}/HFPRD_clone_ee_KCPRD.log
+sudo su - grid -c '/infshare/oracle/scripts/tfclone/bin/KCPRD_tfclone_start.bash' |tee ${TFCLONE_LOG_DIR}/KCPRD_tfclone_start.log
+sudo su - oracle -c '/infshare/oracle/scripts/tfclone/bin/KCPRD_tfclone_activate.bash' |tee ${TFCLONE_LOG_DIR}/KCPRD_tfclone_activate.log
+sudo su - oracle -c '/infshare/oracle/scripts/tfclone/bin/POST_KCPRD_tfclone.bash' |tee ${TFCLONE_LOG_DIR}/POST_KCPRD_tfclone.log
+[oracle@hrewoel16 ~]$
+
+
+
+------------------------------------------------------------------------------------------------------------------------------
+
+In our Testing scenerio : Target is physcial 19C sandbox(test) 2 node RAC (HREWOEL40/HREWOEL41) 
+and the source is 3-node HF 19C cluster (hrewoel45,hrewoel46,hrewoel47)
+
+All ASM disks are formatted and labelled as we already discussed on both source and target
+
+

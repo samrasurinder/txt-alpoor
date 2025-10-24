@@ -1,0 +1,21 @@
+==================
+PREUPGRADE SUMMARY
+==================
+  /u02/app/oracle/cfgtoollogs/HFKC/preupgrade/preupgrade.log
+  /u02/app/oracle/cfgtoollogs/HFKC/preupgrade/preupgrade_fixups.sql
+  /u02/app/oracle/cfgtoollogs/HFKC/preupgrade/postupgrade_fixups.sql
+
+Execute fixup scripts as indicated below:
+
+Before upgrade:
+
+Log into the database and execute the preupgrade fixups
+@/u02/app/oracle/cfgtoollogs/HFKC/preupgrade/preupgrade_fixups.sql
+
+After the upgrade:
+
+Log into the database and execute the postupgrade fixups
+@/u02/app/oracle/cfgtoollogs/HFKC/preupgrade/postupgrade_fixups.sql
+
+Preupgrade complete: 2021-10-25T13:25:56
+[oracle@hrewoel06 bin]$

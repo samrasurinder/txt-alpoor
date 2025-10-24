@@ -1,0 +1,52 @@
+srvctl add service -d RAC -s PRD -r RAC01,RAC02 -a RAC03,RAC04
+
+
+srvctl add service -d TSTKC1 -s INFTLOAD -r TSTKC11 -a TSTKC12
+srvctl start service -s INFTLOAD -d TSTKC1
+
+
+
+srvctl add service -d TSTKC2 -s INFTLOAD -r TSTKC21 -a TSTKC22
+srvctl start service -s INFTLOAD -d TSTKC2
+
+
+Service "INFTLOAD.HR.STATE.SBU" has 1 instance(s).
+  Instance "TSTKC11", status READY, has 1 handler(s) for this service...
+
+
+TSTKC1 =
+  (description =
+    (load_balance = yes)
+    (address = (protocol = tcp)(host = tst-ew-scan.hr.state.sbu)(port = 1526))
+    (connect_data = (service_name = TSTKC1.hr.state.sbu)))
+
+TSTKC1.hr.state.sbu =
+  (description =
+    (load_balance = yes)
+    (address = (protocol = tcp)(host = tst-ew-scan.hr.state.sbu)(port = 1526))
+    (connect_data = (service_name = TSTKC1.hr.state.sbu)))
+
+TSTKC2 =
+  (description =
+    (load_balance = yes)
+    (address = (protocol = tcp)(host = tst-ew-scan.hr.state.sbu)(port = 1526))
+    (connect_data = (service_name = TSTKC2.hr.state.sbu)))
+
+TSTKC2.hr.state.sbu =
+  (description =
+    (load_balance = yes)
+    (address = (protocol = tcp)(host = tst-ew-scan.hr.state.sbu)(port = 1526))
+    (connect_data = (service_name = TSTKC2.hr.state.sbu)))
+
+
+
+
+
+srvctl add service -d HFKC -s INFTLOAD -r HFKC2 -a HFKC1,HFKC3
+srvctl start service -s INFTLOAD -d HFKC
+
+SET CRP_SW=%~dp0..\SecureDocSFX.exe
+REM SecureDocSFX.exe -t Target_file_Name.exe -o \\hrinffp03\tempedw$ -p xxx -ng -s \\hrinffp03\tempedw$\xxx.dmp
+%CRP_SW% -t %CRP_EXP_FILE_NAME% -o %CRP_DIR% -p %CRP_KEY% -ng -s %EXP_FILE%
+%CRP_SW% -t %CRP_EXP_LOG_NAME%  -o %CRP_DIR% -p %CRP_KEY% -ng -s %EXP_LOG%
+SecureDoc FE uses the same AES 256-bit encryption that is used for the full disk encryption on a computer.

@@ -1,0 +1,16 @@
+[root@hrvlcpydb7601 u02]# $ORACLE_HOME/OPatch/opatchauto apply /u02/PSU/JAN2020/30463673/30502018 &
+[1] 29128
+[root@hrvlcpydb7601 u02]#
+OPatchauto session is initiated at Sat Mar  7 14:37:44 2020
+
+System initialization log file is /u02/app/12.2.0/grid/cfgtoollogs/opatchautodb/systemconfig2020-03-07_02-37-49PM.log.
+
+Session log file is /u02/app/12.2.0/grid/cfgtoollogs/opatchauto/opatchauto2020-03-07_02-38-01PM.log
+The id for this session is 8I76
+
+Executing OPatch prereq operations to verify patch applicability on home /u02/app/oracle/product/12.0.2/db_1
+Patch applicability verified successfully on home /u02/app/oracle/product/12.0.2/db_1
+
+
+Verifying SQL patch applicability on home /u02/app/oracle/product/12.0.2/db_1
+"/bin/sh -c 'cd /u02/app/oracle/product/12.0.2/db_1; ORACLE_HOME=/u02/app/oracle/product/12.0.2/db_1 ORACLE_SID=OPSCYP1 /u02/app/oracle/product/12.0.2/db_1/OPatch/datapatch -prereq -verbose'" command failed with errors. Please refer to logs for more details. SQL changes, if any, can be analyzed by manually retrying the same command.

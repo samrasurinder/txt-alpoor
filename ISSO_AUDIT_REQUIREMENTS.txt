@@ -1,0 +1,157 @@
+Step 1) What's being audited currently in old way
+
+select audit_option from dba_stmt_audit_opts order by 1;
+
+Total 33 audits
+---------------
+
+ALTER ANY PROCEDURE
+ALTER ANY TABLE
+ALTER DATABASE
+ALTER PROFILE
+ALTER SYSTEM
+ALTER USER
+BECOME USER
+CREATE ANY JOB
+CREATE ANY LIBRARY
+CREATE ANY PROCEDURE
+CREATE ANY TABLE
+CREATE EXTERNAL JOB
+CREATE JOB
+CREATE PUBLIC DATABASE LINK
+CREATE PUBLIC SYNONYM
+CREATE SESSION
+CREATE USER
+DATABASE LINK
+DIRECTORY
+DROP ANY PROCEDURE
+DROP ANY TABLE
+DROP PROFILE
+DROP USER
+EXEMPT ACCESS POLICY
+GRANT ANY OBJECT PRIVILEGE
+GRANT ANY PRIVILEGE
+GRANT ANY ROLE
+PLUGGABLE DATABASE
+PROFILE
+PUBLIC SYNONYM
+ROLE
+SYSTEM AUDIT
+SYSTEM GRANT
+
+
+
+
+
+
+step 2)  What's common between what we have VS ORA_SECURECONFIG 
+ORA_ACCOUNT_MGMT,ORA_LOGON_FAILURES and,ORA_CIS_RECOMMENDATIONS 
+
+
+
+select audit_option from dba_stmt_audit_opts  
+where audit_option in (
+select  audit_option from audit_unified_policies where policy_name = 'ORA_ACCOUNT_MGMT'
+union
+select  audit_option from audit_unified_policies where policy_name = 'ORA_SECURECONFIG'
+union
+select  audit_option from audit_unified_policies where policy_name = 'ORA_LOGON_FAILURES'
+union
+select  audit_option from audit_unified_policies where policy_name = 'ORA_CIS_RECOMMENDATIONS'
+ )
+
+
+ALTER ANY PROCEDURE
+ALTER ANY TABLE
+ALTER DATABASE
+ALTER PROFILE
+ALTER SYSTEM
+ALTER USER
+BECOME USER
+CREATE ANY JOB
+CREATE ANY LIBRARY
+CREATE ANY PROCEDURE
+CREATE ANY TABLE
+CREATE EXTERNAL JOB
+CREATE PUBLIC SYNONYM
+CREATE USER
+DROP ANY PROCEDURE
+DROP ANY TABLE
+DROP PROFILE
+DROP USER
+EXEMPT ACCESS POLICY
+GRANT ANY OBJECT PRIVILEGE
+GRANT ANY PRIVILEGE
+GRANT ANY ROLE
+
+
+
+
+
+
+
+
+
+
+
+step 3)  What's NOT common between what we have VS ORA_SECURECONFIG 
+ORA_ACCOUNT_MGMT,ORA_LOGON_FAILURES and,ORA_CIS_RECOMMENDATIONS 
+
+select audit_option from dba_stmt_audit_opts  
+where audit_option not in (
+select  audit_option from audit_unified_policies where policy_name = 'ORA_ACCOUNT_MGMT'
+union
+select  audit_option from audit_unified_policies where policy_name = 'ORA_SECURECONFIG'
+union
+select  audit_option from audit_unified_policies where policy_name = 'ORA_LOGON_FAILURES'
+union
+select  audit_option from audit_unified_policies where policy_name = 'ORA_CIS_RECOMMENDATIONS'
+ )
+
+SYSTEM AUDIT
+CREATE SESSION       - ACTIONS  LOGON
+PUBLIC SYNONYM
+DATABASE LINK
+ROLE
+PROFILE
+DIRECTORY
+CREATE PUBLIC DATABASE LINK
+SYSTEM GRANT
+CREATE JOB
+PLUGGABLE DATABASE
+
+
+
+
+
+
+
+
+CREATE AUDIT POLICY "ISSO_AUDIT_REQUIREMENTS"
+    PRIVILEGES 
+     ALTER ANY PROCEDURE,
+     ALTER ANY TABLE,
+     ALTER DATABASE,
+     ALTER PROFILE,
+     ALTER SYSTEM,
+     ALTER USER,
+     BECOME USER,
+     CREATE ANY JOB,
+     CREATE ANY LIBRARY,
+     CREATE ANY PROCEDURE,
+     CREATE ANY TABLE,
+     CREATE DATABASE LINK,
+     CREATE EXTERNAL JOB,
+     CREATE JOB,
+     CREATE PUBLIC DATABASE LINK,
+     CREATE PUBLIC SYNONYM,
+     CREATE SESSION,
+     CREATE USER,
+     DROP ANY PROCEDURE,
+     DROP ANY TABLE,
+     DROP PROFILE,
+     DROP USER,
+     EXEMPT ACCESS POLICY,
+     GRANT ANY OBJECT PRIVILEGE,
+     GRANT ANY PRIVILEGE,
+     GRANT ANY ROLE

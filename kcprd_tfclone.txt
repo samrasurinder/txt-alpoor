@@ -1,0 +1,91 @@
+KCPRD TF clone on hrewoel16
+---------------------------
+#!/bin/bash
+
+#For the multiclones the above could be changed using the device files instead of a
+#device group.  The format for a device file is two columns of devices, the first is
+#the production volume and the second is the clone volume like:  0123   04BA
+#the above syntax would be the same except the -g would be replaced with a -file and
+#a -sid parameter.  The -sid xxxx is the last four digits of the VMAX serial number, I.E
+#1829 and the -file would point to the appropriate device file.  So the syntax would be:
+
+#this script assumes that the intial copy had been done prior to running this script.
+#In other words, the clone devices have been through at least one symclone session of
+#symclone "create" and "activate" and that both the -precopy and -differential options
+#were used with the initial create syntax.
+#For this script the device file names are:  four_volume_test_device_group and four_volume_test_device_group2
+#For this script issue the script name and then the argument of either four_volume_test_device_group or four_volume_test_device_group2
+export DG="hfprd"
+export SID="1420"
+/u01/SYMCLI/bin/symclone -g $DG query
+/u01/SYMCLI/bin/symclone -sid $SID -g $DG recreate -precopy -noprompt
+/u01/SYMCLI/bin/symclone -sid $SID -g $DG verify -cycled -precopy -i 60
+/u01/SYMCLI/bin/symclone -sid $SID -g $DG activate -consistent -noprompt
+/u01/SYMCLI/bin/symclone -sid $SID -g $DG verify -copied -i 60
+/u01/SYMCLI/bin/symclone -g $DG query
+rm -rf /var/symapi/db/symapi_db.bin
+rm -rf /var/symapi/db/symapi_db.bin_xlock
+/u01/SYMCLI/bin/symcfg discover
+/u01/SYMCLI/bin/symcfg list
+/u01/SYMCLI/bin/symclone -g $DG query
+#Notes  -noprompt is used as the equivalent of doing an ECHO Y | to a command to pass
+#a "Yes" to actually do the operation.  Without the above commands would halt waiting
+#user input before going to the next step.  The query and verify commands are only
+#output state commands and as such do not require a -noprompt
+
+
+
+
+Device Group (DG) Name: hfprd
+DG's Type             : RDF1
+DG's Symmetrix ID     : 000198701420 
+
+
+        Source Device                    Target Device            State     Cpy
+--------------------------------- ---------------------------- ------------ ---
+         Sym   Protected Modified          Sym   Modified
+Logical  Dev   Tracks    Tracks   Logical  Dev   Tracks   CGDP SRC <=> TGT  (%)
+--------------------------------- ---------------------------- ------------ ---
+DEV001   0284A         0        0 BCV001   02B3E        0 XXX. Copied       100
+DEV002   02854         0        0 BCV002   02B48        0 XXX. Copied       100
+DEV003   0285E         0        0 BCV003   02B52        0 XXX. Copied       100
+DEV004   02868         0        0 BCV004   02B5C        0 XXX. Copied       100
+DEV005   02872         0        0 BCV005   02B66        0 XXX. Copied       100
+DEV006   0287C         0        0 BCV006   02B70        0 XXX. Copied       100
+DEV007   02886         0        0 BCV007   02B7A        0 XXX. Copied       100
+DEV008   02890         0        0 BCV008   02B84        0 XXX. Copied       100
+DEV009   0289A         0        0 BCV009   02B8E        0 XXX. Copied       100
+DEV010   028A4         0        0 BCV010   02B98        0 XXX. Copied       100
+DEV011   028AE         0        0 BCV011   02BA2        0 XXX. Copied       100
+DEV012   028B8         0        0 BCV012   02BAC        0 XXX. Copied       100
+DEV013   028C2         0        0 BCV013   02BB6        0 XXX. Copied       100
+DEV014   028CC         0        0 BCV014   02BC0        0 XXX. Copied       100
+DEV015   028D6         0        0 BCV015   02BCA        0 XXX. Copied       100
+DEV016   028E0         0        0 BCV016   02BD4        0 XXX. Copied       100
+DEV017   028EA         0        0 BCV017   02BDE        0 XXX. Copied       100
+DEV018   028F4         0        0 BCV018   02BE8        0 XXX. Copied       100
+
+
+
+
+
+[root@hrewoel16 ~]# /home/grid/asm_disk_map.sh | grep HFPRD
+The ASM disk: 'HFPRD_DATA01' mapped to '/dev/emcpowerx1'  Totalsize=214.8 GB,
+The ASM disk: 'HFPRD_DATA02' mapped to '/dev/emcpowery1'  Totalsize=214.8 GB,
+The ASM disk: 'HFPRD_DATA03' mapped to '/dev/emcpowerz1'  Totalsize=214.8 GB,
+The ASM disk: 'HFPRD_DATA04' mapped to '/dev/emcpoweraa1'  Totalsize=214.8 GB,
+The ASM disk: 'HFPRD_DATA05' mapped to '/dev/emcpowerab1'  Totalsize=214.8 GB,
+The ASM disk: 'HFPRD_DATA06' mapped to '/dev/emcpowerac1'  Totalsize=214.8 GB,
+The ASM disk: 'HFPRD_DATA07' mapped to '/dev/emcpowerad1'  Totalsize=214.8 GB,
+The ASM disk: 'HFPRD_FRA01' mapped to '/dev/emcpowerae1'  Totalsize=214.8 GB,
+The ASM disk: 'HFPRD_FRA02' mapped to '/dev/emcpoweraf1'  Totalsize=214.8 GB,
+The ASM disk: 'HFPRD_FRA03' mapped to '/dev/emcpowerag1'  Totalsize=214.8 GB,
+The ASM disk: 'HFPRD_FRA04' mapped to '/dev/emcpowerah1'  Totalsize=214.8 GB,
+The ASM disk: 'HFPRD_FRA05' mapped to '/dev/emcpoweraj1'  Totalsize=214.8 GB,
+The ASM disk: 'HFPRD_FRA06' mapped to '/dev/emcpowerai1'  Totalsize=214.8 GB,
+The ASM disk: 'HFPRD_FRA07' mapped to '/dev/emcpowerak1'  Totalsize=214.8 GB,
+The ASM disk: 'HFPRD_FRA08' mapped to '/dev/emcpoweral1'  Totalsize=214.8 GB,
+The ASM disk: 'HFPRD_FRA09' mapped to '/dev/emcpoweram1'  Totalsize=214.8 GB,
+The ASM disk: 'HFPRD_FRA10' mapped to '/dev/emcpoweran1'  Totalsize=214.8 GB,
+The ASM disk: 'HFPRD_FRA11' mapped to '/dev/emcpowerao1'  Totalsize=214.8 GB,
+[root@hrewoel16 ~]# /home/grid/asm_disk_map.sh | grep HF

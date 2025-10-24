@@ -1,0 +1,121 @@
+DUE TO IVV CONNECTIONS TO TEST DATABASES ----------------------------------------------------------->
+--  These steps must be done during both IVV and TST Password Resets !! --------
+
+
+1.) login to ivv1 as sys -->
+
+create user oab_refresh identified by oracle123456$;     -- temp pwd, will be dropped at end --
+grant create database link to oab_refresh;
+grant create session to oab_refresh;
+
+2.) connect to ivv1 as oab_refresh -->
+
+--ALPOOR NOTES -> create a database link to TSTKC1
+
+CREATE DATABASE LINK BMA_DW
+CONNECT TO DW IDENTIFIED BY TSTQ2R$2lMjr8Ng
+USING 'TSTKC1';
+select sysdate from dual@bma_dw;
+
+3.) create dumpfiles 
+
+expdp \"/ as sysdba\" SCHEMAs=OAB_REFRESH dumpfile=dp_rfrsh_dmp:expdp_PRE_BMA_IVV_dblnk.dmp logfile=dp_rfrsh_lg:impdp_POST_BMA_IVV_dblnk.log REUSE_DUMPFILES=Y
+
+4.) login to ivv1 as sys -->
+
+drop user oab_refresh cascade;
+create user oab_refresh identified by oracle123456$;
+grant create database link to oab_refresh;
+grant create session to oab_refresh;
+
+5.) connect to ivv1 as oab_refresh -->
+
+drop database link CAMPUS7;
+CREATE DATABASE LINK CAMPUS7
+CONNECT TO HRSVCIVVCAMPUS7LINK IDENTIFIED BY IVVS$6Q4t0coHGc
+USING 'IVV1_CAMPUS7';
+select sysdate from dual@campus7;
+
+drop database link CONTDB;
+CREATE DATABASE LINK CONTDB
+CONNECT TO HRSVCIVVCDBLINKORACLESQLTEST IDENTIFIED BY IVVFK0$wN8Drjk8
+USING 'IVV1_CONTDB';
+select sysdate from dual@contdb;
+
+
+++++++++++++++++++  SKIP THIS =============================
+drop database link EDW_SRC_LNK;
+CREATE DATABASE LINK EDW_SRC_LNK
+CONNECT TO DW IDENTIFIED BY TSTQ2R$2lMjr8Ng
+USING 'edw_source';                       -- source is TSTKC1
+select sysdate from dual@EDW_SRC_LNK;
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+drop database link EOPFLINK;
+CREATE DATABASE LINK EOPFLINK
+CONNECT TO HRSVCIVVEOPFLINKORASQLTST IDENTIFIED BY IVVRuv$8JaHh84C
+USING 'IVV1_EOPFLINK';
+select sysdate from dual@EOPFLINK;
+
+6.) dumpfiles creation
+
+expdp \"/ as sysdba\" SCHEMAs=OAB_REFRESH dumpfile=dp_rfrsh_dmp:expdp_PRE_ESRT_IVV_dblnk.dmp logfile=dp_rfrsh_lg:impdp_POST_ESRT_IVV_dblnk.log REUSE_DUMPFILES=Y
+
+
+7.) login to ivv1 as sys -->
+
+drop user oab_refresh cascade;
+create user oab_refresh identified by oracle123456$;
+grant create database link to oab_refresh;
+grant create session to oab_refresh;
+
+8.) connect to ivv1 as oab_refresh -->
+
+drop DATABASE LINK DB_LINK_MIGRATE_CIRCUIT;
+CREATE DATABASE LINK DB_LINK_MIGRATE_CIRCUIT
+CONNECT TO SECREF IDENTIFIED BY TSTAy7Fr$W0xyA6
+USING 'ASB';
+select sysdate from dual@DB_LINK_MIGRATE_CIRCUIT;
+
+drop DATABASE LINK DB_LINK_REETA_UAT;
+CREATE DATABASE LINK DB_LINK_REETA_UAT
+CONNECT TO SECREF IDENTIFIED BY IVVLZw$y4r9AD0i
+USING 'IVV1';
+select sysdate from dual@DB_LINK_REETA_UAT;
+
+drop DATABASE LINK EAPS;
+CREATE DATABASE LINK EAPS
+CONNECT TO HRORAIVVSECREF IDENTIFIED BY IVVFuw9kp$G79JC
+USING 'IVV1_EAPS';
+select sysdate from dual@eaps;
+
+9.) dumpfiles creation
+
+expdp \"/ as sysdba\" SCHEMAs=OAB_REFRESH dumpfile=dp_rfrsh_dmp:expdp_PRE_SECREF_IVV_dblnk.dmp logfile=dp_rfrsh_lg:impdp_POST_SECREF_IVV_dblnk.log REUSE_DUMPFILES=Y
+
+
+10.) login to ivv1 as sys -->
+
+drop user oab_refresh cascade;
+create user oab_refresh identified by oracle123456$;
+grant create database link to oab_refresh;
+grant create session to oab_refresh;
+
+connect to ivv1 as oab_refresh --->
+
+drop DATABASE LINK EAPS;
+CREATE DATABASE LINK EAPS
+CONNECT TO HRORAIVVSECREF IDENTIFIED BY IVVFuw9kp$G79JC
+USING 'IVV1_EAPS';
+select sysdate from dual@eaps;
+
+expdp \"/ as sysdba\" SCHEMAs=OAB_REFRESH dumpfile=dp_rfrsh_dmp:expdp_PRE_ESRT_INTERFACE_IVV_dblnk.dmp logfile=dp_rfrsh_lg:impdp_POST_ESRT_INTERFACE_IVV_dblnk.log REUSE_DUMPFILES=Y
+
+
+login to ivv1 as sys -->
+
+drop user oab_refresh cascade;
+
+

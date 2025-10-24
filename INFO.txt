@@ -1,0 +1,143 @@
+ORACLE	Y	PRDX2i0mqG$zKQ7	LNX_OPS_PROD
+ORACLE	Y	PRDKpI8q$cR7uF6	LNX_DB_DMZ
+ORACLE	Y	PRDO$W4y23uKNov	LNX_DB_PROD
+ORACLE	Y	PRDC96EKjflj2F$	LNX_DB_DR
+
+ADMINISTER KEY MANAGEMENT CREATE AUTO_LOGIN KEYSTORE FROM KEYSTORE '/infshare/oracle/scripts/WALLETS/PRD/' IDENTIFIED BY PrD$2x1mEuQ4;
+OABADMIN	PRDD23Xp9$oDzEd	EODPRD	Y
+OABADMIN	Avay33hapuDe		Y
+OABADMIN	Avay33hapuDe		Y
+OABADMIN	1Tiav78910Ta2		Y
+OABADMIN	rMa20PRas2016AVamAR16OaB		Y
+OABADMIN	PRDF61xefb2GZ$G	LNX_SNC_PROD	Y
+OABADMIN	PRDPyKv3c45$jWS	LNX_TALENTMAP_PROD	Y
+OABADMIN	PRDDt0w1lX5mJ$L	LNX_OPS_PROD	Y
+OABADMIN	PRDQIA1$v5o0wUz	LNX_DB_DMZ	Y
+OABADMIN	PRDGXz$G90uhB7e	LNX_DB_PROD	Y
+OABADMIN	PRDZX7he$dK25Je	LNX_DB_DR	Y
+
+
+ssh pureoel@10.68.104.245 -pw P@ssword123
+
+
+pureoel@10.68.104.245's password:
+0kc1-prd2_fra-05          500G   hfkc-hfkc_data-01        2021-09-02 10:31:13 MDT  DE43CDEDEAF742660005747F
+0kc1-prd2_fra-08          500G   hfkc-hfkc_data-02        2021-09-02 10:31:13 MDT  DE43CDEDEAF742660005747E
+hfkc-hfkc_data-01         500G   -                        2021-04-06 14:46:21 MDT  DE43CDEDEAF7426600057469
+hfkc-hfkc_data-02         500G   -                        2021-04-06 14:46:21 MDT  DE43CDEDEAF7426600057471
+hfkc-hfkc_data-03         500G   -                        2021-04-06 14:45:35 MDT  DE43CDEDEAF7426600057453
+hfkc-hfkc_fra-01          500G   -                        2021-04-06 14:45:35 MDT  DE43CDEDEAF7426600057457
+kc1-hkfc_data-01          500G   hfkc-hfkc_data-01        2021-09-06 15:05:25 MDT  DE43CDEDEAF742660011A34C
+kc1-hkfc_data-02          500G   hfkc-hfkc_data-02        2021-09-06 15:05:25 MDT  DE43CDEDEAF742660011A34B
+kc1-hkfc_data-03          500G   hfkc-hfkc_data-03        2021-09-06 15:05:26 MDT  DE43CDEDEAF742660011A34E
+kc1-hkfc_fra-01           500G   hfkc-hfkc_fra-01         2021-09-06 15:05:26 MDT  DE43CDEDEAF742660011A34D
+kc2-hkfc_data-01          500G   hfkc-hfkc_data-01        2021-09-06 12:13:02 MDT  DE43CDEDEAF7426600057496
+kc2-hkfc_data-02          500G   hfkc-hfkc_data-02        2021-09-06 12:13:02 MDT  DE43CDEDEAF742660005748D
+kc2-hkfc_data-03          500G   hfkc-hfkc_data-03        2021-09-06 12:13:02 MDT  DE43CDEDEAF7426600057495
+kc2-hkfc_fra-01           500G   hfkc-hfkc_fra-01         2021-09-06 12:13:02 MDT  DE43CDEDEAF742660005748C
+[oracle@hrewoel45 pure_clone]$
+
+[oracle@hrewoel45 pure_clone]$ ssh pureoel@10.68.104.245 "purevol copy --force hfkc-hfkc_data-01.SEP072021 kc1-hkfc_data-01"
+pureoel@10.68.104.245's password:
+Name              Size  Source             Created                  Serial
+kc1-hkfc_data-01  500G  hfkc-hfkc_data-01  2021-09-07 12:01:20 MDT  DE43CDEDEAF742660011A34C
+[oracle@hrewoel45 pure_clone]$
+[oracle@hrewoel45 pure_clone]$ ssh pureoel@10.68.104.245 "purevol copy --force hfkc-hfkc_data-02.SEP072021 kc1-hkfc_data-02"
+pureoel@10.68.104.245's password:
+Name              Size  Source             Created                  Serial
+kc1-hkfc_data-02  500G  hfkc-hfkc_data-02  2021-09-07 12:01:20 MDT  DE43CDEDEAF742660011A34B
+[oracle@hrewoel45 pure_clone]$ ssh pureoel@10.68.104.245 "purevol copy --force hfkc-hfkc_data-03.SEP072021 kc1-hkfc_data-03"
+pureoel@10.68.104.245's password:
+Name              Size  Source             Created                  Serial
+kc1-hkfc_data-03  500G  hfkc-hfkc_data-03  2021-09-07 12:01:20 MDT  DE43CDEDEAF742660011A34E
+[oracle@hrewoel45 pure_clone]$ ssh pureoel@10.68.104.245 "purevol copy --force hfkc-hfkc_fra-01.SEP072021 kc1-hkfc_fra-01"
+pureoel@10.68.104.245's password:
+Name             Size  Source            Created                  Serial
+kc1-hkfc_fra-01  500G  hfkc-hfkc_fra-01  2021-09-07 12:01:20 MDT  DE43CDEDEAF742660011A34D
+[oracle@hrewoel45 pure_clone]$
+
+
+
+ssh pureoel@10.68.104.245 "purevol snap --suffix 09072021 hfkc-hfkc_data-01 hfkc-hfkc_data-02 hfkc-hfkc_data-03 hfkc-hfkc_fra-01"
+[oracle@hrewoel45 pure_clone]$ ssh pureoel@10.68.104.245 "purevol snap --suffix SEP072021 hfkc-hfkc_data-01 hfkc-hfkc_data-02 hfkc-hfkc_data-03 hfkc-hfkc_fra-01"
+pureoel@10.68.104.245's password:
+Name                         Size  Source             Created                  Serial
+hfkc-hfkc_data-03.SEP072021  500G  hfkc-hfkc_data-03  2021-09-07 12:01:20 MDT  DE43CDEDEAF742660011B0DC
+hfkc-hfkc_fra-01.SEP072021   500G  hfkc-hfkc_fra-01   2021-09-07 12:01:20 MDT  DE43CDEDEAF742660011B0DD
+hfkc-hfkc_data-01.SEP072021  500G  hfkc-hfkc_data-01  2021-09-07 12:01:20 MDT  DE43CDEDEAF742660011B0DE
+hfkc-hfkc_data-02.SEP072021  500G  hfkc-hfkc_data-02  2021-09-07 12:01:20 MDT  DE43CDEDEAF742660011B0DF
+[oracle@hrewoel45 pure_clone]$
+
+
+
+
+select * from PURE_CLONE_USER.clone_check;
+
+
+
+
+ssh pureoel@10.68.104.245 "purevol list"
+
+ssh pureoel@10.68.104.245 "purevol snap --suffix SEP082021 hfkc-hfkc_data-01 hfkc-hfkc_data-02 hfkc-hfkc_data-03 hfkc-hfkc_fra-01"
+
+ssh pureoel@10.68.104.245 "purevol copy --force hfkc-hfkc_data-01.KC2SNAP   kc2-hkfc_data-01"
+ssh pureoel@10.68.104.245 "purevol copy --force hfkc-hfkc_data-02.SEP082021 kc1-hkfc_data-01"
+ssh pureoel@10.68.104.245 "purevol copy --force hfkc-hfkc_data-03.SEP082021 kc1-hkfc_data-01"
+ssh pureoel@10.68.104.245 "purevol copy --force hfkc-hfkc_fra-01.SEP082021  kc1-hkfc_fra-01"
+
+purevol copy --force hfkc-hfkc_data-01.SEP082021 kc1-hkfc_data-01
+
+sudo su - pureoel -c "ssh pureoel@10.68.104.245 'purevol list' | grep kc1-hfkc"
+
+
+
+
+
+
+
+ssh pureoel@10.68.104.245 "purevol copy --force hfkc-hfkc_data-01.KC2SNAP   kc1-hkfc_data-01"
+ssh pureoel@10.68.104.245 "purevol copy --force hfkc-hfkc_data-02.KC2SNAP   kc1-hkfc_data-01"
+ssh pureoel@10.68.104.245 "purevol copy --force hfkc-hfkc_data-03.KC2SNAP   kc1-hkfc_data-01"
+ssh pureoel@10.68.104.245 "purevol copy --force hfkc-hfkc_fra-01.KC2SNAP    kc1-hkfc_fra-01"
+
+
+
+
+https://blog.purestorage.com/purely-technical/overwriting-a-volume-in-windows-server/
+
+---------------------------------------------------------------------------------------------------------
+
+Set Disk to offline:
+set-disk (get-partition -DriveLetter T | get-disk | select number -ExpandProperty number) -isOffline $true
+
+Bring Disk to online:
+Get-Disk | Where-Object IsOffline -Eq $True | Set-Disk -IsOffline $False
+
+
+
+$Volume = Get-PfaVolume -Array $f -Name 'PSRepository'
+Get-Disk -SerialNumber $Volume.serial | Set-Disk -IsOffline $true
+
+
+
+$ArrayPassword="P@ssword123"
+$sqlvolumes="SQL"
+$SecurePassword = ConvertTo-SecureString -String $ArrayPassword -AsPlaintext -Force
+$Array = New-PfaArray -EndPoint 10.68.104.245 -username pureoel -Password $SecurePassword -IgnoreCertificateError
+
+$sourceVolumes = Get-pfavolumes -Array $Array | select name |  Out-String -Stream | Select-String "SQL_TEST_"
+
+$sourceVolumes
+
+$suffix=(Get-Date -Format "MM-dd-yyyy-HH-mm-ss")
+New-PfaVolumeSnapshots -Array $Array -Sources 'SQL_TEST_SOURCE' -Suffix "snap$suffix"
+
+
+Get-PfaAllVolumeSnapshots -Array $Array | ft -a | Out-String -Stream | Select-String "SQL_TEST_SOURCE.snap"
+
+
+New-PfaVolume -Array $Array -Source "snap$suffix" -VolumeName 'SQL_TEST_TARGET'
+
+
+New-PfaVolume -Array $Array -Source SQL_TEST_SOURCE.snap01-11-2023-11-02-09 -VolumeName 'SQL_TEST_TARGET' -Overwrite
+

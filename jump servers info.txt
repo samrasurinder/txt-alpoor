@@ -1,0 +1,34 @@
+[?5/?7/?2019 2:51 PM]  Lee, Diana:  
+*** Jump Servers
+From: Singh, Baljinder <SinghB1@state.gov> 
+Sent: Thursday, April 25, 2019 8:54 AM
+To: Austin, Sharon L <AustinSL@state.gov>; Grewal, Hardeep S <GrewalHS@state.gov>; Vinta, Naveen R <VintaNR@state.gov>
+Cc: HR-EX-ESD-OAB <HR-EX-ESD-OAB@state.gov>; HR ISSO <HRISSO@state.gov>
+Subject: RE: (TRA) New Enterprise Services Support Request - 57150
+Sharon,
+Here is how these VMs should be created. Let’s try to deliver these by COB tomorrow.
+On Production ESXi cluster:
+Create following 2 VMs by cloning HRIPMSOPS1000
+-          HRIPMSOPS1002
+-          HRIPMSOPS1003
+On Test ESXi cluster:
+Create following 2 VMs by cloning HROPSCONV1000
+-          HRIPMSOPSTST01
+-          HRIPMSOPSTST02 
+ 
+
+On 4/24/2019, The VM names those are running windows 10 OS (On OpenNet):
+HRIPMSOPS1000 and HRIPMSOPS1001
+
+
+
+[?5/?7/?2019 3:41 PM]  Lee, Diana:  
+Hardeep told me that the 4 new VMs are created for OAB. We can reboot them anytime:
+-          HRIPMSOPS1002
+-          HRIPMSOPS1003 
+-          HRIPMSOPSTST01
+-          HRIPMSOPSTST02  
+The OLD VMs are used by other users:
+HRIPMSOPS1000 and HRIPMSOPS1001
+HROPSCONV1000 and HROPSCONV1001  
+ 

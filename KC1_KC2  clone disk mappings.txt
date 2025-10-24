@@ -1,0 +1,87 @@
+
+Source (PRD2-EW-SCAN) - 3-Node-RAC - hrewoel42,hrewoel43,hrewoel44
+-----------------------------------------------------------------
+
+
+[root@hrewoel42 ~]# asmcmd afd_lsdsk | grep CLONE
+
+CLONE_DISK_08               ENABLED   /dev/dm-18
+CLONE_DISK_09               ENABLED   /dev/dm-9
+CLONE_DISK_10               ENABLED   /dev/dm-16
+CLONE_DISK_11               ENABLED   /dev/dm-15
+
+[root@hrewoel42 ~]#
+
+
+
+
+
+
+
+There are 2 targets for the same source:
+----------------------------------------
+
+
+First Target:HF2-EW-SCAN - 3-Node-RAC - hrewoel45,hrewoel46,hrewoel47 - This is called as KC1
+
+[root@hrewoel45 ~]# asmcmd afd_lslbl | grep CLONE
+
+CLONE_DISK_08                         /dev/dm-14 /dev/mapper/3624a9370de43cdedeaf7426600057476
+CLONE_DISK_09                         /dev/dm-7 /dev/mapper/3624a9370de43cdedeaf742660005747f
+CLONE_DISK_10                         /dev/dm-12 /dev/mapper/3624a9370de43cdedeaf742660005747e
+CLONE_DISK_11                         /dev/dm-15 /dev/mapper/3624a9370de43cdedeaf742660005747d
+
+[root@hrewoel45 ~]# ls -l /dev/mapper/362*
+lrwxrwxrwx. 1 root root 8 Sep  2 13:50 /dev/mapper/3624a9370de43cdedeaf74266000444bf -> ../dm-22
+lrwxrwxrwx. 1 root root 8 Sep  2 13:50 /dev/mapper/3624a9370de43cdedeaf74266000444bf1 -> ../dm-26
+lrwxrwxrwx. 1 root root 8 Sep  2 13:50 /dev/mapper/3624a9370de43cdedeaf74266000444bf2 -> ../dm-27
+lrwxrwxrwx. 1 root root 8 Sep  2 13:50 /dev/mapper/3624a9370de43cdedeaf7426600057473 -> ../dm-19
+lrwxrwxrwx. 1 root root 8 Sep  2 13:50 /dev/mapper/3624a9370de43cdedeaf7426600057474 -> ../dm-21
+lrwxrwxrwx. 1 root root 8 Sep  2 13:50 /dev/mapper/3624a9370de43cdedeaf7426600057475 -> ../dm-18
+lrwxrwxrwx. 1 root root 8 Sep  2 13:50 /dev/mapper/3624a9370de43cdedeaf7426600057476 -> ../dm-14
+lrwxrwxrwx. 1 root root 8 Sep  2 13:50 /dev/mapper/3624a9370de43cdedeaf7426600057477 -> ../dm-16
+lrwxrwxrwx. 1 root root 8 Sep  2 13:50 /dev/mapper/3624a9370de43cdedeaf7426600057478 -> ../dm-11
+lrwxrwxrwx. 1 root root 7 Sep  2 13:50 /dev/mapper/3624a9370de43cdedeaf7426600057479 -> ../dm-6
+lrwxrwxrwx. 1 root root 8 Sep  2 13:50 /dev/mapper/3624a9370de43cdedeaf742660005747a -> ../dm-13
+lrwxrwxrwx. 1 root root 7 Sep  2 13:50 /dev/mapper/3624a9370de43cdedeaf742660005747b -> ../dm-8
+lrwxrwxrwx. 1 root root 8 Sep  2 13:50 /dev/mapper/3624a9370de43cdedeaf742660005747c -> ../dm-10
+lrwxrwxrwx. 1 root root 8 Sep  2 13:50 /dev/mapper/3624a9370de43cdedeaf742660005747d -> ../dm-15
+lrwxrwxrwx. 1 root root 8 Sep  2 13:51 /dev/mapper/3624a9370de43cdedeaf742660005747e -> ../dm-12
+lrwxrwxrwx. 1 root root 7 Sep  2 13:50 /dev/mapper/3624a9370de43cdedeaf742660005747f -> ../dm-7
+lrwxrwxrwx. 1 root root 7 Sep  2 13:50 /dev/mapper/3624a9370de43cdedeaf7426600057480 -> ../dm-9
+lrwxrwxrwx. 1 root root 7 Sep  2 13:50 /dev/mapper/3624a9370de43cdedeaf7426600057481 -> ../dm-4
+lrwxrwxrwx. 1 root root 8 Sep  2 13:50 /dev/mapper/3624a9370de43cdedeaf7426600057482 -> ../dm-17
+lrwxrwxrwx. 1 root root 7 Sep  2 13:50 /dev/mapper/3624a9370de43cdedeaf7426600057483 -> ../dm-3
+lrwxrwxrwx. 1 root root 7 Sep  2 13:50 /dev/mapper/3624a9370de43cdedeaf7426600057484 -> ../dm-5
+lrwxrwxrwx. 1 root root 7 Sep  2 13:50 /dev/mapper/3624a9370de43cdedeaf7426600057485 -> ../dm-1
+lrwxrwxrwx. 1 root root 7 Sep  2 13:50 /dev/mapper/3624a9370de43cdedeaf7426600057486 -> ../dm-0
+lrwxrwxrwx. 1 root root 8 Sep  2 13:50 /dev/mapper/3624a9370de43cdedeaf74266000574ce -> ../dm-29
+lrwxrwxrwx. 1 root root 7 Sep  2 13:50 /dev/mapper/3624a9370de43cdedeaf74266000574cf -> ../dm-2
+lrwxrwxrwx. 1 root root 8 Sep  2 13:50 /dev/mapper/3624a9370de43cdedeaf74266000574d0 -> ../dm-28
+lrwxrwxrwx. 1 root root 8 Sep  2 13:50 /dev/mapper/3624a9370de43cdedeaf74266000621fd -> ../dm-20
+lrwxrwxrwx. 1 root root 8 Sep  2 13:50 /dev/mapper/3624a9370de43cdedeaf74266000621fd1 -> ../dm-23
+lrwxrwxrwx. 1 root root 8 Sep  2 13:50 /dev/mapper/3624a9370de43cdedeaf742660006225d -> ../dm-25
+lrwxrwxrwx. 1 root root 8 Sep  2 13:50 /dev/mapper/3624a9370de43cdedeaf7426600062262 -> ../dm-24
+lrwxrwxrwx. 1 root root 8 Sep  2 13:50 /dev/mapper/3624a9370de43cdedeaf7426600116482 -> ../dm-38
+lrwxrwxrwx. 1 root root 8 Sep  2 13:50 /dev/mapper/3624a9370de43cdedeaf7426600117a54 -> ../dm-39
+[root@hrewoel45 ~]# ls -l /dev/mapper/362* |
+
+
+
+
+Second Target:KC2-EW-SCAN - Nodes hrewoel48 and hrewoel49 - This is called as KC2
+
+[root@hrewoel48 ~]# asmcmd afd_lslbl | grep CLONE
+
+CLONE_DISK_08                         /dev/dm-3
+CLONE_DISK_09                         /dev/dm-20
+CLONE_DISK_10                         /dev/dm-9
+CLONE_DISK_11                         /dev/dm-16
+
+
+
+
+
+
+
+

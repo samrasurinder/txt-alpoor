@@ -1,0 +1,47 @@
+
+Copy Cluster
+-------------
+
+HRVLCPYDB25	10.68.26.237
+HRVLCPYDB26	10.68.26.238
+
+
+Please allocate raw devices of below sizes and make sure devices are shared between 2 nodes.
+Please don't format them, just make sure these devices can be seen all 2 nodes so that I can format and label them
+
+
+The ASM disk: 'CPY_DATA01' mapped to '/dev/emcpowerd1'  Totalsize=214.7 GB,
+The ASM disk: 'CPY_DATA02' mapped to '/dev/emcpowere1'  Totalsize=214.7 GB,
+The ASM disk: 'CPY_DATA03' mapped to '/dev/emcpowerf1'  Totalsize=214.7 GB,
+The ASM disk: 'CPY_DATA04' mapped to '/dev/emcpowerg1'  Totalsize=214.7 GB,
+The ASM disk: 'CPY_DATA05' mapped to '/dev/emcpowerh1'  Totalsize=214.7 GB,
+The ASM disk: 'CPY_DATA06' mapped to '/dev/emcpoweri1'  Totalsize=214.7 GB,
+The ASM disk: 'CPY_DATA07' mapped to '/dev/emcpowerj1'  Totalsize=214.7 GB,
+The ASM disk: 'CPY_DATA08' mapped to '/dev/emcpowerk1'  Totalsize=214.7 GB,
+The ASM disk: 'CPY_DATA09' mapped to '/dev/emcpowerl1'  Totalsize=214.7 GB,
+The ASM disk: 'CPY_DATA10' mapped to '/dev/emcpowerm1'  Totalsize=214.7 GB,
+The ASM disk: 'CPY_DATA11' mapped to '/dev/emcpowern1'  Totalsize=214.7 GB,
+The ASM disk: 'CPY_DATA12' mapped to '/dev/emcpowero1'  Totalsize=214.7 GB,
+The ASM disk: 'CPY_FRA01' mapped to '/dev/emcpowerp1'  Totalsize=214.7 GB,
+
+The ASM disk: 'OPSCPYDATA01' mapped to '/dev/emcpoweraj1'  Totalsize=214.8 GB,
+The ASM disk: 'OPSCPYDATA02' mapped to '/dev/emcpowerak1'  Totalsize=214.8 GB,
+The ASM disk: 'OPSCPYDATA03' mapped to '/dev/emcpoweral1'  Totalsize=214.8 GB,
+The ASM disk: 'OPSCPYDATA04' mapped to '/dev/emcpoweram1'  Totalsize=214.8 GB,
+
+The ASM disk: 'OPSCPYFRA01' mapped to '/dev/emcpowerap1'  Totalsize=107.4 GB,
+The ASM disk: 'OPSCPYFRA02' mapped to '/dev/emcpoweraq1'  Totalsize=107.4 GB,
+The ASM disk: 'OPSCPYFRA03' mapped to '/dev/emcpowerar1'  Totalsize=107.4 GB,
+The ASM disk: 'OPSCPYFRA04' mapped to '/dev/emcpoweras1'  Totalsize=107.4 GB,
+The ASM disk: 'OPSCPYFRA05' mapped to '/dev/emcpowerat1'  Totalsize=107.4 GB,
+The ASM disk: 'OPSCPYFRA06' mapped to '/dev/emcpowerau1'  Totalsize=107.4 GB,
+The ASM disk: 'OPSCPYFRA07' mapped to '/dev/emcpowerav1'  Totalsize=107.4 GB,
+The ASM disk: 'OPSCPYFRA08' mapped to '/dev/emcpoweraw1'  Totalsize=107.4 GB,
+The ASM disk: 'OPSCPYFRA09' mapped to '/dev/emcpowerax1'  Totalsize=107.4 GB,
+The ASM disk: 'OPSCPYFRA10' mapped to '/dev/emcpoweray1'  Totalsize=107.4 GB,
+The ASM disk: 'OPSCPYFRA11' mapped to '/dev/emcpoweraz1'  Totalsize=107.4 GB,
+The ASM disk: 'OPSCPYFRA12' mapped to '/dev/emcpowerba1'  Totalsize=107.4 GB,
+
+he ASM disk: 'OCR_VOTE1' mapped to '/dev/emcpowerx1'  Totalsize=5000 MB,
+The ASM disk: 'OCR_VOTE2' mapped to '/dev/emcpowery1'  Totalsize=5000 MB,
+The ASM disk: 'OCR_VOTE3' mapped to '/dev/emcpowerz1'  Totalsize=5000 MB,

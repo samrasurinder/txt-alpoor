@@ -1,0 +1,26 @@
+-- Landing page issue - 04-15-2021
+--- HRVEPRDAP1642 - business objects server.
+Action taken:-
+=================
+1. Stopped :- "Server Inteligence Agent(HRKCPRD)" Service from services.
+
+ 
+
+2. renamed docs to docs.old3  at location:-
+D:\SAPBUSOBJ4\SAP BusinessObjects Enterprise XI 4.0\Data\HRVWPRDAP1642.washdc.state.sbu\storage
+
+ 
+
+3.
+D:\SAPBUSOBJ4\SAP BusinessObjects Enterprise XI 4.0
+rename Auditing Auditing.old3
+create empty folder Auditing
+
+ 
+
+4. Start :- "Server Inteligence Agent(HRKCPRD)" Service from services.
+
+ 
+
+5. Verify the Landing page again.
+ 

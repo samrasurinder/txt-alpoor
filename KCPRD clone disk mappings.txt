@@ -1,0 +1,66 @@
+SQL> select name,path,group_number from v$asm_disk where group_number in (1,2) order by 3;
+
+NAME                                     PATH                                     GROUP_NUMBER
+---------------------------------------- ---------------------------------------- ------------
+CLONE_DISK_02                            AFD:CLONE_DISK_02                                   1
+CLONE_DISK_01                            AFD:CLONE_DISK_01                                   1
+CLONE_DISK_03                            AFD:CLONE_DISK_03                                   1
+CLONE_DISK_06                            AFD:CLONE_DISK_06                                   2
+CLONE_DISK_05                            AFD:CLONE_DISK_05                                   2
+CLONE_DISK_07                            AFD:CLONE_DISK_07                                   2
+CLONE_DISK_04                            AFD:CLONE_DISK_04                                   2
+
+7 rows selected.
+
+SQL>
+
+
+
+
+[grid@hrewoel48 ~]$ asmcmd lsdsk --candidate | sort
+AFD:ASM_DISK09
+AFD:ASM_DISK14
+AFD:ASM_DISK15
+AFD:ASM_DISK16
+AFD:ASM_DISK17
+AFD:ASM_DISK18
+AFD:ASM_DISK19
+AFD:ASM_DISK20
+AFD:ASM_DISK21
+AFD:ASM_DISK22
+
+[root@hrewoel48 ~]# blkid | grep ASM_DISK09 | grep mapper
+/dev/mapper/3624a9370de43cdedeaf7426600057489: LABEL="ASM_DISK09" TYPE="oracleasm"
+[root@hrewoel48 ~]#
+
+
+
+[root@hrewoel48 ~]# asmcmd afd_lslbl
+--------------------------------------------------------------------------------
+Label                     Duplicate  Path
+================================================================================
+ASM_DISK01                            /dev/dm-24
+ASM_DISK02                            /dev/dm-7
+ASM_DISK03                            /dev/dm-14
+ASM_DISK04                            /dev/dm-10
+ASM_DISK05                            /dev/dm-19
+ASM_DISK06                            /dev/dm-12
+ASM_DISK07                            /dev/dm-15
+ASM_DISK08                            /dev/dm-8
+ASM_DISK10                            /dev/dm-6
+ASM_DISK11                            /dev/dm-21
+ASM_DISK12                            /dev/dm-4
+ASM_DISK13                            /dev/dm-17
+ASM_DISK14                            /dev/dm-0
+ASM_DISK15                            /dev/dm-1
+ASM_DISK16                            /dev/dm-11
+ASM_DISK17                            /dev/dm-5
+ASM_DISK18                            /dev/dm-13
+ASM_DISK19                            /dev/dm-18
+ASM_DISK20                            /dev/dm-3
+ASM_DISK21                            /dev/dm-20
+ASM_DISK22                            /dev/dm-9
+ASM_DISK23                            /dev/dm-16
+CLONE_DISK_01                         /dev/dm-27
+GEMS_DRSHARE                          /dev/dm-38
+[root@hrewoel48 ~]#

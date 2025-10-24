@@ -1,0 +1,48 @@
+[root@hrvlstgdb019 ~]# $ORACLE_HOME//OPatch/opatchauto apply /u02/patches/OCTPSU/33248471/33182768
+
+OPatchauto session is initiated at Thu Jan  6 16:28:23 2022
+
+System initialization log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchautodb/systemconfig2022-01-06_04-28-26PM.log.
+
+Session log file is /u02/app/19.3.0/grid/cfgtoollogs/opatchauto/opatchauto2022-01-06_04-28-29PM.log
+The id for this session is 3FN1
+
+Executing OPatch prereq operations to verify patch applicability on home /u02/app/oracle/product/19.3.0/db_1
+Patch applicability verified successfully on home /u02/app/oracle/product/19.3.0/db_1
+
+
+Executing patch validation checks on home /u02/app/oracle/product/19.3.0/db_1
+Patch validation checks successfully completed on home /u02/app/oracle/product/19.3.0/db_1
+
+
+Verifying SQL patch applicability on home /u02/app/oracle/product/19.3.0/db_1
+SQL patch applicability verified successfully on home /u02/app/oracle/product/19.3.0/db_1
+
+
+Executing OPatch prereq operations to verify patch applicability on home /u02/app/19.3.0/grid
+Patch applicability verified successfully on home /u02/app/19.3.0/grid
+
+
+Executing patch validation checks on home /u02/app/19.3.0/grid
+Patch validation checks successfully completed on home /u02/app/19.3.0/grid
+
+
+Preparing to bring down database service on home /u02/app/oracle/product/19.3.0/db_1
+Successfully prepared home /u02/app/oracle/product/19.3.0/db_1 to bring down database service
+
+
+Bringing down database service on home /u02/app/oracle/product/19.3.0/db_1
+Database service successfully brought down on home /u02/app/oracle/product/19.3.0/db_1
+
+
+Performing prepatch operations on CRS - bringing down CRS service on home /u02/app/19.3.0/grid
+^Z
+[1]+  Stopped                 $ORACLE_HOME//OPatch/opatchauto apply /u02/patches/OCTPSU/33248471/33182768
+[root@hrvlstgdb019 ~]# bg
+[1]+ $ORACLE_HOME//OPatch/opatchauto apply /u02/patches/OCTPSU/33248471/33182768 &
+[root@hrvlstgdb019 ~]# Prepatch operation log file location: /u02/app/grid/crsdata/hrvlstgdb019/crsconfig/hapatch_2022-01-06_04-29-48PM.log
+CRS service brought down successfully on home /u02/app/19.3.0/grid
+
+
+Start applying binary patch on home /u02/app/oracle/product/19.3.0/db_1
+

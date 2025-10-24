@@ -1,0 +1,21 @@
+Source 45/46/47 HFPRD
+---------------------
+
+CLONE_DISK_01 - /dev/mapper/3624a9370de43cdedeaf7426600057479
+CLONE_DISK_02 - /dev/mapper/3624a9370de43cdedeaf742660005747b
+CLONE_DISK_03 - /dev/mapper/3624a9370de43cdedeaf742660005747c
+CLONE_DISK_04 - /dev/mapper/3624a9370de43cdedeaf7426600057484
+CLONE_DISK_05 - /dev/mapper/3624a9370de43cdedeaf7426600057485
+CLONE_DISK_06 - /dev/mapper/3624a9370de43cdedeaf7426600057483
+CLONE_DISK_07 - /dev/mapper/3624a9370de43cdedeaf7426600057486
+
+Target 48/49 KCPRD ( alias for HFPRD)
+------------------------------------
+
+CLONE_DISK_01 -  /dev/mapper/3624a9370de43cdedeaf7426600057489
+CLONE_DISK_02 -  /dev/mapper/3624a9370de43cdedeaf742660005749a
+CLONE_DISK_03 -  /dev/mapper/3624a9370de43cdedeaf7426600057499
+CLONE_DISK_04 -  /dev/mapper/3624a9370de43cdedeaf7426600057498
+CLONE_DISK_05 -  /dev/mapper/3624a9370de43cdedeaf742660005748f
+CLONE_DISK_06 -  /dev/mapper/3624a9370de43cdedeaf7426600057497
+CLONE_DISK_07 -  /dev/mapper/3624a9370de43cdedeaf742660005748e

@@ -1,0 +1,20 @@
+
+
+KC_REFRESH_STATUS_UPDATE on 16
+/bin/bash /infshare/oracle/scripts/backup/KC_REFRESH_STATUS_UPDATE.bash ARC   
+
+KC_LOAD_CHECK on 16
+ /bin/bash /infshare/oracle/scripts/backup/KC_AUTOMATION_FLAG.bash KC_LOAD_CHECK KC  
+
+RUN_TFCLONE_KC2 on 16
+/bin/bash /infshare/oracle/scripts/tfclone/bin/run_tfclone_KC.bash
+
+RUN_TFCLONE_KC1 on 13
+/bin/bash /infshare/oracle/scripts/tfclone/bin/tfclone_KC.bash
+
+KC_TFCLONE_COMPLETE on 16
+/bin/bash /infshare/oracle/scripts/backup/KC_AUTOMATION_FLAG.bash DB_REFRESH_COMPLETE KC
+
+
+
+

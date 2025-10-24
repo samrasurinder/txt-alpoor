@@ -1,0 +1,93 @@
+root@hrvltstdb7601 30463673]# $ORACLE_HOME/OPatch/opatchauto apply /u02/PSU/JAN2020/30463673/30502018 &
+[1] 27578
+[root@hrvltstdb7601 30463673]#
+OPatchauto session is initiated at Sat Mar  7 12:15:27 2020
+
+System initialization log file is /u02/app/12.2.0/grid/cfgtoollogs/opatchautodb/systemconfig2020-03-07_12-15-29PM.log.
+
+Session log file is /u02/app/12.2.0/grid/cfgtoollogs/opatchauto/opatchauto2020-03-07_12-15-43PM.log
+The id for this session is EHYG
+
+Executing OPatch prereq operations to verify patch applicability on home /u02/app/oracle/product/12.0.2/db_1
+Patch applicability verified successfully on home /u02/app/oracle/product/12.0.2/db_1
+
+
+Verifying SQL patch applicability on home /u02/app/oracle/product/12.0.2/db_1
+"/bin/sh -c 'cd /u02/app/oracle/product/12.0.2/db_1; ORACLE_HOME=/u02/app/oracle/product/12.0.2/db_1 ORACLE_SID=OPSMASK /u02/app/oracle/product/12.0.2/db_1/OPatch/datapatch -prereq -verbose'" command failed with errors. Please refer to logs for more details. SQL changes, if any, can be analyzed by manually retrying the same command.
+
+
+[root@hrvltstdb7601 30463673]#
+[root@hrvltstdb7601 30463673]#
+
+
+
+
+Patch: /u02/PSU/JAN2020/30463673/30502018
+Log: /u02/app/12.2.0/grid/cfgtoollogs/opatchauto/core/opatch/opatch2020-03-07_12-22-54PM_1.log
+Reason: Failed during Patching: oracle.opatch.opatchsdk.OPatchException: Prerequisite check "CheckActiveFilesAndExecutables" failed.
+
+After fixing the cause of failure Run opatchauto resume
+
+]
+OPATCHAUTO-68061: The orchestration engine failed.
+OPATCHAUTO-68061: The orchestration engine failed with return code 1
+OPATCHAUTO-68061: Check the log for more details.
+OPatchAuto failed.
+
+OPatchauto session completed at Sat Mar  7 12:23:10 2020
+Time taken to complete the session 7 minutes, 44 seconds
+
+ opatchauto failed with error code 42
+
+
+
+[Mar 7, 2020 12:34:22 PM] [INFO]    Prereq checkPatchApplicableOnCurrentPlatform Passed for patch : 30502018
+[Mar 7, 2020 12:34:22 PM] [INFO]    Start fuser command /sbin/fuser /u02/app/12.2.0/grid/bin/oracle at Sat Mar 07 12:34:22 EST 2020
+[Mar 7, 2020 12:34:22 PM] [INFO]    Finish fuser command /sbin/fuser /u02/app/12.2.0/grid/bin/oracle at Sat Mar 07 12:34:22 EST 2020
+[Mar 7, 2020 12:34:22 PM] [INFO]    Files in use by a process: /u02/app/12.2.0/grid/bin/oracle PID( 23792 23794 23796 23798 23802 23804 23808 23812 23814 23816 23818 23820 23822 23824 23826 23828 23830 23832 23834 23836 )
+[Mar 7, 2020 12:34:22 PM] [INFO]    Following active executables are not used by opatch process :
+                                    /u02/app/12.2.0/grid/bin/oracle
+
+                                    Following active executables are used by opatch process :
+[Mar 7, 2020 12:34:22 PM] [INFO]    Prerequisite check "CheckActiveFilesAndExecutables" failed.
+                                    The details are:
+
+
+                                    Following active executables are not used by opatch process :
+                                    /u02/app/12.2.0/grid/bin/oracle
+
+                                    Following active executables are used by opatch process :
+[Mar 7, 2020 12:34:22 PM] [SEVERE]  OUI-67073:UtilSession failed: Prerequisite check "CheckActiveFilesAndExecutables" failed.
+[Mar 7, 2020 12:34:22 PM] [INFO]    Finishing UtilSession at Sat Mar 07 12:34:22 EST 2020
+
+
+
+
+Details: [
+---------------------------Patching Failed---------------------------------
+Command execution failed during patching in home: /u02/app/12.2.0/grid, host: hrvltstdb7601.
+Command failed:  /u02/app/12.2.0/grid/OPatch/opatchauto  apply /u02/PSU/JAN2020/30463673/30502018 -oh /u02/app/12.2.0/grid -target_type has -binary -invPtrLoc /u02/app/12.2.0/grid/oraInst.loc -jre /u02/app/12.2.0/grid/OPatch/jre -persistresult /u02/app/12.2.0/grid/OPatch/auto/dbsessioninfo/sessionresult_hrvltstdb7601_siha.ser -analyzedresult /u02/app/12.2.0/grid/OPatch/auto/dbsessioninfo/sessionresult_analyze_hrvltstdb7601_siha.ser
+Command failure output:
+==Following patches FAILED in apply:
+
+Patch: /u02/PSU/JAN2020/30463673/30502018
+Log: /u02/app/12.2.0/grid/cfgtoollogs/opatchauto/core/opatch/opatch2020-03-07_12-42-07PM_1.log
+Reason: Failed during Patching: oracle.opatch.opatchsdk.OPatchException: ApplySession failed in system modification phase... 'ApplySession::apply failed: mv: cannot move â/u02/app/12.2.0/grid/lib/libasmclntsh12.soâ to â/u02/app/12.2.0/grid/lib/libasmclntsh12.so.bakâ: Permission denied
+make: *** [update_patchrep] Error 1
+'
+
+After fixing the cause of failure Run opatchauto resume
+
+]
+OPATCHAUTO-68061: The orchestration engine failed.
+OPATCHAUTO-68061: The orchestration engine failed with return code 1
+OPATCHAUTO-68061: Check the log for more details.
+OPatchAuto failed.
+
+OPatchauto session completed at Sat Mar  7 12:42:27 2020
+Time taken to complete the session 0 minute, 27 seconds
+
+ opatchauto failed with error code 42
+[root@hrvltstdb7601 ~]#
+
+

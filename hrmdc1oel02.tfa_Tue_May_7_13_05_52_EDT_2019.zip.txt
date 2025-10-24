@@ -1,0 +1,22 @@
+TFA Version : 12.1.2.8.4
+Build ID : 12128420170203230512
+
+Collection ID : 20190507130552hrmdc1oel01
+Zip file name : tfa_Tue_May_7_13_05_52_EDT_2019.zip
+Zip file location : /u02/app/oracle/tfa/repository/collection_Tue_May_7_13_05_52_EDT_2019_node_all/hrmdc1oel02.tfa_Tue_May_7_13_05_52_EDT_2019.zip
+Zip file creation date : Tue May 07 2019 13:05:59 EDT
+Host name : hrmdc1oel02
+Duration of Diagnostics :
+  Start date : Tue May 07 2019 09:00:00 EDT
+  End date : Tue May 07 2019 12:00:00 EDT
+Component(s) in zip file : INSTALL  CRS  OS  EMAGENT  DBWLM  OCM  ACFS  RDBMS  TNS  OMS  WLS  EMPLUGINS  EM  ASMPROXY  ASM  CFGTOOLS  CHMOS  SUNDIAG 
+User initiated
+
+Directory Structure in zip file : 
+hrmdc1oel02/
+hrmdc1oel02/u02/app/11.2.0.4/grid/rdbms/log
+hrmdc1oel02/u02/app/11.2.0.4/grid/log/hrmdc1oel02
+hrmdc1oel02/var/log
+hrmdc1oel02/asm/+asm/+ASM2/trace
+
+To check full contents of the zip file, Please run "unzip -l <zipfile>"

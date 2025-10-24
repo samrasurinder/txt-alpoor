@@ -1,0 +1,74 @@
+
+
+KCPRD_TFCLONE_JOB  ( Scehduled everyday 6PM)
+--------------------------------------------
+
+( HFPRD database on KC cluster gets cloned from HFPRD1 standby database which is a standby for PRD)
+
+
+KC_TFCLONE_STATUS_MSG
+---------------------
+
+/bin/bash /infshare/oracle/scripts/backup/KC_REFRESH_STATUS_UPDATE.bash ARC  on hrewoel16.hr.state.sbu
+
+
+KC_LOAD_CHECK
+-------------
+/bin/bash /infshare/oracle/scripts/backup/KC_AUTOMATION_FLAG.bash KC_LOAD_CHECK KCPRD   on hrewoel16.hr.state.sbu
+
+HFPRD_STANDBY_STOP
+------------------
+/bin/bash /infshare/oracle/scripts/tfclone/bin/HFPRD_standby_stop.bash on hrewoel13.hr.state.sbu
+
+KCPRD_TFCLONE
+-------------
+/bin/bash /infshare/oracle/scripts/tfclone/bin/KCPRD_tfclone.bash on hrewoel16.hr.state.sbu
+
+HFPRD_STANDBY_START
+-------------------
+/bin/bash /infshare/oracle/scripts/tfclone/bin/HFPRD_standby_start.bash on  hrewoel13.hr.state.sbu
+
+
+
+
+
+
+
+
+
+
+
+KC_TFCLONE  ( Scheduled 4AM everyday in the morning)
+---------------------------------------------------
+
+(Job to Tfclone HFKC to KC1/2 based on JOB JOB_KC_TFCLONE in ARCrefresh KC1/2 depends on JOB JOB_KC_TFCLONE in ARC)
+
+KC_REFRESH_STATUS_UPDATE
+------------------------
+/bin/bash /infshare/oracle/scripts/backup/KC_REFRESH_STATUS_UPDATE.bash ARC  on hrewoel16.hr.state.sbu
+
+
+KC_LOAD_CHECK
+-------------
+
+/bin/bash /infshare/oracle/scripts/backup/KC_AUTOMATION_FLAG.bash KC_LOAD_CHECK KC on hrewoel16.hr.state.sbu
+
+
+RUN_TFCLONE_KC2
+---------------
+
+/bin/bash /infshare/oracle/scripts/tfclone/bin/run_tfclone_KC.bash on hrewoel16.hr.state.sbu on  hrewoel13.hr.state.sbu
+
+
+RUN_TFCLONE_KC1
+---------------
+
+//bin/bash /infshare/oracle/scripts/tfclone/bin/tfclone_KC.bash on  hrewoel13.hr.state.sbu
+
+
+
+KC_TFCLONE_COMPLETE
+-------------------
+
+/bin/bash /infshare/oracle/scripts/backup/KC_AUTOMATION_FLAG.bash DB_REFRESH_COMPLETE KC on hrewoel16.hr.state.sbu
+

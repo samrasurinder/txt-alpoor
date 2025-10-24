@@ -1,0 +1,917 @@
+#Lab Run:
+#cd 
+#gtmvwprdmg1901
+#Crash Consistent - on demand 
+#.\Oracle_P2P_SnapCopy_KC.ps1 -sourcecluster 'hfkc' -targetserver 'hrewoel45' -database 'hfkc' -targetDatabase 'kc1' -datetime 'now'
+
+
+param (
+  [Parameter(Mandatory = $false)]
+  $configFile = 'D:\PureData\Oracle_P2P_SnapCopy.config',
+  [Parameter(Mandatory = $true)]
+  $sourceCluster,
+  [Parameter(Mandatory = $true)]
+  $targetServer,  
+  [Parameter(Mandatory = $true)]
+  $database,  
+  [Parameter(Mandatory = $true)]
+  $targetDatabase, #This is only used to help determine which pre and post scripts to run  
+  [Parameter(Mandatory = $false)]
+  $dateTime = 'latest',
+  [Parameter(Mandatory = $false)]
+  $stage = $false
+)
+$plinkpath = 'D:\PuTTY\'
+
+    
+###############################################################
+########################## Temp Parameters ####################
+###############################################################
+
+
+#$configFile = 'D:\PureData\Oracle_P2P_SnapCopy.config'
+#$sourceCluster = 'hfkc'
+#$targetServer = 'hrewoel45'
+#$database = 'HFKC'
+#$dateTime = 'now'
+#$targetdatabase = 'kc1'
+
+###############################################################
+########################## FUNCTIONS ##########################
+###############################################################
+
+Function Get-globalConfigParams {
+  <# 
+        .SYNOPSIS 
+        Queries database to load config out of a table named dbo.Config (hardcoded)
+        
+        .DESCRIPTION 
+        Queries database to load config out of a table named dbo.Config (hardcoded).  Used in lieu of a config/xml file
+        
+        .NOTES 
+        _______________________________________________________________________________________________ 
+       _ ORIGIN STORY                                                                                 
+        ________________________________________________________________________________________________ 
+       _   DATE        : 5.01.2020
+       _   AUTHOR      : Cody Mautner 
+        _______________________________________________________________________________________________ 
+        .INPUTS
+        Required: dbServer, Database
+        Optional: sqlUser, sqlPass
+        
+        .OUTPUTS 
+        Contents of config table as a PowerShell object
+        
+     
+        #> 
+            
+  #----------------[ Parameter Configuration ]----------------------------------------------------
+  Param(
+    [parameter(Mandatory = $true)]
+    $dbServer,
+    [parameter(Mandatory = $true)]
+    $Database,
+    [parameter(Mandatory = $true)]
+    $ConfigTable,
+    $dbUser = "NoUserSet",
+    $dbPass
+  )
+            
+            
+  #----------------[ Main Execution ]----------------------------------------------------
+    
+  $query = " 
+            use [$Database]
+            select * from dbo.$ConfigTable
+            "
+
+  #Are we using passthrough or authenticating
+  If ($dbUser -eq 'NoUserSet') {
+    $output = Invoke-SQLcmd -ServerInstance $dbServer -query $query -Database $Database
+  }
+  else {
+    $output = Invoke-SQLcmd -ServerInstance $dbServer -query $query -Username $dbUser -Password $dbPass -Database $Database   
+  }
+            
+  Return $output
+           
+}
+
+Function Write-PurePSFlatLog {
+  <# 
+        .SYNOPSIS 
+        Writes a log entry to both a SQL Database table and a csv file for backup.
+        
+        .DESCRIPTION 
+        Writes a log entry to both a SQL Database table and a csv file for backup.
+        
+        .NOTES 
+        _______________________________________________________________________________________________ 
+       _ ORIGIN STORY                                                                               _ 
+        _______________________________________________________________________________________________
+       _   DATE        : 3.11.2019
+       _   AUTHOR      : Cody Mautner 
+        _______________________________________________________________________________________________
+        .INPUTS
+        Required: csvLogPath, dbLoggingServer, logLevel, serverName, sourceName, information, loggingDB
+        Optional: dbUser, dbPass
+        Global: SyslogServer
+        
+        .OUTPUTS 
+        None. Output Log entry in Database and CSV file.
+        
+        .PARAMETER csvLogPath 
+        Path to the csv file containing a copy of the log.
+        
+        .PARAMETER dbLoggingServer
+        Server Instance hosting our database.
+        
+        .PARAMETER loggingDB 
+        Database name that contains appropriate table RunningLog
+        
+        .PARAMETER logLevel 
+        Level of logging, example Informational, Warning, Error, Etc
+        
+        .PARAMETER serverName 
+        Server on which the script is running.
+        
+        .PARAMETER sourceName 
+        Source script making the call
+        
+        .PARAMETER information 
+        The information we want logged.
+        
+        .PARAMETER dbUser
+        User for SQL based authentication
+        
+        .PARAMETER dbPass
+        Password for SQL based authentication
+         
+        .EXAMPLE 
+        # ### Configurables ###
+        # $csvLogPath = "\\ri-dc1\CommonShare\TestZone\PurePSFlatLog.csv"
+        # $dbLoggingServer =  "ri-sql-rdms"
+        # $serverName = "SERVERNAME"
+        # $sourceName = "SOURCENAME"
+        # $loggingDB = "LOGGINGDATABASE"
+        
+        # ### Setting Params ###
+        # $logSettings = @{
+        # csvLogpath = $csvLogPath
+        # dbLoggingServer = $dbLoggingServer
+        # serverName = $serverName
+        # loggingDB = $loggingDB
+        # }
+        
+        
+        # Write-PurePSFlatLog @logSettings -logLevel "Informational" -information "Hey we did a thing!"
+        
+        #> 
+            
+  #----------------[ Parameter Configuration ]----------------------------------------------------
+  Param(
+    [parameter(Mandatory = $true)]
+    $csvLogPath,
+    [parameter(Mandatory = $true)]
+    $dbLoggingServer,
+    [parameter(Mandatory = $false)]
+    $runID,
+    [parameter(Mandatory = $true)]
+    $logLevel,
+    [parameter(Mandatory = $true)]
+    $serverName,
+    [parameter(Mandatory = $true)]
+    $sourceName,
+    [parameter(Mandatory = $true)]
+    $information,
+    [parameter(Mandatory = $true)]
+    $loggingDB,
+    $dbUser = "NoUserSet",
+    $dbPass
+  )
+            
+            
+  #----------------[ Main Execution ]----------------------------------------------------
+  #----------------[ Special Character Handling]------
+            
+  #strip out single quote from $information
+  $information = $information -replace '['']', ''
+  #strip out comma from $information
+  $information = $information -replace '[,]', ''
+        
+  #----------------[ Database bits ]----------------------------------------------------      
+            
+
+  $runTime = get-date
+  $insertquery = " 
+            INSERT INTO [dbo].[Logging] 
+                       ([RunID]
+                       ,[DateTime] 
+                       ,[LogLevel] 
+                       ,[ServerName]
+                       ,[SourceName]
+                       ,[Information]) 
+                 VALUES 
+                       ('$runID'
+                       ,'$runTime' 
+                       ,'$logLevel' 
+                       ,'$serverName'
+                       ,'$sourceName'
+                       ,'$information') 
+            GO 
+            "
+  if ($LogLevel -eq "informational") {
+    Write-Host $information -ForegroundColor Green
+  }
+  if ($LogLevel -eq "Warning") {
+    Write-Host $information -ForegroundColor Yellow
+  }
+  if (($LogLevel -eq "Critical") -or ($LogLevel -eq "error")) {
+    Write-Host $information -ForegroundColor Red
+  }
+  #Are we using passthrough or authenticating
+  If ($dbUser -eq 'NoUserSet') {
+    Invoke-SQLcmd -ServerInstance $dbLoggingServer -query $insertquery -Database $loggingDB
+  }
+  else {
+    Invoke-SQLcmd -ServerInstance $dbLoggingServer -query $insertquery -Username $dbUser -Password $dbPass -Database $loggingDB   
+  }
+            
+  #----------------[ CSV bits ]---------------------------------------------------- 
+       
+  $newObj = [PSCustomObject] @{
+    RunID       = $runID
+    DateTime    = $runTime
+    LogLevel    = $logLevel
+    ServerName  = $serverName
+    SourceName  = $sourceName
+    Information = $information
+  }
+        
+  $newObj | export-csv -Path $csvLogPath -Append
+  #----------------[ SyslogServer bits ]----------------------------------------------------           
+
+  #Send-SyslogMessage -server $syslogServer -Message $information -Severity $logLevel -Facility 'kern' -Hostname $env:computername -ApplicationName 'Pure Refresh'
+}
+
+
+Function Get-PurePSNewRunIdentifier {
+  <# 
+       .SYNOPSIS 
+       Used to generate a new run identifier, utilizing the database/table created for use for PurePS Flatlogging
+           
+       .NOTES 
+       _______________________________________________________________________________________________ 
+      _ ORIGIN STORY                                                                               _ 
+       ________________________________________________________________________________________________ 
+      _   DATE        : 3.11.2019
+      _   AUTHOR      : Cody Mautner 
+       _ï¿½______________________________________________________________________________________________ï¿½ 
+       .INPUTS
+       Required: dbLoggingServer, loggingDB, logSettings
+       Optional: sqlUser, sqlPass
+       
+       .OUTPUTS 
+       Returns new run identifier
+       
+       
+       .EXAMPLE 
+       $runID = Get-PurePSNewRunIdentifier -dbLoggingServer $dbLoggingServer -loggingDB $loggingDB -logSettings $logSettings
+       $logSettings.Add("runID", $runID)
+       
+       #> 
+       
+  #----------------[ Parameter Configuration ]----------------------------------------------------
+  Param(
+    [parameter(Mandatory = $true)]
+    $dbLoggingServer,
+    [parameter(Mandatory = $true)]
+    $loggingDB,
+    $sqlUser = "nodata",
+    $sqlPass
+  )
+  $sourceName = "Get-PurePSNewRunIdentifier"
+       
+       
+  #----------------[ Main Execution ]----------------------------------------------------    
+       
+  #Loop to prevent duplicates
+  do {
+    $conflict = $false
+    #generate AlphaNumeric, over 2 quadrillion possible combinations with count 10.
+    $runID = -join ((0x30..0x39) + ( 0x61..0x7A) | Get-Random -Count 10 | % { [char]$_ }) 
+    #check for conflicts
+    $sqlQuery = "select top 1 * from dbo.Logging where RunID = '$RunID'"
+    if ($sqlUser -eq "nodata") {
+      $record = Invoke-Sqlcmd -Query $sqlQuery -ServerInstance $dbLoggingServer -Database $loggingDB
+    }
+    else {
+      $record = Invoke-Sqlcmd -Query $sqlQuery -ServerInstance $dbLoggingServer -Database $loggingDB -Username $dbUser -Password $dbPass 
+    }
+    if ($record) {
+      $conflict = $true
+    }
+       
+  }while ($conflict)
+  Write-PurePSFlatLog @logSettings -sourceName $sourceName -logLevel "Informational" -information "found a unique run ID $runID!"
+       
+  return $runID
+       
+}
+
+
+Function Complete-Script {
+  <# 
+        .SYNOPSIS 
+        Completes script, sends alert, performs needed cleanup/rollback
+        
+        .DESCRIPTION 
+        Completes script, sends alert, performs needed cleanup/rollback    
+        
+        .NOTES 
+        _______________________________________________________________________________________________ 
+       _ ORIGIN STORY                                                                               _ 
+        ________________________________________________________________________________________________ 
+       _   DATE        : 05.01.2020
+       _   AUTHOR      : Cody Mautner 
+        _ï¿½______________________________________________________________________________________________ï¿½ 
+        .INPUTS
+      
+        
+        .OUTPUTS 
+        No Return.
+        
+        .EXAMPLE 
+    
+        
+        #> 
+        
+  #----------------[ Parameter Configuration ]----------------------------------------------------
+  Param(
+    [Parameter(Mandatory = $true)]
+    $exitCode            
+  )
+  $sourceName = "Complete-Script"
+    
+  #----------------[ Main Execution ]----------------------------------------------------    
+  try {
+    #Since we are not making new volumes or creating naps there is no cleanup actions. 
+  }
+  catch {
+    $errorMessage = $_.Exception.Message
+    Write-PurePSFlatLog @logSettings -sourceName $sourceName -logLevel "Error" -information  "Error cleaning up snapshot $($sourceSnap.name). See Powershell error. Powershell Error: $errorMessage" 
+    write-host "Error cleaning up snapshot $($sourceSnap.name). See Powershell error.  The enviornmnet refresh should still have occured." -ForegroundColor Yellow
+  }
+
+  $queryforLog = "select * from dbo.logging where runid = '$runID' order by eventid asc"
+  $logOutput = Invoke-Sqlcmd -ServerInstance $xml.DOSconfig.DatabaseInfo.DBServer -Database $xml.DOSconfig.DatabaseInfo.DB -Query $queryforLog  | select -ExpandProperty Information
+  $logString = $logOutput -join "<br>-"
+  if ($exitCode -eq 0) {
+    Write-PurePSFlatLog @logSettings -sourceName $sourceName -logLevel "Informational" -information "Job with $runID completed successfully."
+    $emailSubject = "The job with RunID $runID has completed successfully"
+    $emailBody = "The The job with RunID $runID has completed successfully.  See Log below<br>"
+    $emailBody = $emailBody + "<br>"
+    $emailBody = $emailBody + "-------------------------------------------<br>"
+    $emailBody = $emailBody + "Start Log"
+    $emailBody = $emailBody + "<br>"
+    $emailBody = $emailBody + $logString
+  }
+  else {
+    Write-PurePSFlatLog @logSettings -sourceName $sourceName -logLevel "Warning" -information "Job with $runID completed with exit code $exitCode.  Meaning it was considered unsuccessful."
+    $emailSubject = "The job with RunID $runID has failed"
+    $emailBody = $emailBody + "Please reach out and assign to the $teamassignment Support Team"
+    $emailBody = $emailBody + "<br>"
+    $emailBody = $emailBody + "The The job with RunID $runID has been unsuccessful.  See Log below<br>"
+    $emailBody = $emailBody + "<br>"
+    $emailBody = $emailBody + "-------------------------------------------<br>"
+    $emailBody = $emailBody + "Start Log"
+    $emailBody = $emailBody + "<br>"
+    $emailBody = $emailBody + $logString
+
+  
+  }
+  if (!$skipEmail) {
+    if ($SMTPUseAuth -eq 1) {
+      Send-MailMessage -SmtpServer $SMTPAddress -to $SMTPTo -from $SMTPFrom  -Subject $emailSubject -Body $emailBody  -Credential $SMTPcred -BodyAsHtml
+    }
+    else {
+      $SMTPTo = $SMTPTo.Split(',')
+      Send-MailMessage -SmtpServer $SMTPAddress -to $SMTPTo -from $SMTPFrom  -Subject $emailSubject -Body $emailBody -BodyAsHtml
+    }
+  }
+  
+}
+
+
+
+
+###############################################################
+##################### Main Code Execution #####################
+###############################################################
+
+
+
+
+#ConfigLoad
+write-host "Functions Loaded, Gathering Configuration information" -ForegroundColor green
+
+
+try {
+  $xml = [xml](Get-Content $configFile) 
+  
+  $globalConfigParams = Get-globalConfigParams -dbServer $xml.DOSconfig.DatabaseInfo.DBServer -Database $xml.DOSconfig.DatabaseInfo.DB -ConfigTable 'Config_Global'
+  $oracleP2PConfigParams = Get-globalConfigParams -dbServer $xml.DOSconfig.DatabaseInfo.DBServer -Database $xml.DOSconfig.DatabaseInfo.DB -ConfigTable 'Config_OracleP2P'
+}
+catch {
+  $errorMessage = $_.Exception.Message
+  Write-Host "Failed to query database specified in $configFile.  See PowerShell error, also looged in Logging Database. Quitting execution" -ForegroundColor red
+  exit 1
+}
+
+   
+### Variables intended to be used globally ###
+$logSettings = @{
+  csvLogpath      = $xml.DOSconfig.LogPath
+  dbLoggingServer = $xml.DOSconfig.DatabaseInfo.DBServer
+  loggingDB       = $xml.DOSconfig.DatabaseInfo.DB
+  runID           = "unassigned"
+  serverName      = $env:computername
+}
+
+### Variables for Main Execution ###
+$sourceName = "MainExecution"
+#$syslogServer = ($globalConfigParams | where { $_.param -eq "SyslogServer" } | select -ExpandProperty Value)
+$SMTPAddress = ($globalConfigParams | where { $_.param -eq "SMTPAddress" } | select -ExpandProperty Value)
+$SMTPFrom = ($globalConfigParams | where { $_.param -eq "SMTPFrom" } | select -ExpandProperty Value)
+$SMTPTo = ($globalConfigParams | where { $_.param -eq "SMTPTo" } | select -ExpandProperty Value)
+
+
+#get SMTP Creds loaded if they are specified
+$SMTPUsername = ($globalConfigParams | where { $_.param -eq "SMTPUserName" } | select -ExpandProperty Value)
+$SMTPUseAuth = ($globalConfigParams | where { $_.param -eq "SMTPUseAuth" } | select -ExpandProperty Value)
+$SMTPkeyLocation = ($globalConfigParams | where { $_.param -eq "SMTPKeyFile" } | select -ExpandProperty Value)
+$SMTPpassLocation = ($globalConfigParams | where { $_.param -eq "SMTPPassFile" } | select -ExpandProperty Value)
+
+
+if ($SMTPUseAuth -eq 1) {
+  $recalledSMTPKey = Get-Content $SMTPkeyLocation
+  $recalledSMTPPass = Get-Content $SMTPpassLocation
+  $restoredSMTPPass = $recalledSMTPPass | ConvertTo-SecureString -Key $recalledSMTPKey
+  $SMTPcred = New-Object System.Management.Automation.PSCredential ($SMTPUsername, $restoredSMTPPass)
+}
+
+$sourceCluster = $sourceCluster.ToLower()
+$targetServer = $targetServer.ToLower()
+
+if ($dateTime -eq 'latest') {
+  $dateTime = (get-date).adddays(5)  #lets add 5 days to get the latest completed snap
+}
+
+try {
+  Write-PurePSFlatLog @logSettings -sourceName $sourceName -logLevel "Informational" -information "Connected to Log DB successfully.  Now Generating Run ID."
+}
+catch {
+  $errorMessage = $_.Exception.Message
+  Write-Host "There was an issue writting to the Log, this is a critical piece of this process.  Erroring this job. Powershell error: $errorMessage" -ForegroundColor red
+  Write-PurePSFlatLog @logSettings -sourceName $sourceName -logLevel "Error" -information  "Error running first attempt to write to Log. See Powershell error. Powershell Error: $errorMessage"
+  #
+  Complete-Script -exitCode 1
+  exit 1
+}
+
+try {
+  $runID = Get-PurePSNewRunIdentifier -dbLoggingServer $xml.DOSconfig.DatabaseInfo.DBServer -loggingDB $xml.DOSconfig.DatabaseInfo.DB 
+}
+catch {
+  $errorMessage = $_.Exception.Message
+  Write-PurePSFlatLog @logSettings -sourceName $sourceName -logLevel "Error" -information  "Error getting a new run identifier. See Powershell error. Powershell Error: $errorMessage"
+  $teamAssignment = 'Microsoft'
+  Complete-Script -exitCode 1
+  exit 1
+}
+#add runID to our logging
+$logSettings = @{
+  csvLogpath      = $xml.DOSconfig.LogPath
+  dbLoggingServer = $xml.DOSconfig.DatabaseInfo.DBServer
+  loggingDB       = $xml.DOSconfig.DatabaseInfo.DB
+  runID           = $runID
+  serverName      = $env:computername
+}        
+Write-PurePSFlatLog @logSettings -sourceName $sourceName -logLevel "Informational" -information "Run ID Generated $runID"
+Write-Host "Run ID Generated, please use below as reference" -ForegroundColor green
+Write-Host "$runID" -ForegroundColor cyan
+sleep 3
+
+###############################################################
+################# Get our Target Diskgroups ###################
+###############################################################
+$query = "select diskgroups from dbo.OracleDBtoDGMapping where dbname =  '$database'"
+$diskGroupMapping = Invoke-Sqlcmd -ServerInstance $xml.DOSconfig.DatabaseInfo.DBServer -Database $xml.DOSconfig.DatabaseInfo.DB -Query $query | select -ExpandProperty diskgroups
+$diskgroups = $diskGroupMapping.split(',')
+If (!$diskgroups) {
+  Write-PurePSFlatLog @logSettings -sourceName $sourceName -logLevel "Critical" -information "We did not find an entry for Database $database in database to diskgroup mapping table in the config database"
+  #$teamAssignment = 'CloudInfrastructure'
+  Complete-Script -exitCode 1
+  exit 1
+}
+
+###############################################################
+################# Get our Cluster to Server Mapping ###################
+###############################################################
+$query = "select * from dbo.OracleClustertoServerMapping"
+$clusterToServerMapping = Invoke-Sqlcmd -ServerInstance $xml.DOSconfig.DatabaseInfo.DBServer -Database $xml.DOSconfig.DatabaseInfo.DB -Query $query
+If (!$diskgroups) {
+  Write-PurePSFlatLog @logSettings -sourceName $sourceName -logLevel "Critical" -information "We did not find an entry for Database $database in database to diskgroup mapping table in the config database"
+  #$teamAssignment = 'CloudInfrastructure'
+  Complete-Script -exitCode 1
+  exit 1
+}
+foreach ($mapping in $clusterToServerMapping) {
+  $mappingExists = $mapping.servers.split(',') | ? { $_ -eq $targetServer }
+  if ($mappingExists) {
+    $targetCluster = $mapping
+  }
+}
+
+###############################################################
+#################### Get stored passwords #####################
+###############################################################
+$faUserName = $globalConfigParams | where { $_.param -eq "faUserName" } | select -ExpandProperty Value
+$faKeyLocation = $globalConfigParams | where { $_.param -eq "faPassKey" } | select -ExpandProperty Value
+$faPassLocation = $globalConfigParams | where { $_.param -eq "faPassFile" } | select -ExpandProperty Value
+#Get out stored password
+$recalledFAKey = Get-Content $faKeyLocation
+$recalledFAPass = Get-Content $faPassLocation
+$restoredFAPass = $recalledFAPass | ConvertTo-SecureString -Key $recalledFAKey
+
+$LinuxUsername = $globalConfigParams | where { $_.param -eq "LinuxUserName" } | select -ExpandProperty Value
+$LinuxkeyLocation = $globalConfigParams | where { $_.param -eq "LinuxPassKey" } | select -ExpandProperty Value
+$LinuxpassLocation = $globalConfigParams | where { $_.param -eq "LinuxPassFile" } | select -ExpandProperty Value
+#Get out stored password
+$recalledLinuxKey = Get-Content $LinuxkeyLocation
+$recalledLinuxPass = Get-Content $LinuxpassLocation
+$restoredLinuxPass = $recalledLinuxPass | ConvertTo-SecureString -Key $recalledLinuxKey
+$BSTR = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($restoredLinuxPass)
+$plinkFormatedPW = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto($BSTR)
+
+###############################################################
+#################### Connect to Arrays            #############
+###############################################################
+
+#Find source array
+Write-PurePSFlatLog @logSettings -sourceName $sourceName -logLevel "Informational" -information "Querying PureSnapDB to find the appropriate arrays for $sourceCluster"
+$query = "select array from dbo.OracleClustertoarraymapping where cluster =  '$sourceCluster'"
+$sourceArray = Invoke-Sqlcmd -ServerInstance $xml.DOSconfig.DatabaseInfo.DBServer -Database $xml.DOSconfig.DatabaseInfo.DB -Query $query | select -ExpandProperty Array
+If (!$sourceArray) {
+  Write-PurePSFlatLog @logSettings -sourceName $sourceName -logLevel "Critical" -information "We did not find an entry for source cluster $sourceCluster in server to array mapping table in the config database"
+  #$teamAssignment = 'CloudInfrastructure'
+  Complete-Script -exitCode 1
+  exit 1
+}
+
+#Find target arrayWrite-PurePSFlatLog @logSettings -sourceName $sourceName -logLevel "Informational" -information "Querying PureSnapDB to find the appropriate arrays for $sourceCluster"
+$query = "select array from dbo.OracleClustertoarraymapping where cluster =  '$($targetCluster.cluster)'"
+$targetArray = Invoke-Sqlcmd -ServerInstance $xml.DOSconfig.DatabaseInfo.DBServer -Database $xml.DOSconfig.DatabaseInfo.DB -Query $query | select -ExpandProperty Array
+If (!$targetArray) {
+  Write-PurePSFlatLog @logSettings -sourceName $sourceName -logLevel "Critical" -information "We did not find an entry for target cluster $targetCluster in server to array mapping table in the config database"
+  #$teamAssignment = 'CloudInfrastructure'
+  Complete-Script -exitCode 1
+  exit 1
+}
+
+
+
+#Connect to PureArrays
+Write-PurePSFlatLog @logSettings -sourceName $sourceName -logLevel "Informational" -information "Connecting to Source Array: $sourceArray"
+try {
+  $objSourceArray = New-PfaArray -EndPoint $sourceArray -UserName $faUserName -Password $restoredFAPass -IgnoreCertificateError
+}
+catch {
+  $errorMessage = $_.Exception.Message
+  Write-PurePSFlatLog @logSettings -sourceName $sourceName -logLevel "Error" -information  "Failed trying to connect to source array $sourceArray. See Powershell error. Powershell Error: $errorMessage"
+  #$teamAssignment = 'CloudInfrastructure'
+  Complete-Script -exitCode 1
+  exit 1
+}
+
+Write-PurePSFlatLog @logSettings -sourceName $sourceName -logLevel "Informational" -information "Connecting to Target Array: $TargetArray"
+try {
+  $objTargetArray = New-PfaArray -EndPoint $targetArray -UserName $faUserName -Password $restoredFAPass -IgnoreCertificateError
+}
+catch {
+  $errorMessage = $_.Exception.Message
+  Write-PurePSFlatLog @logSettings -sourceName $sourceName -logLevel "Error" -information  "Failed trying to connect to target array $targetArray. See Powershell error. Powershell Error: $errorMessage" 
+  #$teamAssignment = 'CloudInfrastructure'
+  Complete-Script -exitCode 1
+  exit 1
+}
+
+
+###############################################################
+#################### Validation   #############################
+###############################################################
+
+#check for restricted server.
+Write-PurePSFlatLog @logSettings -sourceName $sourceName -logLevel "Informational" -information "Validating that the target server $targetServers is not a restricted server"
+$restrictedServers = ($oracleP2PConfigParams | where { $_.param -eq "prodServers" } | select -ExpandProperty Value).split(',') 
+
+if ($restrictedServers.tolower() -contains $targetServer.tolower()) {
+  Write-PurePSFlatLog @logSettings -sourceName $sourceName -logLevel "Error" -information "$targetServer is not allowed to be a target server.  See config table."
+  #$teamAssignment = 'CloudInfrastructure'
+  Complete-Script -exitCode 1
+  exit 1
+}
+
+
+
+
+foreach ($diskGroup in $diskgroups) {
+  #check that source volume exists for our naming standard
+  $sourceVolumeStandard = $sourceCluster + "-" + $diskGroup + "-*" 
+  $sourceVolumes = Get-pfavolumes -Array $objSourceArray | ? { $_.name -like $sourceVolumeStandard }
+  if (!$sourceVolumes) {
+    Write-PurePSFlatLog @logSettings -sourceName $sourceName -logLevel "Error" -information "We could not find any volumes on source array $($objSourceArray.endpoint) that matched our standard of $sourceVolumeStandard"
+    #$teamAssignment = 'CloudInfrastructure'
+    Complete-Script -exitCode 1
+    exit 1
+  }
+
+  #find it's PG
+  #We are going to assume that all the volumes are in the SAME PG, and only a member of a single.  We will check
+  $sourcePG = Get-PfaVolumeProtectionGroups -Array $objSourceArray -volumename $sourceVolumes[0].name
+  if ($sourcePG.protection_group -ne $storedPG.protection_group -and $storedPG) {
+    Write-PurePSFlatLog @logSettings -sourceName $sourceName -logLevel "Error" -information "We did a spot check, and the first volume from this DiskGroup was not a member of a similar volume in the last diskgroup. Our design is around consistent snaps provided by Pure PG.  This is inoperatble."
+    #$teamAssignment = 'CloudInfrastructure'
+    Complete-Script -exitCode 1
+    exit 1
+  }
+  foreach ($sourceVolume in $sourcevolumes) {
+    $singleVolPG = Get-PfaVolumeProtectionGroups -Array $objSourceArray -volumename $sourceVolume.name
+    if (!$singleVolPG) {
+      Write-PurePSFlatLog @logSettings -sourceName $sourceName -logLevel "Error" -information "Volume $($sourceVolume.name) is a member of any protection groups.  This is an unsupported configuration."
+      #$teamAssignment = 'CloudInfrastructure'
+      Complete-Script -exitCode 1
+      exit 1
+    }
+    if ($singleVolPG.count -gt 1) {
+      Write-PurePSFlatLog @logSettings -sourceName $sourceName -logLevel "Error" -information "Volume $($sourceVolume.name) is a member of more than one protection group.  This is an unsupported configuration."
+      #$teamAssignment = 'CloudInfrastructure'
+      Complete-Script -exitCode 1
+      exit 1
+    }
+    elseif ($singleVolPG.protectiongroup -ne $sourcePG.protectiongroup) {
+      Write-PurePSFlatLog @logSettings -sourceName $sourceName -logLevel "Error" -information "Volume $($sourceVolume.name) is not in the same PG as other volumes in this same DiskGroup.  This is an unsupported configuration."
+      #$teamAssignment = 'CloudInfrastructure'
+      Complete-Script -exitCode 1
+      exit 1
+    }
+    $singleVolPG = ''
+  }
+  $storedPG = $sourcePG 
+}
+
+
+
+#If its now, lets take a snap.
+if ($datetime -eq 'Now') {  
+  Write-PurePSFlatLog @logSettings -sourceName $sourceName -logLevel "Informational" -information "Taking a new protection group snapshot using Protection Group $($sourcePG.Protection_Group)"
+  try {
+  $objSourcepgcheck = get-pfaprotectiongroup -Array $objSourceArray -Name $sourcePG.protection_group 
+    if (!$objSourcepgcheck.targets) {
+        $sourceSnap = New-PfaProtectionGroupSnapshot -Array $objSourceArray -Protectiongroupname $sourcePG.protection_group -ApplyRetention  -Suffix $runID
+      }
+    else {
+        $sourceSnap = New-PfaProtectionGroupSnapshot -Array $objSourceArray -Protectiongroupname $sourcePG.protection_group -ApplyRetention -ReplicateNow -Suffix $runID
+      }
+    Write-PurePSFlatLog @logSettings -sourceName $sourceName -logLevel "Informational" -information "Snapshot taken named: $($sourcesnap.name)"
+  }
+  catch {
+    $errorMessage = $_.Exception.Message
+    Write-PurePSFlatLog @logSettings -sourceName $sourceName -logLevel "Error" -information  "Failed to create snapshot on $sourceArray using Protection Group $($sourcePG.Protection_Group) . See Powershell error. Powershell Error: $errorMessage" 
+    Complete-Script -exitCode 1
+    exit 1
+  }
+  sleep 10
+  $datetimeWasNow = $true
+  $dateTime = (get-date).adddays(5)  #We now want the latest snap, that we just sent
+  $dateTime = $datetime.ToUniversalTime()
+  $snapToClean = 1
+}
+
+If ($sourceArray -ne $targetArray) {
+  #We have a replicated Snap
+  if ($datetimeWasNow) {  
+    $tgtPGSnap = $sourceArray + ':' + $sourceSnap.name
+    try {
+      $replicationStatus = Get-PfaProtectionGroupSnapshotReplicationStatus -Array $objTargetArray -Name $tgtPGSnap
+    }
+    catch {
+      $errorMessage = $_.Exception.Message
+      Write-PurePSFlatLog @logSettings -sourceName $sourceName -logLevel "Error" -information  "Failed gather snapshot information on $targetArray for snap $tgtPGSnap .  Make sure you are replicating snaps properly. See Powershell error. Powershell Error: $errorMessage" 
+      Complete-Script -exitCode 1
+      exit 1
+    }
+    $isComplete = $False
+    #we need to wait for it to complete, we will always enter this loop at least once.
+    do {
+      if ($replicationStatus.completed) {
+        $progress = $replicationStatus.progress * 100
+        Write-PurePSFlatLog @logSettings -sourceName $sourceName -logLevel "Informational" -information "Replication of $tgtPGSnap has a completed timestamp! we are at $progress %"
+        $isComplete = $true
+      }
+      else {
+        $progress = $replicationStatus.progress * 100
+        Write-PurePSFlatLog @logSettings -sourceName $sourceName -logLevel "Informational" -information "Replication of $tgtPGSnap not complete, we are at $progress % sleeping for 10 seconds and trying again."
+        sleep 10
+        $replicationStatus = Get-PfaProtectionGroupSnapshotReplicationStatus -Array $objTargetArray -Name $tgtPGSnap
+      }
+    }While ($isComplete -eq $False)
+    sleep 10
+    $snapToClean = 1
+  }
+  #we are going to use the nearest previous snap to $datetime.  In the event of 'latest' and 'Now' we already set the date to 5 days in the future
+
+  $tgtPG = $sourceArray + ':' + $sourcePG.protection_group
+  Write-PurePSFlatLog @logSettings -sourceName $sourceName -logLevel "Informational" -information "Will look for PG: $tgtPG on Target Array $($objTargetArray.Endpoint)"
+  $ourPGSnap = Get-PfaProtectionGroupSnapshotReplicationStatus -Array $objTargetArray -name $tgtPG | where-object { $_.progress -eq 1.0 -and $_.created -lt $datetime } | Sort-Object -Property completed -Descending | Select-Object -Index 0
+  If (!$ourPGSnap) {
+    Write-PurePSFlatLog @logSettings -sourceName $sourceName -logLevel "Critical" -information "Unable to find a snapshot that goes back to $datatime.  Please check retention polices and choose a later date."
+    Complete-Script -exitCode 1
+    exit 1
+  }
+  Write-PurePSFlatLog @logSettings -sourceName $sourceName -logLevel "Informational" -information "We will be using snapshot $($ourPGSnap.name) with created time $($ourPGSnap.created)"
+  try {
+    $ourPGSnapVols = @()
+    foreach ($diskgroup in $diskgroups) {
+      $sourceVolumeStandard = $sourceCluster + "-" + $diskGroup + "-*"
+      $ourPGSnapVols += Get-PfaProtectionGroupVolumeSnapshots -Array $objTargetArray -Name $ourPGSnap.name | Where-Object { $_.source.split(':')[1] -like $sourceVolumeStandard }
+    }
+    
+  }
+  catch {
+    $errorMessage = $_.Exception.Message
+    Write-PurePSFlatLog @logSettings -sourceName $sourceName -logLevel "Error" -information  "Failed gather snapshot information on $targetArray for PG $sourceProtectionGroup . See Powershell error. Powershell Error: $errorMessage" 
+    Complete-Script -exitCode 1
+    exit 1
+  }
+}
+else {
+  #We have a local Snap
+  Write-PurePSFlatLog @logSettings -sourceName $sourceName -logLevel "Informational" -information "Detected this is a local snap.  We will be checking $($sourcePG.protection_group) for the appropriate snap"
+  
+  $ourPGSnap = Get-PfaProtectionGroupSnapshots -Array $objSourceArray -name $($sourcePG.protection_group) | where-object { $_.created -lt $datetime } | Sort-Object -Property created -Descending | Select-Object -Index 0
+  Write-PurePSFlatLog @logSettings -sourceName $sourceName -logLevel "Informational" -information "We will be using snapshot $($ourPGSnap.name) with created time $($ourPGSnap.created)"
+  try {
+    $ourPGSnapVols = @()
+    foreach ($diskgroup in $diskgroups) {
+      $sourceVolumeStandard = $sourceCluster + "-" + $diskGroup + "-*"
+      $ourPGSnapVols += Get-PfaProtectionGroupVolumeSnapshots -Array $objSourceArray -Name $ourPGSnap.name | Where-Object { $_.source -like $sourceVolumeStandard }
+    }
+
+  }
+  catch {
+    $errorMessage = $_.Exception.Message
+    Write-PurePSFlatLog @logSettings -sourceName $sourceName -logLevel "Error" -information  "Failed gather snapshot information on $targetArray for PG $sourceProtectionGroup . See Powershell error. Powershell Error: $errorMessage" 
+    Complete-Script -exitCode 1
+    exit 1
+  }
+}
+forEach ($diskGroup in $diskgroups) {
+  #perform safetynet snapshots
+  $targetVolumeStandard = $targetCluster.cluster + '-' + $diskGroup + '-*'
+  $tgtVolumes = get-pfavolumes -Array $objTargetArray | ? { $_.name -like $targetVolumeStandard }
+  #lets make target volumes if they don't exist and connect them to the host.  This will be for staging
+  If (!$tgtVolumes) {
+    $tgtVolumes = @()
+    Write-PurePSFlatLog @logSettings -sourceName $sourceName -logLevel "Informational" -information "We determined that the volumes for the tgt server $targetServer for disk group $diskgroup doesn't exist... We will create them and attach to the host."
+    $thisDiskGroupsPGSnapVols = $ourPGSnapVols | ? { $_.name -like "*$diskgroup*" }
+    foreach ($snap in $thisDiskGroupsPGSnapVols) {
+      $newVolName = $snap.source.split(':')[1] -replace $sourceCluster, $targetCluster.cluster
+      $newVol = new-pfavolume -Array $objTargetArray -VolumeName $newVolName -size 10 -Unit G #we dont care about size, when snap overwrite occurs it will size automatically
+      #TODO check if it failed an overwrite, that is an unexpected state... fail
+ 
+      New-PfaHostGroupVolumeConnection -Array $objTargetArray -VolumeName $newVol.name -HostGroupName $targetCluster.cluster | out-null
+
+      Write-PurePSFlatLog @logSettings -sourceName $sourceName -logLevel "Warning" -information  "New volume $($newVol.name) created on Pure array $targetArray.  You MUST add this to a protection group to allow refreshes after this run.  Otherwise safetynet will fail." 
+      $tgtVolumes += $newVol
+    }
+  }
+  Else {
+    Write-PurePSFlatLog @logSettings -sourceName $sourceName -logLevel "Informational" -information "We determined the TGT volumes exist, we will perform a safetynet snapshot.  We are assuming PG membership is uniform across all volumes for target server and diskgroup"
+    $safetyPGLog = @()
+    foreach ($tgtVolume in $tgtVolumes) {
+      Write-PurePSFlatLog @logSettings -sourceName $sourceName -logLevel "Informational" -information "Checking volume $($tgtVolume.name) for safetynet validation"
+      $safetyNetPG = Get-PfaVolumeProtectionGroups -array $objTargetArray -VolumeName $tgtVolume.name | select -ExpandProperty protection_Group
+      if (!$safetyNetPG) {
+        Write-PurePSFlatLog @logSettings -sourceName $sourceName  -logLevel "Critical" -information "Our target volumes is not a member of a PG.  Please check target volume PG configuration. The fir"
+        Complete-Script -exitCode 1
+        exit 1
+      }
+      elseif ($safetyNetPG.count -gt 1) {
+        Write-PurePSFlatLog @logSettings -sourceName $sourceName  -logLevel "Critical" -information "Either the Data or Log target volumes are members of multple PGs. Please check volume $TargetVOLName. We expect a single PG"
+        Complete-Script -exitCode 1
+        exit 1
+      }
+      $safetyPGLog += $safetyNetPG
+    }
+    #Lets make sure it's uniform for our safety PG
+    If ( @($safetyPGLog | Select -Unique).Count -gt 1 ) { 
+      Write-PurePSFlatLog @logSettings -sourceName $sourceName  -logLevel "Critical" -information "There is inconsistency in our target Vols and their PG memebership.  Each should be a member of the SAME PG."
+      Complete-Script -exitCode 1
+      exit 1
+    }
+
+    Write-PurePSFlatLog @logSettings -sourceName $sourceName  -logLevel "informational" -information "Validation passed, taking our safety net snap"
+    $safetySuffix = 'SafetyNetfor-' + $runID
+    $doesSafetySnapExist = get-PfaProtectionGroupSnapshots -Array $objTargetArray -name $safetyNetPG | where { $_.name -match $safetySuffix }
+    if ($doesSafetySnapExist) {
+      Write-PurePSFlatLog @logSettings -sourceName $sourceName  -logLevel "informational" -information "Safety Snap by suffix $safetySuffix already exists"
+    }
+    else {
+      Write-PurePSFlatLog @logSettings -sourceName $sourceName  -logLevel "informational" -information "Safety Snap by suffix $safetySuffix does not exist.  Creating"
+      $safetynetSnapData = New-PfaProtectionGroupSnapshot -Array $objTargetArray -Protectiongroupname $safetyNetPG -ApplyRetention -Suffix $safetySuffix
+    }
+ 
+  }
+}
+#Safety net complete or net new volumes.  Proceeding.
+
+#We need to recall prescripts and post scripts
+$query = "select * from dbo.OraclePreScripts where targetdatabase =  '$targetDatabase' order by [order] asc"
+$preScripts = Invoke-Sqlcmd -ServerInstance $xml.DOSconfig.DatabaseInfo.DBServer -Database $xml.DOSconfig.DatabaseInfo.DB -Query $query 
+If (!$preScripts) {
+  Write-PurePSFlatLog @logSettings -sourceName $sourceName -logLevel "warning" -information "We did not find any prescripts for target database $targetDatabase in the Oracle Prescripts Table in the config database.  It may be the case this is intentional and there are no prescripts.  This is just a warning."
+}
+
+$query = "select * from dbo.OraclePostScripts where targetdatabase =  '$targetDatabase' order by [order] asc"
+$postScripts = Invoke-Sqlcmd -ServerInstance $xml.DOSconfig.DatabaseInfo.DBServer -Database $xml.DOSconfig.DatabaseInfo.DB -Query $query 
+If (!$postScripts) {
+  Write-PurePSFlatLog @logSettings -sourceName $sourceName -logLevel "warning" -information "We did not find any prescripts for target database $targetDatabase in the Oracle Postscripts Table in the config database.  It may be the case this is intentional and there are no prescripts.  This is just a warning."
+}
+
+
+
+#
+#Line in the Sand for manual cleanup actions********
+#
+
+
+Write-PurePSFlatLog @logSettings -sourceName $sourceName  -logLevel "informational" -information "!!!!We are about to start stopping services and perform the acutal overwrite.  Any failures past this point may require manual cleanup!!!!"
+
+
+
+
+#INVOKE PreScripts
+if (!$stage) {
+  foreach ($preScript in $preScripts) {
+    Write-PurePSFlatLog @logSettings -sourceName $sourceName -logLevel "Informational" -information "We will now be running the Linux Prescripts named $($prescript.scriptname) command:  $($preScript.CLICommand) given order ID $($preScript.Order)"
+        $linuxlogin = $LinuxUsername + "@" + $targetServer
+        $output = &($plinkpath + "plink.exe") -batch $linuxlogin -pw $plinkFormatedPW $preScript.clicommand 
+ 
+
+    if ($output -match 'OK TO PROCEED') {
+      Write-PurePSFlatLog @logSettings -sourceName $sourceName -logLevel "Informational" -information "$($prescript.scriptName) ran successfully"
+    }
+    else {
+      Write-PurePSFlatLog @logSettings -sourceName $sourceName -logLevel "critical" -information "$($prescript.scriptName) ran unsuccessfully.  ....... command ran: $($prescript.CLICommand)"
+      $teamAssignment = 'Linux'
+      Complete-Script -exitCode 1
+      exit 1
+    }
+  }
+}
+
+foreach ($snap in $ourPGSnapVols) {
+  #$newVolName = $snap.source -replace $sourceCluster, $targetcluster.Cluster
+  $splitSourceSnap = $snap.source.split("-")
+  $updatedVolName = $splitSourceSnap[0] -replace $sourceCluster, $targetcluster.cluster
+  $newVolName = $updatedVolName + "-" + $splitSourceSnap[1] + "-"  + $splitSourceSnap[2]
+  Write-PurePSFlatLog @logSettings -sourceName $sourceName  -logLevel "informational" -information "Overwritting volume $newVolName with snap $($snap.name) created at $($snap.created)"
+  $newVol = new-pfavolume -Array $objTargetArray -VolumeName $newVolName -Source $snap.name -Overwrite
+}
+
+
+
+if (!$stage) {
+  foreach ($postScript in $postScripts) {
+    Write-PurePSFlatLog @logSettings -sourceName $sourceName -logLevel "Informational" -information "We will now be running the Linux Postcripts named $($postscript.scriptname) command:  $($postScript.CLICommand) given order ID $($postScript.Order)"
+        $linuxlogin = $LinuxUsername + "@" + $targetServer
+        $output = &($plinkpath + "plink.exe") -batch $linuxlogin -pw $plinkFormatedPW $postScript.clicommand 
+    if ($output -match 'OK TO PROCEED') {
+      Write-PurePSFlatLog @logSettings -sourceName $sourceName -logLevel "Informational" -information "$($postscript.scriptName) ran successfully"
+    }
+    else {
+      Write-PurePSFlatLog @logSettings -sourceName $sourceName -logLevel "critical" -information "$($postscript.scriptName) ran unsuccessfully.  ....... command ran: $($postscript.CLICommand)"
+      $teamAssignment = 'Linux'
+      Complete-Script -exitCode 1
+      exit 1
+    }
+  }
+}
+
+
+
+
+Complete-Script -exitCode 0
+Exit 0
+

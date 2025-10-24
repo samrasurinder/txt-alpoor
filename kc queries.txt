@@ -1,0 +1,68 @@
+1- SQL Profile Finding (see explain plans section below)
+--------------------------------------------------------
+  A potentially better execution plan was found for this statement.
+
+  Recommendation (estimated benefit: 99.31%)
+  ------------------------------------------
+  - Consider accepting the recommended SQL profile to use parallel execution
+    for this statement.
+    execute dbms_sqltune.accept_sql_profile(task_name => 'staName36333',
+            task_owner => 'SYSTEM', replace => TRUE, profile_type =>
+            DBMS_SQLTUNE.PX_PROFILE);
+
+  Executing this query parallel with DOP 160 will improve its response time
+  99.31% over the original plan. However, there is some cost in enabling
+  parallel execution. It will increase the statement's resource consumption by
+  an estimated 10.03% which may result in a reduction of system throughput.
+  Also, because these resources are consumed over a much smaller duration, the
+  response time of concurrent statements might be negatively impacted if
+  sufficient hardware capacity is not available.
+
+  The following data shows some sampled statistics for this SQL from the past
+  week and projected weekly values when parallel execution is enabled.
+
+                                 Past week sampled statistics for this SQL
+                                 -----------------------------------------
+  Number of executions                                                   0 
+  Percent of total activity                                              0 
+  Percent of samples with #Active Sessions > 2*CPU                       0 
+  Weekly DB time (in sec)                                                0 
+
+                              Projected statistics with Parallel Execution
+                              --------------------------------------------
+  Weekly DB time (in sec)                                                0 
+
+2- Index Finding (see explain plans section below)
+--------------------------------------------------
+  The execution plan of this statement can be improved by creating one or more
+  indices.
+
+  Recommendation (estimated benefit: 93.74%)
+  ------------------------------------------
+  - Consider running the Access Advisor to improve the physical schema design
+    or creating the recommended index.
+    create index EAPS.IDX$$_3CE1E0001 on EAPS.AMERICAN_EMPLOYEE("ETL_MMYYYY","A
+    MER_EMP_POS_STATUS_IND");
+
+  - Consider running the Access Advisor to improve the physical schema design
+    or creating the recommended index.
+    create index EAPS.IDX$$_3CE1E0002 on EAPS.LOCAL_EMPLOYEE("ETL_MMYYYY","FN_E
+    MP_POS_STATUS_IND");
+
+  Rationale
+  ---------
+    Creating the recommended indices significantly improves the execution plan
+    of this statement. However, it might be preferable to run "Access Advisor"
+    using a representative SQL workload as opposed to a single statement. This
+    will allow to get comprehensive index recommendations which takes into
+    account index maintenance overhead and additional space consumption.
+
+
+
+
+mkdir -p /u02/app/19.3.0/grid
+mkdir -p /u02/app/grid
+mkdir -p /u02/app/oracle
+chown -R grid:oinstall /u02
+chown oracle:oinstall /u02/app/oracle
+chmod -R 775 /u02/

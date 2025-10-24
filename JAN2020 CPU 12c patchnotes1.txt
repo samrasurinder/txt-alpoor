@@ -1,0 +1,117 @@
+[root@hrvltstdb7601 OPatch]# ./opatchauto rollback -oh $ORACLE_HOME /u02/PSU/JAN2020/30463673/30502018
+
+
+
+/opatchauto rollback -oh $ORACLE_HOME /u02/PSU/JAN2020/30463609/30501910/
+
+OPatchauto session is initiated at Sat Mar  7 13:09:53 2020
+
+[root@hrvltstdb7601 OPatch]# ./opatchauto rollback /u02/PSU/JAN2020/30463673/30502018 &
+[1] 26391
+[root@hrvltstdb7601 OPatch]#
+OPatchauto session is initiated at Sat Mar  7 13:08:30 2020
+
+System initialization log file is /u02/app/12.2.0/grid/cfgtoollogs/opatchautodb/systemconfig2020-03-07_01-08-32PM.log.
+
+Clusterware is either not running or not configured. You have the following 2 options:
+ 1. Configure and start the Clusterware on this node and re-run the tool
+ 2. Run the tool with '-oh <GI_HOME>' to first patch the Grid Home, then invoke tool with '-database <oracle database name>' or '-oh <RAC_HOME>' to patch the RAC home
+
+OPATCHAUTO-72029: CLusterware home not configured.
+OPATCHAUTO-72029: Clusterware is either not running or not configured or cluster is software only GI
+OPATCHAUTO-72029: If only Grid Infrastructure software is installed, please run opatchauto with '-oh' option . Alternatively configure and start the Clusterware before running opatchauto.
+
+
+
+OPatchauto session completed at Sat Mar  7 13:08:34 2020
+Time taken to complete the session 0 minute, 4 seconds
+
+Topology creation failed.
+
+
+
+System initialization log file is /u02/app/12.2.0/grid/cfgtoollogs/opatchautodb/systemconfig2020-03-07_01-09-56PM.log.
+
+Session log file is /u02/app/12.2.0/grid/cfgtoollogs/opatchauto/opatchauto2020-03-07_01-10-01PM.log
+The id for this session is CZG4
+
+Executing OPatch prereq operations to verify patch applicability on home /u02/app/12.2.0/grid
+Patch applicability verified successfully on home /u02/app/12.2.0/grid
+
+OPatchAuto successful.
+
+--------------------------------Summary--------------------------------
+
+Patching is completed successfully. Please find the summary as follows:
+
+Host:hrvltstdb7601
+SIHA Home:/u02/app/12.2.0/grid
+Version:12.2.0.1.0
+Summary:
+
+==Following patches were SKIPPED:
+
+Patch: /u02/PSU/JAN2020/30463673/30502018
+Reason: This Patch does not exist in the home, it cannot be rolled back.
+
+
+
+OPatchauto session completed at Sat Mar  7 13:10:10 2020
+Time taken to complete the session 0 minute, 18 seconds
+[root@hrvltstdb7601 OPatch]#
+
+
+
+[root@hrvltstdb7601 OPatch]# /u02/app/oracle/product/12.0.2/db_1/OPatch/opatchauto rollback -oh /u02/app/oracle/product/12.0.2/db_1 /u02/PSU/JAN2020/30463673/30502018
+
+OPatchauto session is initiated at Sat Mar  7 13:13:42 2020
+
+System initialization log file is /u02/app/oracle/product/12.0.2/db_1/cfgtoollogs/opatchautodb/systemconfig2020-03-07_01-13-46PM.log.
+
+Session log file is /u02/app/oracle/product/12.0.2/db_1/cfgtoollogs/opatchauto/opatchauto2020-03-07_01-13-51PM.log
+The id for this session is 646A
+
+Executing OPatch prereq operations to verify patch applicability on home /u02/app/oracle/product/12.0.2/db_1
+Patch applicability verified successfully on home /u02/app/oracle/product/12.0.2/db_1
+
+
+Verifying SQL patch applicability on home /u02/app/oracle/product/12.0.2/db_1
+No step execution required.........
+
+
+Preparing to bring down database service on home /u02/app/oracle/product/12.0.2/db_1
+No step execution required.........
+
+
+Start rolling back binary patch on home /u02/app/oracle/product/12.0.2/db_1
+Binary patch rolled back successfully on home /u02/app/oracle/product/12.0.2/db_1
+
+
+Preparing home /u02/app/oracle/product/12.0.2/db_1 after database service restarted
+No step execution required.........
+
+
+Trying to roll back SQL patch on home /u02/app/oracle/product/12.0.2/db_1
+No step execution required.........
+
+OPatchAuto successful.
+
+--------------------------------Summary--------------------------------
+
+Patching is completed successfully. Please find the summary as follows:
+
+Host:hrvltstdb7601
+SIDB Home:/u02/app/oracle/product/12.0.2/db_1
+Summary:
+
+==Following patches were SUCCESSFULLY rolled back:
+
+Patch: /u02/PSU/JAN2020/30463673/30502018
+Log: /u02/app/oracle/product/12.0.2/db_1/cfgtoollogs/opatchauto/core/opatch/opatch2020-03-07_13-14-02PM_1.log
+
+
+
+OPatchauto session completed at Sat Mar  7 13:14:27 2020
+Time taken to complete the session 0 minute, 46 seconds
+[root@hrvltstdb7601 OPatch]#
+

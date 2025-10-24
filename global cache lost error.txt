@@ -1,0 +1,48 @@
+[oracle@hrewoel48 ~]$ tfactl set redact=mask
+User oracle doesn't have access to perform this action. Please contact TFA Administrator.
+FAIL
+Could not set redact=mask
+[oracle@hrewoel48 ~]$ sudo su -
+Last login: Fri Aug 20 09:09:43 EDT 2021 on pts/0
+[root@hrewoel48 ~]# tfactl set redact=mask
+Successfully set redact=mask
+.-------------------------------------------------------------------.
+|                             hrewoel48                             |
++-----------------------------------------------------------+-------+
+| Configuration Parameter                                   | Value |
++-----------------------------------------------------------+-------+
+| Setting for ACR redaction (none|SANITIZE|MASK) ( redact ) | mask  |
+'-----------------------------------------------------------+-------'
+
+[root@hrewoel48 ~]# exit
+logout
+[oracle@hrewoel48 ~]$ tfactl diagcollect -srdc dbracinst
+Choose the event you want to perform a diagnostic collection for:
+1. Aug/19/2021 21:37:15 [ db.tfclone.TFCLONE1 ]  Instance terminated by USER, pid = 21242
+2. Aug/19/2021 11:32:34 [ db.hfprd.HFPRD1 ]  ORA-00603: ORACLE server session terminated by fatal error
+3. Aug/19/2021 11:32:30 [ db.hfprd.HFPRD1 ]  ORA-00603: ORACLE server session terminated by fatal error
+4. Default diagnostic collection, for no specific event
+
+Please choose the event : 1-4 [] 4
+
+TFA will collect diagnostics for the last 1 hour(s).
+Please enter the time of the incident [YYYY-MM-DD HH24:MI:SS], or <RETURN> to collect for the last 1 hour(s):
+2021-08-20 04:00:00
+Scripts to be run by this srdc:
+Components included in this srdc: OS CRS DATABASE INSTALL CFGTOOLS CHMOS ASM ASMPROXY ASMIO ACFS RHP DBWLM
+Collecting data for all nodes
+Scanning files from aug/20/2021 03:00:00 to aug/20/2021 05:00:00
+
+Collection Id : 20210820091637hrewoel48
+
+Detailed Logging at : /u01/ahf_data_dir/oracle.ahf/data/repository/srdc_dbracinst_collection_Fri_Aug_20_09_16_38_EDT_2021_node_all/diagcollect_20210820091637_hrewoel48.log
+2021/08/20 09:16:41 EDT : NOTE : Any file or directory name containing the string .com will be renamed to replace .com with dotcom
+2021/08/20 09:16:41 EDT : Collection Name : tfa_srdc_dbracinst_Fri_Aug_20_09_16_38_EDT_2021.zip
+2021/08/20 09:16:41 EDT : Collecting diagnostics from hosts : [hrewoel48, hrewoel49]
+2021/08/20 09:16:42 EDT : Scanning of files for Collection in progress...
+2021/08/20 09:16:42 EDT : Collecting additional diagnostic information...
+2021/08/20 09:18:13 EDT : Completed collection of additional diagnostic information...
+2021/08/20 09:18:22 EDT : Getting list of files satisfying time range [08/20/2021 03:00:00 EDT, 08/20/2021 05:00:00 EDT]
+2021/08/20 09:19:02 EDT : Collecting ADR incident files...
+2021/08/20 09:19:04 EDT : Completed Local Collection
+2021/08/20 09:19:04 EDT : Redacting the collection...

@@ -1,0 +1,41 @@
+
+Training Cluster
+-------------
+
+HRVLTRNDB23	10.68.26.235
+HRVLTRNDB24	10.68.26.236
+
+
+Please allocate raw devices of below sizes and make sure devices are shared between 2 nodes.
+Please don't format them, just make sure these devices can be seen all 2 nodes so that I can format and label them
+
+
+The ASM disk: 'TRN_DATA01' mapped to '/dev/emcpowers1'  Totalsize=214.8 GB,
+The ASM disk: 'TRN_DATA02' mapped to '/dev/emcpowert1'  Totalsize=214.8 GB,
+The ASM disk: 'TRN_DATA03' mapped to '/dev/emcpoweru1'  Totalsize=214.8 GB,
+The ASM disk: 'TRN_DATA04' mapped to '/dev/emcpowerv1'  Totalsize=214.8 GB,
+The ASM disk: 'TRN_DATA05' mapped to '/dev/emcpowerw1'  Totalsize=214.8 GB,
+The ASM disk: 'TRN_DATA06' mapped to '/dev/emcpowerx1'  Totalsize=214.8 GB,
+The ASM disk: 'TRN_DATA07' mapped to '/dev/emcpowery1'  Totalsize=214.8 GB,
+The ASM disk: 'TRN_DATA08' mapped to '/dev/emcpowerz1'  Totalsize=214.8 GB,
+The ASM disk: 'TRN_DATA09' mapped to '/dev/emcpoweraa1'  Totalsize=214.8 GB,
+The ASM disk: 'TRN_DATA10' mapped to '/dev/emcpowerab1'  Totalsize=214.8 GB,
+The ASM disk: 'TRN_DATA11' mapped to '/dev/emcpowerac1'  Totalsize=214.8 GB,
+The ASM disk: 'TRN_DATA12' mapped to '/dev/emcpowerad1'  Totalsize=214.8 GB,
+The ASM disk: 'TRN_DATA13' mapped to '/dev/emcpowerbc1'  Totalsize=214.8 GB,
+The ASM disk: 'TRN_DATA14' mapped to '/dev/emcpowerbd1'  Totalsize=214.8 GB,
+The ASM disk: 'TRN_DATA15' mapped to '/dev/emcpowerbg1'  Totalsize=214.7 GB,
+The ASM disk: 'TRN_FRA01' mapped to '/dev/emcpowerae1'  Totalsize=214.8 GB,
+The ASM disk: 'TRN_FRA02' mapped to '/dev/emcpoweraf1'  Totalsize=214.8 GB,
+The ASM disk: 'TRN_FRA03' mapped to '/dev/emcpowerag1'  Totalsize=214.8 GB,
+The ASM disk: 'TRN_FRA04' mapped to '/dev/emcpowerah1'  Totalsize=214.8 GB,
+The ASM disk: 'TRN_FRA05' mapped to '/dev/emcpowerai1'  Totalsize=214.8 GB,
+The ASM disk: 'TRN_FRA06' mapped to '/dev/emcpowerbe1'  Totalsize=214.8 GB,
+The ASM disk: 'TRN_FRA07' mapped to '/dev/emcpowerbb1'  Totalsize=214.8 GB,
+The ASM disk: 'TRN_FRA08' mapped to '/dev/emcpowerao1'  Totalsize=214.8 GB,
+The ASM disk: 'TRN_FRA09' mapped to '/dev/emcpoweran1'  Totalsize=214.8 GB,
+The ASM disk: 'TRN_FRA10' mapped to '/dev/emcpowerq1'  Totalsize=214.7 GB,
+
+he ASM disk: 'OCR_VOTE1' mapped to '/dev/emcpowerx1'  Totalsize=5000 MB,
+The ASM disk: 'OCR_VOTE2' mapped to '/dev/emcpowery1'  Totalsize=5000 MB,
+The ASM disk: 'OCR_VOTE3' mapped to '/dev/emcpowerz1'  Totalsize=5000 MB,
